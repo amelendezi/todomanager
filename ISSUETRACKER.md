@@ -333,3 +333,54 @@ Requested → Open (when todo linked) → Paused (all todos complete) → Closed
 8. Todos remain after opportunity deletion but without the link
 
 ---
+
+## Issue #11: Add Cancel Action with Comments System for Opportunities
+
+**Status:** Open
+**Created:** 2025-12-02
+**Related Issues:** #8, #10
+
+### Summary
+Add a Cancel action button to opportunities that sets status to "Cancelled". Cancelling requires entering a comment explaining the reason. Introduce a comments system for opportunities - a list of timestamped comments. Cancellation comments are visually distinguished with red styling.
+
+### Requirements
+
+#### Cancel Action Button
+- [ ] Add cancel button (X icon) to opportunity list items
+- [ ] Button always visible (not just on hover)
+- [ ] Enabled for any status (including Closed)
+- [ ] Clicking opens a modal to enter cancellation reason
+
+#### Comments Data Model
+- [ ] Add `comments` array field to opportunity data model
+- [ ] Each comment contains:
+  - `text`: The comment content
+  - `timestamp`: Date/time when comment was made
+  - `type`: "standard" or "cancellation"
+
+#### Cancellation Modal
+- [ ] Modal prompts for cancellation reason (required text field)
+- [ ] On confirm: add comment with type "cancellation", set status to "Cancelled"
+- [ ] Cancel button to dismiss without action
+
+#### Comments Display (Side Panel Only)
+- [ ] Show comments list in opportunity detail side panel
+- [ ] Display timestamp and text for each comment
+- [ ] Cancellation comments styled with red text to distinguish from standard comments
+
+### Technical Notes
+- Add `comments: []` to opportunity data model initialization
+- Create cancel modal with textarea for reason input
+- Add `cancelOpportunity()` function
+- Update side panel rendering to display comments section
+- Add CSS for cancellation comment styling (red text)
+
+### Acceptance Criteria
+1. Cancel button (X icon) visible on all opportunities
+2. Clicking Cancel opens modal with reason text field
+3. Reason is required before confirming
+4. Confirming adds cancellation comment and sets status to "Cancelled"
+5. Comments visible in side panel with timestamps
+6. Cancellation comments display in red styling
+
+---
