@@ -458,3 +458,46 @@ Add a textarea input in the Comments section of the opportunity side panel, allo
 6. Empty comments are not submitted
 
 ---
+
+## Issue #14: Archive Action for Closed/Cancelled Opportunities with Toggle View
+
+**Status:** Open
+**Created:** 2025-12-02
+**Related Issues:** #10, #11
+
+### Summary
+For opportunities with status "Closed" or "Cancelled", disable the Close, Cancel, and Delete action buttons. Replace with an Archive action that hides the opportunity from the default list view. Add a "Show Archived" toggle at the top right of the opportunities list to reveal archived items.
+
+### Requirements
+
+#### Action Button Behavior for Closed/Cancelled
+- [ ] Disable Close, Cancel, and Delete buttons for Closed/Cancelled opportunities
+- [ ] Show Archive button (box icon) only for Closed/Cancelled opportunities
+- [ ] Archive button always visible when applicable
+
+#### Archive Functionality
+- [ ] Add `archived` boolean field to opportunity data model
+- [ ] Clicking Archive sets `archived: true`
+- [ ] Archived opportunities hidden from default list view
+
+#### Show Archived Toggle
+- [ ] Add toggle/checkbox at top right of opportunities list
+- [ ] Label: "Show Archived"
+- [ ] When enabled, show both archived and non-archived opportunities
+- [ ] Archived opportunities visually distinguished (e.g., slightly faded)
+
+### Technical Notes
+- Add `archived: false` to opportunity data model
+- Update `renderOpportunities()` to filter based on archived state
+- Add state for `showArchived` toggle
+- Conditionally render action buttons based on opportunity status
+
+### Acceptance Criteria
+1. Closed/Cancelled opportunities show only Archive button
+2. Close, Cancel, Delete buttons disabled for Closed/Cancelled
+3. Clicking Archive hides opportunity from list
+4. "Show Archived" toggle visible at top right of list
+5. Toggle reveals archived opportunities
+6. Archived opportunities visually distinguishable
+
+---
