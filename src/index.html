@@ -1430,13 +1430,7 @@
             </div>
             <div class="detail-group">
                 <div class="detail-label">Status</div>
-                <select id="panel-opp-status" class="detail-select" onchange="updateOpportunityStatus()">
-                    <option value="requested">Requested</option>
-                    <option value="open">Open</option>
-                    <option value="paused">Paused</option>
-                    <option value="cancelled">Cancelled</option>
-                    <option value="closed">Closed</option>
-                </select>
+                <span id="panel-opp-status" class="status-badge"></span>
             </div>
             <!-- Comments Section -->
             <div class="comments-section">
@@ -2125,7 +2119,9 @@
             panelOppDescription.textContent = opp.description || 'No description';
             panelOppDate.textContent = opp.startDate ? formatDate(opp.startDate) : 'Not set';
             panelOppContact.textContent = opp.contact || 'Not set';
-            panelOppStatus.value = opp.status;
+
+            // Update status badge
+            updatePanelStatusBadge(opp.status);
 
             // Render comments
             renderCommentsInPanel(opp);
@@ -2143,15 +2139,10 @@
             sidePanelBackdrop.classList.remove('open');
         }
 
-        // Update opportunity status from side panel
-        function updateOpportunityStatus() {
-            if (state.selectedOpportunityIndex === null) return;
-
-            const newStatus = panelOppStatus.value;
-            state.opportunities[state.selectedOpportunityIndex].status = newStatus;
-
-            // Re-render list to update badge
-            renderOpportunities();
+        // Update status badge in side panel
+        function updatePanelStatusBadge(status) {
+            panelOppStatus.textContent = capitalizeFirst(status);
+            panelOppStatus.className = `status-badge status-${status}`;
         }
 
         // Close opportunity action (set status to Closed)
@@ -2164,7 +2155,7 @@
 
             // Also update side panel if open
             if (state.sidePanelOpen && state.selectedOpportunityIndex === index) {
-                panelOppStatus.value = 'closed';
+                updatePanelStatusBadge('closed');
             }
         }
 
@@ -2272,7 +2263,7 @@
 
             // Update side panel if this opportunity is open
             if (state.sidePanelOpen && state.selectedOpportunityIndex === state.cancelOpportunityIndex) {
-                panelOppStatus.value = 'cancelled';
+                updatePanelStatusBadge('cancelled');
                 renderCommentsInPanel(opp);
             }
 

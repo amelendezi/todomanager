@@ -388,9 +388,10 @@ Add a Cancel action button to opportunities that sets status to "Cancelled". Can
 
 ## Issue #12: Make Opportunity Status Read-Only in Side Panel
 
-**Status:** Open
+**Status:** Closed
 **Created:** 2025-12-02
 **Related Issues:** #8, #10, #11
+**Fix:** Issue-12: Replaced status dropdown with read-only badge in side panel to match automated status workflow.
 
 ### Summary
 Replace the status dropdown in the opportunity details side panel with a read-only display. Since opportunity status is now automatically managed through auto-transitions (Requested → Open when todo linked, Open → Paused when all todos complete) and list action buttons (Close, Cancel), the manual status dropdown is no longer needed and could conflict with the automated workflow.
