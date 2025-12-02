@@ -872,10 +872,9 @@
 
         // Add keyboard navigation (capture phase to intercept browser shortcuts)
         document.addEventListener('keydown', (e) => {
-            // Handle Ctrl+N to open modal (only on home page) - must be first to prevent browser default
-            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'n' && state.currentPage === 'home' && !state.modalOpen) {
+            // Handle Shift+N to open modal (only on home page)
+            if (e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && e.key.toLowerCase() === 'n' && state.currentPage === 'home' && !state.modalOpen) {
                 e.preventDefault();
-                e.stopPropagation();
                 openModal();
                 return;
             }
