@@ -281,9 +281,10 @@ Enhance the todo creation/edit modal to allow users to optionally link a todo to
 
 ## Issue #10: Opportunity Status Automation and List Actions (Close/Delete)
 
-**Status:** Open
+**Status:** Closed
 **Created:** 2025-12-02
 **Related Issues:** #8, #9
+**Fix:** Issue-10: Added auto-status Paused when all todos complete, Close/Delete action buttons with confirmation modal, and unlinks todos on delete.
 
 ### Summary
 Enhance the opportunity lifecycle management with automatic status transitions and direct list actions. When all linked todos are completed, set opportunity status to "Paused". Only Paused opportunities can be Closed. Add always-visible Close and Delete action buttons to each opportunity in the list view.

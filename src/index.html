@@ -1039,6 +1039,97 @@
             width: 12px;
             height: 12px;
         }
+
+        /* Opportunity action buttons */
+        .opportunity-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 8px;
+        }
+
+        .opp-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, opacity 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .opp-action-btn:hover:not(:disabled) {
+            background: #F0F0F0;
+        }
+
+        .opp-action-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .opp-action-btn svg {
+            width: 18px;
+            height: 18px;
+            color: #6C757D;
+            transition: color 0.2s ease;
+        }
+
+        .opp-action-btn:hover:not(:disabled) svg {
+            color: #1F1F1F;
+        }
+
+        .opp-action-btn.close-btn:hover:not(:disabled) svg {
+            color: #7B1FA2;
+        }
+
+        .opp-action-btn.delete-btn:hover:not(:disabled) svg {
+            color: #D32F2F;
+        }
+
+        /* Confirmation modal */
+        .confirm-modal-content {
+            text-align: center;
+        }
+
+        .confirm-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            color: #D32F2F;
+        }
+
+        .confirm-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1F1F1F;
+            margin-bottom: 12px;
+        }
+
+        .confirm-message {
+            font-size: 14px;
+            color: #6C757D;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .confirm-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn-danger {
+            background: #D32F2F;
+            color: #FFFFFF;
+        }
+
+        .btn-danger:hover {
+            background: #B71C1C;
+        }
     </style>
 </head>
 <body>
@@ -1314,6 +1405,24 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
+    <div id="confirm-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closeConfirmModal()"></div>
+        <div class="modal-content confirm-modal-content">
+            <svg class="confirm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <h2 class="confirm-title">Delete Opportunity?</h2>
+            <p id="confirm-message" class="confirm-message">Are you sure you want to delete this opportunity? This action cannot be undone.</p>
+            <div class="confirm-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeConfirmModal()">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDeleteOpportunity()">Delete</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Application state
         const state = {
@@ -1323,9 +1432,11 @@
             currentTab: 'home',  // 'home' or 'opportunities'
             modalOpen: false,
             opportunityModalOpen: false,
+            confirmModalOpen: false,
             sidePanelOpen: false,
             editingTodoIndex: null,  // Track which todo is being edited (null = create mode)
             selectedOpportunityIndex: null,  // Track which opportunity is open in side panel
+            deleteOpportunityIndex: null,  // Track which opportunity is pending deletion
             // Autocomplete state
             selectedOpportunityId: null,  // ID of selected opportunity for todo linking
             pendingOpportunity: null,  // New opportunity to create when saving todo
@@ -1379,6 +1490,10 @@
         const appHeader = document.getElementById('app-header');
         const tabHome = document.getElementById('tab-home');
         const tabOpportunities = document.getElementById('tab-opportunities');
+
+        // DOM Elements - Confirmation Modal
+        const confirmModal = document.getElementById('confirm-modal');
+        const confirmMessage = document.getElementById('confirm-message');
 
         // Navigation functions
         function navigateTo(page) {
@@ -1591,16 +1706,33 @@
         }
 
         // Auto-update opportunity status based on linked todos
+        // Status Flow: Requested → Open (when todo linked) → Paused (all todos complete) → Closed
         function updateOpportunityAutoStatus(opportunityId) {
             const opp = state.opportunities.find(o => o.id === opportunityId);
             if (!opp) return;
 
-            // Check if any linked todo is not completed
-            const hasActiveTodo = state.todos.some(t => t.opportunityId === opportunityId && !t.completed);
+            // Don't change closed or cancelled opportunities
+            if (opp.status === 'closed' || opp.status === 'cancelled') return;
 
-            if (hasActiveTodo && opp.status !== 'open') {
-                opp.status = 'open';
+            // Get all todos linked to this opportunity
+            const linkedTodos = state.todos.filter(t => t.opportunityId === opportunityId);
+
+            // Check if any linked todo is not completed
+            const hasActiveTodo = linkedTodos.some(t => !t.completed);
+            const hasAnyTodo = linkedTodos.length > 0;
+
+            if (hasActiveTodo) {
+                // Has non-completed todos → Open
+                if (opp.status !== 'open') {
+                    opp.status = 'open';
+                }
+            } else if (hasAnyTodo) {
+                // All todos are completed → Paused
+                if (opp.status !== 'paused') {
+                    opp.status = 'paused';
+                }
             }
+            // If no todos linked, keep current status
         }
 
         // Render functions
@@ -1672,8 +1804,19 @@
         }
 
         function toggleTodo(index) {
-            state.todos[index].completed = !state.todos[index].completed;
+            const todo = state.todos[index];
+            todo.completed = !todo.completed;
+
+            // Check and update opportunity status if linked
+            if (todo.opportunityId) {
+                updateOpportunityAutoStatus(todo.opportunityId);
+            }
+
             renderTodos();
+            // Re-render opportunities if on that tab to update status badges
+            if (state.currentTab === 'opportunities') {
+                renderOpportunities();
+            }
         }
 
         // Utility function to escape HTML
@@ -1755,16 +1898,31 @@
                 state.opportunities.forEach((opp, index) => {
                     const oppItem = document.createElement('div');
                     oppItem.className = 'opportunity-item';
-                    oppItem.onclick = () => openSidePanel(index);
 
                     const statusClass = `status-${opp.status}`;
+                    const canClose = opp.status === 'paused';
 
                     oppItem.innerHTML = `
-                        <div class="opportunity-content">
+                        <div class="opportunity-content" onclick="openSidePanel(${index})">
                             <div class="opportunity-name">${escapeHtml(opp.name)}</div>
                             ${opp.contact ? `<div class="opportunity-contact">${escapeHtml(opp.contact)}</div>` : ''}
                         </div>
                         <span class="status-badge ${statusClass}">${capitalizeFirst(opp.status)}</span>
+                        <div class="opportunity-actions">
+                            <button class="opp-action-btn close-btn" onclick="event.stopPropagation(); closeOpportunityAction(${index})" title="${canClose ? 'Close Opportunity' : 'Only Paused opportunities can be closed'}" ${canClose ? '' : 'disabled'}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </button>
+                            <button class="opp-action-btn delete-btn" onclick="event.stopPropagation(); openDeleteConfirmation(${index})" title="Delete Opportunity">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                            </button>
+                        </div>
                     `;
                     opportunityList.appendChild(oppItem);
                 });
@@ -1812,6 +1970,70 @@
 
             // Re-render list to update badge
             renderOpportunities();
+        }
+
+        // Close opportunity action (set status to Closed)
+        function closeOpportunityAction(index) {
+            const opp = state.opportunities[index];
+            if (opp.status !== 'paused') return; // Only paused can be closed
+
+            opp.status = 'closed';
+            renderOpportunities();
+
+            // Also update side panel if open
+            if (state.sidePanelOpen && state.selectedOpportunityIndex === index) {
+                panelOppStatus.value = 'closed';
+            }
+        }
+
+        // Open delete confirmation modal
+        function openDeleteConfirmation(index) {
+            state.deleteOpportunityIndex = index;
+            state.confirmModalOpen = true;
+
+            const opp = state.opportunities[index];
+            confirmMessage.textContent = `Are you sure you want to delete "${opp.name}"? This action cannot be undone.`;
+
+            confirmModal.classList.remove('hidden');
+        }
+
+        // Close confirmation modal
+        function closeConfirmModal() {
+            confirmModal.classList.add('hidden');
+            state.confirmModalOpen = false;
+            state.deleteOpportunityIndex = null;
+        }
+
+        // Confirm and execute opportunity deletion
+        function confirmDeleteOpportunity() {
+            if (state.deleteOpportunityIndex === null) return;
+
+            const oppId = state.opportunities[state.deleteOpportunityIndex].id;
+
+            // Remove opportunity link from all associated todos
+            state.todos.forEach(todo => {
+                if (todo.opportunityId === oppId) {
+                    todo.opportunityId = null;
+                }
+            });
+
+            // Remove the opportunity
+            state.opportunities.splice(state.deleteOpportunityIndex, 1);
+
+            // Close side panel if the deleted opportunity was open
+            if (state.sidePanelOpen && state.selectedOpportunityIndex === state.deleteOpportunityIndex) {
+                closeSidePanel();
+            } else if (state.sidePanelOpen && state.selectedOpportunityIndex > state.deleteOpportunityIndex) {
+                // Adjust index if needed
+                state.selectedOpportunityIndex--;
+            }
+
+            // Close confirmation modal
+            closeConfirmModal();
+
+            // Re-render both lists
+            renderOpportunities();
+            renderTodos();
         }
 
         // =============================================
@@ -2055,6 +2277,11 @@
 
             // Handle Escape key to close modals or side panel
             if (e.key === 'Escape') {
+                if (state.confirmModalOpen) {
+                    e.preventDefault();
+                    closeConfirmModal();
+                    return;
+                }
                 if (state.modalOpen) {
                     e.preventDefault();
                     closeModal();
