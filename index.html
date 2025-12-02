@@ -223,10 +223,183 @@
                 transition-duration: 0.01ms !important;
             }
         }
+
+        /* Page visibility */
+        .hidden {
+            display: none !important;
+        }
+
+        .page {
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Header styles */
+        .header {
+            height: 60px;
+            background: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #1F1F1F;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .icon-button:hover {
+            background: #F8F9FA;
+        }
+
+        .icon-button:active {
+            transform: scale(0.95);
+        }
+
+        .icon-button svg {
+            width: 24px;
+            height: 24px;
+            color: #6C757D;
+            transition: color 0.2s ease, transform 0.3s ease;
+        }
+
+        .icon-button:hover svg {
+            color: #1F1F1F;
+        }
+
+        /* Settings icon rotation on hover */
+        .icon-button[title="Settings"]:hover svg {
+            transform: rotate(90deg);
+        }
+
+        /* Main content area */
+        .main-content {
+            padding-top: 84px;
+            padding-left: 24px;
+            padding-right: 24px;
+            padding-bottom: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Todo list styles */
+        .todo-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .todo-item {
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .todo-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .todo-checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #E0E0E0;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .todo-checkbox.checked {
+            background: #00A86B;
+            border-color: #00A86B;
+        }
+
+        .todo-content {
+            flex: 1;
+        }
+
+        .todo-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1F1F1F;
+        }
+
+        /* Empty state styles */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 64px 24px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            color: #ADB5BD;
+            margin-bottom: 16px;
+        }
+
+        .empty-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #ADB5BD;
+        }
+
+        /* Home page body override */
+        #home-page {
+            background: #F5F5F5;
+        }
+
+        /* Responsive styles for home page */
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 16px;
+            }
+
+            .main-content {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Landing Page -->
+    <div id="landing-page" class="container">
         <div class="logo-container">
             <svg class="logo" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <!-- Clipboard background -->
@@ -291,24 +464,164 @@
         </div>
     </div>
 
+    <!-- Home Page -->
+    <div id="home-page" class="page hidden">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="header-title">Home</h1>
+            <div class="header-actions">
+                <button class="icon-button" onclick="openSettings()" title="Settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </button>
+                <button class="icon-button" onclick="exportTodos()" title="Export">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Todo List Container -->
+            <div id="todo-list" class="todo-list">
+                <!-- Todos will be rendered here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="empty-state">
+                <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
+                    <rect x="9" y="3" width="6" height="4" rx="1"></rect>
+                    <line x1="9" y1="12" x2="15" y2="12"></line>
+                    <line x1="9" y1="16" x2="13" y2="16"></line>
+                </svg>
+                <p class="empty-text">No Todos</p>
+            </div>
+        </main>
+    </div>
+
     <script>
+        // Application state
+        const state = {
+            todos: [],
+            currentPage: 'landing'
+        };
+
+        // DOM Elements
+        const landingPage = document.getElementById('landing-page');
+        const homePage = document.getElementById('home-page');
+        const todoList = document.getElementById('todo-list');
+        const emptyState = document.getElementById('empty-state');
+
+        // Navigation functions
+        function navigateTo(page) {
+            // Hide all pages
+            landingPage.classList.add('hidden');
+            landingPage.classList.remove('container');
+            homePage.classList.add('hidden');
+
+            // Show requested page
+            if (page === 'landing') {
+                landingPage.classList.remove('hidden');
+                landingPage.classList.add('container');
+                document.body.style.display = 'flex';
+                document.body.style.alignItems = 'center';
+                document.body.style.justifyContent = 'center';
+            } else if (page === 'home') {
+                homePage.classList.remove('hidden');
+                document.body.style.display = 'block';
+                document.body.style.alignItems = '';
+                document.body.style.justifyContent = '';
+            }
+
+            state.currentPage = page;
+            renderTodos();
+        }
+
         function startFromScratch() {
-            console.log('Starting from scratch...');
-            // Future navigation logic here
+            // Clear todos and navigate to home
+            state.todos = [];
+            navigateTo('home');
         }
 
         function continueWorking() {
-            console.log('Continue working...');
-            // Future navigation logic here
+            // Navigate to home with existing todos
+            navigateTo('home');
+        }
+
+        // Placeholder functions for header actions
+        function openSettings() {
+            // Settings functionality not implemented yet
+            console.log('Settings clicked - not implemented');
+        }
+
+        function exportTodos() {
+            // Export functionality not implemented yet
+            console.log('Export clicked - not implemented');
+        }
+
+        // Render functions
+        function renderTodos() {
+            if (state.currentPage !== 'home') return;
+
+            // Clear current list
+            todoList.innerHTML = '';
+
+            if (state.todos.length === 0) {
+                // Show empty state
+                todoList.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+            } else {
+                // Show todo list
+                todoList.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+
+                state.todos.forEach((todo, index) => {
+                    const todoItem = document.createElement('div');
+                    todoItem.className = 'todo-item';
+                    todoItem.innerHTML = `
+                        <div class="todo-checkbox ${todo.completed ? 'checked' : ''}" onclick="toggleTodo(${index})"></div>
+                        <div class="todo-content">
+                            <div class="todo-title">${escapeHtml(todo.title)}</div>
+                        </div>
+                    `;
+                    todoList.appendChild(todoItem);
+                });
+            }
+        }
+
+        function toggleTodo(index) {
+            state.todos[index].completed = !state.todos[index].completed;
+            renderTodos();
+        }
+
+        // Utility function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         // Add keyboard navigation
         document.addEventListener('keydown', (e) => {
-            if (e.key === '1') {
-                startFromScratch();
-            } else if (e.key === '2') {
-                continueWorking();
+            if (state.currentPage === 'landing') {
+                if (e.key === '1') {
+                    startFromScratch();
+                } else if (e.key === '2') {
+                    continueWorking();
+                }
             }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            navigateTo('landing');
         });
     </script>
 </body>
