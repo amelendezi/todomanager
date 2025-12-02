@@ -870,18 +870,20 @@
             return date.toLocaleDateString('en-US', options);
         }
 
-        // Add keyboard navigation
+        // Add keyboard navigation (capture phase to intercept browser shortcuts)
         document.addEventListener('keydown', (e) => {
-            // Handle Escape key to close modal
-            if (e.key === 'Escape' && state.modalOpen) {
-                closeModal();
+            // Handle Ctrl+N to open modal (only on home page) - must be first to prevent browser default
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'n' && state.currentPage === 'home' && !state.modalOpen) {
+                e.preventDefault();
+                e.stopPropagation();
+                openModal();
                 return;
             }
 
-            // Handle Ctrl+N to open modal (only on home page)
-            if ((e.ctrlKey || e.metaKey) && e.key === 'n' && state.currentPage === 'home' && !state.modalOpen) {
+            // Handle Escape key to close modal
+            if (e.key === 'Escape' && state.modalOpen) {
                 e.preventDefault();
-                openModal();
+                closeModal();
                 return;
             }
 
@@ -893,7 +895,7 @@
                     continueWorking();
                 }
             }
-        });
+        }, true);  // Use capture phase to intercept before browser handles it
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
