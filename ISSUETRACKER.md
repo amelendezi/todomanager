@@ -225,9 +225,10 @@ Create a new "Opportunity Manager" page accessible via tab navigation next to "H
 
 ## Issue #9: Link Todos to Opportunities with Autocomplete and Inline Creation
 
-**Status:** Open
+**Status:** Closed
 **Created:** 2025-12-02
 **Related Issues:** #3, #7, #8
+**Fix:** Issue-9: Added autocomplete opportunity linking in todo modal with inline creation form (slide animation) and auto-status to Open when linked.
 
 ### Summary
 Enhance the todo creation/edit modal to allow users to optionally link a todo to an opportunity. The system provides autocomplete suggestions from existing opportunities. If the user types a name that doesn't exist and presses Enter, an inline opportunity creation form slides down within the modal. The linked opportunity is displayed in the todo list view, and opportunities with at least one non-completed todo automatically have their status set to "Open".
