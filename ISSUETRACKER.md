@@ -278,3 +278,57 @@ Enhance the todo creation/edit modal to allow users to optionally link a todo to
 8. New opportunity only created when todo is saved (not on inline form close)
 
 ---
+
+## Issue #10: Opportunity Status Automation and List Actions (Close/Delete)
+
+**Status:** Open
+**Created:** 2025-12-02
+**Related Issues:** #8, #9
+
+### Summary
+Enhance the opportunity lifecycle management with automatic status transitions and direct list actions. When all linked todos are completed, set opportunity status to "Paused". Only Paused opportunities can be Closed. Add always-visible Close and Delete action buttons to each opportunity in the list view.
+
+### Requirements
+
+#### Auto-Status: Paused when All Todos Complete
+- [ ] When all todos linked to an opportunity are completed, automatically set status to "Paused"
+- [ ] Check status after each todo completion toggle
+- [ ] If a new non-completed todo is linked, revert to "Open"
+
+#### Close Action (Only from Paused)
+- [ ] Add close button (checkmark icon) to opportunity list items
+- [ ] Button always visible (not just on hover)
+- [ ] Only enabled when opportunity status is "Paused"
+- [ ] Clicking sets status to "Closed"
+- [ ] Disabled/greyed out for non-Paused opportunities
+
+#### Delete Action
+- [ ] Add delete button (trash icon) to opportunity list items
+- [ ] Button always visible (not just on hover)
+- [ ] Show confirmation dialog before deleting
+- [ ] When deleted, remove opportunity link from all associated todos (set opportunityId to null)
+- [ ] Re-render both opportunity list and todo list after deletion
+
+#### Status Flow
+```
+Requested → Open (when todo linked) → Paused (all todos complete) → Closed
+```
+
+### Technical Notes
+- Update `toggleTodo()` to check and update opportunity status
+- Add `closeOpportunity()` and `deleteOpportunity()` functions
+- Add confirmation modal for delete action
+- Update `renderOpportunities()` to include action buttons
+- Add CSS for disabled button state
+
+### Acceptance Criteria
+1. Opportunity auto-changes to "Paused" when all linked todos are completed
+2. Opportunity auto-changes back to "Open" if non-completed todo is linked
+3. Close button visible on all opportunities, only clickable when Paused
+4. Clicking Close sets status to "Closed"
+5. Delete button visible on all opportunities
+6. Delete shows confirmation dialog
+7. Deleting opportunity removes links from associated todos
+8. Todos remain after opportunity deletion but without the link
+
+---
