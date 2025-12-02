@@ -772,8 +772,19 @@
             state.modalOpen = true;
             // Reset form
             todoForm.reset();
+            // Set default due date to today
+            todoDueDateInput.value = getTodayDate();
             // Focus on description input
             setTimeout(() => todoDescriptionInput.focus(), 100);
+        }
+
+        // Get today's date in YYYY-MM-DD format for date input
+        function getTodayDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
         }
 
         function closeModal() {
