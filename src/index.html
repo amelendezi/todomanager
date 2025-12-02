@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoManager - Manage Your Tasks Efficiently</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #F5F5F5 0%, #E8E8E8 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-container {
+            margin-bottom: 48px;
+            animation: slideDown 0.8s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 24px;
+            filter: drop-shadow(0 4px 12px rgba(255, 184, 0, 0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .logo:hover {
+            animation: float 3s ease-in-out infinite, pulse 0.6s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1F1F1F;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .tagline {
+            font-size: 18px;
+            color: #6C757D;
+            margin-bottom: 64px;
+            font-weight: 400;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .option-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            animation: slideUp 0.6s ease;
+            animation-fill-mode: both;
+        }
+
+        .option-card:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .option-card:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .option-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            border-color: #FFB800;
+        }
+
+        .option-card:active {
+            transform: translateY(-2px) scale(1.01);
+        }
+
+        .option-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            background: linear-gradient(135deg, #FFB800 0%, #FFA000 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .option-card:hover .option-icon {
+            transform: rotate(5deg) scale(1.1);
+            box-shadow: 0 4px 16px rgba(255, 184, 0, 0.4);
+        }
+
+        .option-icon svg {
+            width: 36px;
+            height: 36px;
+            color: #1F1F1F;
+        }
+
+        .option-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1F1F1F;
+            margin-bottom: 8px;
+        }
+
+        .option-description {
+            font-size: 14px;
+            color: #6C757D;
+            line-height: 1.5;
+        }
+
+        .footer {
+            margin-top: 48px;
+            font-size: 14px;
+            color: #ADB5BD;
+            animation: fadeIn 0.8s ease 0.5s both;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 36px;
+            }
+
+            .tagline {
+                font-size: 16px;
+                margin-bottom: 48px;
+            }
+
+            .logo {
+                width: 100px;
+                height: 100px;
+            }
+
+            .option-card {
+                padding: 24px;
+            }
+
+            .option-title {
+                font-size: 20px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Page visibility */
+        .hidden {
+            display: none !important;
+        }
+
+        .page {
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Header styles */
+        .header {
+            height: 60px;
+            background: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #1F1F1F;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 4px;
+        }
+
+        .tab-btn {
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6C757D;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            color: #1F1F1F;
+            background: #F8F9FA;
+        }
+
+        .tab-btn.active {
+            color: #1F1F1F;
+            background: #FFB800;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .icon-button:hover {
+            background: #F8F9FA;
+        }
+
+        .icon-button:active {
+            transform: scale(0.95);
+        }
+
+        .icon-button svg {
+            width: 24px;
+            height: 24px;
+            color: #6C757D;
+            transition: color 0.2s ease, transform 0.3s ease;
+        }
+
+        .icon-button:hover svg {
+            color: #1F1F1F;
+        }
+
+        /* Settings icon rotation on hover */
+        .icon-button[title="Settings"]:hover svg {
+            transform: rotate(90deg);
+        }
+
+        /* Main content area */
+        .main-content {
+            padding-top: 84px;
+            padding-left: 24px;
+            padding-right: 24px;
+            padding-bottom: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Todo list styles */
+        .todo-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .todo-item {
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .todo-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .todo-checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #E0E0E0;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .todo-checkbox.checked {
+            background: #00A86B;
+            border-color: #00A86B;
+        }
+
+        .todo-content {
+            flex: 1;
+        }
+
+        .todo-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1F1F1F;
+        }
+
+        /* Empty state styles */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 64px 24px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            color: #ADB5BD;
+            margin-bottom: 16px;
+        }
+
+        .empty-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #ADB5BD;
+        }
+
+        /* Home page body override */
+        #home-page {
+            background: #F5F5F5;
+        }
+
+        /* Responsive styles for home page */
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 16px;
+            }
+
+            .main-content {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+        }
+
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            position: relative;
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 480px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease;
+            transform-origin: center center;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1F1F1F;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1F1F1F;
+            margin-bottom: 8px;
+        }
+
+        .form-label .required {
+            color: #DC3545;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 48px;
+            padding: 12px 16px;
+            font-size: 14px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            background: #FFFFFF;
+            color: #1F1F1F;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #FFB800;
+            box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: #ADB5BD;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #FFB800;
+            color: #1F1F1F;
+        }
+
+        .btn-primary:hover {
+            background: #E5A600;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: #F8F9FA;
+            color: #6C757D;
+        }
+
+        .btn-secondary:hover {
+            background: #E9ECEF;
+        }
+
+        /* Todo item with due date */
+        .todo-due-date {
+            font-size: 12px;
+            color: #6C757D;
+            margin-top: 4px;
+        }
+
+        .todo-due-date.overdue {
+            color: #DC3545;
+        }
+
+        .todo-item.completed .todo-title {
+            text-decoration: line-through;
+            color: #ADB5BD;
+        }
+
+        /* Checkmark icon inside checkbox */
+        .todo-checkbox.checked::after {
+            content: '';
+            display: block;
+            width: 8px;
+            height: 5px;
+            border-left: 2px solid #FFFFFF;
+            border-bottom: 2px solid #FFFFFF;
+            transform: rotate(-45deg);
+            margin: 6px auto;
+        }
+
+        /* Todo actions (edit button) */
+        .todo-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: auto;
+        }
+
+        .todo-edit-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .todo-edit-btn:hover {
+            background: #F0F0F0;
+        }
+
+        .todo-edit-btn svg {
+            width: 18px;
+            height: 18px;
+            color: #6C757D;
+            transition: color 0.2s ease;
+        }
+
+        .todo-edit-btn:hover svg {
+            color: #1F1F1F;
+        }
+
+        /* Modal responsive */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .modal-actions {
+                flex-direction: column-reverse;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* Opportunity list styles */
+        .opportunity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .opportunity-item {
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .opportunity-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .opportunity-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .opportunity-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1F1F1F;
+            margin-bottom: 4px;
+        }
+
+        .opportunity-contact {
+            font-size: 12px;
+            color: #6C757D;
+        }
+
+        /* Status badges */
+        .status-badge {
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 16px;
+            white-space: nowrap;
+        }
+
+        .status-requested {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .status-open {
+            background: #E8F5E9;
+            color: #388E3C;
+        }
+
+        .status-paused {
+            background: #FFF3E0;
+            color: #F57C00;
+        }
+
+        .status-cancelled {
+            background: #FFEBEE;
+            color: #D32F2F;
+        }
+
+        .status-closed {
+            background: #F3E5F5;
+            color: #7B1FA2;
+        }
+
+        /* Side Panel */
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 400px;
+            max-width: 100%;
+            height: 100vh;
+            background: #FFFFFF;
+            box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+            z-index: 200;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .side-panel.open {
+            transform: translateX(0);
+        }
+
+        .side-panel-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 199;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .side-panel-backdrop.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .side-panel-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #E0E0E0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .side-panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1F1F1F;
+        }
+
+        .side-panel-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .side-panel-close:hover {
+            background: #F8F9FA;
+        }
+
+        .side-panel-close svg {
+            width: 20px;
+            height: 20px;
+            color: #6C757D;
+        }
+
+        .side-panel-body {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .detail-group {
+            margin-bottom: 20px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6C757D;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: #1F1F1F;
+        }
+
+        .detail-select {
+            width: 100%;
+            height: 40px;
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            background: #FFFFFF;
+            color: #1F1F1F;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+        }
+
+        .detail-select:focus {
+            outline: none;
+            border-color: #FFB800;
+        }
+
+        /* Responsive side panel */
+        @media (max-width: 768px) {
+            .side-panel {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Landing Page -->
+    <div id="landing-page" class="container">
+        <div class="logo-container">
+            <svg class="logo" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Clipboard background -->
+                <rect x="20" y="15" width="80" height="95" rx="8" fill="#FFB800"/>
+                <rect x="25" y="20" width="70" height="85" rx="6" fill="#FFFFFF"/>
+
+                <!-- Clipboard clip -->
+                <path d="M45 10 H75 C78 10 80 12 80 15 V20 H40 V15 C40 12 42 10 45 10 Z" fill="#FFB800"/>
+                <rect x="48" y="5" width="24" height="12" rx="3" fill="#1F1F1F"/>
+
+                <!-- Checkmark items -->
+                <g opacity="0.9">
+                    <!-- First item - checked -->
+                    <circle cx="35" cy="38" r="5" fill="#00A86B"/>
+                    <path d="M33 38 L34.5 39.5 L37.5 36.5" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <rect x="45" y="36" width="45" height="4" rx="2" fill="#E0E0E0"/>
+
+                    <!-- Second item - checked -->
+                    <circle cx="35" cy="55" r="5" fill="#00A86B"/>
+                    <path d="M33 55 L34.5 56.5 L37.5 53.5" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <rect x="45" y="53" width="35" height="4" rx="2" fill="#E0E0E0"/>
+
+                    <!-- Third item - unchecked -->
+                    <circle cx="35" cy="72" r="5" fill="#E0E0E0"/>
+                    <rect x="45" y="70" width="40" height="4" rx="2" fill="#E0E0E0"/>
+
+                    <!-- Fourth item - unchecked -->
+                    <circle cx="35" cy="89" r="5" fill="#E0E0E0"/>
+                    <rect x="45" y="87" width="30" height="4" rx="2" fill="#E0E0E0"/>
+                </g>
+            </svg>
+            <h1>TodoManager</h1>
+            <p class="tagline">Organize your tasks, achieve your goals</p>
+        </div>
+
+        <div class="options-container">
+            <div class="option-card" onclick="startFromScratch()">
+                <div class="option-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </div>
+                <h2 class="option-title">Start from Scratch</h2>
+                <p class="option-description">Begin fresh with a clean workspace and create your first task list</p>
+            </div>
+
+            <div class="option-card" onclick="continueWorking()">
+                <div class="option-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 11l3 3L22 4"></path>
+                        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+                    </svg>
+                </div>
+                <h2 class="option-title">Continue Working</h2>
+                <p class="option-description">Pick up where you left off and manage your existing tasks</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 TodoManager. Built with care.</p>
+        </div>
+    </div>
+
+    <!-- App Header (shared across pages) -->
+    <header id="app-header" class="header hidden">
+        <div class="header-left">
+            <nav class="tab-nav">
+                <button id="tab-home" class="tab-btn active" onclick="switchTab('home')">Home</button>
+                <button id="tab-opportunities" class="tab-btn" onclick="switchTab('opportunities')">Opportunities</button>
+            </nav>
+        </div>
+        <div class="header-actions">
+            <button class="icon-button" onclick="openSettings()" title="Settings">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+            </button>
+            <button class="icon-button" onclick="exportData()" title="Export">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Home Page -->
+    <div id="home-page" class="page hidden">
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Todo List Container -->
+            <div id="todo-list" class="todo-list">
+                <!-- Todos will be rendered here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="empty-state">
+                <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
+                    <rect x="9" y="3" width="6" height="4" rx="1"></rect>
+                    <line x1="9" y1="12" x2="15" y2="12"></line>
+                    <line x1="9" y1="16" x2="13" y2="16"></line>
+                </svg>
+                <p class="empty-text">No Todos</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Opportunities Page -->
+    <div id="opportunities-page" class="page hidden">
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Opportunity List Container -->
+            <div id="opportunity-list" class="opportunity-list">
+                <!-- Opportunities will be rendered here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="opportunity-empty-state" class="empty-state">
+                <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <p class="empty-text">No Opportunities</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Side Panel for Opportunity Details -->
+    <div id="side-panel-backdrop" class="side-panel-backdrop" onclick="closeSidePanel()"></div>
+    <div id="side-panel" class="side-panel">
+        <div class="side-panel-header">
+            <h2 class="side-panel-title">Opportunity Details</h2>
+            <button class="side-panel-close" onclick="closeSidePanel()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="side-panel-body">
+            <div class="detail-group">
+                <div class="detail-label">Name</div>
+                <div id="panel-opp-name" class="detail-value"></div>
+            </div>
+            <div class="detail-group">
+                <div class="detail-label">Description</div>
+                <div id="panel-opp-description" class="detail-value"></div>
+            </div>
+            <div class="detail-group">
+                <div class="detail-label">Start Date</div>
+                <div id="panel-opp-date" class="detail-value"></div>
+            </div>
+            <div class="detail-group">
+                <div class="detail-label">Contact</div>
+                <div id="panel-opp-contact" class="detail-value"></div>
+            </div>
+            <div class="detail-group">
+                <div class="detail-label">Status</div>
+                <select id="panel-opp-status" class="detail-select" onchange="updateOpportunityStatus()">
+                    <option value="requested">Requested</option>
+                    <option value="open">Open</option>
+                    <option value="paused">Paused</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="closed">Closed</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Todo Modal -->
+    <div id="todo-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <h2 id="modal-title" class="modal-title">New Todo</h2>
+            <form id="todo-form" onsubmit="saveTodo(event)">
+                <div class="form-group">
+                    <label for="todo-description" class="form-label">Description <span class="required">*</span></label>
+                    <input type="text" id="todo-description" class="form-input" placeholder="What needs to be done?" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="todo-due-date" class="form-label">Due Date</label>
+                    <input type="date" id="todo-due-date" class="form-input">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create Opportunity Modal -->
+    <div id="opportunity-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closeOpportunityModal()"></div>
+        <div class="modal-content">
+            <h2 class="modal-title">New Opportunity</h2>
+            <form id="opportunity-form" onsubmit="saveOpportunity(event)">
+                <div class="form-group">
+                    <label for="opp-name" class="form-label">Name <span class="required">*</span></label>
+                    <input type="text" id="opp-name" class="form-input" placeholder="Opportunity name" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="opp-description" class="form-label">Description</label>
+                    <input type="text" id="opp-description" class="form-input" placeholder="Brief description">
+                </div>
+                <div class="form-group">
+                    <label for="opp-start-date" class="form-label">Start Date</label>
+                    <input type="date" id="opp-start-date" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="opp-contact" class="form-label">Contact</label>
+                    <input type="text" id="opp-contact" class="form-input" placeholder="Contact person">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeOpportunityModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Application state
+        const state = {
+            todos: [],
+            opportunities: [],
+            currentPage: 'landing',
+            currentTab: 'home',  // 'home' or 'opportunities'
+            modalOpen: false,
+            opportunityModalOpen: false,
+            sidePanelOpen: false,
+            editingTodoIndex: null,  // Track which todo is being edited (null = create mode)
+            selectedOpportunityIndex: null  // Track which opportunity is open in side panel
+        };
+
+        // DOM Elements - Landing and Home
+        const landingPage = document.getElementById('landing-page');
+        const homePage = document.getElementById('home-page');
+        const todoList = document.getElementById('todo-list');
+        const emptyState = document.getElementById('empty-state');
+        const todoModal = document.getElementById('todo-modal');
+        const todoForm = document.getElementById('todo-form');
+        const todoDescriptionInput = document.getElementById('todo-description');
+        const todoDueDateInput = document.getElementById('todo-due-date');
+        const modalTitle = document.getElementById('modal-title');
+
+        // DOM Elements - Opportunities
+        const opportunitiesPage = document.getElementById('opportunities-page');
+        const opportunityList = document.getElementById('opportunity-list');
+        const opportunityEmptyState = document.getElementById('opportunity-empty-state');
+        const opportunityModal = document.getElementById('opportunity-modal');
+        const opportunityForm = document.getElementById('opportunity-form');
+        const oppNameInput = document.getElementById('opp-name');
+        const oppDescriptionInput = document.getElementById('opp-description');
+        const oppStartDateInput = document.getElementById('opp-start-date');
+        const oppContactInput = document.getElementById('opp-contact');
+
+        // DOM Elements - Side Panel
+        const sidePanel = document.getElementById('side-panel');
+        const sidePanelBackdrop = document.getElementById('side-panel-backdrop');
+        const panelOppName = document.getElementById('panel-opp-name');
+        const panelOppDescription = document.getElementById('panel-opp-description');
+        const panelOppDate = document.getElementById('panel-opp-date');
+        const panelOppContact = document.getElementById('panel-opp-contact');
+        const panelOppStatus = document.getElementById('panel-opp-status');
+
+        // DOM Elements - Header and Tabs
+        const appHeader = document.getElementById('app-header');
+        const tabHome = document.getElementById('tab-home');
+        const tabOpportunities = document.getElementById('tab-opportunities');
+
+        // Navigation functions
+        function navigateTo(page) {
+            // Hide all pages
+            landingPage.classList.add('hidden');
+            landingPage.classList.remove('container');
+            homePage.classList.add('hidden');
+            opportunitiesPage.classList.add('hidden');
+            appHeader.classList.add('hidden');
+
+            // Show requested page
+            if (page === 'landing') {
+                landingPage.classList.remove('hidden');
+                landingPage.classList.add('container');
+                document.body.style.display = 'flex';
+                document.body.style.alignItems = 'center';
+                document.body.style.justifyContent = 'center';
+            } else if (page === 'app') {
+                // Show app with header and current tab
+                appHeader.classList.remove('hidden');
+                document.body.style.display = 'block';
+                document.body.style.alignItems = '';
+                document.body.style.justifyContent = '';
+                switchTab(state.currentTab);
+            }
+
+            state.currentPage = page;
+        }
+
+        // Tab switching function
+        function switchTab(tab) {
+            state.currentTab = tab;
+
+            // Update tab buttons
+            tabHome.classList.toggle('active', tab === 'home');
+            tabOpportunities.classList.toggle('active', tab === 'opportunities');
+
+            // Show/hide pages
+            homePage.classList.toggle('hidden', tab !== 'home');
+            opportunitiesPage.classList.toggle('hidden', tab !== 'opportunities');
+
+            // Render content
+            if (tab === 'home') {
+                renderTodos();
+            } else if (tab === 'opportunities') {
+                renderOpportunities();
+            }
+        }
+
+        function startFromScratch() {
+            // Clear data and navigate to app
+            state.todos = [];
+            state.opportunities = [];
+            state.currentTab = 'home';
+            navigateTo('app');
+        }
+
+        function continueWorking() {
+            // Navigate to app with existing data
+            navigateTo('app');
+        }
+
+        // Placeholder functions for header actions
+        function openSettings() {
+            // Settings functionality not implemented yet
+            console.log('Settings clicked - not implemented');
+        }
+
+        function exportData() {
+            // Export functionality not implemented yet
+            console.log('Export clicked - not implemented');
+        }
+
+        // Modal functions
+        function openModal(todoIndex = null) {
+            todoModal.classList.remove('hidden');
+            state.modalOpen = true;
+            state.editingTodoIndex = todoIndex;
+
+            // Reset form
+            todoForm.reset();
+
+            if (todoIndex !== null) {
+                // Edit mode - populate with existing todo data
+                const todo = state.todos[todoIndex];
+                modalTitle.textContent = 'Edit Todo';
+                todoDescriptionInput.value = todo.title;
+                todoDueDateInput.value = todo.dueDate || '';
+            } else {
+                // Create mode
+                modalTitle.textContent = 'New Todo';
+                // Set default due date to today
+                todoDueDateInput.value = getTodayDate();
+            }
+
+            // Focus on description input
+            setTimeout(() => todoDescriptionInput.focus(), 100);
+        }
+
+        // Edit a todo - opens modal in edit mode
+        function editTodo(index) {
+            openModal(index);
+        }
+
+        // Get today's date in YYYY-MM-DD format for date input
+        function getTodayDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function closeModal() {
+            todoModal.classList.add('hidden');
+            state.modalOpen = false;
+            state.editingTodoIndex = null;
+            todoForm.reset();
+        }
+
+        // Generate unique ID
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Save todo (handles both create and update)
+        function saveTodo(event) {
+            event.preventDefault();
+
+            const description = todoDescriptionInput.value.trim();
+            const dueDate = todoDueDateInput.value;
+
+            if (!description) return;
+
+            if (state.editingTodoIndex !== null) {
+                // Update existing todo
+                const todo = state.todos[state.editingTodoIndex];
+                todo.title = description;
+                todo.dueDate = dueDate || null;
+                // Preserve id, completed, and createdAt
+            } else {
+                // Create new todo
+                const newTodo = {
+                    id: generateId(),
+                    title: description,
+                    dueDate: dueDate || null,
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                };
+                state.todos.push(newTodo);
+            }
+
+            closeModal();
+            renderTodos();
+        }
+
+        // Render functions
+        function renderTodos() {
+            if (state.currentPage !== 'app' || state.currentTab !== 'home') return;
+
+            // Clear current list
+            todoList.innerHTML = '';
+
+            if (state.todos.length === 0) {
+                // Show empty state
+                todoList.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+            } else {
+                // Show todo list
+                todoList.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+
+                state.todos.forEach((todo, index) => {
+                    const todoItem = document.createElement('div');
+                    todoItem.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+
+                    // Format due date
+                    let dueDateHtml = '';
+                    if (todo.dueDate) {
+                        const dueDate = new Date(todo.dueDate);
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        const isOverdue = dueDate < today && !todo.completed;
+                        dueDateHtml = `<div class="todo-due-date ${isOverdue ? 'overdue' : ''}">Due: ${formatDate(todo.dueDate)}</div>`;
+                    }
+
+                    todoItem.innerHTML = `
+                        <div class="todo-checkbox ${todo.completed ? 'checked' : ''}" onclick="toggleTodo(${index})"></div>
+                        <div class="todo-content">
+                            <div class="todo-title">${escapeHtml(todo.title)}</div>
+                            ${dueDateHtml}
+                        </div>
+                        <div class="todo-actions">
+                            <button class="todo-edit-btn" onclick="editTodo(${index})" title="Edit">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                    todoList.appendChild(todoItem);
+                });
+            }
+        }
+
+        function toggleTodo(index) {
+            state.todos[index].completed = !state.todos[index].completed;
+            renderTodos();
+        }
+
+        // Utility function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Opportunity Modal functions
+        function openOpportunityModal() {
+            opportunityModal.classList.remove('hidden');
+            state.opportunityModalOpen = true;
+
+            // Reset form
+            opportunityForm.reset();
+            // Set default start date to today
+            oppStartDateInput.value = getTodayDate();
+
+            // Focus on name input
+            setTimeout(() => oppNameInput.focus(), 100);
+        }
+
+        function closeOpportunityModal() {
+            opportunityModal.classList.add('hidden');
+            state.opportunityModalOpen = false;
+            opportunityForm.reset();
+        }
+
+        // Save opportunity
+        function saveOpportunity(event) {
+            event.preventDefault();
+
+            const name = oppNameInput.value.trim();
+            const description = oppDescriptionInput.value.trim();
+            const startDate = oppStartDateInput.value;
+            const contact = oppContactInput.value.trim();
+
+            if (!name) return;
+
+            const newOpportunity = {
+                id: generateId(),
+                name: name,
+                description: description || null,
+                startDate: startDate || getTodayDate(),
+                contact: contact || null,
+                status: 'requested',  // Default status
+                createdAt: new Date().toISOString()
+            };
+
+            state.opportunities.push(newOpportunity);
+            closeOpportunityModal();
+            renderOpportunities();
+        }
+
+        // Render opportunities list
+        function renderOpportunities() {
+            if (state.currentPage !== 'app' || state.currentTab !== 'opportunities') return;
+
+            // Clear current list
+            opportunityList.innerHTML = '';
+
+            if (state.opportunities.length === 0) {
+                // Show empty state
+                opportunityList.classList.add('hidden');
+                opportunityEmptyState.classList.remove('hidden');
+            } else {
+                // Show opportunity list
+                opportunityList.classList.remove('hidden');
+                opportunityEmptyState.classList.add('hidden');
+
+                state.opportunities.forEach((opp, index) => {
+                    const oppItem = document.createElement('div');
+                    oppItem.className = 'opportunity-item';
+                    oppItem.onclick = () => openSidePanel(index);
+
+                    const statusClass = `status-${opp.status}`;
+
+                    oppItem.innerHTML = `
+                        <div class="opportunity-content">
+                            <div class="opportunity-name">${escapeHtml(opp.name)}</div>
+                            ${opp.contact ? `<div class="opportunity-contact">${escapeHtml(opp.contact)}</div>` : ''}
+                        </div>
+                        <span class="status-badge ${statusClass}">${capitalizeFirst(opp.status)}</span>
+                    `;
+                    opportunityList.appendChild(oppItem);
+                });
+            }
+        }
+
+        // Capitalize first letter
+        function capitalizeFirst(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Side Panel functions
+        function openSidePanel(index) {
+            state.selectedOpportunityIndex = index;
+            state.sidePanelOpen = true;
+
+            const opp = state.opportunities[index];
+
+            // Populate panel
+            panelOppName.textContent = opp.name;
+            panelOppDescription.textContent = opp.description || 'No description';
+            panelOppDate.textContent = opp.startDate ? formatDate(opp.startDate) : 'Not set';
+            panelOppContact.textContent = opp.contact || 'Not set';
+            panelOppStatus.value = opp.status;
+
+            // Show panel
+            sidePanel.classList.add('open');
+            sidePanelBackdrop.classList.add('open');
+        }
+
+        function closeSidePanel() {
+            state.sidePanelOpen = false;
+            state.selectedOpportunityIndex = null;
+
+            sidePanel.classList.remove('open');
+            sidePanelBackdrop.classList.remove('open');
+        }
+
+        // Update opportunity status from side panel
+        function updateOpportunityStatus() {
+            if (state.selectedOpportunityIndex === null) return;
+
+            const newStatus = panelOppStatus.value;
+            state.opportunities[state.selectedOpportunityIndex].status = newStatus;
+
+            // Re-render list to update badge
+            renderOpportunities();
+        }
+
+        // Add keyboard navigation (capture phase to intercept browser shortcuts)
+        document.addEventListener('keydown', (e) => {
+            // Skip if any modal is open and it's not Escape
+            const anyModalOpen = state.modalOpen || state.opportunityModalOpen;
+
+            // Handle Shift+N to open todo modal (only on home tab)
+            if (e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && e.key.toLowerCase() === 'n' &&
+                state.currentPage === 'app' && state.currentTab === 'home' && !anyModalOpen) {
+                e.preventDefault();
+                openModal();
+                return;
+            }
+
+            // Handle Shift+N to open opportunity modal (only on opportunities tab)
+            if (e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && e.key.toLowerCase() === 'n' &&
+                state.currentPage === 'app' && state.currentTab === 'opportunities' && !anyModalOpen) {
+                e.preventDefault();
+                openOpportunityModal();
+                return;
+            }
+
+            // Handle Escape key to close modals or side panel
+            if (e.key === 'Escape') {
+                if (state.modalOpen) {
+                    e.preventDefault();
+                    closeModal();
+                    return;
+                }
+                if (state.opportunityModalOpen) {
+                    e.preventDefault();
+                    closeOpportunityModal();
+                    return;
+                }
+                if (state.sidePanelOpen) {
+                    e.preventDefault();
+                    closeSidePanel();
+                    return;
+                }
+            }
+
+            // Landing page keyboard shortcuts
+            if (state.currentPage === 'landing') {
+                if (e.key === '1') {
+                    startFromScratch();
+                } else if (e.key === '2') {
+                    continueWorking();
+                }
+            }
+        }, true);  // Use capture phase to intercept before browser handles it
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            navigateTo('landing');
+        });
+    </script>
+</body>
+</html>
