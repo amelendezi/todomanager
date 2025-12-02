@@ -417,9 +417,10 @@ Replace the status dropdown in the opportunity details side panel with a read-on
 
 ## Issue #13: Add Comment Input to Opportunity Side Panel
 
-**Status:** Open
+**Status:** Closed
 **Created:** 2025-12-02
 **Related Issues:** #11
+**Fix:** Issue-13: Added textarea and button in side panel to allow users to add standard comments to opportunities.
 
 ### Summary
 Add a textarea input in the Comments section of the opportunity side panel, allowing users to manually add standard comments. This extends the comments system introduced in Issue #11 (which only added cancellation comments) to support user-added notes.

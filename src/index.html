@@ -1208,6 +1208,60 @@
             font-style: italic;
         }
 
+        /* Comment input area */
+        .comment-input-area {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .comment-textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px 12px;
+            font-size: 13px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            background: #FFFFFF;
+            color: #1F1F1F;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .comment-textarea:focus {
+            outline: none;
+            border-color: #FFB800;
+            box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.2);
+        }
+
+        .comment-textarea::placeholder {
+            color: #ADB5BD;
+        }
+
+        .comment-submit-btn {
+            margin-top: 8px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            background: #FFB800;
+            color: #1F1F1F;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .comment-submit-btn:hover {
+            background: #E5A600;
+        }
+
+        .comment-submit-btn:disabled {
+            background: #E0E0E0;
+            color: #ADB5BD;
+            cursor: not-allowed;
+        }
+
         /* Cancel modal with textarea */
         .cancel-modal-content {
             text-align: left;
@@ -1438,6 +1492,11 @@
                 <div id="panel-comments" class="comments-list">
                     <!-- Comments will be rendered here -->
                 </div>
+                <!-- Comment Input Area -->
+                <div class="comment-input-area">
+                    <textarea id="comment-input" class="comment-textarea" placeholder="Add a comment..."></textarea>
+                    <button type="button" class="comment-submit-btn" onclick="addComment()">Add Comment</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1658,6 +1717,7 @@
 
         // DOM Elements - Comments
         const panelComments = document.getElementById('panel-comments');
+        const commentInput = document.getElementById('comment-input');
 
         // Navigation functions
         function navigateTo(page) {
@@ -2307,6 +2367,34 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        // Add a new comment to the current opportunity
+        function addComment() {
+            if (state.selectedOpportunityIndex === null) return;
+
+            const text = commentInput.value.trim();
+            if (!text) return;
+
+            const opp = state.opportunities[state.selectedOpportunityIndex];
+
+            // Initialize comments array if not exists
+            if (!opp.comments) {
+                opp.comments = [];
+            }
+
+            // Add new standard comment
+            opp.comments.push({
+                text: text,
+                timestamp: new Date().toISOString(),
+                type: 'standard'
+            });
+
+            // Clear input
+            commentInput.value = '';
+
+            // Re-render comments
+            renderCommentsInPanel(opp);
         }
 
         // =============================================
