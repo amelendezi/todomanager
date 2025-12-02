@@ -578,3 +578,95 @@ Add a visual hint text "Press Left-Shift + N to create new items" to help users 
 6. Old shortcuts (Ctrl+N, Shift+N) no longer work
 
 ---
+
+## Issue #17: Add People Management Page with Centralized Contacts and Roles
+
+**Status:** Closed
+**Created:** 2025-12-02
+**Related Issues:** #8, #9, #1
+**Fix:** Issue-17: Added People management page via Settings icon with Person/Role CRUD, role autocomplete with auto-creation, Contact autocomplete in Opportunity modal with inline person creation form, and data migration for existing contacts.
+
+### Summary
+Create a People management page accessible via the Settings icon. This provides a centralized repository for managing People (contacts) and their Roles. The system integrates with the Opportunity Contact field using autocomplete and inline creation, following the same pattern established in Issue #9 for linking Todos to Opportunities.
+
+### Requirements
+
+#### People Data Model
+- **ID**: Auto-generated unique ID (hidden)
+- **Name**: Required text field
+- **Role**: Optional, links to Role record (with autocomplete)
+
+#### Role Data Model
+- **ID**: Auto-generated unique ID (hidden)
+- **Name**: Required text field (unique)
+
+#### People Page (Accessed via Settings Icon)
+- [ ] Clicking Settings icon opens People management page
+- [ ] List view showing all people with Name and Role
+- [ ] Empty state with "No People" text and shortcut hint
+- [ ] Shift+N opens create person modal
+
+#### Create Person Modal
+- [ ] Modal with Name (required) and Role (optional) fields
+- [ ] Role field has autocomplete from existing roles
+- [ ] If typed role doesn't exist and user presses Enter, create new role automatically
+- [ ] Save creates person and closes modal
+- [ ] Cancel/Escape closes without saving
+
+#### Edit Person
+- [ ] Edit icon (pencil) on each person in list
+- [ ] Opens modal in edit mode with pre-populated fields
+- [ ] Can change name and role
+
+#### Delete Person
+- [ ] Delete icon (trash) on each person in list
+- [ ] Show confirmation dialog before deleting
+- [ ] When deleted, update any Opportunities referencing this person
+
+#### Role Management (Within People Page)
+- [ ] Roles auto-created when typing non-existing role in person modal
+- [ ] Simple list display (just names)
+- [ ] Consider showing role list in a section on People page
+
+#### Opportunity Contact Integration
+- [ ] Replace Contact text input with autocomplete field
+- [ ] As user types, show dropdown with matching people
+- [ ] Filter matches case-insensitively by person name
+- [ ] Clicking a suggestion selects it
+
+#### Inline Person Creation (in Opportunity Modal)
+- [ ] If user types a name not in list and presses Enter, slide down inline creation form
+- [ ] Animate with slide-down effect (0.3s ease) - same as Issue #9
+- [ ] Inline form includes: Name (pre-filled), Role (with autocomplete)
+- [ ] New person is created when opportunity is saved
+- [ ] Inline form can be collapsed/cancelled
+
+#### Data Migration
+- [ ] On first load, migrate existing Contact text values to People records
+- [ ] Create Person records for each unique Contact name
+- [ ] Update Opportunity records to reference Person ID instead of text
+- [ ] Handle duplicates gracefully (case-insensitive matching)
+
+### Technical Notes
+- Add `people` and `roles` arrays to state
+- Create People page HTML (similar structure to Todo's/Opportunities)
+- Add Settings icon click handler to show People page
+- Modify Opportunity modal Contact field to use autocomplete
+- Add inline person creation form (reuse pattern from Issue #9)
+- Implement migration logic in initialization
+- Update `renderOpportunities()` to display person name from linked record
+
+### Acceptance Criteria
+1. Settings icon opens People management page
+2. People list shows Name and Role for each person
+3. Shift+N opens create person modal with name and role fields
+4. Role field autocompletes from existing roles
+5. Typing new role and pressing Enter creates the role
+6. Edit and Delete actions work on people
+7. Opportunity Contact field has autocomplete with existing people
+8. Typing non-existing contact and pressing Enter shows inline person creation form
+9. Inline form has name (pre-filled) and role (autocomplete) fields
+10. Existing Contact values are migrated to People records
+11. Opportunities display linked person's name correctly
+
+---

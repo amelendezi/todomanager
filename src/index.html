@@ -1375,6 +1375,167 @@
         .btn-warning:hover {
             background: #E65100;
         }
+
+        /* People page styles */
+        .people-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .person-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .person-item:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        .person-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .person-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1F1F1F;
+            margin-bottom: 4px;
+        }
+
+        .person-role {
+            font-size: 13px;
+            color: #6C757D;
+        }
+
+        .person-role-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: 500;
+            color: #6C757D;
+            background: #F5F5F5;
+            border-radius: 12px;
+        }
+
+        .person-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        /* Roles section */
+        .roles-section {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .roles-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #6C757D;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .roles-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .role-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            font-size: 13px;
+            color: #1F1F1F;
+            background: #F5F5F5;
+            border-radius: 16px;
+        }
+
+        /* Inline person creation form */
+        .inline-person-form {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+            background: #F8F9FA;
+            border-radius: 8px;
+            margin-top: 0;
+            padding: 0 16px;
+        }
+
+        .inline-person-form.open {
+            max-height: 200px;
+            padding: 16px;
+            margin-top: 12px;
+        }
+
+        .inline-person-form .form-group {
+            margin-bottom: 12px;
+        }
+
+        .inline-person-form .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .inline-person-form .form-label {
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .inline-person-form .form-input {
+            height: 40px;
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+
+        .inline-person-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .inline-person-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1F1F1F;
+        }
+
+        .inline-person-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .inline-person-actions .btn {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Contact badge in opportunity list */
+        .opp-contact-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: 500;
+            color: #1976D2;
+            background: #E3F2FD;
+            border-radius: 12px;
+        }
     </style>
 </head>
 <body>
@@ -1528,6 +1689,40 @@
         </main>
     </div>
 
+    <!-- People Page -->
+    <div id="people-page" class="page hidden">
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Floating shortcut hint (shown when items exist) -->
+            <p id="people-shortcut-hint-floating" class="shortcut-hint-floating hidden">Press Shift + N to create new items</p>
+
+            <!-- People List Container -->
+            <div id="people-list" class="people-list">
+                <!-- People will be rendered here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="people-empty-state" class="empty-state">
+                <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <p class="empty-text">No People</p>
+                <p class="shortcut-hint">Press Shift + N to create new items</p>
+            </div>
+
+            <!-- Roles Section -->
+            <div id="roles-section" class="roles-section hidden">
+                <h3 class="roles-title">Roles</h3>
+                <div id="roles-list" class="roles-list">
+                    <!-- Roles will be rendered here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
     <!-- Side Panel for Opportunity Details -->
     <div id="side-panel-backdrop" class="side-panel-backdrop" onclick="closeSidePanel()"></div>
     <div id="side-panel" class="side-panel">
@@ -1661,7 +1856,31 @@
                 </div>
                 <div class="form-group">
                     <label for="opp-contact" class="form-label">Contact</label>
-                    <input type="text" id="opp-contact" class="form-input" placeholder="Contact person">
+                    <div class="autocomplete-wrapper">
+                        <input type="text" id="opp-contact" class="form-input" placeholder="Type to search or create person..." autocomplete="off">
+                        <button type="button" id="opp-contact-clear" class="autocomplete-clear" onclick="clearOppContact()">×</button>
+                        <div id="contact-dropdown" class="autocomplete-dropdown">
+                            <!-- Contact dropdown items will be rendered here -->
+                        </div>
+                    </div>
+                    <!-- Inline Person Creation Form -->
+                    <div id="inline-person-form" class="inline-person-form">
+                        <div class="inline-person-header">
+                            <span class="inline-person-title">Create New Person</span>
+                            <div class="inline-person-actions">
+                                <button type="button" class="btn btn-secondary" onclick="cancelInlinePerson()">Cancel</button>
+                                <button type="button" class="btn btn-primary" onclick="confirmInlinePerson()">Add</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inline-person-name" class="form-label">Name</label>
+                            <input type="text" id="inline-person-name" class="form-input" placeholder="Person's name">
+                        </div>
+                        <div class="form-group">
+                            <label for="inline-person-role" class="form-label">Role</label>
+                            <input type="text" id="inline-person-role" class="form-input" placeholder="Person's role">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeOpportunityModal()">Cancel</button>
@@ -1711,28 +1930,86 @@
         </div>
     </div>
 
+    <!-- Person Modal -->
+    <div id="person-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closePersonModal()"></div>
+        <div class="modal-content">
+            <h2 id="person-modal-title" class="modal-title">New Person</h2>
+            <form id="person-form" onsubmit="savePerson(event)">
+                <div class="form-group">
+                    <label for="person-name" class="form-label">Name <span class="required">*</span></label>
+                    <input type="text" id="person-name" class="form-input" placeholder="Person's name" required>
+                </div>
+                <div class="form-group">
+                    <label for="person-role" class="form-label">Role</label>
+                    <div class="autocomplete-wrapper">
+                        <input type="text" id="person-role" class="form-input" placeholder="Type to search or create role..." autocomplete="off">
+                        <button type="button" id="person-role-clear" class="autocomplete-clear" onclick="clearPersonRole()">×</button>
+                        <div id="role-dropdown" class="autocomplete-dropdown">
+                            <!-- Role dropdown items will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closePersonModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Person Confirmation Modal -->
+    <div id="delete-person-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closeDeletePersonModal()"></div>
+        <div class="modal-content confirm-modal-content">
+            <svg class="confirm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            <h2 class="modal-title">Delete Person</h2>
+            <p id="delete-person-name" style="text-align: center; color: #6C757D; margin-bottom: 20px;"></p>
+            <p style="text-align: center; margin-bottom: 20px;">Are you sure you want to delete this person? This will remove them from any linked opportunities.</p>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeDeletePersonModal()">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDeletePerson()">Delete</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Application state
         const state = {
             todos: [],
             opportunities: [],
+            people: [],
+            roles: [],
             currentPage: 'landing',
-            currentTab: 'home',  // 'home' or 'opportunities'
+            currentTab: 'home',  // 'home', 'opportunities', or 'people'
             modalOpen: false,
             opportunityModalOpen: false,
+            personModalOpen: false,
             confirmModalOpen: false,
             cancelModalOpen: false,
             sidePanelOpen: false,
             editingTodoIndex: null,  // Track which todo is being edited (null = create mode)
+            editingPersonIndex: null,  // Track which person is being edited (null = create mode)
             selectedOpportunityIndex: null,  // Track which opportunity is open in side panel
             deleteOpportunityIndex: null,  // Track which opportunity is pending deletion
+            deletePersonIndex: null,  // Track which person is pending deletion
             cancelOpportunityIndex: null,  // Track which opportunity is pending cancellation
             // Autocomplete state
             selectedOpportunityId: null,  // ID of selected opportunity for todo linking
+            selectedPersonId: null,  // ID of selected person for opportunity contact
             pendingOpportunity: null,  // New opportunity to create when saving todo
+            pendingPerson: null,  // New person to create when saving opportunity
             autocompleteOpen: false,
             autocompleteHighlightIndex: -1,
+            roleAutocompleteOpen: false,
+            roleAutocompleteHighlightIndex: -1,
+            contactAutocompleteOpen: false,
+            contactAutocompleteHighlightIndex: -1,
             inlineOppFormOpen: false,
+            inlinePersonFormOpen: false,
             showArchived: false
         };
 
@@ -1769,6 +2046,11 @@
         const oppDescriptionInput = document.getElementById('opp-description');
         const oppStartDateInput = document.getElementById('opp-start-date');
         const oppContactInput = document.getElementById('opp-contact');
+        const oppContactClear = document.getElementById('opp-contact-clear');
+        const contactDropdown = document.getElementById('contact-dropdown');
+        const inlinePersonForm = document.getElementById('inline-person-form');
+        const inlinePersonName = document.getElementById('inline-person-name');
+        const inlinePersonRole = document.getElementById('inline-person-role');
 
         // DOM Elements - Side Panel
         const sidePanel = document.getElementById('side-panel');
@@ -1800,6 +2082,27 @@
         // DOM Elements - Archive Toggle
         const showArchivedToggle = document.getElementById('show-archived-toggle');
 
+        // DOM Elements - People
+        const peoplePage = document.getElementById('people-page');
+        const peopleList = document.getElementById('people-list');
+        const peopleEmptyState = document.getElementById('people-empty-state');
+        const peopleShortcutHintFloating = document.getElementById('people-shortcut-hint-floating');
+        const rolesSection = document.getElementById('roles-section');
+        const rolesList = document.getElementById('roles-list');
+
+        // DOM Elements - Person Modal
+        const personModal = document.getElementById('person-modal');
+        const personModalTitle = document.getElementById('person-modal-title');
+        const personForm = document.getElementById('person-form');
+        const personNameInput = document.getElementById('person-name');
+        const personRoleInput = document.getElementById('person-role');
+        const personRoleClear = document.getElementById('person-role-clear');
+        const roleDropdown = document.getElementById('role-dropdown');
+
+        // DOM Elements - Delete Person Modal
+        const deletePersonModal = document.getElementById('delete-person-modal');
+        const deletePersonName = document.getElementById('delete-person-name');
+
         // Navigation functions
         function navigateTo(page) {
             // Hide all pages
@@ -1807,6 +2110,7 @@
             landingPage.classList.remove('container');
             homePage.classList.add('hidden');
             opportunitiesPage.classList.add('hidden');
+            peoplePage.classList.add('hidden');
             appHeader.classList.add('hidden');
 
             // Show requested page
@@ -1839,13 +2143,21 @@
             // Show/hide pages
             homePage.classList.toggle('hidden', tab !== 'home');
             opportunitiesPage.classList.toggle('hidden', tab !== 'opportunities');
+            peoplePage.classList.toggle('hidden', tab !== 'people');
 
             // Render content
             if (tab === 'home') {
                 renderTodos();
             } else if (tab === 'opportunities') {
                 renderOpportunities();
+            } else if (tab === 'people') {
+                renderPeople();
             }
+        }
+
+        // Open Settings (People page)
+        function openSettings() {
+            switchTab('people');
         }
 
         function startFromScratch() {
@@ -1862,14 +2174,14 @@
         }
 
         // Placeholder functions for header actions
-        function openSettings() {
-            // Settings functionality not implemented yet
-            console.log('Settings clicked - not implemented');
-        }
-
         function exportData() {
             // Export functionality not implemented yet
             console.log('Export clicked - not implemented');
+        }
+
+        // Placeholder for data persistence
+        function saveData() {
+            // Data persistence not implemented yet - data lives in memory
         }
 
         // Modal functions
@@ -2152,6 +2464,16 @@
             // Set default start date to today
             oppStartDateInput.value = getTodayDate();
 
+            // Reset contact autocomplete state
+            state.selectedPersonId = null;
+            state.pendingPerson = null;
+            state.contactAutocompleteOpen = false;
+            state.contactAutocompleteHighlightIndex = -1;
+            state.inlinePersonFormOpen = false;
+            oppContactClear.classList.remove('visible');
+            contactDropdown.classList.remove('open');
+            inlinePersonForm.classList.remove('open');
+
             // Focus on name input
             setTimeout(() => oppNameInput.focus(), 100);
         }
@@ -2159,7 +2481,13 @@
         function closeOpportunityModal() {
             opportunityModal.classList.add('hidden');
             state.opportunityModalOpen = false;
+            state.selectedPersonId = null;
+            state.pendingPerson = null;
+            state.contactAutocompleteOpen = false;
+            state.inlinePersonFormOpen = false;
             opportunityForm.reset();
+            contactDropdown.classList.remove('open');
+            inlinePersonForm.classList.remove('open');
         }
 
         // Save opportunity
@@ -2169,16 +2497,31 @@
             const name = oppNameInput.value.trim();
             const description = oppDescriptionInput.value.trim();
             const startDate = oppStartDateInput.value;
-            const contact = oppContactInput.value.trim();
+            const contactName = oppContactInput.value.trim();
 
             if (!name) return;
+
+            // Handle pending person creation
+            let contactId = state.selectedPersonId;
+            if (state.pendingPerson) {
+                // Create the pending person
+                const roleId = getOrCreateRole(state.pendingPerson.role);
+                const newPerson = {
+                    id: generateId(),
+                    name: state.pendingPerson.name,
+                    roleId: roleId
+                };
+                state.people.push(newPerson);
+                contactId = newPerson.id;
+            }
 
             const newOpportunity = {
                 id: generateId(),
                 name: name,
                 description: description || null,
                 startDate: startDate || getTodayDate(),
-                contact: contact || null,
+                contact: contactName || null,  // Keep text for display
+                contactId: contactId || null,  // Link to person
                 status: 'requested',  // Default status
                 comments: [],
                 archived: false,
@@ -2188,6 +2531,7 @@
             state.opportunities.push(newOpportunity);
             closeOpportunityModal();
             renderOpportunities();
+            renderPeople();  // Refresh people list if new person was created
         }
 
         // Toggle show archived opportunities
@@ -2747,17 +3091,577 @@
             }
         });
 
+        // =============================================
+        // People Management Functions
+        // =============================================
+
+        // Render people list
+        function renderPeople() {
+            peopleList.innerHTML = '';
+
+            if (state.people.length === 0) {
+                // Show empty state
+                peopleList.classList.add('hidden');
+                peopleEmptyState.classList.remove('hidden');
+                peopleShortcutHintFloating.classList.add('hidden');
+                rolesSection.classList.add('hidden');
+            } else {
+                // Show people list
+                peopleList.classList.remove('hidden');
+                peopleEmptyState.classList.add('hidden');
+                peopleShortcutHintFloating.classList.remove('hidden');
+
+                state.people.forEach((person, index) => {
+                    const personItem = document.createElement('div');
+                    personItem.className = 'person-item';
+
+                    const roleName = person.roleId ? getRoleName(person.roleId) : '';
+
+                    personItem.innerHTML = `
+                        <div class="person-info">
+                            <div class="person-name">${escapeHtml(person.name)}</div>
+                            ${roleName ? `<span class="person-role-badge">${escapeHtml(roleName)}</span>` : ''}
+                        </div>
+                        <div class="person-actions">
+                            <button class="action-btn" onclick="event.stopPropagation(); openPersonModal(${index})" title="Edit">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                            <button class="action-btn action-btn-danger" onclick="event.stopPropagation(); openDeletePersonModal(${index})" title="Delete">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+
+                    peopleList.appendChild(personItem);
+                });
+
+                // Show roles section if there are roles
+                if (state.roles.length > 0) {
+                    rolesSection.classList.remove('hidden');
+                    renderRoles();
+                } else {
+                    rolesSection.classList.add('hidden');
+                }
+            }
+
+            saveData();
+        }
+
+        // Render roles list
+        function renderRoles() {
+            rolesList.innerHTML = '';
+            state.roles.forEach(role => {
+                const roleTag = document.createElement('span');
+                roleTag.className = 'role-tag';
+                roleTag.textContent = role.name;
+                rolesList.appendChild(roleTag);
+            });
+        }
+
+        // Get role name by ID
+        function getRoleName(roleId) {
+            const role = state.roles.find(r => r.id === roleId);
+            return role ? role.name : '';
+        }
+
+        // Get or create role by name
+        function getOrCreateRole(roleName) {
+            if (!roleName || roleName.trim() === '') return null;
+            const trimmedName = roleName.trim();
+            const existingRole = state.roles.find(r => r.name.toLowerCase() === trimmedName.toLowerCase());
+            if (existingRole) return existingRole.id;
+
+            // Create new role
+            const newRole = {
+                id: generateId(),
+                name: trimmedName
+            };
+            state.roles.push(newRole);
+            return newRole.id;
+        }
+
+        // Open person modal
+        function openPersonModal(personIndex = null) {
+            state.personModalOpen = true;
+            state.editingPersonIndex = personIndex;
+            state.roleAutocompleteOpen = false;
+            state.roleAutocompleteHighlightIndex = -1;
+
+            personRoleInput.value = '';
+            personRoleClear.classList.remove('visible');
+            roleDropdown.classList.remove('open');
+
+            if (personIndex !== null) {
+                // Edit mode
+                const person = state.people[personIndex];
+                personModalTitle.textContent = 'Edit Person';
+                personNameInput.value = person.name;
+                if (person.roleId) {
+                    personRoleInput.value = getRoleName(person.roleId);
+                    personRoleClear.classList.add('visible');
+                }
+            } else {
+                // Create mode
+                personModalTitle.textContent = 'New Person';
+                personNameInput.value = '';
+            }
+
+            personModal.classList.remove('hidden');
+            setTimeout(() => personNameInput.focus(), 100);
+        }
+
+        // Close person modal
+        function closePersonModal() {
+            state.personModalOpen = false;
+            state.editingPersonIndex = null;
+            state.roleAutocompleteOpen = false;
+            personModal.classList.add('hidden');
+            personForm.reset();
+            roleDropdown.classList.remove('open');
+        }
+
+        // Save person
+        function savePerson(e) {
+            e.preventDefault();
+
+            const name = personNameInput.value.trim();
+            if (!name) return;
+
+            const roleName = personRoleInput.value.trim();
+            const roleId = getOrCreateRole(roleName);
+
+            if (state.editingPersonIndex !== null) {
+                // Update existing person
+                state.people[state.editingPersonIndex].name = name;
+                state.people[state.editingPersonIndex].roleId = roleId;
+            } else {
+                // Create new person
+                const newPerson = {
+                    id: generateId(),
+                    name: name,
+                    roleId: roleId
+                };
+                state.people.push(newPerson);
+            }
+
+            closePersonModal();
+            renderPeople();
+        }
+
+        // Open delete person modal
+        function openDeletePersonModal(index) {
+            state.deletePersonIndex = index;
+            const person = state.people[index];
+            deletePersonName.textContent = person.name;
+            deletePersonModal.classList.remove('hidden');
+        }
+
+        // Close delete person modal
+        function closeDeletePersonModal() {
+            state.deletePersonIndex = null;
+            deletePersonModal.classList.add('hidden');
+        }
+
+        // Confirm delete person
+        function confirmDeletePerson() {
+            if (state.deletePersonIndex !== null) {
+                const personId = state.people[state.deletePersonIndex].id;
+
+                // Remove person from array
+                state.people.splice(state.deletePersonIndex, 1);
+
+                // Update opportunities that referenced this person
+                state.opportunities.forEach(opp => {
+                    if (opp.contactId === personId) {
+                        opp.contactId = null;
+                        opp.contact = ''; // Clear the text contact as well
+                    }
+                });
+
+                closeDeletePersonModal();
+                renderPeople();
+                renderOpportunities();
+            }
+        }
+
+        // Clear person role input
+        function clearPersonRole() {
+            personRoleInput.value = '';
+            personRoleClear.classList.remove('visible');
+            roleDropdown.classList.remove('open');
+            state.roleAutocompleteOpen = false;
+        }
+
+        // Filter roles based on search query
+        function filterRoles(query) {
+            if (!query || query.trim() === '') return [];
+            const lowerQuery = query.toLowerCase().trim();
+            return state.roles.filter(role =>
+                role.name.toLowerCase().includes(lowerQuery)
+            );
+        }
+
+        // Render role autocomplete dropdown
+        function renderRoleDropdown(query) {
+            const matches = filterRoles(query);
+            roleDropdown.innerHTML = '';
+
+            if (matches.length > 0) {
+                matches.forEach((role, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'autocomplete-item';
+                    item.setAttribute('data-index', index);
+                    item.setAttribute('data-id', role.id);
+                    item.innerHTML = `<div class="autocomplete-item-name">${escapeHtml(role.name)}</div>`;
+                    item.onclick = () => selectRole(role);
+                    roleDropdown.appendChild(item);
+                });
+            } else if (query && query.trim() !== '') {
+                // Show create option
+                const createItem = document.createElement('div');
+                createItem.className = 'autocomplete-item autocomplete-create';
+                createItem.innerHTML = `
+                    <div class="autocomplete-item-name">Create "${escapeHtml(query.trim())}"</div>
+                `;
+                createItem.onclick = () => {
+                    personRoleInput.value = query.trim();
+                    personRoleClear.classList.add('visible');
+                    closeRoleDropdown();
+                };
+                roleDropdown.appendChild(createItem);
+            }
+
+            state.roleAutocompleteHighlightIndex = -1;
+            updateRoleAutocompleteHighlight();
+        }
+
+        // Update role autocomplete highlight
+        function updateRoleAutocompleteHighlight() {
+            const items = roleDropdown.querySelectorAll('.autocomplete-item');
+            items.forEach((item, index) => {
+                item.classList.toggle('highlighted', index === state.roleAutocompleteHighlightIndex);
+            });
+        }
+
+        // Select role from autocomplete
+        function selectRole(role) {
+            personRoleInput.value = role.name;
+            personRoleClear.classList.add('visible');
+            closeRoleDropdown();
+        }
+
+        // Open role dropdown
+        function openRoleDropdown() {
+            state.roleAutocompleteOpen = true;
+            roleDropdown.classList.add('open');
+        }
+
+        // Close role dropdown
+        function closeRoleDropdown() {
+            state.roleAutocompleteOpen = false;
+            roleDropdown.classList.remove('open');
+            state.roleAutocompleteHighlightIndex = -1;
+        }
+
+        // Person role input event handlers
+        personRoleInput.addEventListener('input', (e) => {
+            const query = e.target.value;
+
+            // Show/hide clear button
+            personRoleClear.classList.toggle('visible', query.length > 0);
+
+            // Render and open dropdown
+            if (query.trim() !== '') {
+                renderRoleDropdown(query);
+                openRoleDropdown();
+            } else {
+                closeRoleDropdown();
+            }
+        });
+
+        personRoleInput.addEventListener('focus', () => {
+            const query = personRoleInput.value;
+            if (query.trim() !== '') {
+                renderRoleDropdown(query);
+                openRoleDropdown();
+            }
+        });
+
+        personRoleInput.addEventListener('keydown', (e) => {
+            const items = roleDropdown.querySelectorAll('.autocomplete-item');
+            const matches = filterRoles(personRoleInput.value);
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (state.roleAutocompleteOpen && items.length > 0) {
+                    state.roleAutocompleteHighlightIndex = Math.min(state.roleAutocompleteHighlightIndex + 1, items.length - 1);
+                    updateRoleAutocompleteHighlight();
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (state.roleAutocompleteOpen && items.length > 0) {
+                    state.roleAutocompleteHighlightIndex = Math.max(state.roleAutocompleteHighlightIndex - 1, 0);
+                    updateRoleAutocompleteHighlight();
+                }
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                const query = personRoleInput.value.trim();
+
+                if (state.roleAutocompleteOpen && state.roleAutocompleteHighlightIndex >= 0 && matches.length > 0) {
+                    // Select highlighted item
+                    selectRole(matches[state.roleAutocompleteHighlightIndex]);
+                } else if (query) {
+                    // Just accept the typed value
+                    personRoleClear.classList.add('visible');
+                    closeRoleDropdown();
+                }
+            } else if (e.key === 'Escape') {
+                if (state.roleAutocompleteOpen) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeRoleDropdown();
+                }
+            }
+        });
+
+        // =============================================
+        // Contact Autocomplete Functions (Opportunity Modal)
+        // =============================================
+
+        // Filter people based on search query
+        function filterPeople(query) {
+            if (!query || query.trim() === '') return [];
+            const lowerQuery = query.toLowerCase().trim();
+            return state.people.filter(person =>
+                person.name.toLowerCase().includes(lowerQuery)
+            );
+        }
+
+        // Render contact autocomplete dropdown
+        function renderContactDropdown(query) {
+            const matches = filterPeople(query);
+            contactDropdown.innerHTML = '';
+
+            if (matches.length > 0) {
+                matches.forEach((person, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'autocomplete-item';
+                    item.setAttribute('data-index', index);
+                    item.setAttribute('data-id', person.id);
+                    const roleName = person.roleId ? getRoleName(person.roleId) : '';
+                    item.innerHTML = `
+                        <div class="autocomplete-item-name">${escapeHtml(person.name)}</div>
+                        ${roleName ? `<div class="autocomplete-item-contact">${escapeHtml(roleName)}</div>` : ''}
+                    `;
+                    item.onclick = () => selectContact(person);
+                    contactDropdown.appendChild(item);
+                });
+            } else if (query && query.trim() !== '') {
+                // Show create option
+                const createItem = document.createElement('div');
+                createItem.className = 'autocomplete-item autocomplete-create';
+                createItem.innerHTML = `
+                    <div class="autocomplete-item-name">Create "${escapeHtml(query.trim())}" - press Enter</div>
+                `;
+                createItem.onclick = () => openInlinePersonForm(query.trim());
+                contactDropdown.appendChild(createItem);
+            }
+
+            state.contactAutocompleteHighlightIndex = -1;
+            updateContactAutocompleteHighlight();
+        }
+
+        // Update contact autocomplete highlight
+        function updateContactAutocompleteHighlight() {
+            const items = contactDropdown.querySelectorAll('.autocomplete-item');
+            items.forEach((item, index) => {
+                item.classList.toggle('highlighted', index === state.contactAutocompleteHighlightIndex);
+            });
+        }
+
+        // Select contact from autocomplete
+        function selectContact(person) {
+            state.selectedPersonId = person.id;
+            state.pendingPerson = null;
+            oppContactInput.value = person.name;
+            oppContactClear.classList.add('visible');
+            closeContactDropdown();
+            closeInlinePersonForm();
+        }
+
+        // Open contact dropdown
+        function openContactDropdown() {
+            state.contactAutocompleteOpen = true;
+            contactDropdown.classList.add('open');
+        }
+
+        // Close contact dropdown
+        function closeContactDropdown() {
+            state.contactAutocompleteOpen = false;
+            contactDropdown.classList.remove('open');
+            state.contactAutocompleteHighlightIndex = -1;
+        }
+
+        // Clear opportunity contact input
+        function clearOppContact() {
+            state.selectedPersonId = null;
+            state.pendingPerson = null;
+            oppContactInput.value = '';
+            oppContactClear.classList.remove('visible');
+            closeContactDropdown();
+            closeInlinePersonForm();
+        }
+
+        // Open inline person form
+        function openInlinePersonForm(name) {
+            state.inlinePersonFormOpen = true;
+            inlinePersonName.value = name;
+            inlinePersonRole.value = '';
+            inlinePersonForm.classList.add('open');
+            closeContactDropdown();
+
+            // Focus on role after animation
+            setTimeout(() => inlinePersonRole.focus(), 350);
+        }
+
+        // Close inline person form
+        function closeInlinePersonForm() {
+            state.inlinePersonFormOpen = false;
+            inlinePersonForm.classList.remove('open');
+        }
+
+        // Cancel inline person creation
+        function cancelInlinePerson() {
+            state.pendingPerson = null;
+            oppContactInput.value = '';
+            oppContactClear.classList.remove('visible');
+            closeInlinePersonForm();
+        }
+
+        // Confirm inline person creation
+        function confirmInlinePerson() {
+            const name = inlinePersonName.value.trim();
+            const role = inlinePersonRole.value.trim();
+
+            if (!name) {
+                inlinePersonName.focus();
+                return;
+            }
+
+            // Store as pending person
+            state.pendingPerson = { name, role };
+            state.selectedPersonId = null;
+
+            // Update the contact input to show the name
+            oppContactInput.value = name;
+            oppContactClear.classList.add('visible');
+
+            closeInlinePersonForm();
+        }
+
+        // Contact input event handlers
+        oppContactInput.addEventListener('input', (e) => {
+            const query = e.target.value;
+
+            // Clear selected person if user types
+            state.selectedPersonId = null;
+            state.pendingPerson = null;
+
+            // Show/hide clear button
+            oppContactClear.classList.toggle('visible', query.length > 0);
+
+            // Close inline form if open
+            if (state.inlinePersonFormOpen) {
+                closeInlinePersonForm();
+            }
+
+            // Render and open dropdown
+            if (query.trim() !== '') {
+                renderContactDropdown(query);
+                openContactDropdown();
+            } else {
+                closeContactDropdown();
+            }
+        });
+
+        oppContactInput.addEventListener('focus', () => {
+            const query = oppContactInput.value;
+            if (query.trim() !== '' && !state.selectedPersonId && !state.pendingPerson) {
+                renderContactDropdown(query);
+                openContactDropdown();
+            }
+        });
+
+        oppContactInput.addEventListener('keydown', (e) => {
+            const items = contactDropdown.querySelectorAll('.autocomplete-item');
+            const matches = filterPeople(oppContactInput.value);
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (state.contactAutocompleteOpen && items.length > 0) {
+                    state.contactAutocompleteHighlightIndex = Math.min(state.contactAutocompleteHighlightIndex + 1, items.length - 1);
+                    updateContactAutocompleteHighlight();
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (state.contactAutocompleteOpen && items.length > 0) {
+                    state.contactAutocompleteHighlightIndex = Math.max(state.contactAutocompleteHighlightIndex - 1, 0);
+                    updateContactAutocompleteHighlight();
+                }
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                const query = oppContactInput.value.trim();
+
+                if (state.contactAutocompleteOpen && state.contactAutocompleteHighlightIndex >= 0 && matches.length > 0) {
+                    // Select highlighted item
+                    selectContact(matches[state.contactAutocompleteHighlightIndex]);
+                } else if (query && matches.length === 0 && !state.inlinePersonFormOpen) {
+                    // No matches - open inline creation form
+                    openInlinePersonForm(query);
+                } else if (state.contactAutocompleteOpen && matches.length > 0 && state.contactAutocompleteHighlightIndex === -1) {
+                    // Just close dropdown if there are matches but none selected
+                    closeContactDropdown();
+                }
+            } else if (e.key === 'Escape') {
+                if (state.contactAutocompleteOpen) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeContactDropdown();
+                }
+            }
+        });
+
+        // Handle inline person form Enter key
+        inlinePersonForm.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+                e.preventDefault();
+                confirmInlinePerson();
+            }
+        });
+
         // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.autocomplete-wrapper') && state.autocompleteOpen) {
                 closeAutocompleteDropdown();
+            }
+            if (!e.target.closest('.autocomplete-wrapper') && state.contactAutocompleteOpen) {
+                closeContactDropdown();
+            }
+            if (!e.target.closest('.autocomplete-wrapper') && state.roleAutocompleteOpen) {
+                closeRoleDropdown();
             }
         });
 
         // Add keyboard navigation (capture phase to intercept browser shortcuts)
         document.addEventListener('keydown', (e) => {
             // Skip if any modal is open and it's not Escape
-            const anyModalOpen = state.modalOpen || state.opportunityModalOpen;
+            const anyModalOpen = state.modalOpen || state.opportunityModalOpen || state.personModalOpen;
 
             // Handle Shift+N to open todo modal (only on home tab)
             if (e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && e.key.toLowerCase() === 'n' &&
@@ -2772,6 +3676,14 @@
                 state.currentPage === 'app' && state.currentTab === 'opportunities' && !anyModalOpen) {
                 e.preventDefault();
                 openOpportunityModal();
+                return;
+            }
+
+            // Handle Shift+N to open person modal (only on people tab)
+            if (e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && e.key.toLowerCase() === 'n' &&
+                state.currentPage === 'app' && state.currentTab === 'people' && !anyModalOpen) {
+                e.preventDefault();
+                openPersonModal();
                 return;
             }
 
@@ -2797,6 +3709,16 @@
                     closeOpportunityModal();
                     return;
                 }
+                if (state.personModalOpen) {
+                    e.preventDefault();
+                    closePersonModal();
+                    return;
+                }
+                if (state.deletePersonIndex !== null) {
+                    e.preventDefault();
+                    closeDeletePersonModal();
+                    return;
+                }
                 if (state.sidePanelOpen) {
                     e.preventDefault();
                     closeSidePanel();
@@ -2814,8 +3736,50 @@
             }
         }, true);  // Use capture phase to intercept before browser handles it
 
+        // Migrate existing contacts to people
+        function migrateContactsToPeople() {
+            // Get all unique contacts from opportunities that don't have a contactId
+            const contactsToMigrate = new Map();
+
+            state.opportunities.forEach(opp => {
+                if (opp.contact && !opp.contactId) {
+                    const normalizedContact = opp.contact.trim().toLowerCase();
+                    if (!contactsToMigrate.has(normalizedContact)) {
+                        contactsToMigrate.set(normalizedContact, opp.contact.trim());
+                    }
+                }
+            });
+
+            // Create people for unique contacts
+            contactsToMigrate.forEach((originalName, normalizedName) => {
+                // Check if person already exists
+                const existingPerson = state.people.find(p => p.name.toLowerCase() === normalizedName);
+                if (!existingPerson) {
+                    const newPerson = {
+                        id: generateId(),
+                        name: originalName,
+                        roleId: null
+                    };
+                    state.people.push(newPerson);
+                }
+            });
+
+            // Update opportunities to reference the person
+            state.opportunities.forEach(opp => {
+                if (opp.contact && !opp.contactId) {
+                    const normalizedContact = opp.contact.trim().toLowerCase();
+                    const person = state.people.find(p => p.name.toLowerCase() === normalizedContact);
+                    if (person) {
+                        opp.contactId = person.id;
+                    }
+                }
+            });
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
+            // Run migration on startup
+            migrateContactsToPeople();
             navigateTo('landing');
         });
     </script>
