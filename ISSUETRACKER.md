@@ -525,3 +525,56 @@ Rename the "Home" navigation tab to "Todo's" for clearer labeling of the todo li
 1. Navigation tab displays "Todo's" instead of "Home"
 
 ---
+
+## Issue #16: Add Keyboard Shortcut Hint Text with Unified Left-Shift+N
+
+**Status:** Closed
+**Created:** 2025-12-02
+**Related Issues:** #3, #8, #1
+**Fix:** Issue-16: Added keyboard shortcut hint text "Press Shift + N to create new items" to empty states and floating above lists on both Todo's and Opportunities pages.
+
+### Summary
+Add a visual hint text "Press Left-Shift + N to create new items" to help users discover the keyboard shortcut for creating new items. This hint should appear on both the Todo's and Opportunities pages. Additionally, unify the keyboard shortcuts to use `Left-Shift + N` for both pages.
+
+### Requirements
+
+#### Keyboard Shortcut Update
+- [ ] Change Todo's creation shortcut from `Ctrl+N` to `Left-Shift + N`
+- [ ] Change Opportunities creation shortcut from `Shift+N` to `Left-Shift + N` (verify left shift specifically)
+- [ ] Ensure shortcuts only work on their respective pages
+
+#### Hint Text - Empty State
+- [ ] Display hint text below the empty state icon (under "No Todos" / "No Opportunities")
+- [ ] Text content: "Press Left-Shift + N to create new items"
+- [ ] Style: Italic, grayed out (muted color)
+- [ ] Centered with the empty state content
+
+#### Hint Text - With Items
+- [ ] Display hint text as subtle floating text below the header
+- [ ] Text content: "Press Left-Shift + N to create new items"
+- [ ] Style: Italic, grayed out, small font size
+- [ ] Position: Top of the list area, below header
+- [ ] Should not be obtrusive or take too much space
+
+#### Styling Guidelines
+- [ ] Use muted text color (`#ADB5BD` per DESIGN.md)
+- [ ] Font style: Italic
+- [ ] Font size: Smaller than regular text for the "with items" variant
+- [ ] Subtle and non-intrusive appearance
+
+### Technical Notes
+- Update keyboard event listeners to detect `Left-Shift + N` specifically
+- Add hint text HTML to both empty state sections
+- Add floating hint element in list view sections
+- Use CSS for italic styling and muted color
+- Consider using `event.shiftKey` and `event.location` to detect left shift specifically
+
+### Acceptance Criteria
+1. Pressing Left-Shift + N on Todo's page opens the create todo modal
+2. Pressing Left-Shift + N on Opportunities page opens the create opportunity modal
+3. Empty state shows hint text below the icon, styled italic and gray
+4. List view shows hint text floating below header, styled italic, gray, and small
+5. Hint text is visible but subtle - not distracting from main content
+6. Old shortcuts (Ctrl+N, Shift+N) no longer work
+
+---

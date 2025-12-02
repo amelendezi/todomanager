@@ -413,6 +413,23 @@
             color: #ADB5BD;
         }
 
+        /* Keyboard shortcut hint text */
+        .shortcut-hint {
+            font-size: 13px;
+            font-style: italic;
+            color: #ADB5BD;
+            margin-top: 12px;
+        }
+
+        .shortcut-hint-floating {
+            font-size: 12px;
+            font-style: italic;
+            color: #ADB5BD;
+            text-align: center;
+            padding: 8px 0;
+            margin-bottom: 8px;
+        }
+
         /* Home page body override */
         #home-page {
             background: #F5F5F5;
@@ -1457,6 +1474,9 @@
 
         <!-- Main Content -->
         <main class="main-content">
+            <!-- Floating shortcut hint (shown when items exist) -->
+            <p id="todo-shortcut-hint-floating" class="shortcut-hint-floating hidden">Press Shift + N to create new items</p>
+
             <!-- Todo List Container -->
             <div id="todo-list" class="todo-list">
                 <!-- Todos will be rendered here -->
@@ -1471,6 +1491,7 @@
                     <line x1="9" y1="16" x2="13" y2="16"></line>
                 </svg>
                 <p class="empty-text">No Todos</p>
+                <p class="shortcut-hint">Press Shift + N to create new items</p>
             </div>
         </main>
     </div>
@@ -1486,6 +1507,9 @@
                     <span>Show Archived</span>
                 </label>
             </div>
+            <!-- Floating shortcut hint (shown when items exist) -->
+            <p id="opp-shortcut-hint-floating" class="shortcut-hint-floating hidden">Press Shift + N to create new items</p>
+
             <!-- Opportunity List Container -->
             <div id="opportunity-list" class="opportunity-list">
                 <!-- Opportunities will be rendered here -->
@@ -1499,6 +1523,7 @@
                     <line x1="12" y1="16" x2="12.01" y2="16"></line>
                 </svg>
                 <p class="empty-text">No Opportunities</p>
+                <p class="shortcut-hint">Press Shift + N to create new items</p>
             </div>
         </main>
     </div>
@@ -1716,6 +1741,7 @@
         const homePage = document.getElementById('home-page');
         const todoList = document.getElementById('todo-list');
         const emptyState = document.getElementById('empty-state');
+        const todoShortcutHintFloating = document.getElementById('todo-shortcut-hint-floating');
         const todoModal = document.getElementById('todo-modal');
         const todoForm = document.getElementById('todo-form');
         const todoDescriptionInput = document.getElementById('todo-description');
@@ -1736,6 +1762,7 @@
         const opportunitiesPage = document.getElementById('opportunities-page');
         const opportunityList = document.getElementById('opportunity-list');
         const opportunityEmptyState = document.getElementById('opportunity-empty-state');
+        const oppShortcutHintFloating = document.getElementById('opp-shortcut-hint-floating');
         const opportunityModal = document.getElementById('opportunity-modal');
         const opportunityForm = document.getElementById('opportunity-form');
         const oppNameInput = document.getElementById('opp-name');
@@ -2026,10 +2053,12 @@
                 // Show empty state
                 todoList.classList.add('hidden');
                 emptyState.classList.remove('hidden');
+                todoShortcutHintFloating.classList.add('hidden');
             } else {
                 // Show todo list
                 todoList.classList.remove('hidden');
                 emptyState.classList.add('hidden');
+                todoShortcutHintFloating.classList.remove('hidden');
 
                 state.todos.forEach((todo, index) => {
                     const todoItem = document.createElement('div');
@@ -2184,10 +2213,12 @@
                 // Show empty state
                 opportunityList.classList.add('hidden');
                 opportunityEmptyState.classList.remove('hidden');
+                oppShortcutHintFloating.classList.add('hidden');
             } else {
                 // Show opportunity list
                 opportunityList.classList.remove('hidden');
                 opportunityEmptyState.classList.add('hidden');
+                oppShortcutHintFloating.classList.remove('hidden');
 
                 filteredOpportunities.forEach((opp) => {
                     // Find original index in state.opportunities
