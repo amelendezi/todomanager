@@ -222,3 +222,58 @@ Create a new "Opportunity Manager" page accessible via tab navigation next to "H
 5. Status changeable via dropdown
 
 ---
+
+## Issue #9: Link Todos to Opportunities with Autocomplete and Inline Creation
+
+**Status:** Open
+**Created:** 2025-12-02
+**Related Issues:** #3, #7, #8
+
+### Summary
+Enhance the todo creation/edit modal to allow users to optionally link a todo to an opportunity. The system provides autocomplete suggestions from existing opportunities. If the user types a name that doesn't exist and presses Enter, an inline opportunity creation form slides down within the modal. The linked opportunity is displayed in the todo list view, and opportunities with at least one non-completed todo automatically have their status set to "Open".
+
+### Requirements
+
+#### Autocomplete Field in Todo Modal
+- [ ] Add "Linked Opportunity" field (optional) to todo create/edit modal
+- [ ] As user types, show dropdown with matching opportunities
+- [ ] Filter matches case-insensitively by opportunity name
+- [ ] Clicking a suggestion selects it
+
+#### Inline Opportunity Creation
+- [ ] If user types a name not in list and presses Enter, slide down inline creation form
+- [ ] Animate with slide-down effect (0.3s ease)
+- [ ] Inline form includes: Name (pre-filled), Description, Start Date, Contact
+- [ ] Save/Enter in inline form collapses it and links the new opportunity
+- [ ] New opportunity is only created when the entire todo is saved
+
+#### Todo List Display
+- [ ] Show linked opportunity name as badge/text below todo description
+- [ ] Style consistently with existing todo item layout
+
+#### Edit Mode Support
+- [ ] Pre-populate linked opportunity field when editing
+- [ ] User can change to different opportunity or remove link entirely
+
+#### Auto-Status for Opportunities
+- [ ] When a todo is linked to an opportunity and the todo is not completed, automatically set opportunity status to "Open"
+- [ ] Check on any link action (create or edit)
+
+### Technical Notes
+- Modify todo modal HTML to include autocomplete field
+- Add inline opportunity creation section (hidden by default)
+- Update todo data model to include `opportunityId` field
+- Update `renderTodos()` to display linked opportunity
+- Add logic in `saveTodo()` to handle opportunity creation and status updates
+
+### Acceptance Criteria
+1. Todo modal shows optional "Linked Opportunity" autocomplete field
+2. Typing shows matching opportunities in dropdown
+3. Pressing Enter on non-existing name shows inline creation form with slide animation
+4. Inline form fields can be filled and saved with Enter or Save button
+5. Linked opportunity displays in todo list item
+6. Editing todo allows changing or removing linked opportunity
+7. Opportunity status auto-updates to "Open" when linked to non-completed todo
+8. New opportunity only created when todo is saved (not on inline form close)
+
+---
