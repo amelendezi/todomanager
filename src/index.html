@@ -413,6 +413,23 @@
             color: #ADB5BD;
         }
 
+        /* Keyboard shortcut hint text */
+        .shortcut-hint {
+            font-size: 13px;
+            font-style: italic;
+            color: #ADB5BD;
+            margin-top: 12px;
+        }
+
+        .shortcut-hint-floating {
+            font-size: 12px;
+            font-style: italic;
+            color: #ADB5BD;
+            text-align: center;
+            padding: 8px 0;
+            margin-bottom: 8px;
+        }
+
         /* Home page body override */
         #home-page {
             background: #F5F5F5;
@@ -839,6 +856,525 @@
                 width: 100%;
             }
         }
+
+        /* Autocomplete styles */
+        .autocomplete-wrapper {
+            position: relative;
+        }
+
+        .autocomplete-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .autocomplete-input {
+            width: 100%;
+            height: 48px;
+            padding: 12px 40px 12px 16px;
+            font-size: 14px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            background: #FFFFFF;
+            color: #1F1F1F;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: inherit;
+        }
+
+        .autocomplete-input:focus {
+            outline: none;
+            border-color: #FFB800;
+            box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.2);
+        }
+
+        .autocomplete-input::placeholder {
+            color: #ADB5BD;
+        }
+
+        .autocomplete-clear {
+            position: absolute;
+            right: 12px;
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: #E0E0E0;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
+        }
+
+        .autocomplete-clear.visible {
+            opacity: 1;
+        }
+
+        .autocomplete-clear:hover {
+            background: #D0D0D0;
+        }
+
+        .autocomplete-clear svg {
+            width: 12px;
+            height: 12px;
+            color: #6C757D;
+        }
+
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 4px;
+            background: #FFFFFF;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 10;
+            display: none;
+        }
+
+        .autocomplete-dropdown.open {
+            display: block;
+        }
+
+        .autocomplete-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+            font-size: 14px;
+            color: #1F1F1F;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.highlighted {
+            background: #F8F9FA;
+        }
+
+        .autocomplete-item-name {
+            font-weight: 500;
+        }
+
+        .autocomplete-item-contact {
+            font-size: 12px;
+            color: #6C757D;
+            margin-top: 2px;
+        }
+
+        .autocomplete-empty {
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #6C757D;
+            font-style: italic;
+        }
+
+        .autocomplete-create-hint {
+            padding: 8px 16px;
+            font-size: 12px;
+            color: #6C757D;
+            background: #F8F9FA;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        /* Inline opportunity creation form */
+        .inline-opp-form {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+            background: #F8F9FA;
+            border-radius: 8px;
+            margin-top: 0;
+            padding: 0 16px;
+        }
+
+        .inline-opp-form.open {
+            max-height: 300px;
+            padding: 16px;
+            margin-top: 12px;
+        }
+
+        .inline-opp-form .form-group {
+            margin-bottom: 12px;
+        }
+
+        .inline-opp-form .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .inline-opp-form .form-label {
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .inline-opp-form .form-input {
+            height: 40px;
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+
+        .inline-opp-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .inline-opp-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1F1F1F;
+        }
+
+        .inline-opp-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .inline-opp-actions .btn {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Todo opportunity badge */
+        .todo-opportunity {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: 500;
+            color: #1976D2;
+            background: #E3F2FD;
+            border-radius: 12px;
+            margin-top: 4px;
+        }
+
+        .todo-opportunity svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Opportunity action buttons */
+        .opportunity-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 8px;
+        }
+
+        .opp-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, opacity 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .opp-action-btn:hover:not(:disabled) {
+            background: #F0F0F0;
+        }
+
+        .opp-action-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .opp-action-btn svg {
+            width: 18px;
+            height: 18px;
+            color: #6C757D;
+            transition: color 0.2s ease;
+        }
+
+        .opp-action-btn:hover:not(:disabled) svg {
+            color: #1F1F1F;
+        }
+
+        .opp-action-btn.close-btn:hover:not(:disabled) svg {
+            color: #7B1FA2;
+        }
+
+        .opp-action-btn.delete-btn:hover:not(:disabled) svg {
+            color: #D32F2F;
+        }
+
+        .opp-action-btn.cancel-btn:hover:not(:disabled) svg {
+            color: #F57C00;
+        }
+
+        .opp-action-btn.archive-btn:hover:not(:disabled) svg {
+            color: #5C6BC0;
+        }
+
+        /* Archived opportunity styling */
+        .opportunity-item.archived {
+            opacity: 0.6;
+        }
+
+        .opportunity-item.archived .opportunity-name {
+            text-decoration: line-through;
+        }
+
+        /* Show Archived Toggle */
+        .archive-toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+            padding-right: 8px;
+        }
+
+        .archive-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #6C757D;
+            user-select: none;
+        }
+
+        .archive-toggle input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #FFB800;
+            cursor: pointer;
+        }
+
+        .archive-toggle:hover {
+            color: #1F1F1F;
+        }
+
+        /* Confirmation modal */
+        .confirm-modal-content {
+            text-align: center;
+        }
+
+        .confirm-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            color: #D32F2F;
+        }
+
+        .confirm-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1F1F1F;
+            margin-bottom: 12px;
+        }
+
+        .confirm-message {
+            font-size: 14px;
+            color: #6C757D;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .confirm-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn-danger {
+            background: #D32F2F;
+            color: #FFFFFF;
+        }
+
+        .btn-danger:hover {
+            background: #B71C1C;
+        }
+
+        /* Comments section in side panel */
+        .comments-section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .comments-header {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1F1F1F;
+            margin-bottom: 16px;
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .comment-item {
+            padding: 12px;
+            background: #F8F9FA;
+            border-radius: 8px;
+            border-left: 3px solid #E0E0E0;
+        }
+
+        .comment-item.cancellation {
+            background: #FFF5F5;
+            border-left-color: #D32F2F;
+        }
+
+        .comment-timestamp {
+            font-size: 11px;
+            color: #6C757D;
+            margin-bottom: 4px;
+        }
+
+        .comment-item.cancellation .comment-timestamp {
+            color: #D32F2F;
+        }
+
+        .comment-text {
+            font-size: 13px;
+            color: #1F1F1F;
+            line-height: 1.5;
+        }
+
+        .comment-item.cancellation .comment-text {
+            color: #B71C1C;
+        }
+
+        .comment-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
+        .comment-badge.cancellation {
+            background: #FFEBEE;
+            color: #D32F2F;
+        }
+
+        .no-comments {
+            font-size: 13px;
+            color: #ADB5BD;
+            font-style: italic;
+        }
+
+        /* Comment input area */
+        .comment-input-area {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .comment-textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px 12px;
+            font-size: 13px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            background: #FFFFFF;
+            color: #1F1F1F;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .comment-textarea:focus {
+            outline: none;
+            border-color: #FFB800;
+            box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.2);
+        }
+
+        .comment-textarea::placeholder {
+            color: #ADB5BD;
+        }
+
+        .comment-submit-btn {
+            margin-top: 8px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            background: #FFB800;
+            color: #1F1F1F;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .comment-submit-btn:hover {
+            background: #E5A600;
+        }
+
+        .comment-submit-btn:disabled {
+            background: #E0E0E0;
+            color: #ADB5BD;
+            cursor: not-allowed;
+        }
+
+        /* Cancel modal with textarea */
+        .cancel-modal-content {
+            text-align: left;
+        }
+
+        .cancel-modal-content .modal-title {
+            text-align: center;
+        }
+
+        .cancel-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            color: #F57C00;
+            display: block;
+        }
+
+        .cancel-modal-content .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px 16px;
+            font-size: 14px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            background: #FFFFFF;
+            color: #1F1F1F;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #FFB800;
+            box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.2);
+        }
+
+        .form-textarea::placeholder {
+            color: #ADB5BD;
+        }
+
+        .btn-warning {
+            background: #F57C00;
+            color: #FFFFFF;
+        }
+
+        .btn-warning:hover {
+            background: #E65100;
+        }
     </style>
 </head>
 <body>
@@ -912,7 +1448,7 @@
     <header id="app-header" class="header hidden">
         <div class="header-left">
             <nav class="tab-nav">
-                <button id="tab-home" class="tab-btn active" onclick="switchTab('home')">Home</button>
+                <button id="tab-home" class="tab-btn active" onclick="switchTab('home')">Todo's</button>
                 <button id="tab-opportunities" class="tab-btn" onclick="switchTab('opportunities')">Opportunities</button>
             </nav>
         </div>
@@ -938,6 +1474,9 @@
 
         <!-- Main Content -->
         <main class="main-content">
+            <!-- Floating shortcut hint (shown when items exist) -->
+            <p id="todo-shortcut-hint-floating" class="shortcut-hint-floating hidden">Press Shift + N to create new items</p>
+
             <!-- Todo List Container -->
             <div id="todo-list" class="todo-list">
                 <!-- Todos will be rendered here -->
@@ -952,6 +1491,7 @@
                     <line x1="9" y1="16" x2="13" y2="16"></line>
                 </svg>
                 <p class="empty-text">No Todos</p>
+                <p class="shortcut-hint">Press Shift + N to create new items</p>
             </div>
         </main>
     </div>
@@ -960,6 +1500,16 @@
     <div id="opportunities-page" class="page hidden">
         <!-- Main Content -->
         <main class="main-content">
+            <!-- Archive Toggle -->
+            <div class="archive-toggle-container">
+                <label class="archive-toggle">
+                    <input type="checkbox" id="show-archived-toggle" onchange="toggleShowArchived()">
+                    <span>Show Archived</span>
+                </label>
+            </div>
+            <!-- Floating shortcut hint (shown when items exist) -->
+            <p id="opp-shortcut-hint-floating" class="shortcut-hint-floating hidden">Press Shift + N to create new items</p>
+
             <!-- Opportunity List Container -->
             <div id="opportunity-list" class="opportunity-list">
                 <!-- Opportunities will be rendered here -->
@@ -973,6 +1523,7 @@
                     <line x1="12" y1="16" x2="12.01" y2="16"></line>
                 </svg>
                 <p class="empty-text">No Opportunities</p>
+                <p class="shortcut-hint">Press Shift + N to create new items</p>
             </div>
         </main>
     </div>
@@ -1008,13 +1559,19 @@
             </div>
             <div class="detail-group">
                 <div class="detail-label">Status</div>
-                <select id="panel-opp-status" class="detail-select" onchange="updateOpportunityStatus()">
-                    <option value="requested">Requested</option>
-                    <option value="open">Open</option>
-                    <option value="paused">Paused</option>
-                    <option value="cancelled">Cancelled</option>
-                    <option value="closed">Closed</option>
-                </select>
+                <span id="panel-opp-status" class="status-badge"></span>
+            </div>
+            <!-- Comments Section -->
+            <div class="comments-section">
+                <div class="comments-header">Comments</div>
+                <div id="panel-comments" class="comments-list">
+                    <!-- Comments will be rendered here -->
+                </div>
+                <!-- Comment Input Area -->
+                <div class="comment-input-area">
+                    <textarea id="comment-input" class="comment-textarea" placeholder="Add a comment..."></textarea>
+                    <button type="button" class="comment-submit-btn" onclick="addComment()">Add Comment</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1032,6 +1589,49 @@
                 <div class="form-group">
                     <label for="todo-due-date" class="form-label">Due Date</label>
                     <input type="date" id="todo-due-date" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="todo-opportunity" class="form-label">Linked Opportunity</label>
+                    <div class="autocomplete-wrapper">
+                        <div class="autocomplete-input-wrapper">
+                            <input type="text" id="todo-opportunity" class="autocomplete-input" placeholder="Type to search or create..." autocomplete="off">
+                            <button type="button" id="todo-opportunity-clear" class="autocomplete-clear" onclick="clearOpportunitySelection()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="opportunity-dropdown" class="autocomplete-dropdown">
+                            <!-- Dropdown items will be rendered here -->
+                        </div>
+                    </div>
+                    <!-- Inline Opportunity Creation Form -->
+                    <div id="inline-opp-form" class="inline-opp-form">
+                        <div class="inline-opp-header">
+                            <span class="inline-opp-title">Create New Opportunity</span>
+                            <div class="inline-opp-actions">
+                                <button type="button" class="btn btn-secondary" onclick="cancelInlineOpportunity()">Cancel</button>
+                                <button type="button" class="btn btn-primary" onclick="confirmInlineOpportunity()">Add</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inline-opp-name" class="form-label">Name</label>
+                            <input type="text" id="inline-opp-name" class="form-input" placeholder="Opportunity name" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="inline-opp-description" class="form-label">Description</label>
+                            <input type="text" id="inline-opp-description" class="form-input" placeholder="Brief description">
+                        </div>
+                        <div class="form-group">
+                            <label for="inline-opp-start-date" class="form-label">Start Date</label>
+                            <input type="date" id="inline-opp-start-date" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="inline-opp-contact" class="form-label">Contact</label>
+                            <input type="text" id="inline-opp-contact" class="form-input" placeholder="Contact person">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
@@ -1071,6 +1671,46 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
+    <div id="confirm-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closeConfirmModal()"></div>
+        <div class="modal-content confirm-modal-content">
+            <svg class="confirm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <h2 class="confirm-title">Delete Opportunity?</h2>
+            <p id="confirm-message" class="confirm-message">Are you sure you want to delete this opportunity? This action cannot be undone.</p>
+            <div class="confirm-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeConfirmModal()">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDeleteOpportunity()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Opportunity Modal -->
+    <div id="cancel-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closeCancelModal()"></div>
+        <div class="modal-content cancel-modal-content">
+            <svg class="cancel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+            <h2 class="modal-title">Cancel Opportunity</h2>
+            <p id="cancel-opp-name" style="text-align: center; color: #6C757D; margin-bottom: 20px;"></p>
+            <div class="form-group">
+                <label for="cancel-reason" class="form-label">Reason for Cancellation <span class="required">*</span></label>
+                <textarea id="cancel-reason" class="form-textarea" placeholder="Please provide a reason for cancelling this opportunity..." required></textarea>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeCancelModal()">Back</button>
+                <button type="button" class="btn btn-warning" onclick="confirmCancelOpportunity()">Cancel Opportunity</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Application state
         const state = {
@@ -1080,9 +1720,20 @@
             currentTab: 'home',  // 'home' or 'opportunities'
             modalOpen: false,
             opportunityModalOpen: false,
+            confirmModalOpen: false,
+            cancelModalOpen: false,
             sidePanelOpen: false,
             editingTodoIndex: null,  // Track which todo is being edited (null = create mode)
-            selectedOpportunityIndex: null  // Track which opportunity is open in side panel
+            selectedOpportunityIndex: null,  // Track which opportunity is open in side panel
+            deleteOpportunityIndex: null,  // Track which opportunity is pending deletion
+            cancelOpportunityIndex: null,  // Track which opportunity is pending cancellation
+            // Autocomplete state
+            selectedOpportunityId: null,  // ID of selected opportunity for todo linking
+            pendingOpportunity: null,  // New opportunity to create when saving todo
+            autocompleteOpen: false,
+            autocompleteHighlightIndex: -1,
+            inlineOppFormOpen: false,
+            showArchived: false
         };
 
         // DOM Elements - Landing and Home
@@ -1090,16 +1741,28 @@
         const homePage = document.getElementById('home-page');
         const todoList = document.getElementById('todo-list');
         const emptyState = document.getElementById('empty-state');
+        const todoShortcutHintFloating = document.getElementById('todo-shortcut-hint-floating');
         const todoModal = document.getElementById('todo-modal');
         const todoForm = document.getElementById('todo-form');
         const todoDescriptionInput = document.getElementById('todo-description');
         const todoDueDateInput = document.getElementById('todo-due-date');
         const modalTitle = document.getElementById('modal-title');
 
+        // DOM Elements - Autocomplete
+        const todoOpportunityInput = document.getElementById('todo-opportunity');
+        const todoOpportunityClear = document.getElementById('todo-opportunity-clear');
+        const opportunityDropdown = document.getElementById('opportunity-dropdown');
+        const inlineOppForm = document.getElementById('inline-opp-form');
+        const inlineOppName = document.getElementById('inline-opp-name');
+        const inlineOppDescription = document.getElementById('inline-opp-description');
+        const inlineOppStartDate = document.getElementById('inline-opp-start-date');
+        const inlineOppContact = document.getElementById('inline-opp-contact');
+
         // DOM Elements - Opportunities
         const opportunitiesPage = document.getElementById('opportunities-page');
         const opportunityList = document.getElementById('opportunity-list');
         const opportunityEmptyState = document.getElementById('opportunity-empty-state');
+        const oppShortcutHintFloating = document.getElementById('opp-shortcut-hint-floating');
         const opportunityModal = document.getElementById('opportunity-modal');
         const opportunityForm = document.getElementById('opportunity-form');
         const oppNameInput = document.getElementById('opp-name');
@@ -1120,6 +1783,22 @@
         const appHeader = document.getElementById('app-header');
         const tabHome = document.getElementById('tab-home');
         const tabOpportunities = document.getElementById('tab-opportunities');
+
+        // DOM Elements - Confirmation Modal
+        const confirmModal = document.getElementById('confirm-modal');
+        const confirmMessage = document.getElementById('confirm-message');
+
+        // DOM Elements - Cancel Modal
+        const cancelModal = document.getElementById('cancel-modal');
+        const cancelOppName = document.getElementById('cancel-opp-name');
+        const cancelReason = document.getElementById('cancel-reason');
+
+        // DOM Elements - Comments
+        const panelComments = document.getElementById('panel-comments');
+        const commentInput = document.getElementById('comment-input');
+
+        // DOM Elements - Archive Toggle
+        const showArchivedToggle = document.getElementById('show-archived-toggle');
 
         // Navigation functions
         function navigateTo(page) {
@@ -1202,12 +1881,33 @@
             // Reset form
             todoForm.reset();
 
+            // Reset autocomplete state
+            state.selectedOpportunityId = null;
+            state.pendingOpportunity = null;
+            state.autocompleteOpen = false;
+            state.autocompleteHighlightIndex = -1;
+            state.inlineOppFormOpen = false;
+            todoOpportunityInput.value = '';
+            todoOpportunityClear.classList.remove('visible');
+            opportunityDropdown.classList.remove('open');
+            inlineOppForm.classList.remove('open');
+
             if (todoIndex !== null) {
                 // Edit mode - populate with existing todo data
                 const todo = state.todos[todoIndex];
                 modalTitle.textContent = 'Edit Todo';
                 todoDescriptionInput.value = todo.title;
                 todoDueDateInput.value = todo.dueDate || '';
+
+                // Pre-populate linked opportunity
+                if (todo.opportunityId) {
+                    const opp = state.opportunities.find(o => o.id === todo.opportunityId);
+                    if (opp) {
+                        state.selectedOpportunityId = opp.id;
+                        todoOpportunityInput.value = opp.name;
+                        todoOpportunityClear.classList.add('visible');
+                    }
+                }
             } else {
                 // Create mode
                 modalTitle.textContent = 'New Todo';
@@ -1237,7 +1937,13 @@
             todoModal.classList.add('hidden');
             state.modalOpen = false;
             state.editingTodoIndex = null;
+            state.selectedOpportunityId = null;
+            state.pendingOpportunity = null;
+            state.autocompleteOpen = false;
+            state.inlineOppFormOpen = false;
             todoForm.reset();
+            opportunityDropdown.classList.remove('open');
+            inlineOppForm.classList.remove('open');
         }
 
         // Generate unique ID
@@ -1254,11 +1960,31 @@
 
             if (!description) return;
 
+            // Handle pending opportunity creation
+            let opportunityId = state.selectedOpportunityId;
+            if (state.pendingOpportunity) {
+                // Create the new opportunity
+                const newOpp = {
+                    id: generateId(),
+                    name: state.pendingOpportunity.name,
+                    description: state.pendingOpportunity.description || null,
+                    startDate: state.pendingOpportunity.startDate || getTodayDate(),
+                    contact: state.pendingOpportunity.contact || null,
+                    status: 'requested',
+                    comments: [],
+                    archived: false,
+                    createdAt: new Date().toISOString()
+                };
+                state.opportunities.push(newOpp);
+                opportunityId = newOpp.id;
+            }
+
             if (state.editingTodoIndex !== null) {
                 // Update existing todo
                 const todo = state.todos[state.editingTodoIndex];
                 todo.title = description;
                 todo.dueDate = dueDate || null;
+                todo.opportunityId = opportunityId;
                 // Preserve id, completed, and createdAt
             } else {
                 // Create new todo
@@ -1266,14 +1992,54 @@
                     id: generateId(),
                     title: description,
                     dueDate: dueDate || null,
+                    opportunityId: opportunityId,
                     completed: false,
                     createdAt: new Date().toISOString()
                 };
                 state.todos.push(newTodo);
             }
 
+            // Auto-update opportunity status to Open if todo is linked and not completed
+            if (opportunityId) {
+                updateOpportunityAutoStatus(opportunityId);
+            }
+
             closeModal();
             renderTodos();
+            // Also re-render opportunities if on that tab
+            if (state.currentTab === 'opportunities') {
+                renderOpportunities();
+            }
+        }
+
+        // Auto-update opportunity status based on linked todos
+        // Status Flow: Requested → Open (when todo linked) → Paused (all todos complete) → Closed
+        function updateOpportunityAutoStatus(opportunityId) {
+            const opp = state.opportunities.find(o => o.id === opportunityId);
+            if (!opp) return;
+
+            // Don't change closed or cancelled opportunities
+            if (opp.status === 'closed' || opp.status === 'cancelled') return;
+
+            // Get all todos linked to this opportunity
+            const linkedTodos = state.todos.filter(t => t.opportunityId === opportunityId);
+
+            // Check if any linked todo is not completed
+            const hasActiveTodo = linkedTodos.some(t => !t.completed);
+            const hasAnyTodo = linkedTodos.length > 0;
+
+            if (hasActiveTodo) {
+                // Has non-completed todos → Open
+                if (opp.status !== 'open') {
+                    opp.status = 'open';
+                }
+            } else if (hasAnyTodo) {
+                // All todos are completed → Paused
+                if (opp.status !== 'paused') {
+                    opp.status = 'paused';
+                }
+            }
+            // If no todos linked, keep current status
         }
 
         // Render functions
@@ -1287,10 +2053,12 @@
                 // Show empty state
                 todoList.classList.add('hidden');
                 emptyState.classList.remove('hidden');
+                todoShortcutHintFloating.classList.add('hidden');
             } else {
                 // Show todo list
                 todoList.classList.remove('hidden');
                 emptyState.classList.add('hidden');
+                todoShortcutHintFloating.classList.remove('hidden');
 
                 state.todos.forEach((todo, index) => {
                     const todoItem = document.createElement('div');
@@ -1306,11 +2074,29 @@
                         dueDateHtml = `<div class="todo-due-date ${isOverdue ? 'overdue' : ''}">Due: ${formatDate(todo.dueDate)}</div>`;
                     }
 
+                    // Format linked opportunity
+                    let opportunityHtml = '';
+                    if (todo.opportunityId) {
+                        const opp = state.opportunities.find(o => o.id === todo.opportunityId);
+                        if (opp) {
+                            opportunityHtml = `
+                                <div class="todo-opportunity">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                    ${escapeHtml(opp.name)}
+                                </div>
+                            `;
+                        }
+                    }
+
                     todoItem.innerHTML = `
                         <div class="todo-checkbox ${todo.completed ? 'checked' : ''}" onclick="toggleTodo(${index})"></div>
                         <div class="todo-content">
                             <div class="todo-title">${escapeHtml(todo.title)}</div>
                             ${dueDateHtml}
+                            ${opportunityHtml}
                         </div>
                         <div class="todo-actions">
                             <button class="todo-edit-btn" onclick="editTodo(${index})" title="Edit">
@@ -1327,8 +2113,19 @@
         }
 
         function toggleTodo(index) {
-            state.todos[index].completed = !state.todos[index].completed;
+            const todo = state.todos[index];
+            todo.completed = !todo.completed;
+
+            // Check and update opportunity status if linked
+            if (todo.opportunityId) {
+                updateOpportunityAutoStatus(todo.opportunityId);
+            }
+
             renderTodos();
+            // Re-render opportunities if on that tab to update status badges
+            if (state.currentTab === 'opportunities') {
+                renderOpportunities();
+            }
         }
 
         // Utility function to escape HTML
@@ -1383,11 +2180,19 @@
                 startDate: startDate || getTodayDate(),
                 contact: contact || null,
                 status: 'requested',  // Default status
+                comments: [],
+                archived: false,
                 createdAt: new Date().toISOString()
             };
 
             state.opportunities.push(newOpportunity);
             closeOpportunityModal();
+            renderOpportunities();
+        }
+
+        // Toggle show archived opportunities
+        function toggleShowArchived() {
+            state.showArchived = showArchivedToggle.checked;
             renderOpportunities();
         }
 
@@ -1398,28 +2203,82 @@
             // Clear current list
             opportunityList.innerHTML = '';
 
-            if (state.opportunities.length === 0) {
+            // Filter opportunities based on archived state
+            const filteredOpportunities = state.opportunities.filter(opp => {
+                if (state.showArchived) return true;
+                return !opp.archived;
+            });
+
+            if (filteredOpportunities.length === 0) {
                 // Show empty state
                 opportunityList.classList.add('hidden');
                 opportunityEmptyState.classList.remove('hidden');
+                oppShortcutHintFloating.classList.add('hidden');
             } else {
                 // Show opportunity list
                 opportunityList.classList.remove('hidden');
                 opportunityEmptyState.classList.add('hidden');
+                oppShortcutHintFloating.classList.remove('hidden');
 
-                state.opportunities.forEach((opp, index) => {
+                filteredOpportunities.forEach((opp) => {
+                    // Find original index in state.opportunities
+                    const index = state.opportunities.indexOf(opp);
                     const oppItem = document.createElement('div');
-                    oppItem.className = 'opportunity-item';
-                    oppItem.onclick = () => openSidePanel(index);
+                    oppItem.className = 'opportunity-item' + (opp.archived ? ' archived' : '');
 
                     const statusClass = `status-${opp.status}`;
+                    const canClose = opp.status === 'paused';
+                    const isClosedOrCancelled = opp.status === 'closed' || opp.status === 'cancelled';
+
+                    // Build action buttons based on status
+                    let actionButtons = '';
+                    if (isClosedOrCancelled && !opp.archived) {
+                        // Only show Archive button for closed/cancelled (not yet archived)
+                        actionButtons = `
+                            <button class="opp-action-btn archive-btn" onclick="event.stopPropagation(); archiveOpportunity(${index})" title="Archive Opportunity">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="21 8 21 21 3 21 3 8"></polyline>
+                                    <rect x="1" y="3" width="22" height="5"></rect>
+                                    <line x1="10" y1="12" x2="14" y2="12"></line>
+                                </svg>
+                            </button>
+                        `;
+                    } else if (!opp.archived) {
+                        // Show normal action buttons for non-archived, non-closed/cancelled
+                        actionButtons = `
+                            <button class="opp-action-btn close-btn" onclick="event.stopPropagation(); closeOpportunityAction(${index})" title="${canClose ? 'Close Opportunity' : 'Only Paused opportunities can be closed'}" ${canClose ? '' : 'disabled'}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </button>
+                            <button class="opp-action-btn cancel-btn" onclick="event.stopPropagation(); openCancelConfirmation(${index})" title="Cancel Opportunity">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                </svg>
+                            </button>
+                            <button class="opp-action-btn delete-btn" onclick="event.stopPropagation(); openDeleteConfirmation(${index})" title="Delete Opportunity">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                            </button>
+                        `;
+                    }
+                    // No buttons for archived opportunities
 
                     oppItem.innerHTML = `
-                        <div class="opportunity-content">
+                        <div class="opportunity-content" onclick="openSidePanel(${index})">
                             <div class="opportunity-name">${escapeHtml(opp.name)}</div>
                             ${opp.contact ? `<div class="opportunity-contact">${escapeHtml(opp.contact)}</div>` : ''}
                         </div>
                         <span class="status-badge ${statusClass}">${capitalizeFirst(opp.status)}</span>
+                        <div class="opportunity-actions">
+                            ${actionButtons}
+                        </div>
                     `;
                     opportunityList.appendChild(oppItem);
                 });
@@ -1443,7 +2302,12 @@
             panelOppDescription.textContent = opp.description || 'No description';
             panelOppDate.textContent = opp.startDate ? formatDate(opp.startDate) : 'Not set';
             panelOppContact.textContent = opp.contact || 'Not set';
-            panelOppStatus.value = opp.status;
+
+            // Update status badge
+            updatePanelStatusBadge(opp.status);
+
+            // Render comments
+            renderCommentsInPanel(opp);
 
             // Show panel
             sidePanel.classList.add('open');
@@ -1458,16 +2322,437 @@
             sidePanelBackdrop.classList.remove('open');
         }
 
-        // Update opportunity status from side panel
-        function updateOpportunityStatus() {
-            if (state.selectedOpportunityIndex === null) return;
+        // Update status badge in side panel
+        function updatePanelStatusBadge(status) {
+            panelOppStatus.textContent = capitalizeFirst(status);
+            panelOppStatus.className = `status-badge status-${status}`;
+        }
 
-            const newStatus = panelOppStatus.value;
-            state.opportunities[state.selectedOpportunityIndex].status = newStatus;
+        // Archive opportunity (for closed/cancelled opportunities)
+        function archiveOpportunity(index) {
+            const opp = state.opportunities[index];
+            if (opp.status !== 'closed' && opp.status !== 'cancelled') return;
 
-            // Re-render list to update badge
+            opp.archived = true;
+
+            // Close side panel if this opportunity was open
+            if (state.sidePanelOpen && state.selectedOpportunityIndex === index) {
+                closeSidePanel();
+            }
+
+            // Re-render opportunities list
             renderOpportunities();
         }
+
+        // Close opportunity action (set status to Closed)
+        function closeOpportunityAction(index) {
+            const opp = state.opportunities[index];
+            if (opp.status !== 'paused') return; // Only paused can be closed
+
+            opp.status = 'closed';
+            renderOpportunities();
+
+            // Also update side panel if open
+            if (state.sidePanelOpen && state.selectedOpportunityIndex === index) {
+                updatePanelStatusBadge('closed');
+            }
+        }
+
+        // Open delete confirmation modal
+        function openDeleteConfirmation(index) {
+            state.deleteOpportunityIndex = index;
+            state.confirmModalOpen = true;
+
+            const opp = state.opportunities[index];
+            confirmMessage.textContent = `Are you sure you want to delete "${opp.name}"? This action cannot be undone.`;
+
+            confirmModal.classList.remove('hidden');
+        }
+
+        // Close confirmation modal
+        function closeConfirmModal() {
+            confirmModal.classList.add('hidden');
+            state.confirmModalOpen = false;
+            state.deleteOpportunityIndex = null;
+        }
+
+        // Confirm and execute opportunity deletion
+        function confirmDeleteOpportunity() {
+            if (state.deleteOpportunityIndex === null) return;
+
+            const oppId = state.opportunities[state.deleteOpportunityIndex].id;
+
+            // Remove opportunity link from all associated todos
+            state.todos.forEach(todo => {
+                if (todo.opportunityId === oppId) {
+                    todo.opportunityId = null;
+                }
+            });
+
+            // Remove the opportunity
+            state.opportunities.splice(state.deleteOpportunityIndex, 1);
+
+            // Close side panel if the deleted opportunity was open
+            if (state.sidePanelOpen && state.selectedOpportunityIndex === state.deleteOpportunityIndex) {
+                closeSidePanel();
+            } else if (state.sidePanelOpen && state.selectedOpportunityIndex > state.deleteOpportunityIndex) {
+                // Adjust index if needed
+                state.selectedOpportunityIndex--;
+            }
+
+            // Close confirmation modal
+            closeConfirmModal();
+
+            // Re-render both lists
+            renderOpportunities();
+            renderTodos();
+        }
+
+        // =============================================
+        // Cancel Opportunity Functions
+        // =============================================
+
+        // Open cancel confirmation modal
+        function openCancelConfirmation(index) {
+            state.cancelOpportunityIndex = index;
+            state.cancelModalOpen = true;
+
+            const opp = state.opportunities[index];
+            cancelOppName.textContent = `"${opp.name}"`;
+            cancelReason.value = '';
+
+            cancelModal.classList.remove('hidden');
+            setTimeout(() => cancelReason.focus(), 100);
+        }
+
+        // Close cancel modal
+        function closeCancelModal() {
+            cancelModal.classList.add('hidden');
+            state.cancelModalOpen = false;
+            state.cancelOpportunityIndex = null;
+            cancelReason.value = '';
+        }
+
+        // Confirm and execute opportunity cancellation
+        function confirmCancelOpportunity() {
+            if (state.cancelOpportunityIndex === null) return;
+
+            const reason = cancelReason.value.trim();
+            if (!reason) {
+                cancelReason.focus();
+                return;
+            }
+
+            const opp = state.opportunities[state.cancelOpportunityIndex];
+
+            // Initialize comments array if not exists (for backwards compatibility)
+            if (!opp.comments) {
+                opp.comments = [];
+            }
+
+            // Add cancellation comment
+            opp.comments.push({
+                text: reason,
+                timestamp: new Date().toISOString(),
+                type: 'cancellation'
+            });
+
+            // Set status to cancelled
+            opp.status = 'cancelled';
+
+            // Update side panel if this opportunity is open
+            if (state.sidePanelOpen && state.selectedOpportunityIndex === state.cancelOpportunityIndex) {
+                updatePanelStatusBadge('cancelled');
+                renderCommentsInPanel(opp);
+            }
+
+            // Close cancel modal
+            closeCancelModal();
+
+            // Re-render opportunities list
+            renderOpportunities();
+        }
+
+        // Format datetime for display
+        function formatDateTime(isoString) {
+            const date = new Date(isoString);
+            const options = {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            return date.toLocaleString('en-US', options);
+        }
+
+        // Render comments in side panel
+        function renderCommentsInPanel(opp) {
+            // Initialize comments array if not exists
+            const comments = opp.comments || [];
+
+            if (comments.length === 0) {
+                panelComments.innerHTML = '<p class="no-comments">No comments yet</p>';
+                return;
+            }
+
+            panelComments.innerHTML = comments.map(comment => {
+                const isCancellation = comment.type === 'cancellation';
+                const badge = isCancellation ? '<span class="comment-badge cancellation">Cancellation</span>' : '';
+                return `
+                    <div class="comment-item ${isCancellation ? 'cancellation' : ''}">
+                        <div class="comment-timestamp">${formatDateTime(comment.timestamp)}${badge}</div>
+                        <div class="comment-text">${escapeHtml(comment.text)}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Add a new comment to the current opportunity
+        function addComment() {
+            if (state.selectedOpportunityIndex === null) return;
+
+            const text = commentInput.value.trim();
+            if (!text) return;
+
+            const opp = state.opportunities[state.selectedOpportunityIndex];
+
+            // Initialize comments array if not exists
+            if (!opp.comments) {
+                opp.comments = [];
+            }
+
+            // Add new standard comment
+            opp.comments.push({
+                text: text,
+                timestamp: new Date().toISOString(),
+                type: 'standard'
+            });
+
+            // Clear input
+            commentInput.value = '';
+
+            // Re-render comments
+            renderCommentsInPanel(opp);
+        }
+
+        // =============================================
+        // Autocomplete Functions for Todo-Opportunity Linking
+        // =============================================
+
+        // Filter opportunities based on search query
+        function filterOpportunities(query) {
+            if (!query || query.trim() === '') return [];
+            const lowerQuery = query.toLowerCase().trim();
+            return state.opportunities.filter(opp =>
+                opp.name.toLowerCase().includes(lowerQuery)
+            );
+        }
+
+        // Render autocomplete dropdown
+        function renderAutocompleteDropdown(query) {
+            const matches = filterOpportunities(query);
+            opportunityDropdown.innerHTML = '';
+
+            if (matches.length > 0) {
+                matches.forEach((opp, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'autocomplete-item';
+                    item.setAttribute('data-index', index);
+                    item.setAttribute('data-id', opp.id);
+                    item.innerHTML = `
+                        <div class="autocomplete-item-name">${escapeHtml(opp.name)}</div>
+                        ${opp.contact ? `<div class="autocomplete-item-contact">${escapeHtml(opp.contact)}</div>` : ''}
+                    `;
+                    item.onclick = () => selectOpportunity(opp);
+                    opportunityDropdown.appendChild(item);
+                });
+            } else if (query && query.trim() !== '') {
+                // Show hint to create new
+                const hint = document.createElement('div');
+                hint.className = 'autocomplete-empty';
+                hint.textContent = 'No matches found';
+                opportunityDropdown.appendChild(hint);
+
+                const createHint = document.createElement('div');
+                createHint.className = 'autocomplete-create-hint';
+                createHint.textContent = 'Press Enter to create new opportunity';
+                opportunityDropdown.appendChild(createHint);
+            }
+
+            // Update highlight
+            state.autocompleteHighlightIndex = -1;
+            updateAutocompleteHighlight();
+        }
+
+        // Update autocomplete item highlight
+        function updateAutocompleteHighlight() {
+            const items = opportunityDropdown.querySelectorAll('.autocomplete-item');
+            items.forEach((item, index) => {
+                item.classList.toggle('highlighted', index === state.autocompleteHighlightIndex);
+            });
+        }
+
+        // Select an opportunity from dropdown
+        function selectOpportunity(opp) {
+            state.selectedOpportunityId = opp.id;
+            state.pendingOpportunity = null;
+            todoOpportunityInput.value = opp.name;
+            todoOpportunityClear.classList.add('visible');
+            closeAutocompleteDropdown();
+            closeInlineOppForm();
+        }
+
+        // Clear opportunity selection
+        function clearOpportunitySelection() {
+            state.selectedOpportunityId = null;
+            state.pendingOpportunity = null;
+            todoOpportunityInput.value = '';
+            todoOpportunityClear.classList.remove('visible');
+            closeAutocompleteDropdown();
+            closeInlineOppForm();
+        }
+
+        // Open autocomplete dropdown
+        function openAutocompleteDropdown() {
+            state.autocompleteOpen = true;
+            opportunityDropdown.classList.add('open');
+        }
+
+        // Close autocomplete dropdown
+        function closeAutocompleteDropdown() {
+            state.autocompleteOpen = false;
+            state.autocompleteHighlightIndex = -1;
+            opportunityDropdown.classList.remove('open');
+        }
+
+        // Open inline opportunity form with slide animation
+        function openInlineOppForm(name) {
+            state.inlineOppFormOpen = true;
+            inlineOppName.value = name;
+            inlineOppDescription.value = '';
+            inlineOppStartDate.value = getTodayDate();
+            inlineOppContact.value = '';
+            inlineOppForm.classList.add('open');
+            closeAutocompleteDropdown();
+
+            // Focus on description after animation
+            setTimeout(() => inlineOppDescription.focus(), 350);
+        }
+
+        // Close inline opportunity form
+        function closeInlineOppForm() {
+            state.inlineOppFormOpen = false;
+            inlineOppForm.classList.remove('open');
+        }
+
+        // Cancel inline opportunity creation
+        function cancelInlineOpportunity() {
+            state.pendingOpportunity = null;
+            todoOpportunityInput.value = '';
+            todoOpportunityClear.classList.remove('visible');
+            closeInlineOppForm();
+        }
+
+        // Confirm inline opportunity creation
+        function confirmInlineOpportunity() {
+            const name = inlineOppName.value.trim();
+            if (!name) return;
+
+            // Store pending opportunity data (will be created when todo is saved)
+            state.pendingOpportunity = {
+                name: name,
+                description: inlineOppDescription.value.trim(),
+                startDate: inlineOppStartDate.value,
+                contact: inlineOppContact.value.trim()
+            };
+
+            // Update UI to show it's selected
+            todoOpportunityInput.value = name + ' (new)';
+            todoOpportunityClear.classList.add('visible');
+            closeInlineOppForm();
+        }
+
+        // Handle autocomplete input events
+        todoOpportunityInput.addEventListener('input', (e) => {
+            const query = e.target.value;
+
+            // Reset selection when typing
+            state.selectedOpportunityId = null;
+            state.pendingOpportunity = null;
+
+            // Show/hide clear button
+            todoOpportunityClear.classList.toggle('visible', query.length > 0);
+
+            // Close inline form if open
+            if (state.inlineOppFormOpen) {
+                closeInlineOppForm();
+            }
+
+            // Render and open dropdown
+            if (query.trim() !== '') {
+                renderAutocompleteDropdown(query);
+                openAutocompleteDropdown();
+            } else {
+                closeAutocompleteDropdown();
+            }
+        });
+
+        // Handle autocomplete keyboard navigation
+        todoOpportunityInput.addEventListener('keydown', (e) => {
+            const items = opportunityDropdown.querySelectorAll('.autocomplete-item');
+            const matches = filterOpportunities(todoOpportunityInput.value);
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (state.autocompleteOpen && items.length > 0) {
+                    state.autocompleteHighlightIndex = Math.min(state.autocompleteHighlightIndex + 1, items.length - 1);
+                    updateAutocompleteHighlight();
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (state.autocompleteOpen && items.length > 0) {
+                    state.autocompleteHighlightIndex = Math.max(state.autocompleteHighlightIndex - 1, 0);
+                    updateAutocompleteHighlight();
+                }
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+
+                const query = todoOpportunityInput.value.trim();
+
+                if (state.autocompleteOpen && state.autocompleteHighlightIndex >= 0 && matches.length > 0) {
+                    // Select highlighted item
+                    selectOpportunity(matches[state.autocompleteHighlightIndex]);
+                } else if (query && matches.length === 0 && !state.inlineOppFormOpen) {
+                    // No matches - open inline creation form
+                    openInlineOppForm(query);
+                } else if (state.autocompleteOpen && matches.length > 0 && state.autocompleteHighlightIndex === -1) {
+                    // Just close dropdown if there are matches but none selected
+                    closeAutocompleteDropdown();
+                }
+            } else if (e.key === 'Escape') {
+                if (state.autocompleteOpen) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeAutocompleteDropdown();
+                }
+            }
+        });
+
+        // Handle inline form Enter key
+        inlineOppForm.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+                e.preventDefault();
+                confirmInlineOpportunity();
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.autocomplete-wrapper') && state.autocompleteOpen) {
+                closeAutocompleteDropdown();
+            }
+        });
 
         // Add keyboard navigation (capture phase to intercept browser shortcuts)
         document.addEventListener('keydown', (e) => {
@@ -1492,6 +2777,16 @@
 
             // Handle Escape key to close modals or side panel
             if (e.key === 'Escape') {
+                if (state.cancelModalOpen) {
+                    e.preventDefault();
+                    closeCancelModal();
+                    return;
+                }
+                if (state.confirmModalOpen) {
+                    e.preventDefault();
+                    closeConfirmModal();
+                    return;
+                }
                 if (state.modalOpen) {
                     e.preventDefault();
                     closeModal();

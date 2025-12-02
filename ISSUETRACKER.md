@@ -225,9 +225,10 @@ Create a new "Opportunity Manager" page accessible via tab navigation next to "H
 
 ## Issue #9: Link Todos to Opportunities with Autocomplete and Inline Creation
 
-**Status:** Open
+**Status:** Closed
 **Created:** 2025-12-02
 **Related Issues:** #3, #7, #8
+**Fix:** Issue-9: Added autocomplete opportunity linking in todo modal with inline creation form (slide animation) and auto-status to Open when linked.
 
 ### Summary
 Enhance the todo creation/edit modal to allow users to optionally link a todo to an opportunity. The system provides autocomplete suggestions from existing opportunities. If the user types a name that doesn't exist and presses Enter, an inline opportunity creation form slides down within the modal. The linked opportunity is displayed in the todo list view, and opportunities with at least one non-completed todo automatically have their status set to "Open".
@@ -275,5 +276,305 @@ Enhance the todo creation/edit modal to allow users to optionally link a todo to
 6. Editing todo allows changing or removing linked opportunity
 7. Opportunity status auto-updates to "Open" when linked to non-completed todo
 8. New opportunity only created when todo is saved (not on inline form close)
+
+---
+
+## Issue #10: Opportunity Status Automation and List Actions (Close/Delete)
+
+**Status:** Closed
+**Created:** 2025-12-02
+**Related Issues:** #8, #9
+**Fix:** Issue-10: Added auto-status Paused when all todos complete, Close/Delete action buttons with confirmation modal, and unlinks todos on delete.
+
+### Summary
+Enhance the opportunity lifecycle management with automatic status transitions and direct list actions. When all linked todos are completed, set opportunity status to "Paused". Only Paused opportunities can be Closed. Add always-visible Close and Delete action buttons to each opportunity in the list view.
+
+### Requirements
+
+#### Auto-Status: Paused when All Todos Complete
+- [ ] When all todos linked to an opportunity are completed, automatically set status to "Paused"
+- [ ] Check status after each todo completion toggle
+- [ ] If a new non-completed todo is linked, revert to "Open"
+
+#### Close Action (Only from Paused)
+- [ ] Add close button (checkmark icon) to opportunity list items
+- [ ] Button always visible (not just on hover)
+- [ ] Only enabled when opportunity status is "Paused"
+- [ ] Clicking sets status to "Closed"
+- [ ] Disabled/greyed out for non-Paused opportunities
+
+#### Delete Action
+- [ ] Add delete button (trash icon) to opportunity list items
+- [ ] Button always visible (not just on hover)
+- [ ] Show confirmation dialog before deleting
+- [ ] When deleted, remove opportunity link from all associated todos (set opportunityId to null)
+- [ ] Re-render both opportunity list and todo list after deletion
+
+#### Status Flow
+```
+Requested → Open (when todo linked) → Paused (all todos complete) → Closed
+```
+
+### Technical Notes
+- Update `toggleTodo()` to check and update opportunity status
+- Add `closeOpportunity()` and `deleteOpportunity()` functions
+- Add confirmation modal for delete action
+- Update `renderOpportunities()` to include action buttons
+- Add CSS for disabled button state
+
+### Acceptance Criteria
+1. Opportunity auto-changes to "Paused" when all linked todos are completed
+2. Opportunity auto-changes back to "Open" if non-completed todo is linked
+3. Close button visible on all opportunities, only clickable when Paused
+4. Clicking Close sets status to "Closed"
+5. Delete button visible on all opportunities
+6. Delete shows confirmation dialog
+7. Deleting opportunity removes links from associated todos
+8. Todos remain after opportunity deletion but without the link
+
+---
+
+## Issue #11: Add Cancel Action with Comments System for Opportunities
+
+**Status:** Closed
+**Created:** 2025-12-02
+**Related Issues:** #8, #10
+**Fix:** Issue-11: Added cancel button with reason modal, comments system with timestamped entries, and red styling for cancellation comments in side panel.
+
+### Summary
+Add a Cancel action button to opportunities that sets status to "Cancelled". Cancelling requires entering a comment explaining the reason. Introduce a comments system for opportunities - a list of timestamped comments. Cancellation comments are visually distinguished with red styling.
+
+### Requirements
+
+#### Cancel Action Button
+- [ ] Add cancel button (X icon) to opportunity list items
+- [ ] Button always visible (not just on hover)
+- [ ] Enabled for any status (including Closed)
+- [ ] Clicking opens a modal to enter cancellation reason
+
+#### Comments Data Model
+- [ ] Add `comments` array field to opportunity data model
+- [ ] Each comment contains:
+  - `text`: The comment content
+  - `timestamp`: Date/time when comment was made
+  - `type`: "standard" or "cancellation"
+
+#### Cancellation Modal
+- [ ] Modal prompts for cancellation reason (required text field)
+- [ ] On confirm: add comment with type "cancellation", set status to "Cancelled"
+- [ ] Cancel button to dismiss without action
+
+#### Comments Display (Side Panel Only)
+- [ ] Show comments list in opportunity detail side panel
+- [ ] Display timestamp and text for each comment
+- [ ] Cancellation comments styled with red text to distinguish from standard comments
+
+### Technical Notes
+- Add `comments: []` to opportunity data model initialization
+- Create cancel modal with textarea for reason input
+- Add `cancelOpportunity()` function
+- Update side panel rendering to display comments section
+- Add CSS for cancellation comment styling (red text)
+
+### Acceptance Criteria
+1. Cancel button (X icon) visible on all opportunities
+2. Clicking Cancel opens modal with reason text field
+3. Reason is required before confirming
+4. Confirming adds cancellation comment and sets status to "Cancelled"
+5. Comments visible in side panel with timestamps
+6. Cancellation comments display in red styling
+
+---
+
+## Issue #12: Make Opportunity Status Read-Only in Side Panel
+
+**Status:** Closed
+**Created:** 2025-12-02
+**Related Issues:** #8, #10, #11
+**Fix:** Issue-12: Replaced status dropdown with read-only badge in side panel to match automated status workflow.
+
+### Summary
+Replace the status dropdown in the opportunity details side panel with a read-only display. Since opportunity status is now automatically managed through auto-transitions (Requested → Open when todo linked, Open → Paused when all todos complete) and list action buttons (Close, Cancel), the manual status dropdown is no longer needed and could conflict with the automated workflow.
+
+### Requirements
+
+#### Read-Only Status Display
+- [ ] Replace the `<select>` dropdown with a read-only status badge
+- [ ] Display status using the same styling as the list view badges
+- [ ] Remove the `updateOpportunityStatus()` function (no longer needed)
+
+### Technical Notes
+- Modify the side panel status section in HTML
+- Update `openSidePanel()` to render a status badge instead of setting dropdown value
+- Clean up unused JavaScript function
+
+### Acceptance Criteria
+1. Side panel shows status as a styled badge (matching list view)
+2. Status cannot be manually changed from side panel
+3. Status still updates when using list action buttons (Close, Cancel)
+
+---
+
+## Issue #13: Add Comment Input to Opportunity Side Panel
+
+**Status:** Closed
+**Created:** 2025-12-02
+**Related Issues:** #11
+**Fix:** Issue-13: Added textarea and button in side panel to allow users to add standard comments to opportunities.
+
+### Summary
+Add a textarea input in the Comments section of the opportunity side panel, allowing users to manually add standard comments. This extends the comments system introduced in Issue #11 (which only added cancellation comments) to support user-added notes.
+
+### Requirements
+
+#### Comment Input UI
+- [ ] Add textarea below the comments list in side panel
+- [ ] Include placeholder text (e.g., "Add a comment...")
+- [ ] Add "Add Comment" button next to/below textarea
+- [ ] Clear textarea after successful submission
+
+#### Comment Submission
+- [ ] Create new comment with `type: "standard"`
+- [ ] Include current timestamp
+- [ ] Add to opportunity's comments array
+- [ ] Re-render comments list to show new comment
+- [ ] Empty comments should not be submitted
+
+#### Styling
+- [ ] Standard comments use default styling (not red like cancellation)
+- [ ] Input area styled consistently with other form elements
+
+### Technical Notes
+- Add textarea and button HTML to comments section
+- Create `addComment()` function
+- Comments with `type: "standard"` already styled without red (from Issue #11)
+
+### Acceptance Criteria
+1. Textarea visible in side panel Comments section
+2. User can type and submit a comment
+3. Comment appears in list with timestamp
+4. Standard comments display in normal styling (not red)
+5. Textarea clears after submission
+6. Empty comments are not submitted
+
+---
+
+## Issue #14: Archive Action for Closed/Cancelled Opportunities with Toggle View
+
+**Status:** Closed
+**Created:** 2025-12-02
+**Related Issues:** #10, #11
+**Fix:** Issue-14: Added archive button for closed/cancelled opportunities, Show Archived toggle, and faded styling for archived items.
+
+### Summary
+For opportunities with status "Closed" or "Cancelled", disable the Close, Cancel, and Delete action buttons. Replace with an Archive action that hides the opportunity from the default list view. Add a "Show Archived" toggle at the top right of the opportunities list to reveal archived items.
+
+### Requirements
+
+#### Action Button Behavior for Closed/Cancelled
+- [ ] Disable Close, Cancel, and Delete buttons for Closed/Cancelled opportunities
+- [ ] Show Archive button (box icon) only for Closed/Cancelled opportunities
+- [ ] Archive button always visible when applicable
+
+#### Archive Functionality
+- [ ] Add `archived` boolean field to opportunity data model
+- [ ] Clicking Archive sets `archived: true`
+- [ ] Archived opportunities hidden from default list view
+
+#### Show Archived Toggle
+- [ ] Add toggle/checkbox at top right of opportunities list
+- [ ] Label: "Show Archived"
+- [ ] When enabled, show both archived and non-archived opportunities
+- [ ] Archived opportunities visually distinguished (e.g., slightly faded)
+
+### Technical Notes
+- Add `archived: false` to opportunity data model
+- Update `renderOpportunities()` to filter based on archived state
+- Add state for `showArchived` toggle
+- Conditionally render action buttons based on opportunity status
+
+### Acceptance Criteria
+1. Closed/Cancelled opportunities show only Archive button
+2. Close, Cancel, Delete buttons disabled for Closed/Cancelled
+3. Clicking Archive hides opportunity from list
+4. "Show Archived" toggle visible at top right of list
+5. Toggle reveals archived opportunities
+6. Archived opportunities visually distinguishable
+
+---
+
+## Issue #15: Rename "Home" Tab to "Todo's"
+
+**Status:** Closed
+**Created:** 2025-12-02
+**Related Issues:** #1
+**Fix:** Issue-15: Changed navigation tab label from "Home" to "Todo's".
+
+### Summary
+Rename the "Home" navigation tab to "Todo's" for clearer labeling of the todo list section.
+
+### Requirements
+- [ ] Change tab label from "Home" to "Todo's"
+- [ ] Update any references to "Home" in the navigation
+
+### Technical Notes
+- Update the tab button text in the navigation HTML
+- Simple text change, no functional impact
+
+### Acceptance Criteria
+1. Navigation tab displays "Todo's" instead of "Home"
+
+---
+
+## Issue #16: Add Keyboard Shortcut Hint Text with Unified Left-Shift+N
+
+**Status:** Closed
+**Created:** 2025-12-02
+**Related Issues:** #3, #8, #1
+**Fix:** Issue-16: Added keyboard shortcut hint text "Press Shift + N to create new items" to empty states and floating above lists on both Todo's and Opportunities pages.
+
+### Summary
+Add a visual hint text "Press Left-Shift + N to create new items" to help users discover the keyboard shortcut for creating new items. This hint should appear on both the Todo's and Opportunities pages. Additionally, unify the keyboard shortcuts to use `Left-Shift + N` for both pages.
+
+### Requirements
+
+#### Keyboard Shortcut Update
+- [ ] Change Todo's creation shortcut from `Ctrl+N` to `Left-Shift + N`
+- [ ] Change Opportunities creation shortcut from `Shift+N` to `Left-Shift + N` (verify left shift specifically)
+- [ ] Ensure shortcuts only work on their respective pages
+
+#### Hint Text - Empty State
+- [ ] Display hint text below the empty state icon (under "No Todos" / "No Opportunities")
+- [ ] Text content: "Press Left-Shift + N to create new items"
+- [ ] Style: Italic, grayed out (muted color)
+- [ ] Centered with the empty state content
+
+#### Hint Text - With Items
+- [ ] Display hint text as subtle floating text below the header
+- [ ] Text content: "Press Left-Shift + N to create new items"
+- [ ] Style: Italic, grayed out, small font size
+- [ ] Position: Top of the list area, below header
+- [ ] Should not be obtrusive or take too much space
+
+#### Styling Guidelines
+- [ ] Use muted text color (`#ADB5BD` per DESIGN.md)
+- [ ] Font style: Italic
+- [ ] Font size: Smaller than regular text for the "with items" variant
+- [ ] Subtle and non-intrusive appearance
+
+### Technical Notes
+- Update keyboard event listeners to detect `Left-Shift + N` specifically
+- Add hint text HTML to both empty state sections
+- Add floating hint element in list view sections
+- Use CSS for italic styling and muted color
+- Consider using `event.shiftKey` and `event.location` to detect left shift specifically
+
+### Acceptance Criteria
+1. Pressing Left-Shift + N on Todo's page opens the create todo modal
+2. Pressing Left-Shift + N on Opportunities page opens the create opportunity modal
+3. Empty state shows hint text below the icon, styled italic and gray
+4. List view shows hint text floating below header, styled italic, gray, and small
+5. Hint text is visible but subtle - not distracting from main content
+6. Old shortcuts (Ctrl+N, Shift+N) no longer work
 
 ---
