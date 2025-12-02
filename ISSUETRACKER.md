@@ -505,9 +505,10 @@ For opportunities with status "Closed" or "Cancelled", disable the Close, Cancel
 
 ## Issue #15: Rename "Home" Tab to "Todo's"
 
-**Status:** Open
+**Status:** Closed
 **Created:** 2025-12-02
 **Related Issues:** #1
+**Fix:** Issue-15: Changed navigation tab label from "Home" to "Todo's".
 
 ### Summary
 Rename the "Home" navigation tab to "Todo's" for clearer labeling of the todo list section.
