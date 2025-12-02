@@ -461,9 +461,10 @@ Add a textarea input in the Comments section of the opportunity side panel, allo
 
 ## Issue #14: Archive Action for Closed/Cancelled Opportunities with Toggle View
 
-**Status:** Open
+**Status:** Closed
 **Created:** 2025-12-02
 **Related Issues:** #10, #11
+**Fix:** Issue-14: Added archive button for closed/cancelled opportunities, Show Archived toggle, and faded styling for archived items.
 
 ### Summary
 For opportunities with status "Closed" or "Cancelled", disable the Close, Cancel, and Delete action buttons. Replace with an Archive action that hides the opportunity from the default list view. Add a "Show Archived" toggle at the top right of the opportunities list to reveal archived items.
