@@ -336,9 +336,10 @@ Requested → Open (when todo linked) → Paused (all todos complete) → Closed
 
 ## Issue #11: Add Cancel Action with Comments System for Opportunities
 
-**Status:** Open
+**Status:** Closed
 **Created:** 2025-12-02
 **Related Issues:** #8, #10
+**Fix:** Issue-11: Added cancel button with reason modal, comments system with timestamped entries, and red styling for cancellation comments in side panel.
 
 ### Summary
 Add a Cancel action button to opportunities that sets status to "Cancelled". Cancelling requires entering a comment explaining the reason. Introduce a comments system for opportunities - a list of timestamped comments. Cancellation comments are visually distinguished with red styling.

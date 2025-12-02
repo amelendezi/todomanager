@@ -1090,6 +1090,10 @@
             color: #D32F2F;
         }
 
+        .opp-action-btn.cancel-btn:hover:not(:disabled) svg {
+            color: #F57C00;
+        }
+
         /* Confirmation modal */
         .confirm-modal-content {
             text-align: center;
@@ -1129,6 +1133,133 @@
 
         .btn-danger:hover {
             background: #B71C1C;
+        }
+
+        /* Comments section in side panel */
+        .comments-section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .comments-header {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1F1F1F;
+            margin-bottom: 16px;
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .comment-item {
+            padding: 12px;
+            background: #F8F9FA;
+            border-radius: 8px;
+            border-left: 3px solid #E0E0E0;
+        }
+
+        .comment-item.cancellation {
+            background: #FFF5F5;
+            border-left-color: #D32F2F;
+        }
+
+        .comment-timestamp {
+            font-size: 11px;
+            color: #6C757D;
+            margin-bottom: 4px;
+        }
+
+        .comment-item.cancellation .comment-timestamp {
+            color: #D32F2F;
+        }
+
+        .comment-text {
+            font-size: 13px;
+            color: #1F1F1F;
+            line-height: 1.5;
+        }
+
+        .comment-item.cancellation .comment-text {
+            color: #B71C1C;
+        }
+
+        .comment-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
+        .comment-badge.cancellation {
+            background: #FFEBEE;
+            color: #D32F2F;
+        }
+
+        .no-comments {
+            font-size: 13px;
+            color: #ADB5BD;
+            font-style: italic;
+        }
+
+        /* Cancel modal with textarea */
+        .cancel-modal-content {
+            text-align: left;
+        }
+
+        .cancel-modal-content .modal-title {
+            text-align: center;
+        }
+
+        .cancel-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            color: #F57C00;
+            display: block;
+        }
+
+        .cancel-modal-content .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px 16px;
+            font-size: 14px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            background: #FFFFFF;
+            color: #1F1F1F;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #FFB800;
+            box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.2);
+        }
+
+        .form-textarea::placeholder {
+            color: #ADB5BD;
+        }
+
+        .btn-warning {
+            background: #F57C00;
+            color: #FFFFFF;
+        }
+
+        .btn-warning:hover {
+            background: #E65100;
         }
     </style>
 </head>
@@ -1307,6 +1438,13 @@
                     <option value="closed">Closed</option>
                 </select>
             </div>
+            <!-- Comments Section -->
+            <div class="comments-section">
+                <div class="comments-header">Comments</div>
+                <div id="panel-comments" class="comments-list">
+                    <!-- Comments will be rendered here -->
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1423,6 +1561,28 @@
         </div>
     </div>
 
+    <!-- Cancel Opportunity Modal -->
+    <div id="cancel-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closeCancelModal()"></div>
+        <div class="modal-content cancel-modal-content">
+            <svg class="cancel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+            <h2 class="modal-title">Cancel Opportunity</h2>
+            <p id="cancel-opp-name" style="text-align: center; color: #6C757D; margin-bottom: 20px;"></p>
+            <div class="form-group">
+                <label for="cancel-reason" class="form-label">Reason for Cancellation <span class="required">*</span></label>
+                <textarea id="cancel-reason" class="form-textarea" placeholder="Please provide a reason for cancelling this opportunity..." required></textarea>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeCancelModal()">Back</button>
+                <button type="button" class="btn btn-warning" onclick="confirmCancelOpportunity()">Cancel Opportunity</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Application state
         const state = {
@@ -1433,10 +1593,12 @@
             modalOpen: false,
             opportunityModalOpen: false,
             confirmModalOpen: false,
+            cancelModalOpen: false,
             sidePanelOpen: false,
             editingTodoIndex: null,  // Track which todo is being edited (null = create mode)
             selectedOpportunityIndex: null,  // Track which opportunity is open in side panel
             deleteOpportunityIndex: null,  // Track which opportunity is pending deletion
+            cancelOpportunityIndex: null,  // Track which opportunity is pending cancellation
             // Autocomplete state
             selectedOpportunityId: null,  // ID of selected opportunity for todo linking
             pendingOpportunity: null,  // New opportunity to create when saving todo
@@ -1494,6 +1656,14 @@
         // DOM Elements - Confirmation Modal
         const confirmModal = document.getElementById('confirm-modal');
         const confirmMessage = document.getElementById('confirm-message');
+
+        // DOM Elements - Cancel Modal
+        const cancelModal = document.getElementById('cancel-modal');
+        const cancelOppName = document.getElementById('cancel-opp-name');
+        const cancelReason = document.getElementById('cancel-reason');
+
+        // DOM Elements - Comments
+        const panelComments = document.getElementById('panel-comments');
 
         // Navigation functions
         function navigateTo(page) {
@@ -1666,6 +1836,7 @@
                     startDate: state.pendingOpportunity.startDate || getTodayDate(),
                     contact: state.pendingOpportunity.contact || null,
                     status: 'requested',
+                    comments: [],
                     createdAt: new Date().toISOString()
                 };
                 state.opportunities.push(newOpp);
@@ -1871,6 +2042,7 @@
                 startDate: startDate || getTodayDate(),
                 contact: contact || null,
                 status: 'requested',  // Default status
+                comments: [],
                 createdAt: new Date().toISOString()
             };
 
@@ -1914,6 +2086,13 @@
                                     <polyline points="20 6 9 17 4 12"></polyline>
                                 </svg>
                             </button>
+                            <button class="opp-action-btn cancel-btn" onclick="event.stopPropagation(); openCancelConfirmation(${index})" title="Cancel Opportunity">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                </svg>
+                            </button>
                             <button class="opp-action-btn delete-btn" onclick="event.stopPropagation(); openDeleteConfirmation(${index})" title="Delete Opportunity">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="3 6 5 6 21 6"></polyline>
@@ -1947,6 +2126,9 @@
             panelOppDate.textContent = opp.startDate ? formatDate(opp.startDate) : 'Not set';
             panelOppContact.textContent = opp.contact || 'Not set';
             panelOppStatus.value = opp.status;
+
+            // Render comments
+            renderCommentsInPanel(opp);
 
             // Show panel
             sidePanel.classList.add('open');
@@ -2034,6 +2216,106 @@
             // Re-render both lists
             renderOpportunities();
             renderTodos();
+        }
+
+        // =============================================
+        // Cancel Opportunity Functions
+        // =============================================
+
+        // Open cancel confirmation modal
+        function openCancelConfirmation(index) {
+            state.cancelOpportunityIndex = index;
+            state.cancelModalOpen = true;
+
+            const opp = state.opportunities[index];
+            cancelOppName.textContent = `"${opp.name}"`;
+            cancelReason.value = '';
+
+            cancelModal.classList.remove('hidden');
+            setTimeout(() => cancelReason.focus(), 100);
+        }
+
+        // Close cancel modal
+        function closeCancelModal() {
+            cancelModal.classList.add('hidden');
+            state.cancelModalOpen = false;
+            state.cancelOpportunityIndex = null;
+            cancelReason.value = '';
+        }
+
+        // Confirm and execute opportunity cancellation
+        function confirmCancelOpportunity() {
+            if (state.cancelOpportunityIndex === null) return;
+
+            const reason = cancelReason.value.trim();
+            if (!reason) {
+                cancelReason.focus();
+                return;
+            }
+
+            const opp = state.opportunities[state.cancelOpportunityIndex];
+
+            // Initialize comments array if not exists (for backwards compatibility)
+            if (!opp.comments) {
+                opp.comments = [];
+            }
+
+            // Add cancellation comment
+            opp.comments.push({
+                text: reason,
+                timestamp: new Date().toISOString(),
+                type: 'cancellation'
+            });
+
+            // Set status to cancelled
+            opp.status = 'cancelled';
+
+            // Update side panel if this opportunity is open
+            if (state.sidePanelOpen && state.selectedOpportunityIndex === state.cancelOpportunityIndex) {
+                panelOppStatus.value = 'cancelled';
+                renderCommentsInPanel(opp);
+            }
+
+            // Close cancel modal
+            closeCancelModal();
+
+            // Re-render opportunities list
+            renderOpportunities();
+        }
+
+        // Format datetime for display
+        function formatDateTime(isoString) {
+            const date = new Date(isoString);
+            const options = {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            return date.toLocaleString('en-US', options);
+        }
+
+        // Render comments in side panel
+        function renderCommentsInPanel(opp) {
+            // Initialize comments array if not exists
+            const comments = opp.comments || [];
+
+            if (comments.length === 0) {
+                panelComments.innerHTML = '<p class="no-comments">No comments yet</p>';
+                return;
+            }
+
+            panelComments.innerHTML = comments.map(comment => {
+                const isCancellation = comment.type === 'cancellation';
+                const badge = isCancellation ? '<span class="comment-badge cancellation">Cancellation</span>' : '';
+                return `
+                    <div class="comment-item ${isCancellation ? 'cancellation' : ''}">
+                        <div class="comment-timestamp">${formatDateTime(comment.timestamp)}${badge}</div>
+                        <div class="comment-text">${escapeHtml(comment.text)}</div>
+                    </div>
+                `;
+            }).join('');
         }
 
         // =============================================
@@ -2277,6 +2559,11 @@
 
             // Handle Escape key to close modals or side panel
             if (e.key === 'Escape') {
+                if (state.cancelModalOpen) {
+                    e.preventDefault();
+                    closeCancelModal();
+                    return;
+                }
                 if (state.confirmModalOpen) {
                     e.preventDefault();
                     closeConfirmModal();
