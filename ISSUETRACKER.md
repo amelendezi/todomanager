@@ -414,3 +414,46 @@ Replace the status dropdown in the opportunity details side panel with a read-on
 3. Status still updates when using list action buttons (Close, Cancel)
 
 ---
+
+## Issue #13: Add Comment Input to Opportunity Side Panel
+
+**Status:** Open
+**Created:** 2025-12-02
+**Related Issues:** #11
+
+### Summary
+Add a textarea input in the Comments section of the opportunity side panel, allowing users to manually add standard comments. This extends the comments system introduced in Issue #11 (which only added cancellation comments) to support user-added notes.
+
+### Requirements
+
+#### Comment Input UI
+- [ ] Add textarea below the comments list in side panel
+- [ ] Include placeholder text (e.g., "Add a comment...")
+- [ ] Add "Add Comment" button next to/below textarea
+- [ ] Clear textarea after successful submission
+
+#### Comment Submission
+- [ ] Create new comment with `type: "standard"`
+- [ ] Include current timestamp
+- [ ] Add to opportunity's comments array
+- [ ] Re-render comments list to show new comment
+- [ ] Empty comments should not be submitted
+
+#### Styling
+- [ ] Standard comments use default styling (not red like cancellation)
+- [ ] Input area styled consistently with other form elements
+
+### Technical Notes
+- Add textarea and button HTML to comments section
+- Create `addComment()` function
+- Comments with `type: "standard"` already styled without red (from Issue #11)
+
+### Acceptance Criteria
+1. Textarea visible in side panel Comments section
+2. User can type and submit a comment
+3. Comment appears in list with timestamp
+4. Standard comments display in normal styling (not red)
+5. Textarea clears after submission
+6. Empty comments are not submitted
+
+---
