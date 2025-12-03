@@ -477,6 +477,8 @@
             padding: 24px;
             width: 90%;
             max-width: 480px;
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             animation: modalSlideIn 0.3s ease;
             transform-origin: center center;
@@ -1824,7 +1826,31 @@
                         </div>
                         <div class="form-group">
                             <label for="inline-opp-contact" class="form-label">Contact</label>
-                            <input type="text" id="inline-opp-contact" class="form-input" placeholder="Contact person">
+                            <div class="autocomplete-wrapper">
+                                <input type="text" id="inline-opp-contact" class="form-input" placeholder="Type to search or create person..." autocomplete="off">
+                                <button type="button" id="inline-opp-contact-clear" class="autocomplete-clear" onclick="clearInlineOppContact()">×</button>
+                                <div id="inline-opp-contact-dropdown" class="autocomplete-dropdown">
+                                    <!-- Contact dropdown items will be rendered here -->
+                                </div>
+                            </div>
+                            <!-- Inline Person Creation Form (within inline opportunity) -->
+                            <div id="inline-opp-person-form" class="inline-person-form">
+                                <div class="inline-person-header">
+                                    <span class="inline-person-title">Create New Person</span>
+                                    <div class="inline-person-actions">
+                                        <button type="button" class="btn btn-secondary" onclick="cancelInlineOppPerson()">Cancel</button>
+                                        <button type="button" class="btn btn-primary" onclick="confirmInlineOppPerson()">Add</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inline-opp-person-name" class="form-label">Name</label>
+                                    <input type="text" id="inline-opp-person-name" class="form-input" placeholder="Person's name" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inline-opp-person-role" class="form-label">Role</label>
+                                    <input type="text" id="inline-opp-person-role" class="form-input" placeholder="Person's role">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2010,6 +2036,12 @@
             contactAutocompleteHighlightIndex: -1,
             inlineOppFormOpen: false,
             inlinePersonFormOpen: false,
+            // Inline person form within inline opportunity (in Todo modal)
+            inlineOppContactAutocompleteOpen: false,
+            inlineOppContactAutocompleteHighlightIndex: -1,
+            inlineOppPersonFormOpen: false,
+            selectedInlineOppPersonId: null,
+            pendingInlineOppPerson: null,
             showArchived: false
         };
 
@@ -2034,6 +2066,11 @@
         const inlineOppDescription = document.getElementById('inline-opp-description');
         const inlineOppStartDate = document.getElementById('inline-opp-start-date');
         const inlineOppContact = document.getElementById('inline-opp-contact');
+        const inlineOppContactClear = document.getElementById('inline-opp-contact-clear');
+        const inlineOppContactDropdown = document.getElementById('inline-opp-contact-dropdown');
+        const inlineOppPersonForm = document.getElementById('inline-opp-person-form');
+        const inlineOppPersonName = document.getElementById('inline-opp-person-name');
+        const inlineOppPersonRole = document.getElementById('inline-opp-person-role');
 
         // DOM Elements - Opportunities
         const opportunitiesPage = document.getElementById('opportunities-page');
@@ -2199,10 +2236,21 @@
             state.autocompleteOpen = false;
             state.autocompleteHighlightIndex = -1;
             state.inlineOppFormOpen = false;
+            // Reset inline opp person state
+            state.inlineOppContactAutocompleteOpen = false;
+            state.inlineOppContactAutocompleteHighlightIndex = -1;
+            state.inlineOppPersonFormOpen = false;
+            state.selectedInlineOppPersonId = null;
+            state.pendingInlineOppPerson = null;
             todoOpportunityInput.value = '';
             todoOpportunityClear.classList.remove('visible');
             opportunityDropdown.classList.remove('open');
             inlineOppForm.classList.remove('open');
+            // Reset inline opp contact fields
+            inlineOppContact.value = '';
+            inlineOppContactClear.classList.remove('visible');
+            inlineOppContactDropdown.classList.remove('open');
+            inlineOppPersonForm.classList.remove('open');
 
             if (todoIndex !== null) {
                 // Edit mode - populate with existing todo data
@@ -2275,13 +2323,53 @@
             // Handle pending opportunity creation
             let opportunityId = state.selectedOpportunityId;
             if (state.pendingOpportunity) {
+                // First, handle person creation if needed
+                let contactPersonId = state.pendingOpportunity.contactPersonId;
+
+                // Check for pending person from inline opp form (may be set after opportunity was confirmed)
+                const pendingPersonData = state.pendingOpportunity.pendingPerson || state.pendingInlineOppPerson;
+
+                if (pendingPersonData) {
+                    // Create the new person (use the combined pending person data)
+                    const pendingPerson = pendingPersonData;
+
+                    // Handle role creation if needed
+                    let roleId = null;
+                    if (pendingPerson.role) {
+                        // Check if role exists
+                        const existingRole = state.roles.find(r => r.name.toLowerCase() === pendingPerson.role.toLowerCase());
+                        if (existingRole) {
+                            roleId = existingRole.id;
+                        } else {
+                            // Create new role
+                            const newRole = {
+                                id: generateId(),
+                                name: pendingPerson.role,
+                                createdAt: new Date().toISOString()
+                            };
+                            state.roles.push(newRole);
+                            roleId = newRole.id;
+                        }
+                    }
+
+                    // Create the person
+                    const newPerson = {
+                        id: generateId(),
+                        name: pendingPerson.name,
+                        roleId: roleId,
+                        createdAt: new Date().toISOString()
+                    };
+                    state.people.push(newPerson);
+                    contactPersonId = newPerson.id;
+                }
+
                 // Create the new opportunity
                 const newOpp = {
                     id: generateId(),
                     name: state.pendingOpportunity.name,
                     description: state.pendingOpportunity.description || null,
                     startDate: state.pendingOpportunity.startDate || getTodayDate(),
-                    contact: state.pendingOpportunity.contact || null,
+                    contactPersonId: contactPersonId || null,
                     status: 'requested',
                     comments: [],
                     archived: false,
@@ -2645,7 +2733,17 @@
             panelOppName.textContent = opp.name;
             panelOppDescription.textContent = opp.description || 'No description';
             panelOppDate.textContent = opp.startDate ? formatDate(opp.startDate) : 'Not set';
-            panelOppContact.textContent = opp.contact || 'Not set';
+            // Get contact name - either from contactPersonId or legacy contact field
+            let contactDisplay = 'Not set';
+            if (opp.contactPersonId) {
+                const person = state.people.find(p => p.id === opp.contactPersonId);
+                if (person) {
+                    contactDisplay = person.name;
+                }
+            } else if (opp.contact) {
+                contactDisplay = opp.contact;
+            }
+            panelOppContact.textContent = contactDisplay;
 
             // Update status badge
             updatePanelStatusBadge(opp.status);
@@ -3008,7 +3106,10 @@
                 name: name,
                 description: inlineOppDescription.value.trim(),
                 startDate: inlineOppStartDate.value,
-                contact: inlineOppContact.value.trim()
+                contact: inlineOppContact.value.trim(),
+                // Include person data for the contact
+                contactPersonId: state.selectedInlineOppPersonId,
+                pendingPerson: state.pendingInlineOppPerson
             };
 
             // Update UI to show it's selected
@@ -3083,11 +3184,34 @@
             }
         });
 
-        // Handle inline form Enter key
-        inlineOppForm.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+        // Handle inline opportunity description Enter key - move to Contact field
+        inlineOppDescription.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
                 e.preventDefault();
-                confirmInlineOpportunity();
+                // Move focus to Contact field and scroll
+                inlineOppContact.focus();
+                setTimeout(() => {
+                    inlineOppContact.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            }
+        });
+
+        // Handle inline opportunity name Enter key - move to Description field
+        inlineOppName.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                inlineOppDescription.focus();
+            }
+        });
+
+        // Handle inline opportunity start date Enter key - move to Contact field
+        inlineOppStartDate.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                inlineOppContact.focus();
+                setTimeout(() => {
+                    inlineOppContact.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
             }
         });
 
@@ -3565,6 +3689,234 @@
             closeInlinePersonForm();
         }
 
+        // ============================================
+        // Inline Person Creation within Inline Opportunity (Todo Modal)
+        // ============================================
+
+        // Render inline opp contact dropdown
+        function renderInlineOppContactDropdown(query) {
+            const matches = filterPeople(query);
+            inlineOppContactDropdown.innerHTML = '';
+
+            if (matches.length === 0) {
+                const item = document.createElement('div');
+                item.className = 'autocomplete-item autocomplete-no-match';
+                item.textContent = `Press Enter to create "${query}"`;
+                inlineOppContactDropdown.appendChild(item);
+            } else {
+                matches.forEach((person, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'autocomplete-item';
+                    item.dataset.index = index;
+
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = 'autocomplete-item-name';
+                    nameSpan.textContent = person.name;
+                    item.appendChild(nameSpan);
+
+                    if (person.roleId) {
+                        const role = state.roles.find(r => r.id === person.roleId);
+                        if (role) {
+                            const roleSpan = document.createElement('span');
+                            roleSpan.className = 'autocomplete-item-role';
+                            roleSpan.textContent = role.name;
+                            item.appendChild(roleSpan);
+                        }
+                    }
+
+                    item.addEventListener('click', () => selectInlineOppContact(person));
+                    inlineOppContactDropdown.appendChild(item);
+                });
+            }
+        }
+
+        // Open inline opp contact dropdown
+        function openInlineOppContactDropdown() {
+            state.inlineOppContactAutocompleteOpen = true;
+            state.inlineOppContactAutocompleteHighlightIndex = -1;
+            inlineOppContactDropdown.classList.add('open');
+        }
+
+        // Close inline opp contact dropdown
+        function closeInlineOppContactDropdown() {
+            state.inlineOppContactAutocompleteOpen = false;
+            state.inlineOppContactAutocompleteHighlightIndex = -1;
+            inlineOppContactDropdown.classList.remove('open');
+        }
+
+        // Select contact for inline opportunity
+        function selectInlineOppContact(person) {
+            state.selectedInlineOppPersonId = person.id;
+            state.pendingInlineOppPerson = null;
+            inlineOppContact.value = person.name;
+            inlineOppContactClear.classList.add('visible');
+            closeInlineOppContactDropdown();
+            closeInlineOppPersonForm();
+        }
+
+        // Clear inline opp contact selection
+        function clearInlineOppContact() {
+            state.selectedInlineOppPersonId = null;
+            state.pendingInlineOppPerson = null;
+            inlineOppContact.value = '';
+            inlineOppContactClear.classList.remove('visible');
+            closeInlineOppContactDropdown();
+            closeInlineOppPersonForm();
+        }
+
+        // Open inline person form within inline opportunity
+        function openInlineOppPersonForm(name) {
+            state.inlineOppPersonFormOpen = true;
+            inlineOppPersonName.value = name;
+            inlineOppPersonRole.value = '';
+            inlineOppPersonForm.classList.add('open');
+            closeInlineOppContactDropdown();
+
+            // Scroll to make the form visible
+            setTimeout(() => {
+                inlineOppPersonRole.focus();
+                inlineOppPersonForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 350);
+        }
+
+        // Close inline person form within inline opportunity
+        function closeInlineOppPersonForm() {
+            state.inlineOppPersonFormOpen = false;
+            inlineOppPersonForm.classList.remove('open');
+        }
+
+        // Cancel inline person creation within inline opportunity
+        function cancelInlineOppPerson() {
+            state.pendingInlineOppPerson = null;
+            inlineOppContact.value = '';
+            inlineOppContactClear.classList.remove('visible');
+            closeInlineOppPersonForm();
+        }
+
+        // Confirm inline person creation within inline opportunity
+        function confirmInlineOppPerson() {
+            const name = inlineOppPersonName.value.trim();
+            const role = inlineOppPersonRole.value.trim();
+
+            if (!name) {
+                inlineOppPersonName.focus();
+                return;
+            }
+
+            // Store as pending person for inline opportunity
+            state.pendingInlineOppPerson = { name, role };
+            state.selectedInlineOppPersonId = null;
+
+            // Update the contact input to show the name
+            inlineOppContact.value = name;
+            inlineOppContactClear.classList.add('visible');
+
+            closeInlineOppPersonForm();
+        }
+
+        // Update autocomplete highlight for inline opp contact
+        function updateInlineOppContactAutocompleteHighlight() {
+            const items = inlineOppContactDropdown.querySelectorAll('.autocomplete-item:not(.autocomplete-no-match)');
+            items.forEach((item, index) => {
+                item.classList.toggle('highlighted', index === state.inlineOppContactAutocompleteHighlightIndex);
+            });
+        }
+
+        // Inline opp contact input event handlers
+        inlineOppContact.addEventListener('input', (e) => {
+            const query = e.target.value;
+
+            // Clear selected person if user types
+            state.selectedInlineOppPersonId = null;
+            state.pendingInlineOppPerson = null;
+
+            // Show/hide clear button
+            inlineOppContactClear.classList.toggle('visible', query.length > 0);
+
+            // Close inline form if open
+            if (state.inlineOppPersonFormOpen) {
+                closeInlineOppPersonForm();
+            }
+
+            // Render and open dropdown
+            if (query.trim() !== '') {
+                renderInlineOppContactDropdown(query);
+                openInlineOppContactDropdown();
+            } else {
+                closeInlineOppContactDropdown();
+            }
+        });
+
+        inlineOppContact.addEventListener('focus', (e) => {
+            const query = inlineOppContact.value;
+            if (query.trim() !== '' && !state.selectedInlineOppPersonId && !state.pendingInlineOppPerson) {
+                renderInlineOppContactDropdown(query);
+                openInlineOppContactDropdown();
+            }
+            // Scroll to make contact field visible
+            setTimeout(() => {
+                inlineOppContact.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        });
+
+        inlineOppContact.addEventListener('keydown', (e) => {
+            const items = inlineOppContactDropdown.querySelectorAll('.autocomplete-item:not(.autocomplete-no-match)');
+            const matches = filterPeople(inlineOppContact.value);
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (state.inlineOppContactAutocompleteOpen && items.length > 0) {
+                    state.inlineOppContactAutocompleteHighlightIndex = Math.min(state.inlineOppContactAutocompleteHighlightIndex + 1, items.length - 1);
+                    updateInlineOppContactAutocompleteHighlight();
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (state.inlineOppContactAutocompleteOpen && items.length > 0) {
+                    state.inlineOppContactAutocompleteHighlightIndex = Math.max(state.inlineOppContactAutocompleteHighlightIndex - 1, 0);
+                    updateInlineOppContactAutocompleteHighlight();
+                }
+            } else if (e.key === 'Tab') {
+                // Tab key - if there's a query, open person form and focus role
+                const query = inlineOppContact.value.trim();
+                if (query && !state.inlineOppPersonFormOpen && !state.selectedInlineOppPersonId && !state.pendingInlineOppPerson) {
+                    e.preventDefault();
+                    openInlineOppPersonForm(query);
+                }
+                // If person form is already open, Tab will naturally move to role field
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                const query = inlineOppContact.value.trim();
+
+                if (state.inlineOppContactAutocompleteOpen && state.inlineOppContactAutocompleteHighlightIndex >= 0 && matches.length > 0) {
+                    // Select highlighted item
+                    selectInlineOppContact(matches[state.inlineOppContactAutocompleteHighlightIndex]);
+                } else if (query && !state.inlineOppPersonFormOpen && !state.selectedInlineOppPersonId && !state.pendingInlineOppPerson) {
+                    // Has query but no selection - open inline creation form for new person
+                    openInlineOppPersonForm(query);
+                } else if (state.inlineOppContactAutocompleteOpen) {
+                    // Just close dropdown
+                    closeInlineOppContactDropdown();
+                }
+            } else if (e.key === 'Escape') {
+                if (state.inlineOppContactAutocompleteOpen) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeInlineOppContactDropdown();
+                }
+            }
+        });
+
+        // Handle inline opp person form Enter key - confirm person AND opportunity
+        inlineOppPersonForm.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+                e.preventDefault();
+                // First confirm the person
+                confirmInlineOppPerson();
+                // Then confirm the opportunity (which will include the person)
+                confirmInlineOpportunity();
+            }
+        });
+
         // Contact input event handlers
         oppContactInput.addEventListener('input', (e) => {
             const query = e.target.value;
@@ -3655,6 +4007,9 @@
             }
             if (!e.target.closest('.autocomplete-wrapper') && state.roleAutocompleteOpen) {
                 closeRoleDropdown();
+            }
+            if (!e.target.closest('.autocomplete-wrapper') && state.inlineOppContactAutocompleteOpen) {
+                closeInlineOppContactDropdown();
             }
         });
 
