@@ -1536,6 +1536,139 @@
             background: #E3F2FD;
             border-radius: 12px;
         }
+
+        /* Settings page layout */
+        #settings-page {
+            background: #F5F5F5;
+        }
+
+        .settings-container {
+            display: flex;
+            min-height: calc(100vh - 60px);
+            margin-top: 60px;
+        }
+
+        .settings-menu {
+            width: 40%;
+            background: #FFFFFF;
+            border-right: 1px solid #E0E0E0;
+            padding: 24px 0;
+        }
+
+        .settings-menu-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #6C757D;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 24px;
+            margin-bottom: 16px;
+        }
+
+        .settings-menu-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .settings-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 24px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1F1F1F;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .settings-menu-item:hover {
+            background: #F8F9FA;
+        }
+
+        .settings-menu-item.active {
+            background: #FFF8E1;
+            border-left-color: #FFB800;
+            color: #1F1F1F;
+        }
+
+        .settings-menu-item svg {
+            width: 24px;
+            height: 24px;
+            color: #6C757D;
+            flex-shrink: 0;
+        }
+
+        .settings-menu-item.active svg {
+            color: #FFB800;
+        }
+
+        .settings-content {
+            width: 60%;
+            position: relative;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .settings-close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: none;
+            background: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .settings-close-btn:hover {
+            background: #F8F9FA;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .settings-close-btn svg {
+            width: 24px;
+            height: 24px;
+            color: #6C757D;
+        }
+
+        .settings-close-btn:hover svg {
+            color: #1F1F1F;
+        }
+
+        .settings-section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1F1F1F;
+            margin-bottom: 24px;
+        }
+
+        /* Responsive settings */
+        @media (max-width: 768px) {
+            .settings-container {
+                flex-direction: column;
+            }
+
+            .settings-menu {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #E0E0E0;
+                padding: 16px 0;
+            }
+
+            .settings-content {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1689,38 +1822,70 @@
         </main>
     </div>
 
-    <!-- People Page -->
-    <div id="people-page" class="page hidden">
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Floating shortcut hint (shown when items exist) -->
-            <p id="people-shortcut-hint-floating" class="shortcut-hint-floating hidden">Press Shift + N to create new items</p>
+    <!-- Settings Page -->
+    <div id="settings-page" class="page hidden">
+        <div class="settings-container">
+            <!-- Left Menu -->
+            <nav class="settings-menu">
+                <h2 class="settings-menu-title">Settings</h2>
+                <ul class="settings-menu-list">
+                    <li class="settings-menu-item active" data-section="people" onclick="switchSettingsSection('people')">
+                        <!-- Multi-user icon -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span>People</span>
+                    </li>
+                </ul>
+            </nav>
 
-            <!-- People List Container -->
-            <div id="people-list" class="people-list">
-                <!-- People will be rendered here -->
-            </div>
+            <!-- Content Area -->
+            <div class="settings-content">
+                <!-- Close Button -->
+                <button class="settings-close-btn" onclick="closeSettings()" title="Close Settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
 
-            <!-- Empty State -->
-            <div id="people-empty-state" class="empty-state">
-                <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
-                <p class="empty-text">No People</p>
-                <p class="shortcut-hint">Press Shift + N to create new items</p>
-            </div>
+                <!-- People Section -->
+                <div id="settings-section-people" class="settings-section">
+                    <h2 class="settings-section-title">People</h2>
 
-            <!-- Roles Section -->
-            <div id="roles-section" class="roles-section hidden">
-                <h3 class="roles-title">Roles</h3>
-                <div id="roles-list" class="roles-list">
-                    <!-- Roles will be rendered here -->
+                    <!-- Floating shortcut hint (shown when items exist) -->
+                    <p id="people-shortcut-hint-floating" class="shortcut-hint-floating hidden">Press Shift + N to create new items</p>
+
+                    <!-- People List Container -->
+                    <div id="people-list" class="people-list">
+                        <!-- People will be rendered here -->
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="people-empty-state" class="empty-state">
+                        <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <p class="empty-text">No People</p>
+                        <p class="shortcut-hint">Press Shift + N to create new items</p>
+                    </div>
+
+                    <!-- Roles Section -->
+                    <div id="roles-section" class="roles-section hidden">
+                        <h3 class="roles-title">Roles</h3>
+                        <div id="roles-list" class="roles-list">
+                            <!-- Roles will be rendered here -->
+                        </div>
+                    </div>
                 </div>
             </div>
-        </main>
+        </div>
     </div>
 
     <!-- Side Panel for Opportunity Details -->
@@ -1984,7 +2149,9 @@
             people: [],
             roles: [],
             currentPage: 'landing',
-            currentTab: 'home',  // 'home', 'opportunities', or 'people'
+            currentTab: 'home',  // 'home', 'opportunities', or 'settings'
+            previousTab: 'home',  // Track previous tab for settings return navigation
+            settingsSection: 'people',  // Current settings section
             modalOpen: false,
             opportunityModalOpen: false,
             personModalOpen: false,
@@ -2082,8 +2249,8 @@
         // DOM Elements - Archive Toggle
         const showArchivedToggle = document.getElementById('show-archived-toggle');
 
-        // DOM Elements - People
-        const peoplePage = document.getElementById('people-page');
+        // DOM Elements - Settings
+        const settingsPage = document.getElementById('settings-page');
         const peopleList = document.getElementById('people-list');
         const peopleEmptyState = document.getElementById('people-empty-state');
         const peopleShortcutHintFloating = document.getElementById('people-shortcut-hint-floating');
@@ -2110,7 +2277,7 @@
             landingPage.classList.remove('container');
             homePage.classList.add('hidden');
             opportunitiesPage.classList.add('hidden');
-            peoplePage.classList.add('hidden');
+            settingsPage.classList.add('hidden');
             appHeader.classList.add('hidden');
 
             // Show requested page
@@ -2136,28 +2303,54 @@
         function switchTab(tab) {
             state.currentTab = tab;
 
-            // Update tab buttons
+            // Update tab buttons (settings doesn't have a tab button)
             tabHome.classList.toggle('active', tab === 'home');
             tabOpportunities.classList.toggle('active', tab === 'opportunities');
 
             // Show/hide pages
             homePage.classList.toggle('hidden', tab !== 'home');
             opportunitiesPage.classList.toggle('hidden', tab !== 'opportunities');
-            peoplePage.classList.toggle('hidden', tab !== 'people');
+            settingsPage.classList.toggle('hidden', tab !== 'settings');
 
             // Render content
             if (tab === 'home') {
                 renderTodos();
             } else if (tab === 'opportunities') {
                 renderOpportunities();
-            } else if (tab === 'people') {
+            } else if (tab === 'settings') {
                 renderPeople();
             }
         }
 
-        // Open Settings (People page)
+        // Open Settings page
         function openSettings() {
-            switchTab('people');
+            // Save current tab before navigating to settings
+            if (state.currentTab !== 'settings') {
+                state.previousTab = state.currentTab;
+            }
+            switchTab('settings');
+        }
+
+        // Close Settings and return to previous page
+        function closeSettings() {
+            switchTab(state.previousTab);
+        }
+
+        // Switch settings section (for future extensibility)
+        function switchSettingsSection(section) {
+            state.settingsSection = section;
+
+            // Update menu item active state
+            const menuItems = document.querySelectorAll('.settings-menu-item');
+            menuItems.forEach(item => {
+                item.classList.toggle('active', item.dataset.section === section);
+            });
+
+            // For now, only People section exists
+            // Future sections would be shown/hidden here
+            if (section === 'people') {
+                renderPeople();
+            }
         }
 
         function startFromScratch() {
@@ -3679,9 +3872,9 @@
                 return;
             }
 
-            // Handle Shift+N to open person modal (only on people tab)
+            // Handle Shift+N to open person modal (only on settings page with people section)
             if (e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && e.key.toLowerCase() === 'n' &&
-                state.currentPage === 'app' && state.currentTab === 'people' && !anyModalOpen) {
+                state.currentPage === 'app' && state.currentTab === 'settings' && state.settingsSection === 'people' && !anyModalOpen) {
                 e.preventDefault();
                 openPersonModal();
                 return;
