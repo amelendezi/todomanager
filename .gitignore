@@ -1,0 +1,8 @@
+# Ignore everything in root
+/*
+
+# But not the src folder
+!/src/
+
+# Ignore .git folder (automatically handled by git)
+!/.gitignore
