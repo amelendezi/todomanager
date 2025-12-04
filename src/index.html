@@ -1944,6 +1944,689 @@
                 width: 100%;
             }
         }
+
+        /* ========================================
+           RECOMMENDATION ENGINE STYLES
+           ======================================== */
+
+        /* Split-panel layout for Todos page */
+        .home-split-container {
+            display: flex;
+            gap: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Recommendation Panel (Left) */
+        .recommendation-panel {
+            width: 400px;
+            min-width: 400px;
+            background: #FFFFFF;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            max-height: calc(100vh - 108px);
+            overflow-y: auto;
+        }
+
+        .recommendation-panel.collapsed {
+            width: 48px;
+            min-width: 48px;
+            overflow: hidden;
+        }
+
+        .recommendation-panel.collapsed .recommendation-content {
+            display: none;
+        }
+
+        .recommendation-panel.collapsed .panel-toggle-btn {
+            transform: rotate(180deg);
+        }
+
+        /* Panel Toggle Button */
+        .panel-toggle-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: #F8F9FA;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 5;
+        }
+
+        .panel-toggle-btn:hover {
+            background: #E9ECEF;
+        }
+
+        .panel-toggle-btn svg {
+            width: 18px;
+            height: 18px;
+            color: #6C757D;
+            transition: transform 0.3s ease;
+        }
+
+        /* Collapsed state toggle */
+        .recommendation-panel.collapsed .panel-toggle-btn {
+            position: static;
+            margin: 8px auto;
+            display: flex;
+        }
+
+        /* Todo Panel (Right) */
+        .todo-panel {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Recommendation Header */
+        .recommendation-header {
+            position: relative;
+            padding: 20px;
+            border-bottom: 1px solid #E0E0E0;
+            background: linear-gradient(135deg, #FFF8E1 0%, #FFFFFF 100%);
+        }
+
+        .recommendation-date {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1F1F1F;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .recommendation-date-icon {
+            font-size: 20px;
+        }
+
+        .recommendation-summary {
+            font-size: 13px;
+            color: #6C757D;
+        }
+
+        /* Recommendation Content */
+        .recommendation-content {
+            padding: 16px;
+        }
+
+        /* Recommendation Section */
+        .recommendation-section {
+            margin-bottom: 20px;
+        }
+
+        .recommendation-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .recommendation-section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #6C757D;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #F0F0F0;
+        }
+
+        .recommendation-section-icon {
+            font-size: 14px;
+        }
+
+        .recommendation-section-count {
+            background: #E9ECEF;
+            color: #6C757D;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: auto;
+        }
+
+        /* Section-specific colors */
+        .recommendation-section.overdue .recommendation-section-header {
+            color: #DC3545;
+        }
+
+        .recommendation-section.overdue .recommendation-section-count {
+            background: #FFEBEE;
+            color: #DC3545;
+        }
+
+        .recommendation-section.must-do .recommendation-section-header {
+            color: #F57C00;
+        }
+
+        .recommendation-section.must-do .recommendation-section-count {
+            background: #FFF3E0;
+            color: #F57C00;
+        }
+
+        .recommendation-section.recommended .recommendation-section-header {
+            color: #1976D2;
+        }
+
+        .recommendation-section.recommended .recommendation-section-count {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .recommendation-section.if-time .recommendation-section-header {
+            color: #6C757D;
+        }
+
+        /* Recommendation Item */
+        .recommendation-item {
+            background: #F8F9FA;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .recommendation-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .recommendation-item:hover {
+            background: #FFFFFF;
+            border-color: #E0E0E0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .recommendation-item-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .recommendation-item-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #D0D0D0;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 2px;
+        }
+
+        .recommendation-item-checkbox:hover {
+            border-color: #FFB800;
+        }
+
+        .recommendation-item-checkbox.checked {
+            background: #00A86B;
+            border-color: #00A86B;
+        }
+
+        .recommendation-item-title {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1F1F1F;
+            line-height: 1.4;
+        }
+
+        .recommendation-item.completed .recommendation-item-title {
+            text-decoration: line-through;
+            color: #ADB5BD;
+        }
+
+        .recommendation-item-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: #6C757D;
+            margin-bottom: 8px;
+            margin-left: 30px;
+        }
+
+        .recommendation-item-effort,
+        .recommendation-item-deadline {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Tag pills in recommendation */
+        .recommendation-item-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-left: 30px;
+            margin-bottom: 8px;
+        }
+
+        /* Priority pill styling (distinct from user tags) */
+        .priority-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .priority-pill.priority-urgent {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+
+        .priority-pill.priority-high {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+
+        .priority-pill.priority-normal {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+
+        .priority-pill.priority-low {
+            background: #F5F5F5;
+            color: #616161;
+        }
+
+        .priority-pill.priority-someday {
+            background: #FAFAFA;
+            color: #9E9E9E;
+        }
+
+        /* Reasoning text */
+        .recommendation-item-reasoning {
+            font-size: 12px;
+            color: #6C757D;
+            font-style: italic;
+            margin-left: 30px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .recommendation-item-reasoning::before {
+            content: '\2192';
+            color: #ADB5BD;
+        }
+
+        /* Score display */
+        .recommendation-item-score {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-left: 30px;
+            margin-top: 8px;
+        }
+
+        .score-badge {
+            font-size: 11px;
+            font-weight: 600;
+            color: #6C757D;
+            background: #E9ECEF;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .score-badge.critical {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+
+        .score-badge.high {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+
+        .score-badge.medium {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+
+        /* Warning Card */
+        .warning-card {
+            background: #FFF3E0;
+            border: 1px solid #FFE0B2;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .warning-card.critical {
+            background: #FFEBEE;
+            border-color: #FFCDD2;
+        }
+
+        .warning-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .warning-message {
+            font-size: 13px;
+            color: #5D4037;
+            line-height: 1.4;
+        }
+
+        .warning-card.critical .warning-message {
+            color: #B71C1C;
+        }
+
+        /* Insight Card */
+        .insight-card {
+            background: #E8F5E9;
+            border: 1px solid #C8E6C9;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .insight-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .insight-message {
+            font-size: 13px;
+            color: #2E7D32;
+            line-height: 1.4;
+        }
+
+        /* Warnings section */
+        .warnings-section {
+            margin-bottom: 16px;
+        }
+
+        /* Insights section */
+        .insights-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .insights-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 12px;
+        }
+
+        /* Empty recommendation state */
+        .recommendation-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6C757D;
+        }
+
+        .recommendation-empty-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .recommendation-empty-text {
+            font-size: 14px;
+        }
+
+        /* Effort dropdown styles */
+        .effort-select {
+            width: 100%;
+            height: 48px;
+            padding: 12px 16px;
+            font-size: 14px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            background: #FFFFFF;
+            color: #1F1F1F;
+            cursor: pointer;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: inherit;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236C757D' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+        }
+
+        .effort-select:focus {
+            outline: none;
+            border-color: #FFB800;
+            box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.2);
+        }
+
+        /* Priority autocomplete styles */
+        .priority-autocomplete-wrapper {
+            position: relative;
+        }
+
+        .priority-input {
+            width: 100%;
+            height: 48px;
+            padding: 12px 16px;
+            font-size: 14px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            background: #FFFFFF;
+            color: #1F1F1F;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: inherit;
+        }
+
+        .priority-input:focus {
+            outline: none;
+            border-color: #FFB800;
+            box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.2);
+        }
+
+        .priority-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #FFFFFF;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .priority-dropdown.open {
+            display: block;
+        }
+
+        .priority-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        .priority-option:hover,
+        .priority-option.highlighted {
+            background: #F8F9FA;
+        }
+
+        .priority-option.selected {
+            background: #FFF8E1;
+        }
+
+        .priority-option-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .priority-option-label {
+            font-size: 14px;
+            color: #1F1F1F;
+        }
+
+        .priority-option-desc {
+            font-size: 12px;
+            color: #6C757D;
+            margin-left: auto;
+        }
+
+        /* Datetime input styles */
+        .datetime-input {
+            width: 100%;
+            height: 48px;
+            padding: 12px 16px;
+            font-size: 14px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            background: #FFFFFF;
+            color: #1F1F1F;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: inherit;
+        }
+
+        .datetime-input:focus {
+            outline: none;
+            border-color: #FFB800;
+            box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.2);
+        }
+
+        /* Description textarea */
+        .form-textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 12px 16px;
+            font-size: 14px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            background: #FFFFFF;
+            color: #1F1F1F;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #FFB800;
+            box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.2);
+        }
+
+        .form-textarea::placeholder {
+            color: #ADB5BD;
+        }
+
+        /* Effort display in todo list */
+        .todo-effort {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: #6C757D;
+            background: #F5F5F5;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-right: 8px;
+        }
+
+        .todo-effort-icon {
+            font-size: 10px;
+        }
+
+        /* Priority display in todo list */
+        .todo-priority {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-right: 8px;
+        }
+
+        /* Planning settings section */
+        .planning-settings-form {
+            max-width: 500px;
+        }
+
+        .planning-settings-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .planning-settings-form .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1F1F1F;
+            margin-bottom: 6px;
+        }
+
+        .planning-settings-form .form-hint {
+            font-size: 12px;
+            color: #6C757D;
+            margin-top: 4px;
+        }
+
+        .planning-settings-form .form-input {
+            max-width: 200px;
+        }
+
+        .planning-settings-form .btn-save-settings {
+            margin-top: 24px;
+        }
+
+        /* Responsive split-panel */
+        @media (max-width: 1024px) {
+            .home-split-container {
+                flex-direction: column;
+            }
+
+            .recommendation-panel {
+                width: 100%;
+                min-width: 100%;
+                max-height: none;
+                margin-bottom: 24px;
+            }
+
+            .recommendation-panel.collapsed {
+                width: 100%;
+                min-width: 100%;
+                height: 48px;
+            }
+
+            .todo-panel {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2046,24 +2729,108 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Floating shortcut hint (shown when items exist) -->
-            <p id="todo-shortcut-hint-floating" class="shortcut-hint-floating hidden">Press Shift + N to create new items</p>
+            <!-- Split Container -->
+            <div class="home-split-container">
+                <!-- Recommendation Panel (Left) -->
+                <div id="recommendation-panel" class="recommendation-panel">
+                    <!-- Panel Header -->
+                    <div class="recommendation-header">
+                        <button class="panel-toggle-btn" onclick="toggleRecommendationPanel()" title="Toggle recommendations">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
+                        <div class="recommendation-date">
+                            <span class="recommendation-date-icon">📅</span>
+                            <span id="recommendation-date-text">Daily Plan</span>
+                        </div>
+                        <div id="recommendation-summary" class="recommendation-summary"></div>
+                    </div>
 
-            <!-- Todo List Container -->
-            <div id="todo-list" class="todo-list">
-                <!-- Todos will be rendered here -->
-            </div>
+                    <!-- Panel Content -->
+                    <div class="recommendation-content">
+                        <!-- Warnings Section -->
+                        <div id="warnings-section" class="warnings-section hidden"></div>
 
-            <!-- Empty State -->
-            <div id="empty-state" class="empty-state">
-                <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
-                    <rect x="9" y="3" width="6" height="4" rx="1"></rect>
-                    <line x1="9" y1="12" x2="15" y2="12"></line>
-                    <line x1="9" y1="16" x2="13" y2="16"></line>
-                </svg>
-                <p class="empty-text">No Todos</p>
-                <p class="shortcut-hint">Press Shift + N to create new items</p>
+                        <!-- Overdue Section -->
+                        <div id="overdue-section" class="recommendation-section overdue hidden">
+                            <div class="recommendation-section-header">
+                                <span class="recommendation-section-icon">🔴</span>
+                                <span>Overdue</span>
+                                <span id="overdue-count" class="recommendation-section-count">0</span>
+                            </div>
+                            <div id="overdue-items" class="recommendation-items"></div>
+                        </div>
+
+                        <!-- Must Complete Today Section -->
+                        <div id="must-do-section" class="recommendation-section must-do hidden">
+                            <div class="recommendation-section-header">
+                                <span class="recommendation-section-icon">⚡</span>
+                                <span>Must Complete Today</span>
+                                <span id="must-do-count" class="recommendation-section-count">0</span>
+                            </div>
+                            <div id="must-do-items" class="recommendation-items"></div>
+                        </div>
+
+                        <!-- Recommended Section -->
+                        <div id="recommended-section" class="recommendation-section recommended hidden">
+                            <div class="recommendation-section-header">
+                                <span class="recommendation-section-icon">📋</span>
+                                <span>Recommended</span>
+                                <span id="recommended-count" class="recommendation-section-count">0</span>
+                            </div>
+                            <div id="recommended-items" class="recommendation-items"></div>
+                        </div>
+
+                        <!-- If Time Permits Section -->
+                        <div id="if-time-section" class="recommendation-section if-time hidden">
+                            <div class="recommendation-section-header">
+                                <span class="recommendation-section-icon">💡</span>
+                                <span>If Time Permits</span>
+                                <span id="if-time-count" class="recommendation-section-count">0</span>
+                            </div>
+                            <div id="if-time-items" class="recommendation-items"></div>
+                        </div>
+
+                        <!-- Insights Section -->
+                        <div id="insights-section" class="insights-section hidden">
+                            <div class="insights-header">
+                                <span>💬</span>
+                                <span>Insights</span>
+                            </div>
+                            <div id="insights-items"></div>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div id="recommendation-empty" class="recommendation-empty">
+                            <div class="recommendation-empty-icon">🎉</div>
+                            <p class="recommendation-empty-text">No tasks to recommend.<br>Add some todos to get started!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Todo Panel (Right) -->
+                <div class="todo-panel">
+                    <!-- Floating shortcut hint (shown when items exist) -->
+                    <p id="todo-shortcut-hint-floating" class="shortcut-hint-floating hidden">Press Shift + N to create new items</p>
+
+                    <!-- Todo List Container -->
+                    <div id="todo-list" class="todo-list">
+                        <!-- Todos will be rendered here -->
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="empty-state" class="empty-state">
+                        <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
+                            <rect x="9" y="3" width="6" height="4" rx="1"></rect>
+                            <line x1="9" y1="12" x2="15" y2="12"></line>
+                            <line x1="9" y1="16" x2="13" y2="16"></line>
+                        </svg>
+                        <p class="empty-text">No Todos</p>
+                        <p class="shortcut-hint">Press Shift + N to create new items</p>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -2124,6 +2891,17 @@
                             <line x1="7" y1="7" x2="7.01" y2="7"></line>
                         </svg>
                         <span>Tags</span>
+                    </li>
+                    <li class="settings-menu-item" data-section="planning" onclick="switchSettingsSection('planning')">
+                        <!-- Calendar/Clock icon -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                            <circle cx="12" cy="15" r="2"></circle>
+                        </svg>
+                        <span>Planning</span>
                     </li>
                 </ul>
             </nav>
@@ -2192,6 +2970,40 @@
                         <p class="empty-text">No Tags</p>
                         <p class="shortcut-hint">Press Shift + N to create new items</p>
                     </div>
+                </div>
+
+                <!-- Planning Section -->
+                <div id="settings-section-planning" class="settings-section hidden">
+                    <h2 class="settings-section-title">Planning</h2>
+                    <p style="color: #6C757D; margin-bottom: 24px;">Configure how the daily recommendation engine calculates and displays your task priorities.</p>
+
+                    <form class="planning-settings-form" onsubmit="savePlanningSettings(event)">
+                        <div class="form-group">
+                            <label for="workday-minutes" class="form-label">Workday Length (minutes)</label>
+                            <input type="number" id="workday-minutes" class="form-input" min="60" max="1440" value="480">
+                            <p class="form-hint">How many minutes you plan to work each day (default: 480 = 8 hours)</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="buffer-percentage" class="form-label">Buffer Percentage (%)</label>
+                            <input type="number" id="buffer-percentage" class="form-input" min="0" max="50" value="15">
+                            <p class="form-hint">Reserve time for interruptions and context switching (default: 15%)</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="max-overdue" class="form-label">Max Overdue Items to Show</label>
+                            <input type="number" id="max-overdue" class="form-input" min="1" max="20" value="5">
+                            <p class="form-hint">Limit how many overdue items appear in recommendations (default: 5)</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="planning-horizon" class="form-label">Planning Horizon (days)</label>
+                            <input type="number" id="planning-horizon" class="form-input" min="1" max="30" value="14">
+                            <p class="form-hint">How far ahead to look when recommending tasks (default: 14 days)</p>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-save-settings">Save Settings</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -2279,12 +3091,35 @@
             <h2 id="modal-title" class="modal-title">New Todo</h2>
             <form id="todo-form" onsubmit="saveTodo(event)">
                 <div class="form-group">
-                    <label for="todo-description" class="form-label">Description <span class="required">*</span></label>
-                    <input type="text" id="todo-description" class="form-input" placeholder="What needs to be done?" required autofocus>
+                    <label for="todo-title" class="form-label">Title <span class="required">*</span></label>
+                    <input type="text" id="todo-title" class="form-input" placeholder="What needs to be done?" required autofocus>
                 </div>
                 <div class="form-group">
-                    <label for="todo-due-date" class="form-label">Due Date</label>
-                    <input type="date" id="todo-due-date" class="form-input">
+                    <label for="todo-description" class="form-label">Description</label>
+                    <textarea id="todo-description" class="form-textarea" placeholder="Additional details (optional)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="todo-deadline" class="form-label">Deadline <span class="required">*</span></label>
+                    <input type="datetime-local" id="todo-deadline" class="datetime-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="todo-effort" class="form-label">Effort Level <span class="required">*</span></label>
+                    <select id="todo-effort" class="effort-select" required>
+                        <option value="very_low">Very Low (30 min)</option>
+                        <option value="low">Low (2 hours)</option>
+                        <option value="average" selected>Average (4 hours)</option>
+                        <option value="high">High (6 hours)</option>
+                        <option value="very_high">Very High (8 hours)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="todo-priority" class="form-label">Priority <span class="required">*</span></label>
+                    <div class="priority-autocomplete-wrapper">
+                        <input type="text" id="todo-priority" class="priority-input" placeholder="Type to select priority..." autocomplete="off" required>
+                        <div id="priority-dropdown" class="priority-dropdown">
+                            <!-- Priority options will be rendered here -->
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="todo-opportunity" class="form-label">Linked Opportunity</label>
@@ -2532,6 +3367,77 @@
     </div>
 
     <script>
+        // ========================================
+        // PRIORITY TAGS - System-defined constants
+        // ========================================
+        const PRIORITY_TAGS = Object.freeze({
+            urgent: {
+                id: "priority-urgent",
+                name: "urgent",
+                label: "Urgent",
+                color: "#ef4444",
+                weight: 100,
+                description: "Must be addressed immediately"
+            },
+            high: {
+                id: "priority-high",
+                name: "high",
+                label: "High Priority",
+                color: "#f97316",
+                weight: 75,
+                description: "Important, should be done soon"
+            },
+            normal: {
+                id: "priority-normal",
+                name: "normal",
+                label: "Normal",
+                color: "#3b82f6",
+                weight: 50,
+                description: "Standard priority"
+            },
+            low: {
+                id: "priority-low",
+                name: "low",
+                label: "Low Priority",
+                color: "#6b7280",
+                weight: 25,
+                description: "Can wait, do when time permits"
+            },
+            someday: {
+                id: "priority-someday",
+                name: "someday",
+                label: "Someday",
+                color: "#9ca3af",
+                weight: 10,
+                description: "No urgency, backlog item"
+            }
+        });
+
+        const DEFAULT_PRIORITY = "normal";
+
+        // ========================================
+        // EFFORT LEVELS - Configuration
+        // ========================================
+        const EFFORT_CONFIG = Object.freeze({
+            very_low:  { label: "Very Low",  minutes: 30,  icon: "⚡" },
+            low:       { label: "Low",       minutes: 120, icon: "🟢" },
+            average:   { label: "Average",   minutes: 240, icon: "🟡" },
+            high:      { label: "High",      minutes: 360, icon: "🟠" },
+            very_high: { label: "Very High", minutes: 480, icon: "🔴" }
+        });
+
+        const DEFAULT_EFFORT = "average";
+
+        // ========================================
+        // PLANNING SETTINGS - Defaults
+        // ========================================
+        const DEFAULT_SETTINGS = Object.freeze({
+            workdayMinutes: 480,        // 8-hour workday
+            bufferPercentage: 15,       // 15% buffer for interruptions
+            maxOverdueToShow: 5,        // Limit overdue display
+            planningHorizonDays: 14     // Look-ahead window
+        });
+
         // Application state
         const state = {
             todos: [],
@@ -2583,7 +3489,15 @@
             todoTagDropdownOpen: false,
             todoTagHighlightIndex: -1,
             oppTagDropdownOpen: false,
-            oppTagHighlightIndex: -1
+            oppTagHighlightIndex: -1,
+            // Planning settings
+            settings: { ...DEFAULT_SETTINGS },
+            // Recommendation panel state
+            recommendationPanelOpen: true,
+            // Priority autocomplete state
+            selectedPriority: DEFAULT_PRIORITY,
+            priorityDropdownOpen: false,
+            priorityHighlightIndex: -1
         };
 
         // DOM Elements - Landing and Home
@@ -2594,9 +3508,34 @@
         const todoShortcutHintFloating = document.getElementById('todo-shortcut-hint-floating');
         const todoModal = document.getElementById('todo-modal');
         const todoForm = document.getElementById('todo-form');
+        const todoTitleInput = document.getElementById('todo-title');
         const todoDescriptionInput = document.getElementById('todo-description');
-        const todoDueDateInput = document.getElementById('todo-due-date');
+        const todoDeadlineInput = document.getElementById('todo-deadline');
+        const todoEffortSelect = document.getElementById('todo-effort');
+        const todoPriorityInput = document.getElementById('todo-priority');
+        const priorityDropdown = document.getElementById('priority-dropdown');
         const modalTitle = document.getElementById('modal-title');
+
+        // DOM Elements - Recommendation Panel
+        const recommendationPanel = document.getElementById('recommendation-panel');
+        const recommendationDateText = document.getElementById('recommendation-date-text');
+        const recommendationSummary = document.getElementById('recommendation-summary');
+        const warningsSection = document.getElementById('warnings-section');
+        const overdueSection = document.getElementById('overdue-section');
+        const overdueItems = document.getElementById('overdue-items');
+        const overdueCount = document.getElementById('overdue-count');
+        const mustDoSection = document.getElementById('must-do-section');
+        const mustDoItems = document.getElementById('must-do-items');
+        const mustDoCount = document.getElementById('must-do-count');
+        const recommendedSection = document.getElementById('recommended-section');
+        const recommendedItems = document.getElementById('recommended-items');
+        const recommendedCount = document.getElementById('recommended-count');
+        const ifTimeSection = document.getElementById('if-time-section');
+        const ifTimeItems = document.getElementById('if-time-items');
+        const ifTimeCount = document.getElementById('if-time-count');
+        const insightsSection = document.getElementById('insights-section');
+        const insightsItems = document.getElementById('insights-items');
+        const recommendationEmpty = document.getElementById('recommendation-empty');
 
         // DOM Elements - Autocomplete
         const todoOpportunityInput = document.getElementById('todo-opportunity');
@@ -2815,13 +3754,16 @@
         function exportData() {
             // Collect all data entities from state
             const exportableData = {
+                version: '1.0',
+                lastModified: new Date().toISOString(),
+                settings: state.settings,
+                userTags: state.tags,  // Renamed for spec compliance
                 todos: state.todos,
                 opportunities: state.opportunities,
                 people: state.people,
                 roles: state.roles,
-                tags: state.tags,
-                exportedAt: new Date().toISOString(),
-                version: '1.0'
+                tags: state.tags,  // Keep for backward compatibility
+                exportedAt: new Date().toISOString()
             };
 
             // Create JSON blob
@@ -2869,7 +3811,29 @@
                     state.opportunities = Array.isArray(importedData.opportunities) ? importedData.opportunities : [];
                     state.people = Array.isArray(importedData.people) ? importedData.people : [];
                     state.roles = Array.isArray(importedData.roles) ? importedData.roles : [];
-                    state.tags = Array.isArray(importedData.tags) ? importedData.tags : [];
+                    // Support both old 'tags' and new 'userTags' format
+                    state.tags = Array.isArray(importedData.userTags) ? importedData.userTags :
+                                 Array.isArray(importedData.tags) ? importedData.tags : [];
+
+                    // Restore planning settings (merge with defaults)
+                    if (importedData.settings && typeof importedData.settings === 'object') {
+                        state.settings = { ...DEFAULT_SETTINGS, ...importedData.settings };
+                    } else {
+                        state.settings = { ...DEFAULT_SETTINGS };
+                    }
+
+                    // Ensure all todos have required new fields with defaults
+                    state.todos = state.todos.map(todo => ({
+                        ...todo,
+                        title: todo.title || todo.description || 'Untitled',
+                        description: todo.description || null,
+                        deadline: todo.deadline || (todo.dueDate ? new Date(todo.dueDate).toISOString() : null),
+                        effort: todo.effort || DEFAULT_EFFORT,
+                        priority: PRIORITY_TAGS[todo.priority] ? todo.priority : DEFAULT_PRIORITY,
+                        completedAt: todo.completedAt || null,
+                        createdAt: todo.createdAt || new Date().toISOString(),
+                        updatedAt: todo.updatedAt || new Date().toISOString()
+                    }));
 
                     // Navigate to app and render
                     navigateTo('app');
@@ -2877,6 +3841,7 @@
                     renderOpportunities();
                     renderPeople();
                     renderTags();
+                    loadPlanningSettings();
 
                 } catch (error) {
                     alert('Error importing file: ' + error.message + '\n\nPlease ensure you selected a valid TodoApp export file.');
@@ -2937,12 +3902,37 @@
             todoTagInput.value = '';
             closeTodoTagDropdown();
 
+            // Reset priority state
+            state.selectedPriority = DEFAULT_PRIORITY;
+            state.priorityDropdownOpen = false;
+            state.priorityHighlightIndex = -1;
+            closePriorityDropdown();
+
             if (todoIndex !== null) {
                 // Edit mode - populate with existing todo data
                 const todo = state.todos[todoIndex];
                 modalTitle.textContent = 'Edit Todo';
-                todoDescriptionInput.value = todo.title;
-                todoDueDateInput.value = todo.dueDate || '';
+                todoTitleInput.value = todo.title || '';
+                todoDescriptionInput.value = todo.description || '';
+
+                // Handle deadline (support both new deadline and old dueDate)
+                if (todo.deadline) {
+                    todoDeadlineInput.value = formatDateTimeLocal(new Date(todo.deadline));
+                } else if (todo.dueDate) {
+                    // Convert old dueDate to deadline with default time
+                    const oldDate = new Date(todo.dueDate);
+                    oldDate.setHours(17, 0, 0, 0);
+                    todoDeadlineInput.value = formatDateTimeLocal(oldDate);
+                } else {
+                    todoDeadlineInput.value = getDefaultDeadline();
+                }
+
+                // Set effort
+                todoEffortSelect.value = todo.effort || DEFAULT_EFFORT;
+
+                // Set priority
+                state.selectedPriority = todo.priority || DEFAULT_PRIORITY;
+                todoPriorityInput.value = PRIORITY_TAGS[state.selectedPriority].label;
 
                 // Pre-populate linked opportunity
                 if (todo.opportunityId) {
@@ -2961,15 +3951,20 @@
             } else {
                 // Create mode
                 modalTitle.textContent = 'New Todo';
-                // Set default due date to today
-                todoDueDateInput.value = getTodayDate();
+                // Set default deadline to 5 PM today
+                todoDeadlineInput.value = getDefaultDeadline();
+                // Set default effort
+                todoEffortSelect.value = DEFAULT_EFFORT;
+                // Set default priority
+                state.selectedPriority = DEFAULT_PRIORITY;
+                todoPriorityInput.value = PRIORITY_TAGS[DEFAULT_PRIORITY].label;
             }
 
             // Render selected tags
             renderTodoSelectedTags();
 
-            // Focus on description input
-            setTimeout(() => todoDescriptionInput.focus(), 100);
+            // Focus on title input
+            setTimeout(() => todoTitleInput.focus(), 100);
         }
 
         // Edit a todo - opens modal in edit mode
@@ -3008,10 +4003,14 @@
         function saveTodo(event) {
             event.preventDefault();
 
+            const title = todoTitleInput.value.trim();
             const description = todoDescriptionInput.value.trim();
-            const dueDate = todoDueDateInput.value;
+            const deadline = todoDeadlineInput.value;
+            const effort = todoEffortSelect.value;
+            const priority = state.selectedPriority;
 
-            if (!description) return;
+            if (!title) return;
+            if (!deadline) return;
 
             // Handle pending opportunity creation
             let opportunityId = state.selectedOpportunityId;
@@ -3075,21 +4074,31 @@
             if (state.editingTodoIndex !== null) {
                 // Update existing todo
                 const todo = state.todos[state.editingTodoIndex];
-                todo.title = description;
-                todo.dueDate = dueDate || null;
+                todo.title = title;
+                todo.description = description || null;
+                todo.deadline = new Date(deadline).toISOString();
+                todo.effort = effort;
+                todo.priority = priority;
                 todo.opportunityId = opportunityId;
                 todo.tagIds = [...state.selectedTodoTagIds];
-                // Preserve id, completed, and createdAt
+                todo.updatedAt = new Date().toISOString();
+                // Preserve id, completed, completedAt, and createdAt
             } else {
                 // Create new todo
+                const now = new Date().toISOString();
                 const newTodo = {
                     id: generateId(),
-                    title: description,
-                    dueDate: dueDate || null,
+                    title: title,
+                    description: description || null,
+                    deadline: new Date(deadline).toISOString(),
+                    effort: effort,
+                    priority: priority,
                     opportunityId: opportunityId,
                     tagIds: [...state.selectedTodoTagIds],
                     completed: false,
-                    createdAt: new Date().toISOString()
+                    completedAt: null,
+                    createdAt: now,
+                    updatedAt: now
                 };
                 state.todos.push(newTodo);
             }
@@ -3144,6 +4153,9 @@
             // Clear current list
             todoList.innerHTML = '';
 
+            // Also render recommendation panel
+            renderRecommendationPanel();
+
             if (state.todos.length === 0) {
                 // Show empty state
                 todoList.classList.add('hidden');
@@ -3159,14 +4171,33 @@
                     const todoItem = document.createElement('div');
                     todoItem.className = `todo-item ${todo.completed ? 'completed' : ''}`;
 
-                    // Format due date
+                    // Format deadline (supports both old dueDate and new deadline)
                     let dueDateHtml = '';
-                    if (todo.dueDate) {
-                        const dueDate = new Date(todo.dueDate);
+                    const deadlineValue = todo.deadline || todo.dueDate;
+                    if (deadlineValue) {
+                        const dueDate = new Date(deadlineValue);
                         const today = new Date();
                         today.setHours(0, 0, 0, 0);
                         const isOverdue = dueDate < today && !todo.completed;
-                        dueDateHtml = `<div class="todo-due-date ${isOverdue ? 'overdue' : ''}">Due: ${formatDate(todo.dueDate)}</div>`;
+                        dueDateHtml = `<div class="todo-due-date ${isOverdue ? 'overdue' : ''}">📅 ${formatDeadlineDisplay(deadlineValue)}</div>`;
+                    }
+
+                    // Format effort
+                    let effortHtml = '';
+                    const effort = todo.effort || DEFAULT_EFFORT;
+                    const effortConfig = EFFORT_CONFIG[effort];
+                    if (effortConfig) {
+                        effortHtml = `<span class="todo-effort"><span class="todo-effort-icon">${effortConfig.icon}</span> ${formatEffortDisplay(effort)}</span>`;
+                    }
+
+                    // Format priority
+                    let priorityHtml = '';
+                    const priority = todo.priority || DEFAULT_PRIORITY;
+                    if (priority && priority !== 'normal') {
+                        const priorityTag = PRIORITY_TAGS[priority];
+                        if (priorityTag) {
+                            priorityHtml = `<span class="priority-pill priority-${priority}">${priorityTag.label}</span>`;
+                        }
                     }
 
                     // Format linked opportunity
@@ -3186,19 +4217,32 @@
                         }
                     }
 
-                    // Format tags
+                    // Format tags (combine priority pill with user tags)
                     let tagsHtml = '';
+                    const tagPills = [];
+
+                    // Add priority pill first (if not normal)
+                    if (priorityHtml) {
+                        tagPills.push(priorityHtml);
+                    }
+
+                    // Add effort badge
+                    if (effortHtml) {
+                        tagPills.push(effortHtml);
+                    }
+
+                    // Add user tags
                     if (todo.tagIds && todo.tagIds.length > 0) {
-                        const tagPills = todo.tagIds.map(tagId => {
+                        todo.tagIds.forEach(tagId => {
                             const tag = getTagById(tagId);
                             if (tag) {
-                                return `<span class="tag-pill" style="background-color: ${tag.color}; color: #fff;">${escapeHtml(tag.name)}</span>`;
+                                tagPills.push(`<span class="tag-pill" style="background-color: ${tag.color}; color: #fff;">${escapeHtml(tag.name)}</span>`);
                             }
-                            return '';
-                        }).filter(Boolean).join('');
-                        if (tagPills) {
-                            tagsHtml = `<div class="tags-container">${tagPills}</div>`;
-                        }
+                        });
+                    }
+
+                    if (tagPills.length > 0) {
+                        tagsHtml = `<div class="tags-container">${tagPills.join('')}</div>`;
                     }
 
                     todoItem.innerHTML = `
@@ -3226,6 +4270,8 @@
         function toggleTodo(index) {
             const todo = state.todos[index];
             todo.completed = !todo.completed;
+            todo.completedAt = todo.completed ? new Date().toISOString() : null;
+            todo.updatedAt = new Date().toISOString();
 
             // Check and update opportunity status if linked
             if (todo.opportunityId) {
@@ -5341,6 +6387,667 @@
                     }
                 }
             });
+        }
+
+        // ========================================
+        // SCORING ALGORITHM FUNCTIONS
+        // ========================================
+
+        function getDaysUntilDeadline(deadline, currentDate = new Date()) {
+            const deadlineDate = new Date(deadline);
+            const today = new Date(currentDate);
+
+            // Reset to start of day for comparison
+            today.setHours(0, 0, 0, 0);
+            const deadlineDay = new Date(deadlineDate);
+            deadlineDay.setHours(0, 0, 0, 0);
+
+            const msPerDay = 24 * 60 * 60 * 1000;
+            return Math.floor((deadlineDay - today) / msPerDay);
+        }
+
+        function calculateDeadlineScore(todo, currentDate = new Date()) {
+            if (!todo.deadline) return 0;
+
+            const daysUntilDue = getDaysUntilDeadline(todo.deadline, currentDate);
+
+            if (daysUntilDue < 0) {
+                // OVERDUE: 150 base + 10 per day overdue, max 200
+                return Math.min(200, 150 + (Math.abs(daysUntilDue) * 10));
+            }
+
+            if (daysUntilDue === 0) return 140;  // Due today
+            if (daysUntilDue === 1) return 120;  // Due tomorrow
+            if (daysUntilDue <= 3) return 100 - (daysUntilDue * 10);  // 70-90
+            if (daysUntilDue <= 7) return 70 - (daysUntilDue * 5);    // 35-55
+            if (daysUntilDue <= 14) return 30 - (daysUntilDue - 7);   // 23-30
+
+            return Math.max(0, 20 - (daysUntilDue - 14));  // Distant future
+        }
+
+        function calculatePriorityScore(todo) {
+            const priority = todo.priority || DEFAULT_PRIORITY;
+            const weight = PRIORITY_TAGS[priority]?.weight;
+            return weight ?? PRIORITY_TAGS[DEFAULT_PRIORITY].weight;
+        }
+
+        function calculateStalenessBonus(todo, currentDate = new Date()) {
+            if (!todo.createdAt) return 0;
+
+            const created = new Date(todo.createdAt);
+            const today = new Date(currentDate);
+            const msPerDay = 24 * 60 * 60 * 1000;
+            const daysOld = Math.floor((today - created) / msPerDay);
+
+            if (daysOld <= 7) return 0;
+            if (daysOld <= 14) return 10;
+            if (daysOld <= 30) return 20;
+            return 30;
+        }
+
+        function calculateUrgencyScore(todo, currentDate = new Date()) {
+            const deadline = calculateDeadlineScore(todo, currentDate);
+            const priority = calculatePriorityScore(todo);
+            const staleness = calculateStalenessBonus(todo, currentDate);
+
+            return {
+                total: deadline + priority + staleness,
+                breakdown: { deadline, priority, staleness }
+            };
+        }
+
+        function getScoreClassification(score) {
+            if (score >= 250) return { label: 'Critical', class: 'critical' };
+            if (score >= 200) return { label: 'Must Do Today', class: 'high' };
+            if (score >= 150) return { label: 'High Priority', class: 'high' };
+            if (score >= 100) return { label: 'Should Do Soon', class: 'medium' };
+            if (score >= 50) return { label: 'Plan Ahead', class: '' };
+            return { label: 'Backlog', class: '' };
+        }
+
+        // ========================================
+        // DAILY PLAN GENERATION
+        // ========================================
+
+        function classifyTodos(scored, currentDate = new Date()) {
+            const today = new Date(currentDate);
+            today.setHours(0, 0, 0, 0);
+
+            return {
+                overdue: scored.filter(s => {
+                    if (!s.todo.deadline) return false;
+                    const d = new Date(s.todo.deadline);
+                    d.setHours(0, 0, 0, 0);
+                    return d < today;
+                }),
+                dueToday: scored.filter(s => {
+                    if (!s.todo.deadline) return false;
+                    const d = new Date(s.todo.deadline);
+                    d.setHours(0, 0, 0, 0);
+                    return d.getTime() === today.getTime();
+                }),
+                upcoming: scored.filter(s => {
+                    if (!s.todo.deadline) return true; // Include todos without deadlines
+                    const d = new Date(s.todo.deadline);
+                    d.setHours(0, 0, 0, 0);
+                    return d > today;
+                })
+            };
+        }
+
+        function buildPlan(classified, effectiveMinutes, config) {
+            const plan = {
+                date: new Date(),
+                availableMinutes: effectiveMinutes,
+                allocatedMinutes: 0,
+                sections: {
+                    overdue: [],
+                    mustDoToday: [],
+                    recommended: [],
+                    ifTimePermits: []
+                },
+                warnings: [],
+                insights: []
+            };
+
+            let remainingMinutes = effectiveMinutes;
+
+            // Add overdue (capped, always shown)
+            const overdueToShow = classified.overdue.slice(0, config.maxOverdueToShow);
+            for (const item of overdueToShow) {
+                plan.sections.overdue.push(formatScheduledItem(item));
+                plan.allocatedMinutes += item.minutes;
+            }
+
+            // Add due today (always shown)
+            for (const item of classified.dueToday) {
+                plan.sections.mustDoToday.push(formatScheduledItem(item));
+                plan.allocatedMinutes += item.minutes;
+            }
+
+            // Calculate remaining capacity
+            remainingMinutes = effectiveMinutes - plan.allocatedMinutes;
+
+            // Fill recommended from upcoming, respecting capacity
+            for (const item of classified.upcoming) {
+                if (remainingMinutes >= item.minutes) {
+                    plan.sections.recommended.push(formatScheduledItem(item));
+                    remainingMinutes -= item.minutes;
+                    plan.allocatedMinutes += item.minutes;
+                } else if (item.score.total >= 100) {
+                    // High priority but doesn't fit
+                    plan.sections.ifTimePermits.push(formatScheduledItem(item));
+                }
+            }
+
+            return plan;
+        }
+
+        function formatScheduledItem(item) {
+            return {
+                todo: item.todo,
+                urgencyScore: item.score.total,
+                scoreBreakdown: item.score.breakdown,
+                estimatedMinutes: item.minutes,
+                reasoning: generateReasoning(item)
+            };
+        }
+
+        function generateReasoning(item) {
+            const parts = [];
+            const daysUntil = getDaysUntilDeadline(item.todo.deadline);
+
+            // Deadline reasoning
+            if (daysUntil < 0) {
+                parts.push(`Overdue by ${Math.abs(daysUntil)} day(s)`);
+            } else if (daysUntil === 0) {
+                parts.push("Due today");
+            } else if (daysUntil === 1) {
+                parts.push("Due tomorrow");
+            } else if (daysUntil <= 7) {
+                parts.push(`Due in ${daysUntil} days`);
+            }
+
+            // Priority reasoning (only mention if not normal)
+            const priority = item.todo.priority || DEFAULT_PRIORITY;
+            if (priority && priority !== "normal") {
+                const priorityTag = PRIORITY_TAGS[priority];
+                if (priorityTag) {
+                    parts.push(priorityTag.label);
+                }
+            }
+
+            // Effort reasoning
+            const effort = item.todo.effort || DEFAULT_EFFORT;
+            if (effort === "very_low") {
+                parts.push("Quick win");
+            } else if (effort === "very_high") {
+                parts.push("Requires full day");
+            }
+
+            return parts.join(" • ") || "Scheduled based on priority";
+        }
+
+        function generateDailyPlan(currentDate = new Date()) {
+            const config = { ...DEFAULT_SETTINGS, ...state.settings };
+
+            // Calculate effective work time
+            const effectiveMinutes = Math.floor(
+                config.workdayMinutes * (1 - config.bufferPercentage / 100)
+            );
+
+            // 1. Filter incomplete todos
+            const incomplete = state.todos.filter(t => !t.completed);
+
+            // 2. Score and sort
+            const scored = incomplete
+                .map(todo => ({
+                    todo,
+                    score: calculateUrgencyScore(todo, currentDate),
+                    minutes: EFFORT_CONFIG[todo.effort || DEFAULT_EFFORT]?.minutes || 240
+                }))
+                .sort((a, b) => b.score.total - a.score.total);
+
+            // 3. Classify by deadline status
+            const classified = classifyTodos(scored, currentDate);
+
+            // 4. Build the plan with time constraints
+            const plan = buildPlan(classified, effectiveMinutes, config);
+
+            // 5. Generate warnings and insights
+            plan.warnings = generateWarnings(plan, scored, currentDate, config);
+            plan.insights = generateInsights(plan, scored, currentDate);
+
+            return plan;
+        }
+
+        // ========================================
+        // WARNINGS AND INSIGHTS
+        // ========================================
+
+        function generateWarnings(plan, allScored, currentDate, config) {
+            const warnings = [];
+
+            // Check for overloaded day
+            if (plan.allocatedMinutes > plan.availableMinutes) {
+                const overloadHours = ((plan.allocatedMinutes - plan.availableMinutes) / 60).toFixed(1);
+                warnings.push({
+                    type: "overloaded",
+                    severity: "critical",
+                    message: `Today's critical items exceed available time by ${overloadHours} hours. Consider renegotiating deadlines or delegating.`
+                });
+            }
+
+            // Check for large overdue backlog
+            const totalOverdue = allScored.filter(s => getDaysUntilDeadline(s.todo.deadline) < 0).length;
+            if (totalOverdue > config.maxOverdueToShow) {
+                warnings.push({
+                    type: "overdue_backlog",
+                    severity: "warning",
+                    message: `You have ${totalOverdue} overdue items total. Consider a backlog review session.`
+                });
+            }
+
+            // Check for deadline cluster
+            const next3Days = allScored.filter(s => {
+                const d = getDaysUntilDeadline(s.todo.deadline);
+                return d >= 0 && d <= 3;
+            });
+            const clusterMinutes = next3Days.reduce((sum, s) => sum + s.minutes, 0);
+
+            if (clusterMinutes > config.workdayMinutes * 2) {
+                const clusterHours = Math.round(clusterMinutes / 60);
+                warnings.push({
+                    type: "deadline_cluster",
+                    severity: "warning",
+                    message: `Heavy deadline cluster ahead: ${clusterHours} hours of work due in the next 3 days.`
+                });
+            }
+
+            // Check for impossible single task
+            const impossibleTask = allScored.find(s =>
+                s.minutes > config.workdayMinutes && getDaysUntilDeadline(s.todo.deadline) <= 1
+            );
+            if (impossibleTask) {
+                warnings.push({
+                    type: "impossible_task",
+                    severity: "critical",
+                    message: `"${impossibleTask.todo.title}" requires ${(impossibleTask.minutes / 60).toFixed(1)} hours but is due very soon. Consider breaking it down.`
+                });
+            }
+
+            return warnings;
+        }
+
+        function generateInsights(plan, allScored, currentDate) {
+            const insights = [];
+
+            // Light day opportunity
+            const utilization = plan.availableMinutes > 0
+                ? (plan.allocatedMinutes / plan.availableMinutes) * 100
+                : 0;
+            if (utilization < 50 && allScored.length > 0) {
+                insights.push({
+                    type: "light_day",
+                    message: "Light day ahead! Good opportunity to get ahead on upcoming tasks or clear some backlog."
+                });
+            }
+
+            // Quick wins available
+            const quickWins = allScored.filter(s =>
+                (s.todo.effort === "very_low") && s.score.total >= 50
+            );
+            if (quickWins.length >= 3) {
+                insights.push({
+                    type: "quick_wins",
+                    message: `${quickWins.length} quick-win tasks available. Consider batching them to build momentum.`
+                });
+            }
+
+            // All caught up
+            if (plan.sections.overdue.length === 0 && plan.sections.mustDoToday.length === 0) {
+                insights.push({
+                    type: "caught_up",
+                    message: "No overdue or urgent items! Great time to work on important-but-not-urgent tasks."
+                });
+            }
+
+            // High effort concentration
+            const highEffortToday = [...plan.sections.mustDoToday, ...plan.sections.recommended]
+                .filter(s => s.todo.effort === "high" || s.todo.effort === "very_high");
+            if (highEffortToday.length >= 2) {
+                insights.push({
+                    type: "high_effort",
+                    message: "Multiple high-effort tasks today. Consider tackling the hardest one during your peak energy hours."
+                });
+            }
+
+            return insights;
+        }
+
+        // ========================================
+        // FORMATTING HELPERS
+        // ========================================
+
+        function formatDeadlineDisplay(deadline, currentDate = new Date()) {
+            if (!deadline) return 'No deadline';
+
+            const days = getDaysUntilDeadline(deadline, currentDate);
+
+            if (days < -1) return `${Math.abs(days)} days overdue`;
+            if (days === -1) return "Yesterday";
+            if (days === 0) return "Today";
+            if (days === 1) return "Tomorrow";
+            if (days <= 7) return `In ${days} days`;
+
+            return new Date(deadline).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric"
+            });
+        }
+
+        function formatEffortDisplay(effort) {
+            const config = EFFORT_CONFIG[effort || DEFAULT_EFFORT];
+            if (!config) return '4 hrs';
+            if (config.minutes < 60) {
+                return `${config.minutes} min`;
+            }
+            return `${config.minutes / 60} hrs`;
+        }
+
+        function formatPlanSummary(plan) {
+            const overdueCount = plan.sections.overdue.length;
+            const todayCount = plan.sections.mustDoToday.length;
+            const totalHours = (plan.allocatedMinutes / 60).toFixed(1);
+
+            const parts = [];
+            if (overdueCount > 0) parts.push(`${overdueCount} overdue`);
+            if (todayCount > 0) parts.push(`${todayCount} due today`);
+            parts.push(`${totalHours} hrs planned`);
+
+            return parts.join(" • ");
+        }
+
+        function formatDateHeader(date = new Date()) {
+            return date.toLocaleDateString("en-US", {
+                weekday: "long",
+                month: "long",
+                day: "numeric",
+                year: "numeric"
+            });
+        }
+
+        // ========================================
+        // RECOMMENDATION PANEL RENDERING
+        // ========================================
+
+        function toggleRecommendationPanel() {
+            state.recommendationPanelOpen = !state.recommendationPanelOpen;
+            recommendationPanel.classList.toggle('collapsed', !state.recommendationPanelOpen);
+        }
+
+        function renderRecommendationPanel() {
+            const plan = generateDailyPlan();
+
+            // Update header
+            recommendationDateText.textContent = `Daily Plan — ${formatDateHeader()}`;
+            recommendationSummary.textContent = formatPlanSummary(plan);
+
+            // Render warnings
+            renderWarnings(plan.warnings);
+
+            // Render sections
+            renderRecommendationSection(overdueSection, overdueItems, overdueCount, plan.sections.overdue);
+            renderRecommendationSection(mustDoSection, mustDoItems, mustDoCount, plan.sections.mustDoToday);
+            renderRecommendationSection(recommendedSection, recommendedItems, recommendedCount, plan.sections.recommended);
+            renderRecommendationSection(ifTimeSection, ifTimeItems, ifTimeCount, plan.sections.ifTimePermits);
+
+            // Render insights
+            renderInsights(plan.insights);
+
+            // Show/hide empty state
+            const hasItems = plan.sections.overdue.length > 0 ||
+                           plan.sections.mustDoToday.length > 0 ||
+                           plan.sections.recommended.length > 0 ||
+                           plan.sections.ifTimePermits.length > 0;
+            recommendationEmpty.classList.toggle('hidden', hasItems);
+        }
+
+        function renderRecommendationSection(sectionEl, itemsEl, countEl, items) {
+            sectionEl.classList.toggle('hidden', items.length === 0);
+            countEl.textContent = items.length;
+            itemsEl.innerHTML = '';
+
+            items.forEach((item, index) => {
+                const itemEl = createRecommendationItemElement(item, index);
+                itemsEl.appendChild(itemEl);
+            });
+        }
+
+        function createRecommendationItemElement(item, index) {
+            const div = document.createElement('div');
+            div.className = `recommendation-item ${item.todo.completed ? 'completed' : ''}`;
+
+            const priority = item.todo.priority || DEFAULT_PRIORITY;
+            const effort = item.todo.effort || DEFAULT_EFFORT;
+            const scoreClass = getScoreClassification(item.urgencyScore);
+
+            // Build tags HTML
+            let tagsHtml = '';
+            if (priority !== 'normal') {
+                const priorityTag = PRIORITY_TAGS[priority];
+                tagsHtml += `<span class="priority-pill priority-${priority}">${priorityTag.label}</span>`;
+            }
+
+            // Add user tags
+            if (item.todo.tagIds && item.todo.tagIds.length > 0) {
+                item.todo.tagIds.forEach(tagId => {
+                    const tag = state.tags.find(t => t.id === tagId);
+                    if (tag) {
+                        tagsHtml += `<span class="tag-pill" style="background-color: ${tag.color}20; color: ${tag.color}; border: 1px solid ${tag.color}40;">${escapeHtml(tag.name)}</span>`;
+                    }
+                });
+            }
+
+            div.innerHTML = `
+                <div class="recommendation-item-header">
+                    <div class="recommendation-item-checkbox ${item.todo.completed ? 'checked' : ''}"
+                         onclick="toggleTodoFromRecommendation('${item.todo.id}')"></div>
+                    <div class="recommendation-item-title">${escapeHtml(item.todo.title)}</div>
+                </div>
+                <div class="recommendation-item-meta">
+                    <span class="recommendation-item-effort">⏱️ ${formatEffortDisplay(effort)}</span>
+                    <span class="recommendation-item-deadline">📅 ${formatDeadlineDisplay(item.todo.deadline)}</span>
+                </div>
+                ${tagsHtml ? `<div class="recommendation-item-tags">${tagsHtml}</div>` : ''}
+                <div class="recommendation-item-reasoning">${item.reasoning}</div>
+                <div class="recommendation-item-score">
+                    <span class="score-badge ${scoreClass.class}">Score: ${item.urgencyScore}</span>
+                </div>
+            `;
+
+            return div;
+        }
+
+        function renderWarnings(warnings) {
+            warningsSection.innerHTML = '';
+            warningsSection.classList.toggle('hidden', warnings.length === 0);
+
+            warnings.forEach(warning => {
+                const card = document.createElement('div');
+                card.className = `warning-card ${warning.severity === 'critical' ? 'critical' : ''}`;
+                card.innerHTML = `
+                    <span class="warning-icon">⚠️</span>
+                    <span class="warning-message">${escapeHtml(warning.message)}</span>
+                `;
+                warningsSection.appendChild(card);
+            });
+        }
+
+        function renderInsights(insights) {
+            insightsSection.classList.toggle('hidden', insights.length === 0);
+            insightsItems.innerHTML = '';
+
+            insights.forEach(insight => {
+                const card = document.createElement('div');
+                card.className = 'insight-card';
+                card.innerHTML = `
+                    <span class="insight-icon">💡</span>
+                    <span class="insight-message">${escapeHtml(insight.message)}</span>
+                `;
+                insightsItems.appendChild(card);
+            });
+        }
+
+        function toggleTodoFromRecommendation(todoId) {
+            const index = state.todos.findIndex(t => t.id === todoId);
+            if (index !== -1) {
+                toggleTodo(index);
+            }
+        }
+
+        // ========================================
+        // PRIORITY AUTOCOMPLETE FUNCTIONS
+        // ========================================
+
+        function renderPriorityDropdown(filter = '') {
+            priorityDropdown.innerHTML = '';
+            const filterLower = filter.toLowerCase();
+
+            Object.entries(PRIORITY_TAGS).forEach(([key, priority], index) => {
+                if (filter && !priority.label.toLowerCase().includes(filterLower) &&
+                    !priority.name.toLowerCase().includes(filterLower)) {
+                    return;
+                }
+
+                const option = document.createElement('div');
+                option.className = `priority-option ${state.selectedPriority === key ? 'selected' : ''} ${state.priorityHighlightIndex === index ? 'highlighted' : ''}`;
+                option.innerHTML = `
+                    <span class="priority-option-color" style="background-color: ${priority.color}"></span>
+                    <span class="priority-option-label">${priority.label}</span>
+                    <span class="priority-option-desc">${priority.description}</span>
+                `;
+                option.onclick = () => selectPriority(key);
+                priorityDropdown.appendChild(option);
+            });
+        }
+
+        function selectPriority(key) {
+            state.selectedPriority = key;
+            todoPriorityInput.value = PRIORITY_TAGS[key].label;
+            closePriorityDropdown();
+        }
+
+        function openPriorityDropdown() {
+            state.priorityDropdownOpen = true;
+            state.priorityHighlightIndex = -1;
+            renderPriorityDropdown(todoPriorityInput.value);
+            priorityDropdown.classList.add('open');
+        }
+
+        function closePriorityDropdown() {
+            state.priorityDropdownOpen = false;
+            state.priorityHighlightIndex = -1;
+            priorityDropdown.classList.remove('open');
+        }
+
+        // Priority input event listeners
+        if (todoPriorityInput) {
+            todoPriorityInput.addEventListener('focus', () => {
+                openPriorityDropdown();
+            });
+
+            todoPriorityInput.addEventListener('input', (e) => {
+                openPriorityDropdown();
+                renderPriorityDropdown(e.target.value);
+            });
+
+            todoPriorityInput.addEventListener('keydown', (e) => {
+                const options = Object.keys(PRIORITY_TAGS);
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    state.priorityHighlightIndex = Math.min(state.priorityHighlightIndex + 1, options.length - 1);
+                    renderPriorityDropdown(todoPriorityInput.value);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    state.priorityHighlightIndex = Math.max(state.priorityHighlightIndex - 1, 0);
+                    renderPriorityDropdown(todoPriorityInput.value);
+                } else if (e.key === 'Enter' && state.priorityDropdownOpen) {
+                    e.preventDefault();
+                    if (state.priorityHighlightIndex >= 0 && state.priorityHighlightIndex < options.length) {
+                        selectPriority(options[state.priorityHighlightIndex]);
+                    }
+                } else if (e.key === 'Escape') {
+                    closePriorityDropdown();
+                }
+            });
+
+            todoPriorityInput.addEventListener('blur', () => {
+                // Delay to allow click events on dropdown items
+                setTimeout(() => {
+                    // Validate input - if not a valid priority, reset to selected
+                    const inputValue = todoPriorityInput.value.toLowerCase();
+                    const matchingKey = Object.keys(PRIORITY_TAGS).find(
+                        key => PRIORITY_TAGS[key].label.toLowerCase() === inputValue ||
+                               PRIORITY_TAGS[key].name.toLowerCase() === inputValue
+                    );
+
+                    if (matchingKey) {
+                        state.selectedPriority = matchingKey;
+                    }
+
+                    // Always show the selected priority label
+                    todoPriorityInput.value = PRIORITY_TAGS[state.selectedPriority].label;
+                    closePriorityDropdown();
+                }, 200);
+            });
+        }
+
+        // ========================================
+        // PLANNING SETTINGS FUNCTIONS
+        // ========================================
+
+        function savePlanningSettings(event) {
+            event.preventDefault();
+
+            state.settings.workdayMinutes = parseInt(document.getElementById('workday-minutes').value) || DEFAULT_SETTINGS.workdayMinutes;
+            state.settings.bufferPercentage = parseInt(document.getElementById('buffer-percentage').value) || DEFAULT_SETTINGS.bufferPercentage;
+            state.settings.maxOverdueToShow = parseInt(document.getElementById('max-overdue').value) || DEFAULT_SETTINGS.maxOverdueToShow;
+            state.settings.planningHorizonDays = parseInt(document.getElementById('planning-horizon').value) || DEFAULT_SETTINGS.planningHorizonDays;
+
+            // Refresh recommendation panel with new settings
+            if (state.currentPage === 'app' && state.currentTab === 'home') {
+                renderRecommendationPanel();
+            }
+
+            alert('Planning settings saved successfully!');
+        }
+
+        function loadPlanningSettings() {
+            document.getElementById('workday-minutes').value = state.settings.workdayMinutes;
+            document.getElementById('buffer-percentage').value = state.settings.bufferPercentage;
+            document.getElementById('max-overdue').value = state.settings.maxOverdueToShow;
+            document.getElementById('planning-horizon').value = state.settings.planningHorizonDays;
+        }
+
+        // ========================================
+        // DATETIME HELPERS
+        // ========================================
+
+        function getDefaultDeadline() {
+            const now = new Date();
+            now.setHours(17, 0, 0, 0); // Default to 5 PM today
+            return formatDateTimeLocal(now);
+        }
+
+        function formatDateTimeLocal(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
         }
 
         // Initialize
