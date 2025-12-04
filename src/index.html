@@ -2968,7 +2968,29 @@
                 emptyState.classList.add('hidden');
                 todoShortcutHintFloating.classList.remove('hidden');
 
-                state.todos.forEach((todo, index) => {
+                // Create sorted array with original indices preserved
+                const sortedTodos = state.todos
+                    .map((todo, index) => ({ todo, originalIndex: index }))
+                    .sort((a, b) => {
+                        // Incomplete todos first, then completed
+                        if (a.todo.completed !== b.todo.completed) {
+                            return a.todo.completed ? 1 : -1;
+                        }
+
+                        if (a.todo.completed) {
+                            // Both completed: sort by completedAt (most recent first)
+                            const aTime = a.todo.completedAt ? new Date(a.todo.completedAt).getTime() : 0;
+                            const bTime = b.todo.completedAt ? new Date(b.todo.completedAt).getTime() : 0;
+                            return bTime - aTime;
+                        } else {
+                            // Both incomplete: sort by dueDate (earliest first)
+                            const aDate = a.todo.dueDate ? new Date(a.todo.dueDate).getTime() : Infinity;
+                            const bDate = b.todo.dueDate ? new Date(b.todo.dueDate).getTime() : Infinity;
+                            return aDate - bDate;
+                        }
+                    });
+
+                sortedTodos.forEach(({ todo, originalIndex: index }) => {
                     const todoItem = document.createElement('div');
                     todoItem.className = `todo-item ${todo.completed ? 'completed' : ''}`;
 
@@ -3023,6 +3045,13 @@
         function toggleTodo(index) {
             const todo = state.todos[index];
             todo.completed = !todo.completed;
+
+            // Track completion timestamp
+            if (todo.completed) {
+                todo.completedAt = new Date().toISOString();
+            } else {
+                todo.completedAt = null;
+            }
 
             // Check and update opportunity status if linked
             if (todo.opportunityId) {
