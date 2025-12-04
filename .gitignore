@@ -4,5 +4,8 @@
 # But not the src folder
 !/src/
 
+# Keep ISSUETRACKER.md
+!/ISSUETRACKER.md
+
 # Ignore .git folder (automatically handled by git)
 !/.gitignore
