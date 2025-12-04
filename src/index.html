@@ -578,6 +578,53 @@
             background: #E9ECEF;
         }
 
+        /* Disabled button state */
+        .btn:disabled,
+        .btn.btn-disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-primary:disabled,
+        .btn-primary.btn-disabled {
+            background: #FFB800;
+        }
+
+        /* Tooltip wrapper for disabled button */
+        .btn-tooltip-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .btn-tooltip-wrapper[data-tooltip]:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            margin-bottom: 8px;
+            z-index: 1000;
+        }
+
+        .btn-tooltip-wrapper[data-tooltip]:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #333;
+            margin-bottom: -4px;
+            z-index: 1000;
+        }
+
         /* Todo item with due date */
         .todo-due-date {
             font-size: 12px;
@@ -3139,7 +3186,9 @@
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <span id="todo-save-wrapper" class="btn-tooltip-wrapper">
+                        <button type="submit" id="todo-save-btn" class="btn btn-primary">Save</button>
+                    </span>
                 </div>
             </form>
         </div>
@@ -3447,6 +3496,8 @@
         const todoPriorityInput = document.getElementById('todo-priority');
         const priorityDropdown = document.getElementById('priority-dropdown');
         const modalTitle = document.getElementById('modal-title');
+        const todoSaveBtn = document.getElementById('todo-save-btn');
+        const todoSaveWrapper = document.getElementById('todo-save-wrapper');
 
         // DOM Elements - Recommendation Panel
         const recommendationPanel = document.getElementById('recommendation-panel');
@@ -3846,6 +3897,9 @@
             state.priorityDropdownOpen = false;
             state.priorityHighlightIndex = -1;
             closePriorityDropdown();
+
+            // Reset Save button state
+            updateTodoSaveButtonState();
 
             if (todoIndex !== null) {
                 // Edit mode - populate with existing todo data
@@ -4818,9 +4872,25 @@
             opportunityDropdown.classList.remove('open');
         }
 
+        // Update Todo Save button state based on inline forms
+        function updateTodoSaveButtonState() {
+            const isInlineFormOpen = state.inlineOppFormOpen || state.inlineOppPersonFormOpen;
+
+            if (isInlineFormOpen) {
+                todoSaveBtn.disabled = true;
+                todoSaveBtn.classList.add('btn-disabled');
+                todoSaveWrapper.setAttribute('data-tooltip', 'Complete or cancel the inline form first');
+            } else {
+                todoSaveBtn.disabled = false;
+                todoSaveBtn.classList.remove('btn-disabled');
+                todoSaveWrapper.removeAttribute('data-tooltip');
+            }
+        }
+
         // Open inline opportunity form with slide animation
         function openInlineOppForm(name) {
             state.inlineOppFormOpen = true;
+            updateTodoSaveButtonState();
             inlineOppName.value = name;
             inlineOppDescription.value = '';
             inlineOppStartDate.value = getTodayDate();
@@ -4836,6 +4906,7 @@
         function closeInlineOppForm() {
             state.inlineOppFormOpen = false;
             inlineOppForm.classList.remove('open');
+            updateTodoSaveButtonState();
         }
 
         // Cancel inline opportunity creation
@@ -5980,6 +6051,7 @@
         // Open inline person form within inline opportunity
         function openInlineOppPersonForm(name) {
             state.inlineOppPersonFormOpen = true;
+            updateTodoSaveButtonState();
             inlineOppPersonName.value = name;
             inlineOppPersonRole.value = '';
             inlineOppPersonForm.classList.add('open');
@@ -5996,6 +6068,7 @@
         function closeInlineOppPersonForm() {
             state.inlineOppPersonFormOpen = false;
             inlineOppPersonForm.classList.remove('open');
+            updateTodoSaveButtonState();
         }
 
         // Cancel inline person creation within inline opportunity
