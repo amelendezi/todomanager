@@ -4887,6 +4887,23 @@
             }
         }
 
+        // Toggle tabindex on focusable elements inside a form container
+        // When enabled=false, sets tabindex=-1 to remove from tab order
+        // When enabled=true, removes tabindex to restore default tab behavior
+        function setFormTabIndex(formElement, enabled, excludeSelector = null) {
+            const focusables = formElement.querySelectorAll('input, button, select, textarea, [tabindex]');
+            focusables.forEach(el => {
+                // Skip elements that match the exclude selector
+                if (excludeSelector && el.closest(excludeSelector)) return;
+
+                if (enabled) {
+                    el.removeAttribute('tabindex');
+                } else {
+                    el.setAttribute('tabindex', '-1');
+                }
+            });
+        }
+
         // Open inline opportunity form with slide animation
         function openInlineOppForm(name) {
             state.inlineOppFormOpen = true;
@@ -4898,6 +4915,9 @@
             inlineOppForm.classList.add('open');
             closeAutocompleteDropdown();
 
+            // Enable tab navigation for opp form elements, but exclude nested person form
+            setFormTabIndex(inlineOppForm, true, '#inline-opp-person-form');
+
             // Focus on description after animation
             setTimeout(() => inlineOppDescription.focus(), 350);
         }
@@ -4907,6 +4927,9 @@
             state.inlineOppFormOpen = false;
             inlineOppForm.classList.remove('open');
             updateTodoSaveButtonState();
+
+            // Disable tab navigation for all elements inside opp form
+            setFormTabIndex(inlineOppForm, false);
         }
 
         // Cancel inline opportunity creation
@@ -5934,6 +5957,9 @@
             inlinePersonForm.classList.add('open');
             closeContactDropdown();
 
+            // Enable tab navigation for person form elements
+            setFormTabIndex(inlinePersonForm, true);
+
             // Focus on role after animation
             setTimeout(() => inlinePersonRole.focus(), 350);
         }
@@ -5942,6 +5968,9 @@
         function closeInlinePersonForm() {
             state.inlinePersonFormOpen = false;
             inlinePersonForm.classList.remove('open');
+
+            // Disable tab navigation for person form elements
+            setFormTabIndex(inlinePersonForm, false);
         }
 
         // Cancel inline person creation
@@ -6057,6 +6086,9 @@
             inlineOppPersonForm.classList.add('open');
             closeInlineOppContactDropdown();
 
+            // Enable tab navigation for person form elements
+            setFormTabIndex(inlineOppPersonForm, true);
+
             // Scroll to make the form visible
             setTimeout(() => {
                 inlineOppPersonRole.focus();
@@ -6069,6 +6101,9 @@
             state.inlineOppPersonFormOpen = false;
             inlineOppPersonForm.classList.remove('open');
             updateTodoSaveButtonState();
+
+            // Disable tab navigation for person form elements
+            setFormTabIndex(inlineOppPersonForm, false);
         }
 
         // Cancel inline person creation within inline opportunity
@@ -7094,6 +7129,12 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Run migration on startup
             migrateContactsToPeople();
+
+            // Initialize inline forms with disabled tab navigation (they start closed)
+            setFormTabIndex(inlineOppForm, false);
+            setFormTabIndex(inlineOppPersonForm, false);
+            if (inlinePersonForm) setFormTabIndex(inlinePersonForm, false);
+
             navigateTo('landing');
         });
     </script>
