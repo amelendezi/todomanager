@@ -3725,15 +3725,22 @@
             // Toggle section visibility
             const peopleSection = document.getElementById('settings-section-people');
             const tagsSection = document.getElementById('settings-section-tags');
+            const planningSection = document.getElementById('settings-section-planning');
+
+            // Hide all sections
+            peopleSection.classList.add('hidden');
+            tagsSection.classList.add('hidden');
+            planningSection.classList.add('hidden');
 
             if (section === 'people') {
                 peopleSection.classList.remove('hidden');
-                tagsSection.classList.add('hidden');
                 renderPeople();
             } else if (section === 'tags') {
-                peopleSection.classList.add('hidden');
                 tagsSection.classList.remove('hidden');
                 renderTags();
+            } else if (section === 'planning') {
+                planningSection.classList.remove('hidden');
+                renderPlanningSettings();
             }
         }
 
@@ -7029,6 +7036,10 @@
             document.getElementById('buffer-percentage').value = state.settings.bufferPercentage;
             document.getElementById('max-overdue').value = state.settings.maxOverdueToShow;
             document.getElementById('planning-horizon').value = state.settings.planningHorizonDays;
+        }
+
+        function renderPlanningSettings() {
+            loadPlanningSettings();
         }
 
         // ========================================
