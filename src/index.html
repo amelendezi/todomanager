@@ -1959,65 +1959,11 @@
 
         /* Recommendation Panel (Left) */
         .recommendation-panel {
-            width: 400px;
-            min-width: 400px;
+            width: 450px;
+            min-width: 450px;
             background: #FFFFFF;
             border-radius: 16px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-            transition: all 0.3s ease;
-            max-height: calc(100vh - 108px);
-            overflow-y: auto;
-        }
-
-        .recommendation-panel.collapsed {
-            width: 48px;
-            min-width: 48px;
-            overflow: hidden;
-        }
-
-        .recommendation-panel.collapsed .recommendation-content {
-            display: none;
-        }
-
-        .recommendation-panel.collapsed .panel-toggle-btn {
-            transform: rotate(180deg);
-        }
-
-        /* Panel Toggle Button */
-        .panel-toggle-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            border: none;
-            background: #F8F9FA;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            z-index: 5;
-        }
-
-        .panel-toggle-btn:hover {
-            background: #E9ECEF;
-        }
-
-        .panel-toggle-btn svg {
-            width: 18px;
-            height: 18px;
-            color: #6C757D;
-            transition: transform 0.3s ease;
-        }
-
-        /* Collapsed state toggle */
-        .recommendation-panel.collapsed .panel-toggle-btn {
-            position: static;
-            margin: 8px auto;
-            display: flex;
         }
 
         /* Todo Panel (Right) */
@@ -2613,14 +2559,7 @@
             .recommendation-panel {
                 width: 100%;
                 min-width: 100%;
-                max-height: none;
                 margin-bottom: 24px;
-            }
-
-            .recommendation-panel.collapsed {
-                width: 100%;
-                min-width: 100%;
-                height: 48px;
             }
 
             .todo-panel {
@@ -2735,11 +2674,6 @@
                 <div id="recommendation-panel" class="recommendation-panel">
                     <!-- Panel Header -->
                     <div class="recommendation-header">
-                        <button class="panel-toggle-btn" onclick="toggleRecommendationPanel()" title="Toggle recommendations">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="15 18 9 12 15 6"></polyline>
-                            </svg>
-                        </button>
                         <div class="recommendation-date">
                             <span class="recommendation-date-icon">📅</span>
                             <span id="recommendation-date-text">Daily Plan</span>
@@ -3492,8 +3426,6 @@
             oppTagHighlightIndex: -1,
             // Planning settings
             settings: { ...DEFAULT_SETTINGS },
-            // Recommendation panel state
-            recommendationPanelOpen: true,
             // Priority autocomplete state
             selectedPriority: DEFAULT_PRIORITY,
             priorityDropdownOpen: false,
@@ -6816,11 +6748,6 @@
         // ========================================
         // RECOMMENDATION PANEL RENDERING
         // ========================================
-
-        function toggleRecommendationPanel() {
-            state.recommendationPanelOpen = !state.recommendationPanelOpen;
-            recommendationPanel.classList.toggle('collapsed', !state.recommendationPanelOpen);
-        }
 
         function renderRecommendationPanel() {
             const plan = generateDailyPlan();

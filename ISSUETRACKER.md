@@ -6,3 +6,5 @@ Issue-22: Implemented todo sorting by due date (earliest first) with completed t
 Issue-20: Implemented Tags Management feature with CRUD operations in Settings, inline tag assignment for Todos and Opportunities via autocomplete dropdown with inline creation, and colored tag pills display in list views.
 
 Issue-24: Implemented Daily Recommendation Engine with collapsible split-panel layout on Todos page, enhanced todo data structure (priority, effort, deadline), urgency scoring algorithm (DeadlineScore + PriorityScore + StalenessBonus), daily plan generation with sections (Overdue, Must Complete Today, Recommended, If Time Permits), warnings and insights, and Planning settings in Settings page.
+
+Issue-26: Fixed recommendation panel scrolling by removing nested scrollbar and made panel fixed width (450px) with collapse functionality removed.
