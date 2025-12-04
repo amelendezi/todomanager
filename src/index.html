@@ -1467,6 +1467,166 @@
             border-radius: 16px;
         }
 
+        /* Tags styles */
+        .tags-section {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .tags-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #FFFFFF;
+            border: 1px solid #E0E0E0;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .tag-item:hover {
+            border-color: #BDBDBD;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .tag-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tag-color-preview {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .tag-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1F1F1F;
+        }
+
+        .tag-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        /* Tag pill/chip for display in lists */
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 500;
+            border-radius: 12px;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        /* Color picker styles */
+        .color-picker-wrapper {
+            position: relative;
+        }
+
+        .color-picker-input {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #F5F5F5;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .color-picker-input:hover {
+            border-color: #BDBDBD;
+        }
+
+        .color-picker-preview {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .color-picker-value {
+            font-size: 14px;
+            color: #666;
+            font-family: monospace;
+        }
+
+        .color-picker-native {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Tag selector in modals */
+        .tag-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px 0;
+        }
+
+        .tag-selector-item {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            opacity: 0.6;
+        }
+
+        .tag-selector-item:hover {
+            opacity: 0.8;
+        }
+
+        .tag-selector-item.selected {
+            opacity: 1;
+            border-color: rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tag-selector-empty {
+            font-size: 13px;
+            color: #999;
+            font-style: italic;
+        }
+
         /* Inline person creation form */
         .inline-person-form {
             max-height: 0;
@@ -1740,6 +1900,9 @@
         </div>
     </div>
 
+    <!-- Hidden file input for importing state -->
+    <input type="file" id="import-file-input" accept=".json" style="display: none;" onchange="importData(event)">
+
     <!-- App Header (shared across pages) -->
     <header id="app-header" class="header hidden">
         <div class="header-left">
@@ -1841,6 +2004,14 @@
                         </svg>
                         <span>People</span>
                     </li>
+                    <li class="settings-menu-item" data-section="tags" onclick="switchSettingsSection('tags')">
+                        <!-- Tag icon -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                        </svg>
+                        <span>Tags</span>
+                    </li>
                 </ul>
             </nav>
 
@@ -1886,7 +2057,57 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Tags Section -->
+                <div id="settings-section-tags" class="settings-section hidden">
+                    <h2 class="settings-section-title">Tags</h2>
+
+                    <!-- Floating shortcut hint (shown when items exist) -->
+                    <p id="tags-shortcut-hint-floating" class="shortcut-hint-floating hidden">Press Shift + N to create new items</p>
+
+                    <!-- Tags List Container -->
+                    <div id="tags-list" class="tags-list-container">
+                        <!-- Tags will be rendered here -->
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="tags-empty-state" class="empty-state">
+                        <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                        </svg>
+                        <p class="empty-text">No Tags</p>
+                        <p class="shortcut-hint">Press Shift + N to create new items</p>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Tag Modal -->
+    <div id="tag-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="tag-modal-title">New Tag</h2>
+            <form id="tag-form" onsubmit="saveTag(event)">
+                <div class="form-group">
+                    <label for="tag-name" class="form-label">Name *</label>
+                    <input type="text" id="tag-name" class="form-input" placeholder="Tag name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Color *</label>
+                    <div class="color-picker-wrapper">
+                        <div class="color-picker-input">
+                            <div id="tag-color-preview" class="color-picker-preview" style="background-color: #F59E0B;"></div>
+                            <span id="tag-color-value" class="color-picker-value">#F59E0B</span>
+                        </div>
+                        <input type="color" id="tag-color" class="color-picker-native" value="#F59E0B" onchange="updateColorPreview(this.value)">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeTagModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -2174,6 +2395,7 @@
             opportunities: [],
             people: [],
             roles: [],
+            tags: [],
             currentPage: 'landing',
             currentTab: 'home',  // 'home', 'opportunities', or 'settings'
             previousTab: 'home',  // Track previous tab for settings return navigation
@@ -2294,6 +2516,22 @@
         const rolesSection = document.getElementById('roles-section');
         const rolesList = document.getElementById('roles-list');
 
+        // DOM Elements - Tags
+        const tagsList = document.getElementById('tags-list');
+        const tagsEmptyState = document.getElementById('tags-empty-state');
+        const tagsShortcutHintFloating = document.getElementById('tags-shortcut-hint-floating');
+        const settingsSectionPeople = document.getElementById('settings-section-people');
+        const settingsSectionTags = document.getElementById('settings-section-tags');
+
+        // DOM Elements - Tag Modal
+        const tagModal = document.getElementById('tag-modal');
+        const tagModalTitle = document.getElementById('tag-modal-title');
+        const tagForm = document.getElementById('tag-form');
+        const tagNameInput = document.getElementById('tag-name');
+        const tagColorInput = document.getElementById('tag-color');
+        const tagColorPreview = document.getElementById('tag-color-preview');
+        const tagColorValue = document.getElementById('tag-color-value');
+
         // DOM Elements - Person Modal
         const personModal = document.getElementById('person-modal');
         const personModalTitle = document.getElementById('person-modal-title');
@@ -2399,14 +2637,91 @@
         }
 
         function continueWorking() {
-            // Navigate to app with existing data
-            navigateTo('app');
+            // Trigger file input to load previous state
+            document.getElementById('import-file-input').click();
         }
 
-        // Placeholder functions for header actions
+        // Export app state to JSON file
         function exportData() {
-            // Export functionality not implemented yet
-            console.log('Export clicked - not implemented');
+            // Collect all data entities from state
+            const exportableData = {
+                todos: state.todos,
+                opportunities: state.opportunities,
+                people: state.people,
+                roles: state.roles,
+                tags: state.tags,
+                exportedAt: new Date().toISOString(),
+                version: '1.0'
+            };
+
+            // Create JSON blob
+            const jsonString = JSON.stringify(exportableData, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+
+            // Generate filename with timestamp
+            const now = new Date();
+            const timestamp = now.toISOString()
+                .replace(/T/, '_')
+                .replace(/:/g, '-')
+                .replace(/\..+/, '');
+            const filename = `todoApp_${timestamp}.json`;
+
+            // Create download link and trigger download
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Import app state from JSON file
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+
+                    // Validate required data structure
+                    if (!importedData || typeof importedData !== 'object') {
+                        throw new Error('Invalid file format');
+                    }
+
+                    // Restore state data entities (with fallbacks for missing fields)
+                    state.todos = Array.isArray(importedData.todos) ? importedData.todos : [];
+                    state.opportunities = Array.isArray(importedData.opportunities) ? importedData.opportunities : [];
+                    state.people = Array.isArray(importedData.people) ? importedData.people : [];
+                    state.roles = Array.isArray(importedData.roles) ? importedData.roles : [];
+                    state.tags = Array.isArray(importedData.tags) ? importedData.tags : [];
+
+                    // Navigate to app and render
+                    navigateTo('app');
+                    renderTodos();
+                    renderOpportunities();
+                    renderPeople();
+                    renderTags();
+
+                } catch (error) {
+                    alert('Error importing file: ' + error.message + '\n\nPlease ensure you selected a valid TodoApp export file.');
+                }
+
+                // Reset file input for future imports
+                event.target.value = '';
+            };
+
+            reader.onerror = function() {
+                alert('Error reading file. Please try again.');
+                event.target.value = '';
+            };
+
+            reader.readAsText(file);
         }
 
         // Placeholder for data persistence
