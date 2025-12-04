@@ -4,3 +4,5 @@ Issue-18: Implemented export/import functionality to save and restore app state 
 
 Issue-22: Implemented todo sorting by due date (earliest first) with completed todos at bottom sorted by completion time (most recent first).
 Issue-20: Implemented Tags Management feature with CRUD operations in Settings, inline tag assignment for Todos and Opportunities via autocomplete dropdown with inline creation, and colored tag pills display in list views.
+
+Issue-24: Implemented Daily Recommendation Engine with collapsible split-panel layout on Todos page, enhanced todo data structure (priority, effort, deadline), urgency scoring algorithm (DeadlineScore + PriorityScore + StalenessBonus), daily plan generation with sections (Overdue, Must Complete Today, Recommended, If Time Permits), warnings and insights, and Planning settings in Settings page.
