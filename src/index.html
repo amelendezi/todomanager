@@ -3372,6 +3372,158 @@
             planningHorizonDays: 14     // Look-ahead window
         });
 
+        // ========================================
+        // INDEXEDDB - State Persistence
+        // ========================================
+        const DB_NAME = 'TodoManagerDB';
+        const DB_VERSION = 1;
+        const STORE_NAME = 'appState';
+        let db = null;
+
+        // Check if IndexedDB is available
+        function isIndexedDBAvailable() {
+            try {
+                if (!window.indexedDB) {
+                    return false;
+                }
+                // Test if we can actually open a database (fails in private mode on some browsers)
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // Initialize IndexedDB
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                if (!isIndexedDBAvailable()) {
+                    reject(new Error('IndexedDB is not available. Please ensure you are not in private browsing mode.'));
+                    return;
+                }
+
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onerror = (event) => {
+                    reject(new Error('Failed to open database: ' + event.target.error));
+                };
+
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    resolve(db);
+                };
+
+                request.onupgradeneeded = (event) => {
+                    const database = event.target.result;
+                    if (!database.objectStoreNames.contains(STORE_NAME)) {
+                        database.createObjectStore(STORE_NAME, { keyPath: 'id' });
+                    }
+                };
+            });
+        }
+
+        // Save state to IndexedDB
+        function saveStateToIndexedDB() {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject(new Error('Database not initialized'));
+                    return;
+                }
+
+                const persistableState = {
+                    id: 'state',
+                    todos: state.todos,
+                    opportunities: state.opportunities,
+                    people: state.people,
+                    roles: state.roles,
+                    tags: state.tags,
+                    settings: state.settings,
+                    lastModified: new Date().toISOString()
+                };
+
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.put(persistableState);
+
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(new Error('Failed to save state'));
+            });
+        }
+
+        // Load state from IndexedDB
+        function loadStateFromIndexedDB() {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject(new Error('Database not initialized'));
+                    return;
+                }
+
+                const transaction = db.transaction([STORE_NAME], 'readonly');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.get('state');
+
+                request.onsuccess = (event) => {
+                    const savedState = event.target.result;
+                    if (savedState) {
+                        resolve(savedState);
+                    } else {
+                        resolve(null);
+                    }
+                };
+
+                request.onerror = () => reject(new Error('Failed to load state'));
+            });
+        }
+
+        // Clear all data from IndexedDB
+        function clearIndexedDB() {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject(new Error('Database not initialized'));
+                    return;
+                }
+
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.clear();
+
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(new Error('Failed to clear database'));
+            });
+        }
+
+        // Get storage statistics
+        async function getStorageStats() {
+            const stats = {
+                todoCount: state.todos.length,
+                opportunityCount: state.opportunities.length,
+                estimatedSize: 0
+            };
+
+            // Calculate estimated size
+            const dataToMeasure = {
+                todos: state.todos,
+                opportunities: state.opportunities,
+                people: state.people,
+                roles: state.roles,
+                tags: state.tags,
+                settings: state.settings
+            };
+
+            const jsonString = JSON.stringify(dataToMeasure);
+            stats.estimatedSize = new Blob([jsonString]).size;
+
+            return stats;
+        }
+
+        // Format bytes to human-readable string
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
         // Application state
         const state = {
             todos: [],
