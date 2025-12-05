@@ -6618,6 +6618,12 @@
             if (query.trim() !== '') {
                 renderContactDropdown(query);
                 openContactDropdown();
+                // Auto-highlight first match when typing
+                const matches = filterPeople(query);
+                if (matches.length > 0) {
+                    state.contactAutocompleteHighlightIndex = 0;
+                    updateContactAutocompleteHighlight();
+                }
             } else {
                 closeContactDropdown();
             }
