@@ -5280,8 +5280,8 @@
                     state.autocompleteHighlightIndex = Math.max(state.autocompleteHighlightIndex - 1, 0);
                     updateAutocompleteHighlight();
                 }
-            } else if (e.key === 'Tab') {
-                // Tab behavior:
+            } else if (e.key === 'Tab' && !e.shiftKey) {
+                // Tab behavior (forward only, let Shift+Tab work naturally):
                 // 1. If matches exist, select first/highlighted and move to Tags
                 // 2. If no matches but text entered, open inline creation
                 // 3. If no text, natural tab
@@ -5802,8 +5802,8 @@
                     return;
                 }
 
-                if (e.key === 'Tab') {
-                    // Tab with dropdown open: select first/highlighted item and move on
+                if (e.key === 'Tab' && !e.shiftKey) {
+                    // Tab (forward only) with dropdown open: select first/highlighted item and move on
                     const items = todoTagDropdown.querySelectorAll('.tag-dropdown-item');
                     if (items.length > 0) {
                         e.preventDefault();
@@ -5876,8 +5876,8 @@
                     return;
                 }
 
-                if (e.key === 'Tab') {
-                    // Tab with dropdown open: select first/highlighted item and move on
+                if (e.key === 'Tab' && !e.shiftKey) {
+                    // Tab (forward only) with dropdown open: select first/highlighted item and move on
                     const items = oppTagDropdown.querySelectorAll('.tag-dropdown-item');
                     if (items.length > 0) {
                         e.preventDefault();
@@ -6195,8 +6195,8 @@
                     state.roleAutocompleteHighlightIndex = Math.max(state.roleAutocompleteHighlightIndex - 1, 0);
                     updateRoleAutocompleteHighlight();
                 }
-            } else if (e.key === 'Tab') {
-                // Tab with dropdown open: select first/highlighted match and move on
+            } else if (e.key === 'Tab' && !e.shiftKey) {
+                // Tab (forward only) with dropdown open: select first/highlighted match and move on
                 if (state.roleAutocompleteOpen && matches.length > 0) {
                     e.preventDefault();
                     const indexToSelect = state.roleAutocompleteHighlightIndex >= 0 ? state.roleAutocompleteHighlightIndex : 0;
@@ -6561,8 +6561,8 @@
                     state.inlineOppContactAutocompleteHighlightIndex = Math.max(state.inlineOppContactAutocompleteHighlightIndex - 1, 0);
                     updateInlineOppContactAutocompleteHighlight();
                 }
-            } else if (e.key === 'Tab') {
-                // Tab behavior:
+            } else if (e.key === 'Tab' && !e.shiftKey) {
+                // Tab (forward only) behavior:
                 // 1. If contact already selected, confirm inline opp and move to Tags
                 // 2. If matches exist, select first/highlighted and move on
                 // 3. If no matches but text entered, open inline person form
@@ -6680,8 +6680,8 @@
                     state.contactAutocompleteHighlightIndex = Math.max(state.contactAutocompleteHighlightIndex - 1, 0);
                     updateContactAutocompleteHighlight();
                 }
-            } else if (e.key === 'Tab') {
-                // Tab behavior:
+            } else if (e.key === 'Tab' && !e.shiftKey) {
+                // Tab (forward only) behavior:
                 // 1. If matches exist, select first/highlighted and move to Tags
                 // 2. If no matches but text entered, open inline creation
                 // 3. If no text, natural tab
@@ -7469,8 +7469,8 @@
                     e.preventDefault();
                     state.priorityHighlightIndex = Math.max(state.priorityHighlightIndex - 1, 0);
                     renderPriorityDropdown(todoPriorityInput.value);
-                } else if (e.key === 'Tab' && state.priorityDropdownOpen) {
-                    // Tab with dropdown open: select first/highlighted match and move on
+                } else if (e.key === 'Tab' && !e.shiftKey && state.priorityDropdownOpen) {
+                    // Tab (forward only) with dropdown open: select first/highlighted match and move on
                     if (filteredOptions.length > 0) {
                         e.preventDefault();
                         const indexToSelect = state.priorityHighlightIndex >= 0 ? state.priorityHighlightIndex : 0;
