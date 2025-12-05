@@ -20,3 +20,5 @@ Issue-35: Fixed autocomplete dropdowns resetting to previous value when re-focus
 Issue-37: Fixed Shift+Tab navigation loop in Todo modal. Tab handlers were intercepting Shift+Tab and forcing focus forward to Tags, causing backward navigation to loop. Added `!e.shiftKey` check to all Tab key handlers so Shift+Tab navigates naturally backward through the form.
 
 Issue-39: Added Todo description to card with two-column layout displaying description on the right side of the existing info.
+
+Issue-41: Renamed Opportunities to Engagements throughout the application (UI labels, CSS classes, JavaScript variables/functions, state properties, HTML element IDs). Added edit button to engagement list view that opens modal in edit mode. Implemented inline editing for Name, Description, and Contact fields in side panel with auto-save on blur. Added comment deletion with delete button that appears on hover.
