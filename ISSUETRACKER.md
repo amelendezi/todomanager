@@ -14,3 +14,5 @@ Issue-28: Implemented Save button disable during inline opportunity/contact crea
 Issue-30: Implemented IndexedDB state persistence with auto-save, Storage section in Settings with statistics and clear browser state functionality.
 
 Issue-32: Improved Tab key navigation in autocomplete dropdowns. When dropdown is open with highlighted option, Tab selects the option and moves focus to next field. Updated Priority, Opportunity, Contact, Role, Tags, and Inline Contact dropdowns.
+
+Issue-35: Fixed autocomplete dropdowns resetting to previous value when re-focusing and typing new selection by auto-highlighting first match and using filtered options list.
