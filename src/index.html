@@ -2754,6 +2754,719 @@
                 width: 100%;
             }
         }
+
+        /* Engagement Lifecycle Styles */
+        .engagement-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .type-engagement {
+            background: #E8F4FD;
+            color: #0369A1;
+        }
+
+        .type-pre-project {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .type-project {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        /* Lifecycle section in side panel */
+        .lifecycle-section {
+            margin-top: 16px;
+            padding: 16px;
+            background: #F8F9FA;
+            border-radius: 8px;
+            border: 1px solid #E0E0E0;
+        }
+
+        .lifecycle-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .lifecycle-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1F1F1F;
+        }
+
+        .lifecycle-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .lifecycle-action-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.15s ease;
+        }
+
+        .lifecycle-action-btn.promote {
+            background: #FFB800;
+            color: #1F1F1F;
+        }
+
+        .lifecycle-action-btn.promote:hover {
+            background: #E5A600;
+        }
+
+        .lifecycle-action-btn.secondary {
+            background: #FFFFFF;
+            color: #6C757D;
+            border-color: #DEE2E6;
+        }
+
+        .lifecycle-action-btn.secondary:hover {
+            background: #F8F9FA;
+        }
+
+        .lifecycle-action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Pre-Project Section */
+        .pre-project-section {
+            margin-top: 16px;
+        }
+
+        .pre-project-dates {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .pre-project-date-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .pre-project-date-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #6C757D;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pre-project-date-input {
+            padding: 8px 10px;
+            border: 1px solid #DEE2E6;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #1F1F1F;
+        }
+
+        .pre-project-date-input:focus {
+            outline: none;
+            border-color: #FFB800;
+            box-shadow: 0 0 0 2px rgba(255, 184, 0, 0.15);
+        }
+
+        /* Allocations Table */
+        .allocations-section {
+            margin-top: 16px;
+        }
+
+        .allocations-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .allocations-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1F1F1F;
+        }
+
+        .add-allocation-btn {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            background: #FFB800;
+            color: #1F1F1F;
+            border: none;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .add-allocation-btn:hover {
+            background: #E5A600;
+        }
+
+        .allocations-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .allocations-table th {
+            text-align: left;
+            padding: 8px 6px;
+            background: #E9ECEF;
+            color: #495057;
+            font-weight: 600;
+            border-bottom: 1px solid #DEE2E6;
+        }
+
+        .allocations-table td {
+            padding: 8px 6px;
+            border-bottom: 1px solid #E9ECEF;
+            vertical-align: middle;
+        }
+
+        .allocations-table input,
+        .allocations-table select {
+            width: 100%;
+            padding: 4px 6px;
+            border: 1px solid #DEE2E6;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .allocations-table input:focus,
+        .allocations-table select:focus {
+            outline: none;
+            border-color: #FFB800;
+        }
+
+        .allocation-delete-btn {
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: transparent;
+            color: #DC3545;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .allocation-delete-btn:hover {
+            background: #FEE2E2;
+        }
+
+        .allocation-charged-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 6px;
+            background: #D1FAE5;
+            color: #065F46;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .allocation-pending-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 6px;
+            background: #FEF3C7;
+            color: #92400E;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* Allocation Summary */
+        .allocation-summary {
+            margin-top: 12px;
+            padding: 12px;
+            background: #FFFFFF;
+            border-radius: 6px;
+            border: 1px solid #E0E0E0;
+        }
+
+        .allocation-summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            padding: 4px 0;
+        }
+
+        .allocation-summary-label {
+            color: #6C757D;
+        }
+
+        .allocation-summary-value {
+            font-weight: 600;
+            color: #1F1F1F;
+        }
+
+        /* Project Section */
+        .project-section {
+            margin-top: 16px;
+        }
+
+        .project-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .project-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .project-field.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .project-field-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #6C757D;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .project-field-input {
+            padding: 8px 10px;
+            border: 1px solid #DEE2E6;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #1F1F1F;
+        }
+
+        .project-field-input:focus {
+            outline: none;
+            border-color: #FFB800;
+            box-shadow: 0 0 0 2px rgba(255, 184, 0, 0.15);
+        }
+
+        /* Timeline Section */
+        .timeline-section {
+            margin-top: 16px;
+            padding: 12px;
+            background: #FFFFFF;
+            border-radius: 6px;
+            border: 1px solid #E0E0E0;
+        }
+
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .timeline-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1F1F1F;
+        }
+
+        .timeline-dates {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        /* Charge-Back Section */
+        .chargeback-section {
+            margin-top: 16px;
+            padding: 12px;
+            background: #FEF3C7;
+            border-radius: 6px;
+            border: 1px solid #F59E0B;
+        }
+
+        .chargeback-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .chargeback-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #92400E;
+        }
+
+        .chargeback-summary {
+            font-size: 12px;
+            color: #78350F;
+        }
+
+        .chargeback-list {
+            margin-top: 8px;
+        }
+
+        .chargeback-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(245, 158, 11, 0.3);
+            font-size: 12px;
+        }
+
+        .chargeback-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Promote to Pre-Project Modal */
+        .promote-modal-content {
+            max-width: 500px;
+        }
+
+        .promote-form-group {
+            margin-bottom: 16px;
+        }
+
+        .promote-form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #1F1F1F;
+            margin-bottom: 6px;
+        }
+
+        .promote-form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #DEE2E6;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #1F1F1F;
+        }
+
+        .promote-form-input:focus {
+            outline: none;
+            border-color: #FFB800;
+            box-shadow: 0 0 0 2px rgba(255, 184, 0, 0.15);
+        }
+
+        /* Charge-Back Mode Selection */
+        .chargeback-mode-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .chargeback-mode-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border: 1px solid #DEE2E6;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .chargeback-mode-option:hover {
+            border-color: #FFB800;
+        }
+
+        .chargeback-mode-option.selected {
+            border-color: #FFB800;
+            background: #FFFBEB;
+        }
+
+        .chargeback-mode-option input[type="radio"] {
+            margin: 0;
+        }
+
+        .chargeback-mode-label {
+            flex: 1;
+        }
+
+        .chargeback-mode-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: #1F1F1F;
+        }
+
+        .chargeback-mode-desc {
+            font-size: 11px;
+            color: #6C757D;
+            margin-top: 2px;
+        }
+
+        /* Allocations Report View */
+        .allocations-report {
+            padding: 20px;
+        }
+
+        .allocations-report-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .allocations-report-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1F1F1F;
+        }
+
+        .month-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .month-nav-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #DEE2E6;
+            border-radius: 6px;
+            background: #FFFFFF;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #495057;
+        }
+
+        .month-nav-btn:hover {
+            background: #F8F9FA;
+        }
+
+        .month-display {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1F1F1F;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .allocations-report-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #FFFFFF;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .allocations-report-table th {
+            text-align: left;
+            padding: 12px 16px;
+            background: #F8F9FA;
+            color: #495057;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #DEE2E6;
+        }
+
+        .allocations-report-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #E9ECEF;
+            font-size: 13px;
+        }
+
+        .allocations-report-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .allocation-total-row {
+            background: #F8F9FA;
+            font-weight: 600;
+        }
+
+        .allocation-warning {
+            color: #DC3545;
+        }
+
+        /* Engagement Timeline View */
+        .engagement-timeline {
+            margin-top: 16px;
+        }
+
+        .timeline-phase {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 16px;
+        }
+
+        .timeline-phase::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 24px;
+            bottom: 0;
+            width: 2px;
+            background: #DEE2E6;
+        }
+
+        .timeline-phase:last-child::before {
+            display: none;
+        }
+
+        .timeline-phase-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .timeline-phase-dot {
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #FFB800;
+        }
+
+        .timeline-phase-dot.pre-project {
+            background: #F59E0B;
+        }
+
+        .timeline-phase-dot.project {
+            background: #10B981;
+        }
+
+        .timeline-phase-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1F1F1F;
+        }
+
+        .timeline-phase-period {
+            font-size: 11px;
+            color: #6C757D;
+        }
+
+        .timeline-month {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+            font-size: 12px;
+        }
+
+        .timeline-month-label {
+            width: 70px;
+            color: #495057;
+        }
+
+        .timeline-month-percent {
+            font-weight: 600;
+            color: #1F1F1F;
+        }
+
+        .timeline-month-status {
+            font-size: 10px;
+        }
+
+        /* Type selector in modal */
+        .type-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .type-option {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #DEE2E6;
+            border-radius: 8px;
+            background: #FFFFFF;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s ease;
+        }
+
+        .type-option:hover {
+            border-color: #FFB800;
+        }
+
+        .type-option.selected {
+            border-color: #FFB800;
+            background: #FFFBEB;
+        }
+
+        .type-option-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .type-option-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #1F1F1F;
+        }
+
+        /* Status badges for new lifecycle */
+        .status-badge.status-active {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .status-badge.status-completed {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .status-badge.status-dropped {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        /* Engagement item type indicator */
+        .engagement-type-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .engagement-type-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .engagement-type-icon.engagement-type {
+            color: #0369A1;
+        }
+
+        .engagement-type-icon.pre-project-type {
+            color: #92400E;
+        }
+
+        .engagement-type-icon.project-type {
+            color: #065F46;
+        }
     </style>
 </head>
 <body>
@@ -3239,6 +3952,119 @@
                 <div class="detail-label">Status</div>
                 <span id="panel-eng-status" class="status-badge"></span>
             </div>
+
+            <!-- Lifecycle Section -->
+            <div id="panel-lifecycle-section" class="lifecycle-section">
+                <div class="lifecycle-header">
+                    <div>
+                        <span class="lifecycle-title">Type: </span>
+                        <span id="panel-eng-type-badge" class="engagement-type-badge type-engagement">Engagement</span>
+                    </div>
+                    <div id="lifecycle-actions" class="lifecycle-actions">
+                        <!-- Action buttons rendered dynamically -->
+                    </div>
+                </div>
+
+                <!-- Pre-Project Section (hidden by default) -->
+                <div id="panel-preproject-section" class="pre-project-section" style="display: none;">
+                    <div class="pre-project-dates">
+                        <div class="pre-project-date-field">
+                            <label class="pre-project-date-label">Started</label>
+                            <input type="date" id="panel-preproject-started" class="pre-project-date-input" onchange="savePreProjectField('startedAt', this.value)">
+                        </div>
+                        <div class="pre-project-date-field">
+                            <label class="pre-project-date-label">Expected Formalization</label>
+                            <input type="date" id="panel-preproject-expected" class="pre-project-date-input" onchange="savePreProjectField('expectedFormalization', this.value)">
+                        </div>
+                    </div>
+
+                    <!-- Pre-Project Allocations -->
+                    <div class="allocations-section">
+                        <div class="allocations-header">
+                            <span class="allocations-title">Monthly Allocations</span>
+                            <button type="button" class="add-allocation-btn" onclick="addPreProjectAllocation()">+ Add</button>
+                        </div>
+                        <table id="panel-preproject-allocations" class="allocations-table">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>%</th>
+                                    <th>Hours</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Allocations rendered dynamically -->
+                            </tbody>
+                        </table>
+                        <div id="panel-preproject-summary" class="allocation-summary" style="display: none;">
+                            <!-- Summary rendered dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Section (hidden by default) -->
+                <div id="panel-project-section" class="project-section" style="display: none;">
+                    <div class="project-details">
+                        <div class="project-field">
+                            <label class="project-field-label">Formalized</label>
+                            <input type="date" id="panel-project-formalized" class="project-field-input" onchange="saveProjectField('formalizedAt', this.value)">
+                        </div>
+                        <div class="project-field">
+                            <label class="project-field-label">Project Code</label>
+                            <input type="text" id="panel-project-code" class="project-field-input" placeholder="PRJ-..." onblur="saveProjectField('projectCode', this.value)">
+                        </div>
+                        <div class="project-field full-width">
+                            <label class="project-field-label">Funding Source</label>
+                            <input type="text" id="panel-project-funding" class="project-field-input" placeholder="Budget reference..." onblur="saveProjectField('fundingSource', this.value)">
+                        </div>
+                    </div>
+
+                    <!-- Project Timeline -->
+                    <div class="timeline-section">
+                        <div class="timeline-header">
+                            <span class="timeline-title">Project Timeline</span>
+                            <button type="button" class="add-allocation-btn" onclick="addProjectAllocation()">+ Add Period</button>
+                        </div>
+                        <div class="timeline-dates">
+                            <div class="project-field">
+                                <label class="project-field-label">Start Date</label>
+                                <input type="date" id="panel-project-start" class="project-field-input" onchange="saveProjectTimelineField('startDate', this.value)">
+                            </div>
+                            <div class="project-field">
+                                <label class="project-field-label">End Date</label>
+                                <input type="date" id="panel-project-end" class="project-field-input" onchange="saveProjectTimelineField('endDate', this.value)">
+                            </div>
+                        </div>
+                        <table id="panel-project-allocations" class="allocations-table">
+                            <thead>
+                                <tr>
+                                    <th>Period</th>
+                                    <th>%</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Allocations rendered dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Charge-Back Summary (if applicable) -->
+                    <div id="panel-chargeback-section" class="chargeback-section" style="display: none;">
+                        <div class="chargeback-header">
+                            <span class="chargeback-title">Pre-Project Charge-Back</span>
+                        </div>
+                        <div id="panel-chargeback-summary" class="chargeback-summary"></div>
+                        <div id="panel-chargeback-list" class="chargeback-list">
+                            <!-- Charge-back items rendered dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Comments Section -->
             <div class="comments-section">
                 <div class="comments-header">Comments</div>
@@ -3488,6 +4314,106 @@
             <div class="modal-actions">
                 <button type="button" class="btn btn-secondary" onclick="closeCancelModal()">Back</button>
                 <button type="button" class="btn btn-warning" onclick="confirmCancelEngagement()">Cancel Engagement</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Promote to Pre-Project Modal -->
+    <div id="promote-preproject-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closePromotePreProjectModal()"></div>
+        <div class="modal-content promote-modal-content">
+            <h2 class="modal-title">Promote to Pre-Project</h2>
+            <p id="promote-preproject-name" style="text-align: center; color: #6C757D; margin-bottom: 20px;"></p>
+            <p style="font-size: 13px; color: #495057; margin-bottom: 16px;">
+                Pre-project phase tracks informal work with expectation of future project formalization.
+                You can track monthly allocations during this phase.
+            </p>
+            <div class="promote-form-group">
+                <label for="preproject-started" class="promote-form-label">Pre-Project Started</label>
+                <input type="date" id="preproject-started" class="promote-form-input">
+            </div>
+            <div class="promote-form-group">
+                <label for="preproject-expected" class="promote-form-label">Expected Formalization Date (Optional)</label>
+                <input type="date" id="preproject-expected" class="promote-form-input">
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closePromotePreProjectModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="confirmPromoteToPreProject()">Promote</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Promote to Project Modal -->
+    <div id="promote-project-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closePromoteProjectModal()"></div>
+        <div class="modal-content promote-modal-content" style="max-width: 600px;">
+            <h2 class="modal-title">Promote to Project</h2>
+            <p id="promote-project-name" style="text-align: center; color: #6C757D; margin-bottom: 20px;"></p>
+            <p style="font-size: 13px; color: #495057; margin-bottom: 16px;">
+                Converting to a formal project with funding and governance.
+                Pre-project time can be charged back to the project.
+            </p>
+            <div class="promote-form-group">
+                <label for="project-formalized" class="promote-form-label">Formalization Date</label>
+                <input type="date" id="project-formalized" class="promote-form-input">
+            </div>
+            <div class="promote-form-group">
+                <label for="project-code" class="promote-form-label">Project Code (Optional)</label>
+                <input type="text" id="project-code" class="promote-form-input" placeholder="e.g., PRJ-2025-042">
+            </div>
+            <div class="promote-form-group">
+                <label for="project-funding" class="promote-form-label">Funding Source (Optional)</label>
+                <input type="text" id="project-funding" class="promote-form-input" placeholder="e.g., IT Capital Budget 2025">
+            </div>
+            <div class="promote-form-group">
+                <label class="promote-form-label">Project Timeline</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label for="project-start" style="font-size: 11px; color: #6C757D;">Start Date</label>
+                        <input type="date" id="project-start" class="promote-form-input">
+                    </div>
+                    <div>
+                        <label for="project-end" style="font-size: 11px; color: #6C757D;">End Date</label>
+                        <input type="date" id="project-end" class="promote-form-input">
+                    </div>
+                </div>
+            </div>
+            <div class="promote-form-group">
+                <label for="project-allocation" class="promote-form-label">Allocation Percentage</label>
+                <input type="number" id="project-allocation" class="promote-form-input" placeholder="25" min="0" max="100">
+            </div>
+            <div id="chargeback-options" class="promote-form-group" style="display: none;">
+                <label class="promote-form-label">Charge-Back Mode</label>
+                <p style="font-size: 12px; color: #6C757D; margin-bottom: 8px;">
+                    How should pre-project time be charged to the project?
+                </p>
+                <div class="chargeback-mode-options">
+                    <label class="chargeback-mode-option selected" onclick="selectChargeBackMode('original')">
+                        <input type="radio" name="chargeback-mode" value="original" checked>
+                        <div class="chargeback-mode-label">
+                            <div class="chargeback-mode-title">Original Rate</div>
+                            <div class="chargeback-mode-desc">Charge the actual percentage worked during pre-project</div>
+                        </div>
+                    </label>
+                    <label class="chargeback-mode-option" onclick="selectChargeBackMode('project_rate')">
+                        <input type="radio" name="chargeback-mode" value="project_rate">
+                        <div class="chargeback-mode-label">
+                            <div class="chargeback-mode-title">Project Rate</div>
+                            <div class="chargeback-mode-desc">Charge at the formal project allocation rate</div>
+                        </div>
+                    </label>
+                    <label class="chargeback-mode-option" onclick="selectChargeBackMode('none')">
+                        <input type="radio" name="chargeback-mode" value="none">
+                        <div class="chargeback-mode-label">
+                            <div class="chargeback-mode-title">No Charge-Back</div>
+                            <div class="chargeback-mode-desc">Don't charge pre-project time to the project</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closePromoteProjectModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="confirmPromoteToProject()">Promote to Project</button>
             </div>
         </div>
     </div>
@@ -3864,7 +4790,12 @@
             // Priority autocomplete state
             selectedPriority: DEFAULT_PRIORITY,
             priorityDropdownOpen: false,
-            priorityHighlightIndex: -1
+            priorityHighlightIndex: -1,
+            // Lifecycle modal state
+            promotePreProjectModalOpen: false,
+            promoteProjectModalOpen: false,
+            promoteEngagementIndex: null,
+            selectedChargeBackMode: 'original'
         };
 
         // DOM Elements - Landing and Home
@@ -3947,6 +4878,41 @@
         const panelEngContact = document.getElementById('panel-eng-contact');
         const panelContactDropdown = document.getElementById('panel-contact-dropdown');
         const panelEngStatus = document.getElementById('panel-eng-status');
+
+        // DOM Elements - Lifecycle Panel
+        const panelLifecycleSection = document.getElementById('panel-lifecycle-section');
+        const panelEngTypeBadge = document.getElementById('panel-eng-type-badge');
+        const lifecycleActions = document.getElementById('lifecycle-actions');
+        const panelPreProjectSection = document.getElementById('panel-preproject-section');
+        const panelPreProjectStarted = document.getElementById('panel-preproject-started');
+        const panelPreProjectExpected = document.getElementById('panel-preproject-expected');
+        const panelPreProjectAllocations = document.getElementById('panel-preproject-allocations');
+        const panelPreProjectSummary = document.getElementById('panel-preproject-summary');
+        const panelProjectSection = document.getElementById('panel-project-section');
+        const panelProjectFormalized = document.getElementById('panel-project-formalized');
+        const panelProjectCode = document.getElementById('panel-project-code');
+        const panelProjectFunding = document.getElementById('panel-project-funding');
+        const panelProjectStart = document.getElementById('panel-project-start');
+        const panelProjectEnd = document.getElementById('panel-project-end');
+        const panelProjectAllocations = document.getElementById('panel-project-allocations');
+        const panelChargeBackSection = document.getElementById('panel-chargeback-section');
+        const panelChargeBackSummary = document.getElementById('panel-chargeback-summary');
+        const panelChargeBackList = document.getElementById('panel-chargeback-list');
+
+        // DOM Elements - Promote Modals
+        const promotePreProjectModal = document.getElementById('promote-preproject-modal');
+        const promotePreProjectName = document.getElementById('promote-preproject-name');
+        const preProjectStartedInput = document.getElementById('preproject-started');
+        const preProjectExpectedInput = document.getElementById('preproject-expected');
+        const promoteProjectModal = document.getElementById('promote-project-modal');
+        const promoteProjectName = document.getElementById('promote-project-name');
+        const projectFormalizedInput = document.getElementById('project-formalized');
+        const projectCodeInput = document.getElementById('project-code');
+        const projectFundingInput = document.getElementById('project-funding');
+        const projectStartInput = document.getElementById('project-start');
+        const projectEndInput = document.getElementById('project-end');
+        const projectAllocationInput = document.getElementById('project-allocation');
+        const chargeBackOptions = document.getElementById('chargeback-options');
 
         // DOM Elements - Header and Tabs
         const appHeader = document.getElementById('app-header');
@@ -4896,10 +5862,14 @@
                     contact: contactName || null,  // Keep text for display
                     contactId: contactId || null,  // Link to person
                     tagIds: [...state.selectedOppTagIds],
-                    status: 'requested',  // Default status
+                    type: 'engagement',  // Default type (engagement | pre-project | project)
+                    status: 'active',  // Default status (active | completed | closed | dropped)
                     comments: [],
                     archived: false,
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    // Lifecycle data (null until promoted)
+                    preProject: null,
+                    project: null
                 };
                 state.engagements.push(newEngagement);
             }
@@ -4954,12 +5924,14 @@
                     oppItem.className = 'engagement-item' + (opp.archived ? ' archived' : '');
 
                     const statusClass = `status-${opp.status}`;
-                    const canClose = opp.status === 'paused';
-                    const isClosedOrCancelled = opp.status === 'closed' || opp.status === 'cancelled';
+                    const typeClass = `type-${opp.type || 'engagement'}`;
+                    const typeName = getTypeDisplayName(opp.type || 'engagement');
+                    const canClose = opp.status === 'active';  // Updated for new lifecycle model
+                    const isClosedOrCompleted = opp.status === 'closed' || opp.status === 'completed' || opp.status === 'dropped';
 
                     // Build action buttons based on status
                     let actionButtons = '';
-                    if (isClosedOrCancelled && !opp.archived) {
+                    if (isClosedOrCompleted && !opp.archived) {
                         // Only show Archive button for closed/cancelled (not yet archived)
                         actionButtons = `
                             <button class="opp-action-btn archive-btn" onclick="event.stopPropagation(); archiveEngagement(${index})" title="Archive Engagement">
@@ -5020,6 +5992,9 @@
 
                     oppItem.innerHTML = `
                         <div class="engagement-content" onclick="openSidePanel(${index})">
+                            <div class="engagement-type-indicator">
+                                <span class="engagement-type-badge ${typeClass}">${typeName}</span>
+                            </div>
                             <div class="engagement-name">${escapeHtml(opp.name)}</div>
                             ${opp.contact ? `<div class="engagement-contact">${escapeHtml(opp.contact)}</div>` : ''}
                             ${oppTagsHtml}
@@ -5066,6 +6041,9 @@
 
             // Update status badge
             updatePanelStatusBadge(opp.status);
+
+            // Render lifecycle section
+            renderLifecycleSection(opp);
 
             // Render comments
             renderCommentsInPanel(opp);
@@ -5199,7 +6177,8 @@
         // Archive engagement (for closed/cancelled engagements)
         function archiveEngagement(index) {
             const opp = state.engagements[index];
-            if (opp.status !== 'closed' && opp.status !== 'cancelled') return;
+            // Allow archiving for closed, completed, or dropped engagements
+            if (opp.status !== 'closed' && opp.status !== 'completed' && opp.status !== 'dropped') return;
 
             opp.archived = true;
 
@@ -5217,7 +6196,8 @@
         // Close engagement action (set status to Closed)
         function closeEngagementAction(index) {
             const opp = state.engagements[index];
-            if (opp.status !== 'paused') return; // Only paused can be closed
+            // Allow closing from active status in new lifecycle model
+            if (opp.status !== 'active') return;
 
             opp.status = 'closed';
             renderEngagements();
@@ -5225,8 +6205,616 @@
             // Also update side panel if open
             if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
                 updatePanelStatusBadge('closed');
+                renderLifecycleSection(opp);
             }
             // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // ========================================
+        // ENGAGEMENT LIFECYCLE MANAGEMENT
+        // ========================================
+
+        // Get type display name
+        function getTypeDisplayName(type) {
+            const names = {
+                'engagement': 'Engagement',
+                'pre-project': 'Pre-Project',
+                'project': 'Project'
+            };
+            return names[type] || 'Engagement';
+        }
+
+        // Get type CSS class
+        function getTypeClass(type) {
+            return `type-${type}`;
+        }
+
+        // Render lifecycle section in side panel
+        function renderLifecycleSection(eng) {
+            // Update type badge
+            panelEngTypeBadge.textContent = getTypeDisplayName(eng.type);
+            panelEngTypeBadge.className = `engagement-type-badge ${getTypeClass(eng.type)}`;
+
+            // Render action buttons based on type and status
+            renderLifecycleActions(eng);
+
+            // Show/hide sections based on type
+            if (eng.type === 'engagement') {
+                panelPreProjectSection.style.display = 'none';
+                panelProjectSection.style.display = 'none';
+            } else if (eng.type === 'pre-project') {
+                panelPreProjectSection.style.display = 'block';
+                panelProjectSection.style.display = 'none';
+                renderPreProjectSection(eng);
+            } else if (eng.type === 'project') {
+                panelPreProjectSection.style.display = 'block';  // Show pre-project history
+                panelProjectSection.style.display = 'block';
+                renderPreProjectSection(eng);
+                renderProjectSection(eng);
+            }
+        }
+
+        // Render lifecycle action buttons
+        function renderLifecycleActions(eng) {
+            let buttons = '';
+
+            if (eng.status === 'active') {
+                if (eng.type === 'engagement') {
+                    buttons = `
+                        <button class="lifecycle-action-btn promote" onclick="openPromotePreProjectModal(${state.selectedEngagementIndex})">
+                            Promote to Pre-Project
+                        </button>
+                    `;
+                } else if (eng.type === 'pre-project') {
+                    buttons = `
+                        <button class="lifecycle-action-btn promote" onclick="openPromoteProjectModal(${state.selectedEngagementIndex})">
+                            Promote to Project
+                        </button>
+                        <button class="lifecycle-action-btn secondary" onclick="revertToEngagement(${state.selectedEngagementIndex})">
+                            Revert
+                        </button>
+                    `;
+                } else if (eng.type === 'project') {
+                    buttons = `
+                        <button class="lifecycle-action-btn promote" onclick="completeProject(${state.selectedEngagementIndex})">
+                            Complete Project
+                        </button>
+                    `;
+                }
+            }
+
+            lifecycleActions.innerHTML = buttons;
+        }
+
+        // Render pre-project section
+        function renderPreProjectSection(eng) {
+            if (!eng.preProject) return;
+
+            panelPreProjectStarted.value = eng.preProject.startedAt || '';
+            panelPreProjectExpected.value = eng.preProject.expectedFormalization || '';
+
+            // Render allocations table
+            const tbody = panelPreProjectAllocations.querySelector('tbody');
+            tbody.innerHTML = '';
+
+            const allocations = eng.preProject.allocations || [];
+            if (allocations.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #6C757D;">No allocations yet</td></tr>';
+            } else {
+                allocations.forEach((alloc, idx) => {
+                    const statusBadge = alloc.chargedToProject
+                        ? '<span class="allocation-charged-badge">Charged</span>'
+                        : '<span class="allocation-pending-badge">Pending</span>';
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>
+                                <input type="month" value="${alloc.month}"
+                                    onchange="updatePreProjectAllocation(${idx}, 'month', this.value)"
+                                    ${alloc.chargedToProject ? 'disabled' : ''}>
+                            </td>
+                            <td>
+                                <input type="number" value="${alloc.percentage}" min="0" max="100" style="width: 50px;"
+                                    onchange="updatePreProjectAllocation(${idx}, 'percentage', this.value)"
+                                    ${alloc.chargedToProject ? 'disabled' : ''}>
+                            </td>
+                            <td>
+                                <input type="number" value="${alloc.hours || ''}" min="0" style="width: 50px;"
+                                    onchange="updatePreProjectAllocation(${idx}, 'hours', this.value)"
+                                    ${alloc.chargedToProject ? 'disabled' : ''}>
+                            </td>
+                            <td>${statusBadge}</td>
+                            <td>
+                                ${!alloc.chargedToProject ? `
+                                    <button class="allocation-delete-btn" onclick="deletePreProjectAllocation(${idx})" title="Delete">
+                                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+                                ` : ''}
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                // Render summary
+                renderPreProjectSummary(allocations);
+            }
+        }
+
+        // Render pre-project allocation summary
+        function renderPreProjectSummary(allocations) {
+            if (allocations.length === 0) {
+                panelPreProjectSummary.style.display = 'none';
+                return;
+            }
+
+            const totalMonths = allocations.length;
+            const totalPercentage = allocations.reduce((sum, a) => sum + (a.percentage || 0), 0);
+            const avgPercentage = totalMonths > 0 ? Math.round(totalPercentage / totalMonths) : 0;
+            const chargedMonths = allocations.filter(a => a.chargedToProject).length;
+            const pendingMonths = totalMonths - chargedMonths;
+
+            panelPreProjectSummary.innerHTML = `
+                <div class="allocation-summary-row">
+                    <span class="allocation-summary-label">Total Months</span>
+                    <span class="allocation-summary-value">${totalMonths}</span>
+                </div>
+                <div class="allocation-summary-row">
+                    <span class="allocation-summary-label">Average Allocation</span>
+                    <span class="allocation-summary-value">${avgPercentage}%</span>
+                </div>
+                <div class="allocation-summary-row">
+                    <span class="allocation-summary-label">Charged to Project</span>
+                    <span class="allocation-summary-value">${chargedMonths}</span>
+                </div>
+                <div class="allocation-summary-row">
+                    <span class="allocation-summary-label">Pending Charge-Back</span>
+                    <span class="allocation-summary-value">${pendingMonths}</span>
+                </div>
+            `;
+            panelPreProjectSummary.style.display = 'block';
+        }
+
+        // Render project section
+        function renderProjectSection(eng) {
+            if (!eng.project) return;
+
+            panelProjectFormalized.value = eng.project.formalizedAt || '';
+            panelProjectCode.value = eng.project.projectCode || '';
+            panelProjectFunding.value = eng.project.fundingSource || '';
+
+            if (eng.project.timeline) {
+                panelProjectStart.value = eng.project.timeline.startDate || '';
+                panelProjectEnd.value = eng.project.timeline.endDate || '';
+
+                // Render project allocations
+                const tbody = panelProjectAllocations.querySelector('tbody');
+                tbody.innerHTML = '';
+
+                const allocations = eng.project.timeline.allocations || [];
+                if (allocations.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #6C757D;">No allocation periods</td></tr>';
+                } else {
+                    allocations.forEach((alloc, idx) => {
+                        const statusOptions = ['planned', 'active', 'completed', 'cancelled']
+                            .map(s => `<option value="${s}" ${alloc.status === s ? 'selected' : ''}>${capitalizeFirst(s)}</option>`)
+                            .join('');
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${formatDate(alloc.periodStart)} - ${formatDate(alloc.periodEnd)}</td>
+                                <td>${alloc.percentage}%</td>
+                                <td>
+                                    <select onchange="updateProjectAllocationStatus(${idx}, this.value)">
+                                        ${statusOptions}
+                                    </select>
+                                </td>
+                                <td>
+                                    <button class="allocation-delete-btn" onclick="deleteProjectAllocation(${idx})" title="Delete">
+                                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+            }
+
+            // Render charge-back section if applicable
+            renderChargeBackSection(eng);
+        }
+
+        // Render charge-back section
+        function renderChargeBackSection(eng) {
+            if (!eng.project || !eng.project.preProjectMonthsCharged || eng.project.preProjectMonthsCharged.length === 0) {
+                panelChargeBackSection.style.display = 'none';
+                return;
+            }
+
+            const chargebacks = eng.project.preProjectMonthsCharged;
+            const totalCharged = chargebacks.reduce((sum, cb) => sum + cb.chargedPercentage, 0);
+
+            panelChargeBackSummary.textContent = `${chargebacks.length} months charged back (total: ${totalCharged}% allocation-months)`;
+
+            let listHtml = '';
+            chargebacks.forEach(cb => {
+                listHtml += `
+                    <div class="chargeback-item">
+                        <span>${formatMonth(cb.originalMonth)}: ${cb.originalPercentage}% → ${cb.chargedPercentage}%</span>
+                        <span style="color: #6C757D; font-size: 11px;">${formatDate(cb.chargedAt)}</span>
+                    </div>
+                `;
+            });
+            panelChargeBackList.innerHTML = listHtml;
+
+            panelChargeBackSection.style.display = 'block';
+        }
+
+        // Format month for display
+        function formatMonth(monthStr) {
+            if (!monthStr) return '';
+            const [year, month] = monthStr.split('-');
+            const date = new Date(year, parseInt(month) - 1, 1);
+            return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        }
+
+        // Add pre-project allocation
+        function addPreProjectAllocation() {
+            if (state.selectedEngagementIndex === null) return;
+            const eng = state.engagements[state.selectedEngagementIndex];
+            if (!eng.preProject) return;
+
+            // Default to current month
+            const now = new Date();
+            const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+            eng.preProject.allocations = eng.preProject.allocations || [];
+            eng.preProject.allocations.push({
+                month: currentMonth,
+                percentage: 0,
+                hours: null,
+                notes: null,
+                chargedToProject: false,
+                chargedAt: null
+            });
+
+            renderPreProjectSection(eng);
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Update pre-project allocation field
+        function updatePreProjectAllocation(idx, field, value) {
+            if (state.selectedEngagementIndex === null) return;
+            const eng = state.engagements[state.selectedEngagementIndex];
+            if (!eng.preProject || !eng.preProject.allocations[idx]) return;
+
+            const alloc = eng.preProject.allocations[idx];
+            if (field === 'percentage' || field === 'hours') {
+                alloc[field] = value ? parseInt(value) : null;
+            } else {
+                alloc[field] = value;
+            }
+
+            renderPreProjectSummary(eng.preProject.allocations);
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Delete pre-project allocation
+        function deletePreProjectAllocation(idx) {
+            if (state.selectedEngagementIndex === null) return;
+            const eng = state.engagements[state.selectedEngagementIndex];
+            if (!eng.preProject || !eng.preProject.allocations[idx]) return;
+
+            eng.preProject.allocations.splice(idx, 1);
+            renderPreProjectSection(eng);
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Save pre-project field
+        function savePreProjectField(field, value) {
+            if (state.selectedEngagementIndex === null) return;
+            const eng = state.engagements[state.selectedEngagementIndex];
+            if (!eng.preProject) return;
+
+            eng.preProject[field] = value || null;
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Save project field
+        function saveProjectField(field, value) {
+            if (state.selectedEngagementIndex === null) return;
+            const eng = state.engagements[state.selectedEngagementIndex];
+            if (!eng.project) return;
+
+            eng.project[field] = value || null;
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Save project timeline field
+        function saveProjectTimelineField(field, value) {
+            if (state.selectedEngagementIndex === null) return;
+            const eng = state.engagements[state.selectedEngagementIndex];
+            if (!eng.project || !eng.project.timeline) return;
+
+            eng.project.timeline[field] = value || null;
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Add project allocation period
+        function addProjectAllocation() {
+            if (state.selectedEngagementIndex === null) return;
+            const eng = state.engagements[state.selectedEngagementIndex];
+            if (!eng.project || !eng.project.timeline) return;
+
+            // Default to project start/end dates or current month
+            const startDate = eng.project.timeline.startDate || getTodayDate();
+            const endDate = eng.project.timeline.endDate || getTodayDate();
+
+            eng.project.timeline.allocations = eng.project.timeline.allocations || [];
+            eng.project.timeline.allocations.push({
+                periodStart: startDate,
+                periodEnd: endDate,
+                percentage: 25,
+                status: 'planned'
+            });
+
+            renderProjectSection(eng);
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Update project allocation status
+        function updateProjectAllocationStatus(idx, status) {
+            if (state.selectedEngagementIndex === null) return;
+            const eng = state.engagements[state.selectedEngagementIndex];
+            if (!eng.project || !eng.project.timeline || !eng.project.timeline.allocations[idx]) return;
+
+            eng.project.timeline.allocations[idx].status = status;
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Delete project allocation
+        function deleteProjectAllocation(idx) {
+            if (state.selectedEngagementIndex === null) return;
+            const eng = state.engagements[state.selectedEngagementIndex];
+            if (!eng.project || !eng.project.timeline || !eng.project.timeline.allocations[idx]) return;
+
+            eng.project.timeline.allocations.splice(idx, 1);
+            renderProjectSection(eng);
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // ========================================
+        // PROMOTE TO PRE-PROJECT
+        // ========================================
+
+        function openPromotePreProjectModal(index) {
+            state.promoteEngagementIndex = index;
+            state.promotePreProjectModalOpen = true;
+
+            const eng = state.engagements[index];
+            promotePreProjectName.textContent = `"${eng.name}"`;
+
+            // Default start date to engagement start date or today
+            preProjectStartedInput.value = eng.startDate || getTodayDate();
+            preProjectExpectedInput.value = '';
+
+            promotePreProjectModal.classList.remove('hidden');
+        }
+
+        function closePromotePreProjectModal() {
+            promotePreProjectModal.classList.add('hidden');
+            state.promotePreProjectModalOpen = false;
+            state.promoteEngagementIndex = null;
+        }
+
+        function confirmPromoteToPreProject() {
+            if (state.promoteEngagementIndex === null) return;
+
+            const eng = state.engagements[state.promoteEngagementIndex];
+            const startedAt = preProjectStartedInput.value;
+            const expectedFormalization = preProjectExpectedInput.value;
+
+            if (!startedAt) {
+                alert('Please select a start date');
+                return;
+            }
+
+            // Update engagement
+            eng.type = 'pre-project';
+            eng.preProject = {
+                startedAt: startedAt,
+                expectedFormalization: expectedFormalization || null,
+                allocations: []
+            };
+
+            closePromotePreProjectModal();
+            renderEngagements();
+
+            // Refresh side panel if open
+            if (state.sidePanelOpen && state.selectedEngagementIndex === state.promoteEngagementIndex) {
+                openSidePanel(state.promoteEngagementIndex);
+            }
+
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // ========================================
+        // PROMOTE TO PROJECT
+        // ========================================
+
+        function openPromoteProjectModal(index) {
+            state.promoteEngagementIndex = index;
+            state.promoteProjectModalOpen = true;
+            state.selectedChargeBackMode = 'original';
+
+            const eng = state.engagements[index];
+            promoteProjectName.textContent = `"${eng.name}"`;
+
+            // Default formalization date to today
+            projectFormalizedInput.value = getTodayDate();
+            projectCodeInput.value = '';
+            projectFundingInput.value = '';
+            projectStartInput.value = getTodayDate();
+            projectEndInput.value = '';
+            projectAllocationInput.value = '25';
+
+            // Show charge-back options if there are pre-project allocations
+            if (eng.preProject && eng.preProject.allocations && eng.preProject.allocations.length > 0) {
+                chargeBackOptions.style.display = 'block';
+                // Reset to original mode
+                selectChargeBackMode('original');
+            } else {
+                chargeBackOptions.style.display = 'none';
+            }
+
+            promoteProjectModal.classList.remove('hidden');
+        }
+
+        function closePromoteProjectModal() {
+            promoteProjectModal.classList.add('hidden');
+            state.promoteProjectModalOpen = false;
+            state.promoteEngagementIndex = null;
+        }
+
+        function selectChargeBackMode(mode) {
+            state.selectedChargeBackMode = mode;
+
+            // Update UI
+            document.querySelectorAll('.chargeback-mode-option').forEach(opt => {
+                opt.classList.remove('selected');
+                const radio = opt.querySelector('input[type="radio"]');
+                if (radio && radio.value === mode) {
+                    opt.classList.add('selected');
+                    radio.checked = true;
+                }
+            });
+        }
+
+        function confirmPromoteToProject() {
+            if (state.promoteEngagementIndex === null) return;
+
+            const eng = state.engagements[state.promoteEngagementIndex];
+            const formalizedAt = projectFormalizedInput.value;
+            const projectCode = projectCodeInput.value.trim();
+            const fundingSource = projectFundingInput.value.trim();
+            const startDate = projectStartInput.value;
+            const endDate = projectEndInput.value;
+            const allocation = parseInt(projectAllocationInput.value) || 25;
+
+            if (!formalizedAt || !startDate) {
+                alert('Please fill in the formalization date and project start date');
+                return;
+            }
+
+            // Process charge-back for pre-project allocations
+            const chargeBackRecords = [];
+            if (eng.preProject && eng.preProject.allocations && state.selectedChargeBackMode !== 'none') {
+                eng.preProject.allocations.forEach(alloc => {
+                    if (!alloc.chargedToProject && alloc.month < startDate.substring(0, 7)) {
+                        const chargedPercentage = state.selectedChargeBackMode === 'project_rate'
+                            ? allocation
+                            : alloc.percentage;
+
+                        chargeBackRecords.push({
+                            originalMonth: alloc.month,
+                            originalPercentage: alloc.percentage,
+                            chargedPercentage: chargedPercentage,
+                            chargedAt: new Date().toISOString(),
+                            notes: `Charged via ${state.selectedChargeBackMode} mode`
+                        });
+
+                        // Mark original allocation as charged
+                        alloc.chargedToProject = true;
+                        alloc.chargedAt = new Date().toISOString();
+                    }
+                });
+            }
+
+            // Update engagement to project
+            eng.type = 'project';
+            eng.project = {
+                formalizedAt: formalizedAt,
+                projectCode: projectCode || null,
+                fundingSource: fundingSource || null,
+                timeline: {
+                    startDate: startDate,
+                    endDate: endDate || null,
+                    actualEndDate: null,
+                    allocations: [{
+                        periodStart: startDate,
+                        periodEnd: endDate || startDate,
+                        percentage: allocation,
+                        status: 'active'
+                    }]
+                },
+                preProjectMonthsCharged: chargeBackRecords
+            };
+
+            closePromoteProjectModal();
+            renderEngagements();
+
+            // Refresh side panel if open
+            if (state.sidePanelOpen && state.selectedEngagementIndex === state.promoteEngagementIndex) {
+                openSidePanel(state.promoteEngagementIndex);
+            }
+
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Revert pre-project back to engagement
+        function revertToEngagement(index) {
+            const eng = state.engagements[index];
+            if (eng.type !== 'pre-project') return;
+
+            if (!confirm('Are you sure you want to revert this pre-project back to an engagement? All pre-project allocation data will be lost.')) {
+                return;
+            }
+
+            eng.type = 'engagement';
+            eng.preProject = null;
+
+            renderEngagements();
+
+            // Refresh side panel if open
+            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
+                openSidePanel(index);
+            }
+
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Complete project
+        function completeProject(index) {
+            const eng = state.engagements[index];
+            if (eng.type !== 'project' || eng.status !== 'active') return;
+
+            eng.status = 'completed';
+            if (eng.project && eng.project.timeline) {
+                eng.project.timeline.actualEndDate = getTodayDate();
+            }
+
+            // Mark all active allocations as completed
+            if (eng.project && eng.project.timeline && eng.project.timeline.allocations) {
+                eng.project.timeline.allocations.forEach(alloc => {
+                    if (alloc.status === 'active' || alloc.status === 'planned') {
+                        alloc.status = 'completed';
+                    }
+                });
+            }
+
+            renderEngagements();
+
+            // Refresh side panel if open
+            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
+                openSidePanel(index);
+            }
+
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
@@ -5331,12 +6919,13 @@
                 type: 'cancellation'
             });
 
-            // Set status to cancelled
-            opp.status = 'cancelled';
+            // Set status to dropped (new lifecycle model)
+            opp.status = 'dropped';
 
             // Update side panel if this engagement is open
             if (state.sidePanelOpen && state.selectedEngagementIndex === state.cancelEngagementIndex) {
-                updatePanelStatusBadge('cancelled');
+                updatePanelStatusBadge('dropped');
+                renderLifecycleSection(opp);
                 renderCommentsInPanel(opp);
             }
 
@@ -7258,6 +8847,37 @@
             });
         }
 
+        // Migrate engagements to new lifecycle model
+        function migrateEngagementLifecycle() {
+            state.engagements.forEach(eng => {
+                // Add type field if missing (default to 'engagement')
+                if (!eng.type) {
+                    eng.type = 'engagement';
+                }
+
+                // Migrate old status values to new model
+                if (!['active', 'completed', 'closed', 'dropped'].includes(eng.status)) {
+                    // Map old statuses to new ones
+                    const statusMap = {
+                        'requested': 'active',
+                        'open': 'active',
+                        'paused': 'active',  // Paused becomes active, completion is based on type transition
+                        'closed': 'closed',
+                        'cancelled': 'dropped'
+                    };
+                    eng.status = statusMap[eng.status] || 'active';
+                }
+
+                // Ensure preProject and project fields exist
+                if (eng.preProject === undefined) {
+                    eng.preProject = null;
+                }
+                if (eng.project === undefined) {
+                    eng.project = null;
+                }
+            });
+        }
+
         // ========================================
         // SCORING ALGORITHM FUNCTIONS
         // ========================================
@@ -8038,6 +9658,7 @@
 
                     // Run migration for backwards compatibility
                     migrateContactsToPeople();
+                    migrateEngagementLifecycle();
 
                     // Navigate directly to app with home tab
                     state.currentTab = 'home';
@@ -8045,6 +9666,7 @@
                 } else {
                     // No saved state, show landing page
                     migrateContactsToPeople();
+                    migrateEngagementLifecycle();
                     navigateTo('landing');
                 }
             } catch (error) {
