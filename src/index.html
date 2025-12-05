@@ -730,14 +730,14 @@
             }
         }
 
-        /* Opportunity list styles */
-        .opportunity-list {
+        /* Engagement list styles */
+        .engagement-list {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
-        .opportunity-item {
+        .engagement-item {
             background: #FFFFFF;
             border-radius: 12px;
             padding: 16px;
@@ -749,24 +749,24 @@
             transition: all 0.2s ease;
         }
 
-        .opportunity-item:hover {
+        .engagement-item:hover {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
             transform: translateY(-2px);
         }
 
-        .opportunity-content {
+        .engagement-content {
             flex: 1;
             min-width: 0;
         }
 
-        .opportunity-name {
+        .engagement-name {
             font-size: 14px;
             font-weight: 500;
             color: #1F1F1F;
             margin-bottom: 4px;
         }
 
-        .opportunity-contact {
+        .engagement-contact {
             font-size: 12px;
             color: #6C757D;
         }
@@ -903,6 +903,92 @@
         .detail-value {
             font-size: 14px;
             color: #1F1F1F;
+        }
+
+        .detail-value.editable {
+            cursor: pointer;
+            padding: 4px 8px;
+            margin: -4px -8px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .detail-value.editable:hover {
+            background: #F8F9FA;
+            border-color: #E0E0E0;
+        }
+
+        .detail-input {
+            width: 100%;
+            font-size: 14px;
+            color: #1F1F1F;
+            padding: 4px 8px;
+            margin: -4px -8px;
+            border: 1px solid #FFB800;
+            border-radius: 4px;
+            outline: none;
+            background: #FFFEF5;
+            font-family: inherit;
+        }
+
+        .detail-input:focus {
+            box-shadow: 0 0 0 2px rgba(255, 184, 0, 0.2);
+        }
+
+        .detail-textarea {
+            width: calc(100% + 16px);
+            min-height: 60px;
+            font-size: 14px;
+            color: #1F1F1F;
+            padding: 4px 8px;
+            margin: -4px -8px;
+            border: 1px solid #FFB800;
+            border-radius: 4px;
+            outline: none;
+            background: #FFFEF5;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .detail-textarea:focus {
+            box-shadow: 0 0 0 2px rgba(255, 184, 0, 0.2);
+        }
+
+        .panel-contact-wrapper {
+            position: relative;
+        }
+
+        .panel-contact-dropdown {
+            position: absolute;
+            top: 100%;
+            left: -8px;
+            right: -8px;
+            background: #FFFFFF;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .panel-contact-dropdown.open {
+            display: block;
+        }
+
+        .panel-contact-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #1F1F1F;
+        }
+
+        .panel-contact-item:hover,
+        .panel-contact-item.highlighted {
+            background: #FFF8E1;
         }
 
         .detail-select {
@@ -1052,8 +1138,8 @@
             border-top: 1px solid #E0E0E0;
         }
 
-        /* Inline opportunity creation form */
-        .inline-opp-form {
+        /* Inline engagement creation form */
+        .inline-eng-form {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
@@ -1063,56 +1149,56 @@
             padding: 0 16px;
         }
 
-        .inline-opp-form.open {
+        .inline-eng-form.open {
             max-height: 300px;
             padding: 16px;
             margin-top: 12px;
         }
 
-        .inline-opp-form .form-group {
+        .inline-eng-form .form-group {
             margin-bottom: 12px;
         }
 
-        .inline-opp-form .form-group:last-child {
+        .inline-eng-form .form-group:last-child {
             margin-bottom: 0;
         }
 
-        .inline-opp-form .form-label {
+        .inline-eng-form .form-label {
             font-size: 12px;
             margin-bottom: 4px;
         }
 
-        .inline-opp-form .form-input {
+        .inline-eng-form .form-input {
             height: 40px;
             padding: 8px 12px;
             font-size: 13px;
         }
 
-        .inline-opp-header {
+        .inline-eng-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 12px;
         }
 
-        .inline-opp-title {
+        .inline-eng-title {
             font-size: 14px;
             font-weight: 600;
             color: #1F1F1F;
         }
 
-        .inline-opp-actions {
+        .inline-eng-actions {
             display: flex;
             gap: 8px;
         }
 
-        .inline-opp-actions .btn {
+        .inline-eng-actions .btn {
             padding: 6px 12px;
             font-size: 12px;
         }
 
-        /* Todo opportunity badge */
-        .todo-opportunity {
+        /* Todo engagement badge */
+        .todo-engagement {
             display: inline-flex;
             align-items: center;
             gap: 4px;
@@ -1125,13 +1211,13 @@
             margin-top: 4px;
         }
 
-        .todo-opportunity svg {
+        .todo-engagement svg {
             width: 12px;
             height: 12px;
         }
 
-        /* Opportunity action buttons */
-        .opportunity-actions {
+        /* Engagement action buttons */
+        .engagement-actions {
             display: flex;
             align-items: center;
             gap: 4px;
@@ -1188,12 +1274,16 @@
             color: #5C6BC0;
         }
 
-        /* Archived opportunity styling */
-        .opportunity-item.archived {
+        .opp-action-btn.edit-btn:hover:not(:disabled) svg {
+            color: #1976D2;
+        }
+
+        /* Archived engagement styling */
+        .engagement-item.archived {
             opacity: 0.6;
         }
 
-        .opportunity-item.archived .opportunity-name {
+        .engagement-item.archived .engagement-name {
             text-decoration: line-through;
         }
 
@@ -1293,6 +1383,33 @@
             background: #F8F9FA;
             border-radius: 8px;
             border-left: 3px solid #E0E0E0;
+            position: relative;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .comment-delete-btn {
+            background: none;
+            border: none;
+            color: #ADB5BD;
+            cursor: pointer;
+            padding: 0;
+            font-size: 16px;
+            line-height: 1;
+            opacity: 0;
+            transition: opacity 0.2s ease, color 0.2s ease;
+        }
+
+        .comment-item:hover .comment-delete-btn {
+            opacity: 1;
+        }
+
+        .comment-delete-btn:hover {
+            color: #D32F2F;
         }
 
         .comment-item.cancellation {
@@ -1870,8 +1987,8 @@
             font-size: 12px;
         }
 
-        /* Contact badge in opportunity list */
-        .opp-contact-badge {
+        /* Contact badge in engagement list */
+        .eng-contact-badge {
             display: inline-flex;
             align-items: center;
             gap: 4px;
@@ -2714,7 +2831,7 @@
         <div class="header-left">
             <nav class="tab-nav">
                 <button id="tab-home" class="tab-btn active" onclick="switchTab('home')">Todo's</button>
-                <button id="tab-opportunities" class="tab-btn" onclick="switchTab('opportunities')">Opportunities</button>
+                <button id="tab-engagements" class="tab-btn" onclick="switchTab('engagements')">Engagements</button>
             </nav>
         </div>
         <div class="header-actions">
@@ -2840,8 +2957,8 @@
         </main>
     </div>
 
-    <!-- Opportunities Page -->
-    <div id="opportunities-page" class="page hidden">
+    <!-- Engagements Page -->
+    <div id="engagements-page" class="page hidden">
         <!-- Main Content -->
         <main class="main-content">
             <!-- Archive Toggle -->
@@ -2854,19 +2971,19 @@
             <!-- Floating shortcut hint (shown when items exist) -->
             <p id="opp-shortcut-hint-floating" class="shortcut-hint-floating hidden">Press Shift + N to create new items</p>
 
-            <!-- Opportunity List Container -->
-            <div id="opportunity-list" class="opportunity-list">
-                <!-- Opportunities will be rendered here -->
+            <!-- Engagement List Container -->
+            <div id="engagement-list" class="engagement-list">
+                <!-- Engagements will be rendered here -->
             </div>
 
             <!-- Empty State -->
-            <div id="opportunity-empty-state" class="empty-state">
+            <div id="engagement-empty-state" class="empty-state">
                 <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
                     <line x1="12" y1="8" x2="12" y2="12"></line>
                     <line x1="12" y1="16" x2="12.01" y2="16"></line>
                 </svg>
-                <p class="empty-text">No Opportunities</p>
+                <p class="empty-text">No Engagements</p>
                 <p class="shortcut-hint">Press Shift + N to create new items</p>
             </div>
         </main>
@@ -3037,8 +3154,8 @@
                                 <div style="font-size: 12px; color: #6C757D; margin-top: 4px;">Todos</div>
                             </div>
                             <div style="text-align: center; padding: 16px; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                                <div id="storage-opportunities" style="font-size: 24px; font-weight: 700; color: #F59E0B;">--</div>
-                                <div style="font-size: 12px; color: #6C757D; margin-top: 4px;">Opportunities</div>
+                                <div id="storage-engagements" style="font-size: 24px; font-weight: 700; color: #F59E0B;">--</div>
+                                <div style="font-size: 12px; color: #6C757D; margin-top: 4px;">Engagements</div>
                             </div>
                         </div>
                     </div>
@@ -3046,7 +3163,7 @@
                     <div style="border-top: 1px solid #e5e7eb; padding-top: 24px;">
                         <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 12px;">Clear Browser State</h3>
                         <p style="color: #6C757D; margin-bottom: 16px; font-size: 14px;">
-                            Remove all data stored in your browser. This will delete all todos, opportunities, people, tags, and settings.
+                            Remove all data stored in your browser. This will delete all todos, engagements, people, tags, and settings.
                         </p>
                         <button type="button" class="btn btn-danger" onclick="openClearStateModal()">
                             Clear Browser State
@@ -3084,11 +3201,11 @@
         </div>
     </div>
 
-    <!-- Side Panel for Opportunity Details -->
+    <!-- Side Panel for Engagement Details -->
     <div id="side-panel-backdrop" class="side-panel-backdrop" onclick="closeSidePanel()"></div>
     <div id="side-panel" class="side-panel">
         <div class="side-panel-header">
-            <h2 class="side-panel-title">Opportunity Details</h2>
+            <h2 class="side-panel-title">Engagement Details</h2>
             <button class="side-panel-close" onclick="closeSidePanel()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -3099,23 +3216,28 @@
         <div class="side-panel-body">
             <div class="detail-group">
                 <div class="detail-label">Name</div>
-                <div id="panel-opp-name" class="detail-value"></div>
+                <input type="text" id="panel-eng-name" class="detail-input" placeholder="Enter name..." onblur="savePanelEngagementField('name', this.value)">
             </div>
             <div class="detail-group">
                 <div class="detail-label">Description</div>
-                <div id="panel-opp-description" class="detail-value"></div>
+                <textarea id="panel-eng-description" class="detail-textarea" placeholder="Enter description..." onblur="savePanelEngagementField('description', this.value)"></textarea>
             </div>
             <div class="detail-group">
                 <div class="detail-label">Start Date</div>
-                <div id="panel-opp-date" class="detail-value"></div>
+                <div id="panel-eng-date" class="detail-value"></div>
             </div>
             <div class="detail-group">
                 <div class="detail-label">Contact</div>
-                <div id="panel-opp-contact" class="detail-value"></div>
+                <div class="panel-contact-wrapper">
+                    <input type="text" id="panel-eng-contact" class="detail-input" placeholder="Search contacts..." autocomplete="off" oninput="filterPanelContacts(this.value)" onfocus="openPanelContactDropdown()" onblur="handlePanelContactBlur(event)">
+                    <div id="panel-contact-dropdown" class="panel-contact-dropdown">
+                        <!-- Contact dropdown items will be rendered here -->
+                    </div>
+                </div>
             </div>
             <div class="detail-group">
                 <div class="detail-label">Status</div>
-                <span id="panel-opp-status" class="status-badge"></span>
+                <span id="panel-eng-status" class="status-badge"></span>
             </div>
             <!-- Comments Section -->
             <div class="comments-section">
@@ -3170,53 +3292,53 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="todo-opportunity" class="form-label">Linked Opportunity</label>
+                    <label for="todo-engagement" class="form-label">Linked Engagement</label>
                     <div class="autocomplete-wrapper">
                         <div class="autocomplete-input-wrapper">
-                            <input type="text" id="todo-opportunity" class="autocomplete-input" placeholder="Type to search or create..." autocomplete="off">
-                            <button type="button" id="todo-opportunity-clear" class="autocomplete-clear" onclick="clearOpportunitySelection()">
+                            <input type="text" id="todo-engagement" class="autocomplete-input" placeholder="Type to search or create..." autocomplete="off">
+                            <button type="button" id="todo-engagement-clear" class="autocomplete-clear" onclick="clearEngagementSelection()">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <line x1="18" y1="6" x2="6" y2="18"></line>
                                     <line x1="6" y1="6" x2="18" y2="18"></line>
                                 </svg>
                             </button>
                         </div>
-                        <div id="opportunity-dropdown" class="autocomplete-dropdown">
+                        <div id="engagement-dropdown" class="autocomplete-dropdown">
                             <!-- Dropdown items will be rendered here -->
                         </div>
                     </div>
-                    <!-- Inline Opportunity Creation Form -->
-                    <div id="inline-opp-form" class="inline-opp-form">
-                        <div class="inline-opp-header">
-                            <span class="inline-opp-title">Create New Opportunity</span>
-                            <div class="inline-opp-actions">
-                                <button type="button" class="btn btn-secondary" onclick="cancelInlineOpportunity()">Cancel</button>
-                                <button type="button" class="btn btn-primary" onclick="confirmInlineOpportunity()">Add</button>
+                    <!-- Inline Engagement Creation Form -->
+                    <div id="inline-eng-form" class="inline-eng-form">
+                        <div class="inline-eng-header">
+                            <span class="inline-eng-title">Create New Engagement</span>
+                            <div class="inline-eng-actions">
+                                <button type="button" class="btn btn-secondary" onclick="cancelInlineEngagement()">Cancel</button>
+                                <button type="button" class="btn btn-primary" onclick="confirmInlineEngagement()">Add</button>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inline-opp-name" class="form-label">Name</label>
-                            <input type="text" id="inline-opp-name" class="form-input" placeholder="Opportunity name" readonly>
+                            <label for="inline-eng-name" class="form-label">Name</label>
+                            <input type="text" id="inline-eng-name" class="form-input" placeholder="Engagement name" readonly>
                         </div>
                         <div class="form-group">
-                            <label for="inline-opp-description" class="form-label">Description</label>
-                            <input type="text" id="inline-opp-description" class="form-input" placeholder="Brief description">
+                            <label for="inline-eng-description" class="form-label">Description</label>
+                            <input type="text" id="inline-eng-description" class="form-input" placeholder="Brief description">
                         </div>
                         <div class="form-group">
-                            <label for="inline-opp-start-date" class="form-label">Start Date</label>
-                            <input type="date" id="inline-opp-start-date" class="form-input">
+                            <label for="inline-eng-start-date" class="form-label">Start Date</label>
+                            <input type="date" id="inline-eng-start-date" class="form-input">
                         </div>
                         <div class="form-group">
-                            <label for="inline-opp-contact" class="form-label">Contact</label>
+                            <label for="inline-eng-contact" class="form-label">Contact</label>
                             <div class="autocomplete-wrapper">
-                                <input type="text" id="inline-opp-contact" class="form-input" placeholder="Type to search or create person..." autocomplete="off">
-                                <button type="button" id="inline-opp-contact-clear" class="autocomplete-clear" onclick="clearInlineOppContact()">×</button>
-                                <div id="inline-opp-contact-dropdown" class="autocomplete-dropdown">
+                                <input type="text" id="inline-eng-contact" class="form-input" placeholder="Type to search or create person..." autocomplete="off">
+                                <button type="button" id="inline-eng-contact-clear" class="autocomplete-clear" onclick="clearInlineOppContact()">×</button>
+                                <div id="inline-eng-contact-dropdown" class="autocomplete-dropdown">
                                     <!-- Contact dropdown items will be rendered here -->
                                 </div>
                             </div>
-                            <!-- Inline Person Creation Form (within inline opportunity) -->
-                            <div id="inline-opp-person-form" class="inline-person-form">
+                            <!-- Inline Person Creation Form (within inline engagement) -->
+                            <div id="inline-eng-person-form" class="inline-person-form">
                                 <div class="inline-person-header">
                                     <span class="inline-person-title">Create New Person</span>
                                     <div class="inline-person-actions">
@@ -3225,12 +3347,12 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inline-opp-person-name" class="form-label">Name</label>
-                                    <input type="text" id="inline-opp-person-name" class="form-input" placeholder="Person's name" readonly>
+                                    <label for="inline-eng-person-name" class="form-label">Name</label>
+                                    <input type="text" id="inline-eng-person-name" class="form-input" placeholder="Person's name" readonly>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inline-opp-person-role" class="form-label">Role</label>
-                                    <input type="text" id="inline-opp-person-role" class="form-input" placeholder="Person's role">
+                                    <label for="inline-eng-person-role" class="form-label">Role</label>
+                                    <input type="text" id="inline-eng-person-role" class="form-input" placeholder="Person's role">
                                 </div>
                             </div>
                         </div>
@@ -3261,29 +3383,29 @@
         </div>
     </div>
 
-    <!-- Create Opportunity Modal -->
-    <div id="opportunity-modal" class="modal hidden">
-        <div class="modal-backdrop" onclick="closeOpportunityModal()"></div>
+    <!-- Create Engagement Modal -->
+    <div id="engagement-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closeEngagementModal()"></div>
         <div class="modal-content">
-            <h2 class="modal-title">New Opportunity</h2>
-            <form id="opportunity-form" onsubmit="saveOpportunity(event)">
+            <h2 class="modal-title">New Engagement</h2>
+            <form id="engagement-form" onsubmit="saveEngagement(event)">
                 <div class="form-group">
-                    <label for="opp-name" class="form-label">Name <span class="required">*</span></label>
-                    <input type="text" id="opp-name" class="form-input" placeholder="Opportunity name" required autofocus>
+                    <label for="eng-name" class="form-label">Name <span class="required">*</span></label>
+                    <input type="text" id="eng-name" class="form-input" placeholder="Engagement name" required autofocus>
                 </div>
                 <div class="form-group">
-                    <label for="opp-description" class="form-label">Description</label>
-                    <input type="text" id="opp-description" class="form-input" placeholder="Brief description">
+                    <label for="eng-description" class="form-label">Description</label>
+                    <input type="text" id="eng-description" class="form-input" placeholder="Brief description">
                 </div>
                 <div class="form-group">
-                    <label for="opp-start-date" class="form-label">Start Date</label>
-                    <input type="date" id="opp-start-date" class="form-input">
+                    <label for="eng-start-date" class="form-label">Start Date</label>
+                    <input type="date" id="eng-start-date" class="form-input">
                 </div>
                 <div class="form-group">
-                    <label for="opp-contact" class="form-label">Contact</label>
+                    <label for="eng-contact" class="form-label">Contact</label>
                     <div class="autocomplete-wrapper">
-                        <input type="text" id="opp-contact" class="form-input" placeholder="Type to search or create person..." autocomplete="off">
-                        <button type="button" id="opp-contact-clear" class="autocomplete-clear" onclick="clearOppContact()">×</button>
+                        <input type="text" id="eng-contact" class="form-input" placeholder="Type to search or create person..." autocomplete="off">
+                        <button type="button" id="eng-contact-clear" class="autocomplete-clear" onclick="clearOppContact()">×</button>
                         <div id="contact-dropdown" class="autocomplete-dropdown">
                             <!-- Contact dropdown items will be rendered here -->
                         </div>
@@ -3323,7 +3445,7 @@
                     </div>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeOpportunityModal()">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEngagementModal()">Cancel</button>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
@@ -3339,16 +3461,16 @@
                 <line x1="12" y1="8" x2="12" y2="12"></line>
                 <line x1="12" y1="16" x2="12.01" y2="16"></line>
             </svg>
-            <h2 class="confirm-title">Delete Opportunity?</h2>
-            <p id="confirm-message" class="confirm-message">Are you sure you want to delete this opportunity? This action cannot be undone.</p>
+            <h2 class="confirm-title">Delete Engagement?</h2>
+            <p id="confirm-message" class="confirm-message">Are you sure you want to delete this engagement? This action cannot be undone.</p>
             <div class="confirm-actions">
                 <button type="button" class="btn btn-secondary" onclick="closeConfirmModal()">Cancel</button>
-                <button type="button" class="btn btn-danger" onclick="confirmDeleteOpportunity()">Delete</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDeleteEngagement()">Delete</button>
             </div>
         </div>
     </div>
 
-    <!-- Cancel Opportunity Modal -->
+    <!-- Cancel Engagement Modal -->
     <div id="cancel-modal" class="modal hidden">
         <div class="modal-backdrop" onclick="closeCancelModal()"></div>
         <div class="modal-content cancel-modal-content">
@@ -3357,15 +3479,15 @@
                 <line x1="15" y1="9" x2="9" y2="15"></line>
                 <line x1="9" y1="9" x2="15" y2="15"></line>
             </svg>
-            <h2 class="modal-title">Cancel Opportunity</h2>
-            <p id="cancel-opp-name" style="text-align: center; color: #6C757D; margin-bottom: 20px;"></p>
+            <h2 class="modal-title">Cancel Engagement</h2>
+            <p id="cancel-eng-name" style="text-align: center; color: #6C757D; margin-bottom: 20px;"></p>
             <div class="form-group">
                 <label for="cancel-reason" class="form-label">Reason for Cancellation <span class="required">*</span></label>
-                <textarea id="cancel-reason" class="form-textarea" placeholder="Please provide a reason for cancelling this opportunity..." required></textarea>
+                <textarea id="cancel-reason" class="form-textarea" placeholder="Please provide a reason for cancelling this engagement..." required></textarea>
             </div>
             <div class="modal-actions">
                 <button type="button" class="btn btn-secondary" onclick="closeCancelModal()">Back</button>
-                <button type="button" class="btn btn-warning" onclick="confirmCancelOpportunity()">Cancel Opportunity</button>
+                <button type="button" class="btn btn-warning" onclick="confirmCancelEngagement()">Cancel Engagement</button>
             </div>
         </div>
     </div>
@@ -3427,7 +3549,7 @@
             </svg>
             <h2 class="modal-title">Clear Browser State</h2>
             <p style="text-align: center; color: #6C757D; margin-bottom: 20px;">
-                This will permanently delete all your data stored in the browser, including todos, opportunities, people, and settings.
+                This will permanently delete all your data stored in the browser, including todos, engagements, people, and settings.
             </p>
             <p style="text-align: center; color: #6C757D; margin-bottom: 20px;">
                 Would you like to export your data before clearing?
@@ -3450,7 +3572,7 @@
             </svg>
             <h2 class="modal-title">Delete Person</h2>
             <p id="delete-person-name" style="text-align: center; color: #6C757D; margin-bottom: 20px;"></p>
-            <p style="text-align: center; margin-bottom: 20px;">Are you sure you want to delete this person? This will remove them from any linked opportunities.</p>
+            <p style="text-align: center; margin-bottom: 20px;">Are you sure you want to delete this person? This will remove them from any linked engagements.</p>
             <div class="modal-actions">
                 <button type="button" class="btn btn-secondary" onclick="closeDeletePersonModal()">Cancel</button>
                 <button type="button" class="btn btn-danger" onclick="confirmDeletePerson()">Delete</button>
@@ -3590,7 +3712,7 @@
                 const persistableState = {
                     id: 'state',
                     todos: state.todos,
-                    opportunities: state.opportunities,
+                    engagements: state.engagements,
                     people: state.people,
                     roles: state.roles,
                     tags: state.tags,
@@ -3653,14 +3775,14 @@
         async function getStorageStats() {
             const stats = {
                 todoCount: state.todos.length,
-                opportunityCount: state.opportunities.length,
+                engagementCount: state.engagements.length,
                 estimatedSize: 0
             };
 
             // Calculate estimated size
             const dataToMeasure = {
                 todos: state.todos,
-                opportunities: state.opportunities,
+                engagements: state.engagements,
                 people: state.people,
                 roles: state.roles,
                 tags: state.tags,
@@ -3685,16 +3807,16 @@
         // Application state
         const state = {
             todos: [],
-            opportunities: [],
+            engagements: [],
             people: [],
             roles: [],
             tags: [],
             currentPage: 'landing',
-            currentTab: 'home',  // 'home', 'opportunities', or 'settings'
+            currentTab: 'home',  // 'home', 'engagements', or 'settings'
             previousTab: 'home',  // Track previous tab for settings return navigation
             settingsSection: 'people',  // Current settings section
             modalOpen: false,
-            opportunityModalOpen: false,
+            engagementModalOpen: false,
             personModalOpen: false,
             confirmModalOpen: false,
             cancelModalOpen: false,
@@ -3703,36 +3825,39 @@
             editingPersonIndex: null,  // Track which person is being edited (null = create mode)
             editingTagIndex: null,  // Track which tag is being edited (null = create mode)
             tagModalOpen: false,
-            selectedOpportunityIndex: null,  // Track which opportunity is open in side panel
-            deleteOpportunityIndex: null,  // Track which opportunity is pending deletion
+            selectedEngagementIndex: null,  // Track which engagement is open in side panel
+            editingEngagementIndex: null,  // Track which engagement is being edited (null = create mode)
+            panelContactId: null,  // Track selected contact in side panel
+            panelContactDropdownOpen: false,  // Track panel contact dropdown state
+            deleteEngagementIndex: null,  // Track which engagement is pending deletion
             deletePersonIndex: null,  // Track which person is pending deletion
-            cancelOpportunityIndex: null,  // Track which opportunity is pending cancellation
+            cancelEngagementIndex: null,  // Track which engagement is pending cancellation
             // Autocomplete state
-            selectedOpportunityId: null,  // ID of selected opportunity for todo linking
-            selectedPersonId: null,  // ID of selected person for opportunity contact
-            pendingOpportunity: null,  // New opportunity to create when saving todo
-            pendingPerson: null,  // New person to create when saving opportunity
+            selectedEngagementId: null,  // ID of selected engagement for todo linking
+            selectedPersonId: null,  // ID of selected person for engagement contact
+            pendingEngagement: null,  // New engagement to create when saving todo
+            pendingPerson: null,  // New person to create when saving engagement
             autocompleteOpen: false,
             autocompleteHighlightIndex: -1,
             roleAutocompleteOpen: false,
             roleAutocompleteHighlightIndex: -1,
             contactAutocompleteOpen: false,
             contactAutocompleteHighlightIndex: -1,
-            inlineOppFormOpen: false,
+            inlineEngFormOpen: false,
             inlinePersonFormOpen: false,
-            // Inline person form within inline opportunity (in Todo modal)
-            inlineOppContactAutocompleteOpen: false,
-            inlineOppContactAutocompleteHighlightIndex: -1,
-            inlineOppPersonFormOpen: false,
+            // Inline person form within inline engagement (in Todo modal)
+            inlineEngContactAutocompleteOpen: false,
+            inlineEngContactAutocompleteHighlightIndex: -1,
+            inlineEngPersonFormOpen: false,
             selectedInlineOppPersonId: null,
             pendingInlineOppPerson: null,
             showArchived: false,
             // Tag assignment state
             selectedTodoTagIds: [],  // Tag IDs selected for current todo
-            selectedOppTagIds: [],   // Tag IDs selected for current opportunity
+            selectedOppTagIds: [],   // Tag IDs selected for current engagement
             todoTagDropdownOpen: false,
             todoTagHighlightIndex: -1,
-            oppTagDropdownOpen: false,
+            engTagDropdownOpen: false,
             oppTagHighlightIndex: -1,
             // Planning settings
             settings: { ...DEFAULT_SETTINGS },
@@ -3782,32 +3907,32 @@
         const recommendationEmpty = document.getElementById('recommendation-empty');
 
         // DOM Elements - Autocomplete
-        const todoOpportunityInput = document.getElementById('todo-opportunity');
-        const todoOpportunityClear = document.getElementById('todo-opportunity-clear');
-        const opportunityDropdown = document.getElementById('opportunity-dropdown');
-        const inlineOppForm = document.getElementById('inline-opp-form');
-        const inlineOppName = document.getElementById('inline-opp-name');
-        const inlineOppDescription = document.getElementById('inline-opp-description');
-        const inlineOppStartDate = document.getElementById('inline-opp-start-date');
-        const inlineOppContact = document.getElementById('inline-opp-contact');
-        const inlineOppContactClear = document.getElementById('inline-opp-contact-clear');
-        const inlineOppContactDropdown = document.getElementById('inline-opp-contact-dropdown');
-        const inlineOppPersonForm = document.getElementById('inline-opp-person-form');
-        const inlineOppPersonName = document.getElementById('inline-opp-person-name');
-        const inlineOppPersonRole = document.getElementById('inline-opp-person-role');
+        const todoEngagementInput = document.getElementById('todo-engagement');
+        const todoEngagementClear = document.getElementById('todo-engagement-clear');
+        const engagementDropdown = document.getElementById('engagement-dropdown');
+        const inlineEngForm = document.getElementById('inline-eng-form');
+        const inlineEngName = document.getElementById('inline-eng-name');
+        const inlineEngDescription = document.getElementById('inline-eng-description');
+        const inlineEngStartDate = document.getElementById('inline-eng-start-date');
+        const inlineEngContact = document.getElementById('inline-eng-contact');
+        const inlineEngContactClear = document.getElementById('inline-eng-contact-clear');
+        const inlineEngContactDropdown = document.getElementById('inline-eng-contact-dropdown');
+        const inlineEngPersonForm = document.getElementById('inline-eng-person-form');
+        const inlineEngPersonName = document.getElementById('inline-eng-person-name');
+        const inlineEngPersonRole = document.getElementById('inline-eng-person-role');
 
-        // DOM Elements - Opportunities
-        const opportunitiesPage = document.getElementById('opportunities-page');
-        const opportunityList = document.getElementById('opportunity-list');
-        const opportunityEmptyState = document.getElementById('opportunity-empty-state');
+        // DOM Elements - Engagements
+        const engagementsPage = document.getElementById('engagements-page');
+        const engagementList = document.getElementById('engagement-list');
+        const engagementEmptyState = document.getElementById('engagement-empty-state');
         const oppShortcutHintFloating = document.getElementById('opp-shortcut-hint-floating');
-        const opportunityModal = document.getElementById('opportunity-modal');
-        const opportunityForm = document.getElementById('opportunity-form');
-        const oppNameInput = document.getElementById('opp-name');
-        const oppDescriptionInput = document.getElementById('opp-description');
-        const oppStartDateInput = document.getElementById('opp-start-date');
-        const oppContactInput = document.getElementById('opp-contact');
-        const oppContactClear = document.getElementById('opp-contact-clear');
+        const engagementModal = document.getElementById('engagement-modal');
+        const engagementForm = document.getElementById('engagement-form');
+        const engNameInput = document.getElementById('eng-name');
+        const engDescriptionInput = document.getElementById('eng-description');
+        const engStartDateInput = document.getElementById('eng-start-date');
+        const engContactInput = document.getElementById('eng-contact');
+        const engContactClear = document.getElementById('eng-contact-clear');
         const contactDropdown = document.getElementById('contact-dropdown');
         const inlinePersonForm = document.getElementById('inline-person-form');
         const inlinePersonName = document.getElementById('inline-person-name');
@@ -3816,16 +3941,17 @@
         // DOM Elements - Side Panel
         const sidePanel = document.getElementById('side-panel');
         const sidePanelBackdrop = document.getElementById('side-panel-backdrop');
-        const panelOppName = document.getElementById('panel-opp-name');
-        const panelOppDescription = document.getElementById('panel-opp-description');
-        const panelOppDate = document.getElementById('panel-opp-date');
-        const panelOppContact = document.getElementById('panel-opp-contact');
-        const panelOppStatus = document.getElementById('panel-opp-status');
+        const panelEngName = document.getElementById('panel-eng-name');
+        const panelEngDescription = document.getElementById('panel-eng-description');
+        const panelEngDate = document.getElementById('panel-eng-date');
+        const panelEngContact = document.getElementById('panel-eng-contact');
+        const panelContactDropdown = document.getElementById('panel-contact-dropdown');
+        const panelEngStatus = document.getElementById('panel-eng-status');
 
         // DOM Elements - Header and Tabs
         const appHeader = document.getElementById('app-header');
         const tabHome = document.getElementById('tab-home');
-        const tabOpportunities = document.getElementById('tab-opportunities');
+        const tabEngagements = document.getElementById('tab-engagements');
 
         // DOM Elements - Confirmation Modal
         const confirmModal = document.getElementById('confirm-modal');
@@ -3833,7 +3959,7 @@
 
         // DOM Elements - Cancel Modal
         const cancelModal = document.getElementById('cancel-modal');
-        const cancelOppName = document.getElementById('cancel-opp-name');
+        const cancelOppName = document.getElementById('cancel-eng-name');
         const cancelReason = document.getElementById('cancel-reason');
 
         // DOM Elements - Comments
@@ -3872,10 +3998,10 @@
         const todoTagDropdown = document.getElementById('todo-tag-dropdown');
         const todoSelectedTags = document.getElementById('todo-selected-tags');
 
-        // DOM Elements - Tag Input (Opportunity form)
-        const oppTagInput = document.getElementById('opp-tag-input');
-        const oppTagDropdown = document.getElementById('opp-tag-dropdown');
-        const oppSelectedTags = document.getElementById('opp-selected-tags');
+        // DOM Elements - Tag Input (Engagement form)
+        const engTagInput = document.getElementById('opp-tag-input');
+        const engTagDropdown = document.getElementById('opp-tag-dropdown');
+        const engSelectedTags = document.getElementById('opp-selected-tags');
 
         // DOM Elements - Person Modal
         const personModal = document.getElementById('person-modal');
@@ -3896,7 +4022,7 @@
             landingPage.classList.add('hidden');
             landingPage.classList.remove('container');
             homePage.classList.add('hidden');
-            opportunitiesPage.classList.add('hidden');
+            engagementsPage.classList.add('hidden');
             settingsPage.classList.add('hidden');
             appHeader.classList.add('hidden');
 
@@ -3927,18 +4053,18 @@
 
             // Update tab buttons (settings doesn't have a tab button)
             tabHome.classList.toggle('active', tab === 'home');
-            tabOpportunities.classList.toggle('active', tab === 'opportunities');
+            tabEngagements.classList.toggle('active', tab === 'engagements');
 
             // Show/hide pages
             homePage.classList.toggle('hidden', tab !== 'home');
-            opportunitiesPage.classList.toggle('hidden', tab !== 'opportunities');
+            engagementsPage.classList.toggle('hidden', tab !== 'engagements');
             settingsPage.classList.toggle('hidden', tab !== 'settings');
 
             // Render content
             if (tab === 'home') {
                 renderTodos();
-            } else if (tab === 'opportunities') {
-                renderOpportunities();
+            } else if (tab === 'engagements') {
+                renderEngagements();
             } else if (tab === 'settings') {
                 renderPeople();
             }
@@ -3998,7 +4124,7 @@
         function startFromScratch() {
             // Clear data and navigate to app
             state.todos = [];
-            state.opportunities = [];
+            state.engagements = [];
             state.people = [];
             state.roles = [];
             state.tags = [];
@@ -4023,7 +4149,7 @@
                 settings: state.settings,
                 userTags: state.tags,  // Renamed for spec compliance
                 todos: state.todos,
-                opportunities: state.opportunities,
+                engagements: state.engagements,
                 people: state.people,
                 roles: state.roles,
                 tags: state.tags,  // Keep for backward compatibility
@@ -4072,7 +4198,7 @@
 
                     // Restore state data entities (with fallbacks for missing fields)
                     state.todos = Array.isArray(importedData.todos) ? importedData.todos : [];
-                    state.opportunities = Array.isArray(importedData.opportunities) ? importedData.opportunities : [];
+                    state.engagements = Array.isArray(importedData.engagements) ? importedData.engagements : [];
                     state.people = Array.isArray(importedData.people) ? importedData.people : [];
                     state.roles = Array.isArray(importedData.roles) ? importedData.roles : [];
                     // Support both old 'tags' and new 'userTags' format
@@ -4102,7 +4228,7 @@
                     // Navigate to app and render
                     navigateTo('app');
                     renderTodos();
-                    renderOpportunities();
+                    renderEngagements();
                     renderPeople();
                     renderTags();
                     loadPlanningSettings();
@@ -4141,26 +4267,26 @@
             todoForm.reset();
 
             // Reset autocomplete state
-            state.selectedOpportunityId = null;
-            state.pendingOpportunity = null;
+            state.selectedEngagementId = null;
+            state.pendingEngagement = null;
             state.autocompleteOpen = false;
             state.autocompleteHighlightIndex = -1;
-            state.inlineOppFormOpen = false;
+            state.inlineEngFormOpen = false;
             // Reset inline opp person state
-            state.inlineOppContactAutocompleteOpen = false;
-            state.inlineOppContactAutocompleteHighlightIndex = -1;
-            state.inlineOppPersonFormOpen = false;
+            state.inlineEngContactAutocompleteOpen = false;
+            state.inlineEngContactAutocompleteHighlightIndex = -1;
+            state.inlineEngPersonFormOpen = false;
             state.selectedInlineOppPersonId = null;
             state.pendingInlineOppPerson = null;
-            todoOpportunityInput.value = '';
-            todoOpportunityClear.classList.remove('visible');
-            opportunityDropdown.classList.remove('open');
-            inlineOppForm.classList.remove('open');
+            todoEngagementInput.value = '';
+            todoEngagementClear.classList.remove('visible');
+            engagementDropdown.classList.remove('open');
+            inlineEngForm.classList.remove('open');
             // Reset inline opp contact fields
-            inlineOppContact.value = '';
-            inlineOppContactClear.classList.remove('visible');
-            inlineOppContactDropdown.classList.remove('open');
-            inlineOppPersonForm.classList.remove('open');
+            inlineEngContact.value = '';
+            inlineEngContactClear.classList.remove('visible');
+            inlineEngContactDropdown.classList.remove('open');
+            inlineEngPersonForm.classList.remove('open');
 
             // Reset tag input state
             state.selectedTodoTagIds = [];
@@ -4204,13 +4330,13 @@
                 state.selectedPriority = todo.priority || DEFAULT_PRIORITY;
                 todoPriorityInput.value = PRIORITY_TAGS[state.selectedPriority].label;
 
-                // Pre-populate linked opportunity
-                if (todo.opportunityId) {
-                    const opp = state.opportunities.find(o => o.id === todo.opportunityId);
+                // Pre-populate linked engagement
+                if (todo.engagementId) {
+                    const opp = state.engagements.find(o => o.id === todo.engagementId);
                     if (opp) {
-                        state.selectedOpportunityId = opp.id;
-                        todoOpportunityInput.value = opp.name;
-                        todoOpportunityClear.classList.add('visible');
+                        state.selectedEngagementId = opp.id;
+                        todoEngagementInput.value = opp.name;
+                        todoEngagementClear.classList.add('visible');
                     }
                 }
 
@@ -4255,13 +4381,13 @@
             todoModal.classList.add('hidden');
             state.modalOpen = false;
             state.editingTodoIndex = null;
-            state.selectedOpportunityId = null;
-            state.pendingOpportunity = null;
+            state.selectedEngagementId = null;
+            state.pendingEngagement = null;
             state.autocompleteOpen = false;
-            state.inlineOppFormOpen = false;
+            state.inlineEngFormOpen = false;
             todoForm.reset();
-            opportunityDropdown.classList.remove('open');
-            inlineOppForm.classList.remove('open');
+            engagementDropdown.classList.remove('open');
+            inlineEngForm.classList.remove('open');
         }
 
         // Generate unique ID
@@ -4282,14 +4408,14 @@
             if (!title) return;
             if (!deadline) return;
 
-            // Handle pending opportunity creation
-            let opportunityId = state.selectedOpportunityId;
-            if (state.pendingOpportunity) {
+            // Handle pending engagement creation
+            let engagementId = state.selectedEngagementId;
+            if (state.pendingEngagement) {
                 // First, handle person creation if needed
-                let contactPersonId = state.pendingOpportunity.contactPersonId;
+                let contactPersonId = state.pendingEngagement.contactPersonId;
 
-                // Check for pending person from inline opp form (may be set after opportunity was confirmed)
-                const pendingPersonData = state.pendingOpportunity.pendingPerson || state.pendingInlineOppPerson;
+                // Check for pending person from inline eng form (may be set after engagement was confirmed)
+                const pendingPersonData = state.pendingEngagement.pendingPerson || state.pendingInlineOppPerson;
 
                 if (pendingPersonData) {
                     // Create the new person (use the combined pending person data)
@@ -4325,20 +4451,20 @@
                     contactPersonId = newPerson.id;
                 }
 
-                // Create the new opportunity
+                // Create the new engagement
                 const newOpp = {
                     id: generateId(),
-                    name: state.pendingOpportunity.name,
-                    description: state.pendingOpportunity.description || null,
-                    startDate: state.pendingOpportunity.startDate || getTodayDate(),
+                    name: state.pendingEngagement.name,
+                    description: state.pendingEngagement.description || null,
+                    startDate: state.pendingEngagement.startDate || getTodayDate(),
                     contactPersonId: contactPersonId || null,
                     status: 'requested',
                     comments: [],
                     archived: false,
                     createdAt: new Date().toISOString()
                 };
-                state.opportunities.push(newOpp);
-                opportunityId = newOpp.id;
+                state.engagements.push(newOpp);
+                engagementId = newOpp.id;
             }
 
             if (state.editingTodoIndex !== null) {
@@ -4349,7 +4475,7 @@
                 todo.deadline = new Date(deadline).toISOString();
                 todo.effort = effort;
                 todo.priority = priority;
-                todo.opportunityId = opportunityId;
+                todo.engagementId = engagementId;
                 todo.tagIds = [...state.selectedTodoTagIds];
                 todo.updatedAt = new Date().toISOString();
                 // Preserve id, completed, completedAt, and createdAt
@@ -4363,7 +4489,7 @@
                     deadline: new Date(deadline).toISOString(),
                     effort: effort,
                     priority: priority,
-                    opportunityId: opportunityId,
+                    engagementId: engagementId,
                     tagIds: [...state.selectedTodoTagIds],
                     completed: false,
                     completedAt: null,
@@ -4373,32 +4499,32 @@
                 state.todos.push(newTodo);
             }
 
-            // Auto-update opportunity status to Open if todo is linked and not completed
-            if (opportunityId) {
-                updateOpportunityAutoStatus(opportunityId);
+            // Auto-update engagement status to Open if todo is linked and not completed
+            if (engagementId) {
+                updateEngagementAutoStatus(engagementId);
             }
 
             closeModal();
             renderTodos();
-            // Also re-render opportunities if on that tab
-            if (state.currentTab === 'opportunities') {
-                renderOpportunities();
+            // Also re-render engagements if on that tab
+            if (state.currentTab === 'engagements') {
+                renderEngagements();
             }
             // Auto-save to IndexedDB
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
-        // Auto-update opportunity status based on linked todos
+        // Auto-update engagement status based on linked todos
         // Status Flow: Requested → Open (when todo linked) → Paused (all todos complete) → Closed
-        function updateOpportunityAutoStatus(opportunityId) {
-            const opp = state.opportunities.find(o => o.id === opportunityId);
+        function updateEngagementAutoStatus(engagementId) {
+            const opp = state.engagements.find(o => o.id === engagementId);
             if (!opp) return;
 
-            // Don't change closed or cancelled opportunities
+            // Don't change closed or cancelled engagements
             if (opp.status === 'closed' || opp.status === 'cancelled') return;
 
-            // Get all todos linked to this opportunity
-            const linkedTodos = state.todos.filter(t => t.opportunityId === opportunityId);
+            // Get all todos linked to this engagement
+            const linkedTodos = state.todos.filter(t => t.engagementId === engagementId);
 
             // Check if any linked todo is not completed
             const hasActiveTodo = linkedTodos.some(t => !t.completed);
@@ -4494,13 +4620,13 @@
                         }
                     }
 
-                    // Format linked opportunity
-                    let opportunityHtml = '';
-                    if (todo.opportunityId) {
-                        const opp = state.opportunities.find(o => o.id === todo.opportunityId);
+                    // Format linked engagement
+                    let engagementHtml = '';
+                    if (todo.engagementId) {
+                        const opp = state.engagements.find(o => o.id === todo.engagementId);
                         if (opp) {
-                            opportunityHtml = `
-                                <div class="todo-opportunity">
+                            engagementHtml = `
+                                <div class="todo-engagement">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <polyline points="12 6 12 12 16 14"></polyline>
@@ -4551,7 +4677,7 @@
                             <div class="todo-info">
                                 <div class="todo-title">${escapeHtml(todo.title)}</div>
                                 ${dueDateHtml}
-                                ${opportunityHtml}
+                                ${engagementHtml}
                                 ${tagsHtml}
                             </div>
                             ${descriptionHtml}
@@ -4583,15 +4709,15 @@
                 todo.completedAt = null;
             }
 
-            // Check and update opportunity status if linked
-            if (todo.opportunityId) {
-                updateOpportunityAutoStatus(todo.opportunityId);
+            // Check and update engagement status if linked
+            if (todo.engagementId) {
+                updateEngagementAutoStatus(todo.engagementId);
             }
 
             renderTodos();
-            // Re-render opportunities if on that tab to update status badges
-            if (state.currentTab === 'opportunities') {
-                renderOpportunities();
+            // Re-render engagements if on that tab to update status badges
+            if (state.currentTab === 'engagements') {
+                renderEngagements();
             }
             // Auto-save to IndexedDB
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
@@ -4611,15 +4737,20 @@
             return date.toLocaleDateString('en-US', options);
         }
 
-        // Opportunity Modal functions
-        function openOpportunityModal() {
-            opportunityModal.classList.remove('hidden');
-            state.opportunityModalOpen = true;
+        // Engagement Modal functions
+        function openEngagementModal() {
+            engagementModal.classList.remove('hidden');
+            state.engagementModalOpen = true;
+            state.editingEngagementIndex = null;  // Create mode
+
+            // Update modal title
+            const modalTitle = engagementModal.querySelector('.modal-title');
+            if (modalTitle) modalTitle.textContent = 'New Engagement';
 
             // Reset form
-            opportunityForm.reset();
+            engagementForm.reset();
             // Set default start date to today
-            oppStartDateInput.value = getTodayDate();
+            engStartDateInput.value = getTodayDate();
 
             // Reset contact autocomplete state
             state.selectedPersonId = null;
@@ -4627,42 +4758,105 @@
             state.contactAutocompleteOpen = false;
             state.contactAutocompleteHighlightIndex = -1;
             state.inlinePersonFormOpen = false;
-            oppContactClear.classList.remove('visible');
+            engContactClear.classList.remove('visible');
             contactDropdown.classList.remove('open');
             inlinePersonForm.classList.remove('open');
 
             // Reset tag input state
             state.selectedOppTagIds = [];
-            state.oppTagDropdownOpen = false;
+            state.engTagDropdownOpen = false;
             state.oppTagHighlightIndex = -1;
-            oppTagInput.value = '';
+            engTagInput.value = '';
             closeOppTagDropdown();
             renderOppSelectedTags();
 
             // Focus on name input
-            setTimeout(() => oppNameInput.focus(), 100);
+            setTimeout(() => engNameInput.focus(), 100);
         }
 
-        function closeOpportunityModal() {
-            opportunityModal.classList.add('hidden');
-            state.opportunityModalOpen = false;
+        // Open engagement modal in edit mode
+        function openEditEngagement(index) {
+            const eng = state.engagements[index];
+            if (!eng) return;
+
+            engagementModal.classList.remove('hidden');
+            state.engagementModalOpen = true;
+            state.editingEngagementIndex = index;
+
+            // Update modal title
+            const modalTitle = engagementModal.querySelector('.modal-title');
+            if (modalTitle) modalTitle.textContent = 'Edit Engagement';
+
+            // Reset form first
+            engagementForm.reset();
+
+            // Populate form with existing data
+            engNameInput.value = eng.name || '';
+            engDescriptionInput.value = eng.description || '';
+            engStartDateInput.value = eng.startDate || '';
+
+            // Handle contact
+            if (eng.contactId) {
+                const person = state.people.find(p => p.id === eng.contactId);
+                if (person) {
+                    state.selectedPersonId = eng.contactId;
+                    engContactInput.value = person.name;
+                    engContactClear.classList.add('visible');
+                } else {
+                    state.selectedPersonId = null;
+                    engContactInput.value = eng.contact || '';
+                    engContactClear.classList.remove('visible');
+                }
+            } else if (eng.contact) {
+                state.selectedPersonId = null;
+                engContactInput.value = eng.contact;
+                engContactClear.classList.remove('visible');
+            } else {
+                state.selectedPersonId = null;
+                engContactInput.value = '';
+                engContactClear.classList.remove('visible');
+            }
+
+            // Reset autocomplete state
+            state.pendingPerson = null;
+            state.contactAutocompleteOpen = false;
+            state.contactAutocompleteHighlightIndex = -1;
+            state.inlinePersonFormOpen = false;
+            contactDropdown.classList.remove('open');
+            inlinePersonForm.classList.remove('open');
+
+            // Handle tags
+            state.selectedOppTagIds = eng.tagIds ? [...eng.tagIds] : [];
+            state.engTagDropdownOpen = false;
+            state.oppTagHighlightIndex = -1;
+            engTagInput.value = '';
+            closeOppTagDropdown();
+            renderOppSelectedTags();
+
+            // Focus on name input
+            setTimeout(() => engNameInput.focus(), 100);
+        }
+
+        function closeEngagementModal() {
+            engagementModal.classList.add('hidden');
+            state.engagementModalOpen = false;
             state.selectedPersonId = null;
             state.pendingPerson = null;
             state.contactAutocompleteOpen = false;
             state.inlinePersonFormOpen = false;
-            opportunityForm.reset();
+            engagementForm.reset();
             contactDropdown.classList.remove('open');
             inlinePersonForm.classList.remove('open');
         }
 
-        // Save opportunity
-        function saveOpportunity(event) {
+        // Save engagement
+        function saveEngagement(event) {
             event.preventDefault();
 
-            const name = oppNameInput.value.trim();
-            const description = oppDescriptionInput.value.trim();
-            const startDate = oppStartDateInput.value;
-            const contactName = oppContactInput.value.trim();
+            const name = engNameInput.value.trim();
+            const description = engDescriptionInput.value.trim();
+            const startDate = engStartDateInput.value;
+            const contactName = engContactInput.value.trim();
 
             if (!name) return;
 
@@ -4680,63 +4874,84 @@
                 contactId = newPerson.id;
             }
 
-            const newOpportunity = {
-                id: generateId(),
-                name: name,
-                description: description || null,
-                startDate: startDate || getTodayDate(),
-                contact: contactName || null,  // Keep text for display
-                contactId: contactId || null,  // Link to person
-                tagIds: [...state.selectedOppTagIds],
-                status: 'requested',  // Default status
-                comments: [],
-                archived: false,
-                createdAt: new Date().toISOString()
-            };
+            if (state.editingEngagementIndex !== null) {
+                // Edit mode - update existing engagement
+                const eng = state.engagements[state.editingEngagementIndex];
+                if (eng) {
+                    eng.name = name;
+                    eng.description = description || null;
+                    eng.startDate = startDate || eng.startDate;
+                    eng.contact = contactName || null;
+                    eng.contactId = contactId || null;
+                    eng.tagIds = [...state.selectedOppTagIds];
+                    // Don't change status, comments, archived, createdAt
+                }
+            } else {
+                // Create mode - add new engagement
+                const newEngagement = {
+                    id: generateId(),
+                    name: name,
+                    description: description || null,
+                    startDate: startDate || getTodayDate(),
+                    contact: contactName || null,  // Keep text for display
+                    contactId: contactId || null,  // Link to person
+                    tagIds: [...state.selectedOppTagIds],
+                    status: 'requested',  // Default status
+                    comments: [],
+                    archived: false,
+                    createdAt: new Date().toISOString()
+                };
+                state.engagements.push(newEngagement);
+            }
 
-            state.opportunities.push(newOpportunity);
-            closeOpportunityModal();
-            renderOpportunities();
+            closeEngagementModal();
+            renderEngagements();
             renderPeople();  // Refresh people list if new person was created
+
+            // Update side panel if open and editing the same engagement
+            if (state.sidePanelOpen && state.selectedEngagementIndex === state.editingEngagementIndex) {
+                openSidePanel(state.selectedEngagementIndex);
+            }
+
             // Auto-save to IndexedDB
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
-        // Toggle show archived opportunities
+        // Toggle show archived engagements
         function toggleShowArchived() {
             state.showArchived = showArchivedToggle.checked;
-            renderOpportunities();
+            renderEngagements();
         }
 
-        // Render opportunities list
-        function renderOpportunities() {
-            if (state.currentPage !== 'app' || state.currentTab !== 'opportunities') return;
+        // Render engagements list
+        function renderEngagements() {
+            if (state.currentPage !== 'app' || state.currentTab !== 'engagements') return;
 
             // Clear current list
-            opportunityList.innerHTML = '';
+            engagementList.innerHTML = '';
 
-            // Filter opportunities based on archived state
-            const filteredOpportunities = state.opportunities.filter(opp => {
+            // Filter engagements based on archived state
+            const filteredEngagements = state.engagements.filter(opp => {
                 if (state.showArchived) return true;
                 return !opp.archived;
             });
 
-            if (filteredOpportunities.length === 0) {
+            if (filteredEngagements.length === 0) {
                 // Show empty state
-                opportunityList.classList.add('hidden');
-                opportunityEmptyState.classList.remove('hidden');
+                engagementList.classList.add('hidden');
+                engagementEmptyState.classList.remove('hidden');
                 oppShortcutHintFloating.classList.add('hidden');
             } else {
-                // Show opportunity list
-                opportunityList.classList.remove('hidden');
-                opportunityEmptyState.classList.add('hidden');
+                // Show engagement list
+                engagementList.classList.remove('hidden');
+                engagementEmptyState.classList.add('hidden');
                 oppShortcutHintFloating.classList.remove('hidden');
 
-                filteredOpportunities.forEach((opp) => {
-                    // Find original index in state.opportunities
-                    const index = state.opportunities.indexOf(opp);
+                filteredEngagements.forEach((opp) => {
+                    // Find original index in state.engagements
+                    const index = state.engagements.indexOf(opp);
                     const oppItem = document.createElement('div');
-                    oppItem.className = 'opportunity-item' + (opp.archived ? ' archived' : '');
+                    oppItem.className = 'engagement-item' + (opp.archived ? ' archived' : '');
 
                     const statusClass = `status-${opp.status}`;
                     const canClose = opp.status === 'paused';
@@ -4747,7 +4962,7 @@
                     if (isClosedOrCancelled && !opp.archived) {
                         // Only show Archive button for closed/cancelled (not yet archived)
                         actionButtons = `
-                            <button class="opp-action-btn archive-btn" onclick="event.stopPropagation(); archiveOpportunity(${index})" title="Archive Opportunity">
+                            <button class="opp-action-btn archive-btn" onclick="event.stopPropagation(); archiveEngagement(${index})" title="Archive Engagement">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="21 8 21 21 3 21 3 8"></polyline>
                                     <rect x="1" y="3" width="22" height="5"></rect>
@@ -4758,19 +4973,25 @@
                     } else if (!opp.archived) {
                         // Show normal action buttons for non-archived, non-closed/cancelled
                         actionButtons = `
-                            <button class="opp-action-btn close-btn" onclick="event.stopPropagation(); closeOpportunityAction(${index})" title="${canClose ? 'Close Opportunity' : 'Only Paused opportunities can be closed'}" ${canClose ? '' : 'disabled'}>
+                            <button class="opp-action-btn edit-btn" onclick="event.stopPropagation(); openEditEngagement(${index})" title="Edit Engagement">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                            <button class="opp-action-btn close-btn" onclick="event.stopPropagation(); closeEngagementAction(${index})" title="${canClose ? 'Close Engagement' : 'Only Paused engagements can be closed'}" ${canClose ? '' : 'disabled'}>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="20 6 9 17 4 12"></polyline>
                                 </svg>
                             </button>
-                            <button class="opp-action-btn cancel-btn" onclick="event.stopPropagation(); openCancelConfirmation(${index})" title="Cancel Opportunity">
+                            <button class="opp-action-btn cancel-btn" onclick="event.stopPropagation(); openCancelConfirmation(${index})" title="Cancel Engagement">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <line x1="15" y1="9" x2="9" y2="15"></line>
                                     <line x1="9" y1="9" x2="15" y2="15"></line>
                                 </svg>
                             </button>
-                            <button class="opp-action-btn delete-btn" onclick="event.stopPropagation(); openDeleteConfirmation(${index})" title="Delete Opportunity">
+                            <button class="opp-action-btn delete-btn" onclick="event.stopPropagation(); openDeleteConfirmation(${index})" title="Delete Engagement">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="3 6 5 6 21 6"></polyline>
                                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -4780,9 +5001,9 @@
                             </button>
                         `;
                     }
-                    // No buttons for archived opportunities
+                    // No buttons for archived engagements
 
-                    // Format tags for opportunity
+                    // Format tags for engagement
                     let oppTagsHtml = '';
                     if (opp.tagIds && opp.tagIds.length > 0) {
                         const tagPills = opp.tagIds.map(tagId => {
@@ -4798,17 +5019,17 @@
                     }
 
                     oppItem.innerHTML = `
-                        <div class="opportunity-content" onclick="openSidePanel(${index})">
-                            <div class="opportunity-name">${escapeHtml(opp.name)}</div>
-                            ${opp.contact ? `<div class="opportunity-contact">${escapeHtml(opp.contact)}</div>` : ''}
+                        <div class="engagement-content" onclick="openSidePanel(${index})">
+                            <div class="engagement-name">${escapeHtml(opp.name)}</div>
+                            ${opp.contact ? `<div class="engagement-contact">${escapeHtml(opp.contact)}</div>` : ''}
                             ${oppTagsHtml}
                         </div>
                         <span class="status-badge ${statusClass}">${capitalizeFirst(opp.status)}</span>
-                        <div class="opportunity-actions">
+                        <div class="engagement-actions">
                             ${actionButtons}
                         </div>
                     `;
-                    opportunityList.appendChild(oppItem);
+                    engagementList.appendChild(oppItem);
                 });
             }
         }
@@ -4820,26 +5041,28 @@
 
         // Side Panel functions
         function openSidePanel(index) {
-            state.selectedOpportunityIndex = index;
+            state.selectedEngagementIndex = index;
             state.sidePanelOpen = true;
 
-            const opp = state.opportunities[index];
+            const opp = state.engagements[index];
 
-            // Populate panel
-            panelOppName.textContent = opp.name;
-            panelOppDescription.textContent = opp.description || 'No description';
-            panelOppDate.textContent = opp.startDate ? formatDate(opp.startDate) : 'Not set';
-            // Get contact name - either from contactPersonId or legacy contact field
-            let contactDisplay = 'Not set';
-            if (opp.contactPersonId) {
-                const person = state.people.find(p => p.id === opp.contactPersonId);
+            // Populate panel (use .value for input elements)
+            panelEngName.value = opp.name || '';
+            panelEngDescription.value = opp.description || '';
+            panelEngDate.textContent = opp.startDate ? formatDate(opp.startDate) : 'Not set';
+            // Get contact name - either from contactId or legacy contact field
+            let contactDisplay = '';
+            state.panelContactId = null;  // Track selected contact in panel
+            if (opp.contactId) {
+                const person = state.people.find(p => p.id === opp.contactId);
                 if (person) {
                     contactDisplay = person.name;
+                    state.panelContactId = opp.contactId;
                 }
             } else if (opp.contact) {
                 contactDisplay = opp.contact;
             }
-            panelOppContact.textContent = contactDisplay;
+            panelEngContact.value = contactDisplay;
 
             // Update status badge
             updatePanelStatusBadge(opp.status);
@@ -4854,7 +5077,7 @@
 
         function closeSidePanel() {
             state.sidePanelOpen = false;
-            state.selectedOpportunityIndex = null;
+            state.selectedEngagementIndex = null;
 
             sidePanel.classList.remove('open');
             sidePanelBackdrop.classList.remove('open');
@@ -4862,38 +5085,145 @@
 
         // Update status badge in side panel
         function updatePanelStatusBadge(status) {
-            panelOppStatus.textContent = capitalizeFirst(status);
-            panelOppStatus.className = `status-badge status-${status}`;
+            panelEngStatus.textContent = capitalizeFirst(status);
+            panelEngStatus.className = `status-badge status-${status}`;
         }
 
-        // Archive opportunity (for closed/cancelled opportunities)
-        function archiveOpportunity(index) {
-            const opp = state.opportunities[index];
+        // Save engagement field from side panel inline edit
+        function savePanelEngagementField(field, value) {
+            if (state.selectedEngagementIndex === null) return;
+
+            const eng = state.engagements[state.selectedEngagementIndex];
+            if (!eng) return;
+
+            const trimmedValue = value.trim();
+
+            if (field === 'name') {
+                if (!trimmedValue) {
+                    // Don't allow empty name, revert
+                    panelEngName.value = eng.name || '';
+                    return;
+                }
+                if (eng.name !== trimmedValue) {
+                    eng.name = trimmedValue;
+                    renderEngagements();
+                    saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+                }
+            } else if (field === 'description') {
+                const newValue = trimmedValue || null;
+                if (eng.description !== newValue) {
+                    eng.description = newValue;
+                    saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+                }
+            }
+        }
+
+        // Panel contact autocomplete functions
+        function openPanelContactDropdown() {
+            state.panelContactDropdownOpen = true;
+            filterPanelContacts(panelEngContact.value);
+            panelContactDropdown.classList.add('open');
+        }
+
+        function closePanelContactDropdown() {
+            state.panelContactDropdownOpen = false;
+            panelContactDropdown.classList.remove('open');
+        }
+
+        function filterPanelContacts(query) {
+            const q = query.toLowerCase();
+            const matches = state.people.filter(p =>
+                p.name.toLowerCase().includes(q)
+            );
+
+            panelContactDropdown.innerHTML = '';
+
+            if (matches.length === 0 && !query.trim()) {
+                panelContactDropdown.innerHTML = '<div class="panel-contact-item" style="color: #6C757D;">No contacts available</div>';
+                return;
+            }
+
+            if (matches.length === 0 && query.trim()) {
+                panelContactDropdown.innerHTML = '<div class="panel-contact-item" style="color: #6C757D;">No matching contacts</div>';
+                return;
+            }
+
+            matches.forEach(person => {
+                const item = document.createElement('div');
+                item.className = 'panel-contact-item';
+                item.textContent = person.name;
+                item.onclick = () => selectPanelContact(person);
+                panelContactDropdown.appendChild(item);
+            });
+        }
+
+        function selectPanelContact(person) {
+            if (state.selectedEngagementIndex === null) return;
+
+            const eng = state.engagements[state.selectedEngagementIndex];
+            if (!eng) return;
+
+            eng.contactId = person.id;
+            eng.contact = person.name;
+            state.panelContactId = person.id;
+            panelEngContact.value = person.name;
+
+            closePanelContactDropdown();
+            renderEngagements();
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        function handlePanelContactBlur(event) {
+            // Delay to allow click on dropdown item
+            setTimeout(() => {
+                if (state.panelContactDropdownOpen) {
+                    closePanelContactDropdown();
+
+                    // If value changed but no selection made, save as text contact
+                    if (state.selectedEngagementIndex !== null) {
+                        const eng = state.engagements[state.selectedEngagementIndex];
+                        if (eng) {
+                            const newContact = panelEngContact.value.trim();
+                            if (newContact !== eng.contact) {
+                                eng.contact = newContact || null;
+                                eng.contactId = state.panelContactId;  // Keep existing contactId
+                                renderEngagements();
+                                saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+                            }
+                        }
+                    }
+                }
+            }, 200);
+        }
+
+        // Archive engagement (for closed/cancelled engagements)
+        function archiveEngagement(index) {
+            const opp = state.engagements[index];
             if (opp.status !== 'closed' && opp.status !== 'cancelled') return;
 
             opp.archived = true;
 
-            // Close side panel if this opportunity was open
-            if (state.sidePanelOpen && state.selectedOpportunityIndex === index) {
+            // Close side panel if this engagement was open
+            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
                 closeSidePanel();
             }
 
-            // Re-render opportunities list
-            renderOpportunities();
+            // Re-render engagements list
+            renderEngagements();
             // Auto-save to IndexedDB
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
-        // Close opportunity action (set status to Closed)
-        function closeOpportunityAction(index) {
-            const opp = state.opportunities[index];
+        // Close engagement action (set status to Closed)
+        function closeEngagementAction(index) {
+            const opp = state.engagements[index];
             if (opp.status !== 'paused') return; // Only paused can be closed
 
             opp.status = 'closed';
-            renderOpportunities();
+            renderEngagements();
 
             // Also update side panel if open
-            if (state.sidePanelOpen && state.selectedOpportunityIndex === index) {
+            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
                 updatePanelStatusBadge('closed');
             }
             // Auto-save to IndexedDB
@@ -4902,10 +5232,10 @@
 
         // Open delete confirmation modal
         function openDeleteConfirmation(index) {
-            state.deleteOpportunityIndex = index;
+            state.deleteEngagementIndex = index;
             state.confirmModalOpen = true;
 
-            const opp = state.opportunities[index];
+            const opp = state.engagements[index];
             confirmMessage.textContent = `Are you sure you want to delete "${opp.name}"? This action cannot be undone.`;
 
             confirmModal.classList.remove('hidden');
@@ -4915,53 +5245,53 @@
         function closeConfirmModal() {
             confirmModal.classList.add('hidden');
             state.confirmModalOpen = false;
-            state.deleteOpportunityIndex = null;
+            state.deleteEngagementIndex = null;
         }
 
-        // Confirm and execute opportunity deletion
-        function confirmDeleteOpportunity() {
-            if (state.deleteOpportunityIndex === null) return;
+        // Confirm and execute engagement deletion
+        function confirmDeleteEngagement() {
+            if (state.deleteEngagementIndex === null) return;
 
-            const oppId = state.opportunities[state.deleteOpportunityIndex].id;
+            const oppId = state.engagements[state.deleteEngagementIndex].id;
 
-            // Remove opportunity link from all associated todos
+            // Remove engagement link from all associated todos
             state.todos.forEach(todo => {
-                if (todo.opportunityId === oppId) {
-                    todo.opportunityId = null;
+                if (todo.engagementId === oppId) {
+                    todo.engagementId = null;
                 }
             });
 
-            // Remove the opportunity
-            state.opportunities.splice(state.deleteOpportunityIndex, 1);
+            // Remove the engagement
+            state.engagements.splice(state.deleteEngagementIndex, 1);
 
-            // Close side panel if the deleted opportunity was open
-            if (state.sidePanelOpen && state.selectedOpportunityIndex === state.deleteOpportunityIndex) {
+            // Close side panel if the deleted engagement was open
+            if (state.sidePanelOpen && state.selectedEngagementIndex === state.deleteEngagementIndex) {
                 closeSidePanel();
-            } else if (state.sidePanelOpen && state.selectedOpportunityIndex > state.deleteOpportunityIndex) {
+            } else if (state.sidePanelOpen && state.selectedEngagementIndex > state.deleteEngagementIndex) {
                 // Adjust index if needed
-                state.selectedOpportunityIndex--;
+                state.selectedEngagementIndex--;
             }
 
             // Close confirmation modal
             closeConfirmModal();
 
             // Re-render both lists
-            renderOpportunities();
+            renderEngagements();
             renderTodos();
             // Auto-save to IndexedDB
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
         // =============================================
-        // Cancel Opportunity Functions
+        // Cancel Engagement Functions
         // =============================================
 
         // Open cancel confirmation modal
         function openCancelConfirmation(index) {
-            state.cancelOpportunityIndex = index;
+            state.cancelEngagementIndex = index;
             state.cancelModalOpen = true;
 
-            const opp = state.opportunities[index];
+            const opp = state.engagements[index];
             cancelOppName.textContent = `"${opp.name}"`;
             cancelReason.value = '';
 
@@ -4973,13 +5303,13 @@
         function closeCancelModal() {
             cancelModal.classList.add('hidden');
             state.cancelModalOpen = false;
-            state.cancelOpportunityIndex = null;
+            state.cancelEngagementIndex = null;
             cancelReason.value = '';
         }
 
-        // Confirm and execute opportunity cancellation
-        function confirmCancelOpportunity() {
-            if (state.cancelOpportunityIndex === null) return;
+        // Confirm and execute engagement cancellation
+        function confirmCancelEngagement() {
+            if (state.cancelEngagementIndex === null) return;
 
             const reason = cancelReason.value.trim();
             if (!reason) {
@@ -4987,7 +5317,7 @@
                 return;
             }
 
-            const opp = state.opportunities[state.cancelOpportunityIndex];
+            const opp = state.engagements[state.cancelEngagementIndex];
 
             // Initialize comments array if not exists (for backwards compatibility)
             if (!opp.comments) {
@@ -5004,8 +5334,8 @@
             // Set status to cancelled
             opp.status = 'cancelled';
 
-            // Update side panel if this opportunity is open
-            if (state.sidePanelOpen && state.selectedOpportunityIndex === state.cancelOpportunityIndex) {
+            // Update side panel if this engagement is open
+            if (state.sidePanelOpen && state.selectedEngagementIndex === state.cancelEngagementIndex) {
                 updatePanelStatusBadge('cancelled');
                 renderCommentsInPanel(opp);
             }
@@ -5013,8 +5343,8 @@
             // Close cancel modal
             closeCancelModal();
 
-            // Re-render opportunities list
-            renderOpportunities();
+            // Re-render engagements list
+            renderEngagements();
             // Auto-save to IndexedDB
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
@@ -5042,26 +5372,29 @@
                 return;
             }
 
-            panelComments.innerHTML = comments.map(comment => {
+            panelComments.innerHTML = comments.map((comment, index) => {
                 const isCancellation = comment.type === 'cancellation';
                 const badge = isCancellation ? '<span class="comment-badge cancellation">Cancellation</span>' : '';
                 return `
                     <div class="comment-item ${isCancellation ? 'cancellation' : ''}">
-                        <div class="comment-timestamp">${formatDateTime(comment.timestamp)}${badge}</div>
+                        <div class="comment-header">
+                            <div class="comment-timestamp">${formatDateTime(comment.timestamp)}${badge}</div>
+                            <button class="comment-delete-btn" onclick="deleteComment(${index})" title="Delete comment">&times;</button>
+                        </div>
                         <div class="comment-text">${escapeHtml(comment.text)}</div>
                     </div>
                 `;
             }).join('');
         }
 
-        // Add a new comment to the current opportunity
+        // Add a new comment to the current engagement
         function addComment() {
-            if (state.selectedOpportunityIndex === null) return;
+            if (state.selectedEngagementIndex === null) return;
 
             const text = commentInput.value.trim();
             if (!text) return;
 
-            const opp = state.opportunities[state.selectedOpportunityIndex];
+            const opp = state.engagements[state.selectedEngagementIndex];
 
             // Initialize comments array if not exists
             if (!opp.comments) {
@@ -5084,23 +5417,39 @@
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
+        // Delete a comment from the current engagement
+        function deleteComment(commentIndex) {
+            if (state.selectedEngagementIndex === null) return;
+
+            const opp = state.engagements[state.selectedEngagementIndex];
+            if (!opp || !opp.comments || commentIndex < 0 || commentIndex >= opp.comments.length) return;
+
+            // Remove the comment
+            opp.comments.splice(commentIndex, 1);
+
+            // Re-render comments
+            renderCommentsInPanel(opp);
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
         // =============================================
-        // Autocomplete Functions for Todo-Opportunity Linking
+        // Autocomplete Functions for Todo-Engagement Linking
         // =============================================
 
-        // Filter opportunities based on search query
-        function filterOpportunities(query) {
+        // Filter engagements based on search query
+        function filterEngagements(query) {
             if (!query || query.trim() === '') return [];
             const lowerQuery = query.toLowerCase().trim();
-            return state.opportunities.filter(opp =>
+            return state.engagements.filter(opp =>
                 opp.name.toLowerCase().includes(lowerQuery)
             );
         }
 
         // Render autocomplete dropdown
         function renderAutocompleteDropdown(query) {
-            const matches = filterOpportunities(query);
-            opportunityDropdown.innerHTML = '';
+            const matches = filterEngagements(query);
+            engagementDropdown.innerHTML = '';
 
             if (matches.length > 0) {
                 matches.forEach((opp, index) => {
@@ -5112,20 +5461,20 @@
                         <div class="autocomplete-item-name">${escapeHtml(opp.name)}</div>
                         ${opp.contact ? `<div class="autocomplete-item-contact">${escapeHtml(opp.contact)}</div>` : ''}
                     `;
-                    item.onclick = () => selectOpportunity(opp);
-                    opportunityDropdown.appendChild(item);
+                    item.onclick = () => selectEngagement(opp);
+                    engagementDropdown.appendChild(item);
                 });
             } else if (query && query.trim() !== '') {
                 // Show hint to create new
                 const hint = document.createElement('div');
                 hint.className = 'autocomplete-empty';
                 hint.textContent = 'No matches found';
-                opportunityDropdown.appendChild(hint);
+                engagementDropdown.appendChild(hint);
 
                 const createHint = document.createElement('div');
                 createHint.className = 'autocomplete-create-hint';
-                createHint.textContent = 'Press Enter to create new opportunity';
-                opportunityDropdown.appendChild(createHint);
+                createHint.textContent = 'Press Enter to create new engagement';
+                engagementDropdown.appendChild(createHint);
             }
 
             // Update highlight
@@ -5135,28 +5484,28 @@
 
         // Update autocomplete item highlight
         function updateAutocompleteHighlight() {
-            const items = opportunityDropdown.querySelectorAll('.autocomplete-item');
+            const items = engagementDropdown.querySelectorAll('.autocomplete-item');
             items.forEach((item, index) => {
                 item.classList.toggle('highlighted', index === state.autocompleteHighlightIndex);
             });
         }
 
-        // Select an opportunity from dropdown
-        function selectOpportunity(opp) {
-            state.selectedOpportunityId = opp.id;
-            state.pendingOpportunity = null;
-            todoOpportunityInput.value = opp.name;
-            todoOpportunityClear.classList.add('visible');
+        // Select an engagement from dropdown
+        function selectEngagement(opp) {
+            state.selectedEngagementId = opp.id;
+            state.pendingEngagement = null;
+            todoEngagementInput.value = opp.name;
+            todoEngagementClear.classList.add('visible');
             closeAutocompleteDropdown();
             closeInlineOppForm();
         }
 
-        // Clear opportunity selection
-        function clearOpportunitySelection() {
-            state.selectedOpportunityId = null;
-            state.pendingOpportunity = null;
-            todoOpportunityInput.value = '';
-            todoOpportunityClear.classList.remove('visible');
+        // Clear engagement selection
+        function clearEngagementSelection() {
+            state.selectedEngagementId = null;
+            state.pendingEngagement = null;
+            todoEngagementInput.value = '';
+            todoEngagementClear.classList.remove('visible');
             closeAutocompleteDropdown();
             closeInlineOppForm();
         }
@@ -5164,19 +5513,19 @@
         // Open autocomplete dropdown
         function openAutocompleteDropdown() {
             state.autocompleteOpen = true;
-            opportunityDropdown.classList.add('open');
+            engagementDropdown.classList.add('open');
         }
 
         // Close autocomplete dropdown
         function closeAutocompleteDropdown() {
             state.autocompleteOpen = false;
             state.autocompleteHighlightIndex = -1;
-            opportunityDropdown.classList.remove('open');
+            engagementDropdown.classList.remove('open');
         }
 
         // Update Todo Save button state based on inline forms
         function updateTodoSaveButtonState() {
-            const isInlineFormOpen = state.inlineOppFormOpen || state.inlineOppPersonFormOpen;
+            const isInlineFormOpen = state.inlineEngFormOpen || state.inlineEngPersonFormOpen;
 
             if (isInlineFormOpen) {
                 todoSaveBtn.disabled = true;
@@ -5206,77 +5555,77 @@
             });
         }
 
-        // Open inline opportunity form with slide animation
-        function openInlineOppForm(name) {
-            state.inlineOppFormOpen = true;
+        // Open inline engagement form with slide animation
+        function openInlineEngForm(name) {
+            state.inlineEngFormOpen = true;
             updateTodoSaveButtonState();
-            inlineOppName.value = name;
-            inlineOppDescription.value = '';
-            inlineOppStartDate.value = getTodayDate();
-            inlineOppContact.value = '';
-            inlineOppForm.classList.add('open');
+            inlineEngName.value = name;
+            inlineEngDescription.value = '';
+            inlineEngStartDate.value = getTodayDate();
+            inlineEngContact.value = '';
+            inlineEngForm.classList.add('open');
             closeAutocompleteDropdown();
 
             // Enable tab navigation for opp form elements, but exclude nested person form
-            setFormTabIndex(inlineOppForm, true, '#inline-opp-person-form');
+            setFormTabIndex(inlineEngForm, true, '#inline-eng-person-form');
 
             // Focus on description after animation
-            setTimeout(() => inlineOppDescription.focus(), 350);
+            setTimeout(() => inlineEngDescription.focus(), 350);
         }
 
-        // Close inline opportunity form
+        // Close inline engagement form
         function closeInlineOppForm() {
-            state.inlineOppFormOpen = false;
-            inlineOppForm.classList.remove('open');
+            state.inlineEngFormOpen = false;
+            inlineEngForm.classList.remove('open');
             updateTodoSaveButtonState();
 
             // Disable tab navigation for all elements inside opp form
-            setFormTabIndex(inlineOppForm, false);
+            setFormTabIndex(inlineEngForm, false);
         }
 
-        // Cancel inline opportunity creation
-        function cancelInlineOpportunity() {
-            state.pendingOpportunity = null;
-            todoOpportunityInput.value = '';
-            todoOpportunityClear.classList.remove('visible');
+        // Cancel inline engagement creation
+        function cancelInlineEngagement() {
+            state.pendingEngagement = null;
+            todoEngagementInput.value = '';
+            todoEngagementClear.classList.remove('visible');
             closeInlineOppForm();
         }
 
-        // Confirm inline opportunity creation
-        function confirmInlineOpportunity() {
-            const name = inlineOppName.value.trim();
+        // Confirm inline engagement creation
+        function confirmInlineEngagement() {
+            const name = inlineEngName.value.trim();
             if (!name) return;
 
-            // Store pending opportunity data (will be created when todo is saved)
-            state.pendingOpportunity = {
+            // Store pending engagement data (will be created when todo is saved)
+            state.pendingEngagement = {
                 name: name,
-                description: inlineOppDescription.value.trim(),
-                startDate: inlineOppStartDate.value,
-                contact: inlineOppContact.value.trim(),
+                description: inlineEngDescription.value.trim(),
+                startDate: inlineEngStartDate.value,
+                contact: inlineEngContact.value.trim(),
                 // Include person data for the contact
                 contactPersonId: state.selectedInlineOppPersonId,
                 pendingPerson: state.pendingInlineOppPerson
             };
 
             // Update UI to show it's selected
-            todoOpportunityInput.value = name + ' (new)';
-            todoOpportunityClear.classList.add('visible');
+            todoEngagementInput.value = name + ' (new)';
+            todoEngagementClear.classList.add('visible');
             closeInlineOppForm();
         }
 
         // Handle autocomplete input events
-        todoOpportunityInput.addEventListener('input', (e) => {
+        todoEngagementInput.addEventListener('input', (e) => {
             const query = e.target.value;
 
             // Reset selection when typing
-            state.selectedOpportunityId = null;
-            state.pendingOpportunity = null;
+            state.selectedEngagementId = null;
+            state.pendingEngagement = null;
 
             // Show/hide clear button
-            todoOpportunityClear.classList.toggle('visible', query.length > 0);
+            todoEngagementClear.classList.toggle('visible', query.length > 0);
 
             // Close inline form if open
-            if (state.inlineOppFormOpen) {
+            if (state.inlineEngFormOpen) {
                 closeInlineOppForm();
             }
 
@@ -5285,7 +5634,7 @@
                 renderAutocompleteDropdown(query);
                 openAutocompleteDropdown();
                 // Auto-highlight first match when typing
-                const matches = filterOpportunities(query);
+                const matches = filterEngagements(query);
                 if (matches.length > 0) {
                     state.autocompleteHighlightIndex = 0;
                     updateAutocompleteHighlight();
@@ -5296,10 +5645,10 @@
         });
 
         // Handle autocomplete keyboard navigation
-        todoOpportunityInput.addEventListener('keydown', (e) => {
-            const items = opportunityDropdown.querySelectorAll('.autocomplete-item');
-            const matches = filterOpportunities(todoOpportunityInput.value);
-            const query = todoOpportunityInput.value.trim();
+        todoEngagementInput.addEventListener('keydown', (e) => {
+            const items = engagementDropdown.querySelectorAll('.autocomplete-item');
+            const matches = filterEngagements(todoEngagementInput.value);
+            const query = todoEngagementInput.value.trim();
 
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
@@ -5321,11 +5670,11 @@
                 if (matches.length > 0) {
                     e.preventDefault();
                     const indexToSelect = state.autocompleteHighlightIndex >= 0 ? state.autocompleteHighlightIndex : 0;
-                    selectOpportunity(matches[indexToSelect]);
+                    selectEngagement(matches[indexToSelect]);
                     todoTagInput.focus();
-                } else if (query && !state.inlineOppFormOpen) {
+                } else if (query && !state.inlineEngFormOpen) {
                     e.preventDefault();
-                    openInlineOppForm(query);
+                    openInlineEngForm(query);
                 }
                 // If no text entered, let Tab naturally move to next control
             } else if (e.key === 'Enter') {
@@ -5336,14 +5685,14 @@
 
                 if (state.autocompleteHighlightIndex >= 0 && matches.length > 0) {
                     // Select highlighted item
-                    selectOpportunity(matches[state.autocompleteHighlightIndex]);
+                    selectEngagement(matches[state.autocompleteHighlightIndex]);
                 } else if (exactMatch) {
                     // Exact match - select it and move to next field
-                    selectOpportunity(exactMatch);
+                    selectEngagement(exactMatch);
                     todoTagInput.focus();
-                } else if (query && !state.inlineOppFormOpen) {
+                } else if (query && !state.inlineEngFormOpen) {
                     // Partial match or no matches - open inline creation form
-                    openInlineOppForm(query);
+                    openInlineEngForm(query);
                 }
             } else if (e.key === 'Escape') {
                 if (state.autocompleteOpen) {
@@ -5354,33 +5703,33 @@
             }
         });
 
-        // Handle inline opportunity description Enter key - move to Contact field
-        inlineOppDescription.addEventListener('keydown', (e) => {
+        // Handle inline engagement description Enter key - move to Contact field
+        inlineEngDescription.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 // Move focus to Contact field and scroll
-                inlineOppContact.focus();
+                inlineEngContact.focus();
                 setTimeout(() => {
-                    inlineOppContact.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    inlineEngContact.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }, 100);
             }
         });
 
-        // Handle inline opportunity name Enter key - move to Description field
-        inlineOppName.addEventListener('keydown', (e) => {
+        // Handle inline engagement name Enter key - move to Description field
+        inlineEngName.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                inlineOppDescription.focus();
+                inlineEngDescription.focus();
             }
         });
 
-        // Handle inline opportunity start date Enter key - move to Contact field
-        inlineOppStartDate.addEventListener('keydown', (e) => {
+        // Handle inline engagement start date Enter key - move to Contact field
+        inlineEngStartDate.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                inlineOppContact.focus();
+                inlineEngContact.focus();
                 setTimeout(() => {
-                    inlineOppContact.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    inlineEngContact.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }, 100);
             }
         });
@@ -5577,13 +5926,13 @@
         function deleteTag(index) {
             const tag = state.tags[index];
 
-            // Remove tag from all todos and opportunities
+            // Remove tag from all todos and engagements
             state.todos.forEach(todo => {
                 if (todo.tagIds) {
                     todo.tagIds = todo.tagIds.filter(id => id !== tag.id);
                 }
             });
-            state.opportunities.forEach(opp => {
+            state.engagements.forEach(opp => {
                 if (opp.tagIds) {
                     opp.tagIds = opp.tagIds.filter(id => id !== tag.id);
                 }
@@ -5641,9 +5990,9 @@
             });
         }
 
-        // Render selected tags for Opportunity form
+        // Render selected tags for Engagement form
         function renderOppSelectedTags() {
-            oppSelectedTags.innerHTML = '';
+            engSelectedTags.innerHTML = '';
             state.selectedOppTagIds.forEach(tagId => {
                 const tag = getTagById(tagId);
                 if (tag) {
@@ -5654,7 +6003,7 @@
                         ${escapeHtml(tag.name)}
                         <button type="button" class="remove-tag" onclick="removeOppTag('${tagId}')">×</button>
                     `;
-                    oppSelectedTags.appendChild(tagEl);
+                    engSelectedTags.appendChild(tagEl);
                 }
             });
         }
@@ -5665,7 +6014,7 @@
             renderTodoSelectedTags();
         }
 
-        // Remove tag from Opportunity
+        // Remove tag from Engagement
         function removeOppTag(tagId) {
             state.selectedOppTagIds = state.selectedOppTagIds.filter(id => id !== tagId);
             renderOppSelectedTags();
@@ -5714,9 +6063,9 @@
             }
         }
 
-        // Render tag dropdown for Opportunity
+        // Render tag dropdown for Engagement
         function renderOppTagDropdown(filter = '') {
-            oppTagDropdown.innerHTML = '';
+            engTagDropdown.innerHTML = '';
             const filterLower = filter.toLowerCase();
 
             // Filter tags not already selected and matching the filter
@@ -5733,7 +6082,7 @@
                     ${escapeHtml(tag.name)}
                 `;
                 item.onclick = () => selectOppTag(tag.id);
-                oppTagDropdown.appendChild(item);
+                engTagDropdown.appendChild(item);
             });
 
             // Show "create new" option if filter doesn't match existing tag exactly
@@ -5745,15 +6094,15 @@
                     Create "${escapeHtml(filter.trim())}"
                 `;
                 createItem.onclick = () => createAndSelectOppTag(filter.trim());
-                oppTagDropdown.appendChild(createItem);
+                engTagDropdown.appendChild(createItem);
             }
 
-            if (oppTagDropdown.children.length > 0) {
-                oppTagDropdown.classList.add('open');
-                state.oppTagDropdownOpen = true;
+            if (engTagDropdown.children.length > 0) {
+                engTagDropdown.classList.add('open');
+                state.engTagDropdownOpen = true;
             } else {
-                oppTagDropdown.classList.remove('open');
-                state.oppTagDropdownOpen = false;
+                engTagDropdown.classList.remove('open');
+                state.engTagDropdownOpen = false;
             }
         }
 
@@ -5767,13 +6116,13 @@
             closeTodoTagDropdown();
         }
 
-        // Select existing tag for Opportunity
+        // Select existing tag for Engagement
         function selectOppTag(tagId) {
             if (!state.selectedOppTagIds.includes(tagId)) {
                 state.selectedOppTagIds.push(tagId);
                 renderOppSelectedTags();
             }
-            oppTagInput.value = '';
+            engTagInput.value = '';
             closeOppTagDropdown();
         }
 
@@ -5785,7 +6134,7 @@
             }
         }
 
-        // Create new tag and select it for Opportunity
+        // Create new tag and select it for Engagement
         function createAndSelectOppTag(name) {
             const tagId = getOrCreateTag(name);
             if (tagId) {
@@ -5800,10 +6149,10 @@
             state.todoTagHighlightIndex = -1;
         }
 
-        // Close Opportunity tag dropdown
+        // Close Engagement tag dropdown
         function closeOppTagDropdown() {
-            oppTagDropdown.classList.remove('open');
-            state.oppTagDropdownOpen = false;
+            engTagDropdown.classList.remove('open');
+            state.engTagDropdownOpen = false;
             state.oppTagHighlightIndex = -1;
         }
 
@@ -5883,11 +6232,11 @@
                 }
             });
 
-            // Opportunity tag input
-            oppTagInput.addEventListener('input', (e) => {
+            // Engagement tag input
+            engTagInput.addEventListener('input', (e) => {
                 renderOppTagDropdown(e.target.value);
                 // Auto-highlight first item when typing
-                const items = oppTagDropdown.querySelectorAll('.tag-dropdown-item');
+                const items = engTagDropdown.querySelectorAll('.tag-dropdown-item');
                 if (items.length > 0) {
                     state.oppTagHighlightIndex = 0;
                     renderOppTagDropdown(e.target.value);
@@ -5896,30 +6245,30 @@
                 }
             });
 
-            oppTagInput.addEventListener('focus', () => {
-                renderOppTagDropdown(oppTagInput.value);
+            engTagInput.addEventListener('focus', () => {
+                renderOppTagDropdown(engTagInput.value);
             });
 
-            oppTagInput.addEventListener('keydown', (e) => {
+            engTagInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     e.preventDefault();
                     e.stopPropagation();
                     closeOppTagDropdown();
-                    oppTagInput.value = '';
+                    engTagInput.value = '';
                     return;
                 }
 
                 if (e.key === 'Tab' && !e.shiftKey) {
                     // Tab (forward only) with dropdown open: select first/highlighted item and move on
-                    const items = oppTagDropdown.querySelectorAll('.tag-dropdown-item');
+                    const items = engTagDropdown.querySelectorAll('.tag-dropdown-item');
                     if (items.length > 0) {
                         e.preventDefault();
                         const indexToSelect = state.oppTagHighlightIndex >= 0 ? state.oppTagHighlightIndex : 0;
                         items[indexToSelect].click();
-                    } else if (oppTagInput.value.trim()) {
+                    } else if (engTagInput.value.trim()) {
                         // If text entered but no matches, create tag and move on
                         e.preventDefault();
-                        createAndSelectOppTag(oppTagInput.value.trim());
+                        createAndSelectOppTag(engTagInput.value.trim());
                     }
                     // If nothing, let Tab naturally move to next control
                     return;
@@ -5927,22 +6276,22 @@
 
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    const items = oppTagDropdown.querySelectorAll('.tag-dropdown-item');
+                    const items = engTagDropdown.querySelectorAll('.tag-dropdown-item');
                     if (items.length > 0) {
                         const indexToSelect = state.oppTagHighlightIndex >= 0 ? state.oppTagHighlightIndex : 0;
                         items[indexToSelect].click();
-                    } else if (oppTagInput.value.trim()) {
-                        createAndSelectOppTag(oppTagInput.value.trim());
+                    } else if (engTagInput.value.trim()) {
+                        createAndSelectOppTag(engTagInput.value.trim());
                     }
                     return;
                 }
 
                 if (e.key === 'ArrowDown') {
                     e.preventDefault();
-                    const items = oppTagDropdown.querySelectorAll('.tag-dropdown-item');
+                    const items = engTagDropdown.querySelectorAll('.tag-dropdown-item');
                     if (items.length > 0) {
                         state.oppTagHighlightIndex = Math.min(state.oppTagHighlightIndex + 1, items.length - 1);
-                        renderOppTagDropdown(oppTagInput.value);
+                        renderOppTagDropdown(engTagInput.value);
                     }
                     return;
                 }
@@ -5951,7 +6300,7 @@
                     e.preventDefault();
                     if (state.oppTagHighlightIndex > 0) {
                         state.oppTagHighlightIndex--;
-                        renderOppTagDropdown(oppTagInput.value);
+                        renderOppTagDropdown(engTagInput.value);
                     }
                     return;
                 }
@@ -6087,8 +6436,8 @@
                 // Remove person from array
                 state.people.splice(state.deletePersonIndex, 1);
 
-                // Update opportunities that referenced this person
-                state.opportunities.forEach(opp => {
+                // Update engagements that referenced this person
+                state.engagements.forEach(opp => {
                     if (opp.contactId === personId) {
                         opp.contactId = null;
                         opp.contact = ''; // Clear the text contact as well
@@ -6097,7 +6446,7 @@
 
                 closeDeletePersonModal();
                 renderPeople();
-                renderOpportunities();
+                renderEngagements();
                 // Auto-save to IndexedDB
                 saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
             }
@@ -6259,7 +6608,7 @@
         });
 
         // =============================================
-        // Contact Autocomplete Functions (Opportunity Modal)
+        // Contact Autocomplete Functions (Engagement Modal)
         // =============================================
 
         // Filter people based on search query
@@ -6317,8 +6666,8 @@
         function selectContact(person) {
             state.selectedPersonId = person.id;
             state.pendingPerson = null;
-            oppContactInput.value = person.name;
-            oppContactClear.classList.add('visible');
+            engContactInput.value = person.name;
+            engContactClear.classList.add('visible');
             closeContactDropdown();
             closeInlinePersonForm();
         }
@@ -6336,12 +6685,12 @@
             state.contactAutocompleteHighlightIndex = -1;
         }
 
-        // Clear opportunity contact input
+        // Clear engagement contact input
         function clearOppContact() {
             state.selectedPersonId = null;
             state.pendingPerson = null;
-            oppContactInput.value = '';
-            oppContactClear.classList.remove('visible');
+            engContactInput.value = '';
+            engContactClear.classList.remove('visible');
             closeContactDropdown();
             closeInlinePersonForm();
         }
@@ -6373,8 +6722,8 @@
         // Cancel inline person creation
         function cancelInlinePerson() {
             state.pendingPerson = null;
-            oppContactInput.value = '';
-            oppContactClear.classList.remove('visible');
+            engContactInput.value = '';
+            engContactClear.classList.remove('visible');
             closeInlinePersonForm();
         }
 
@@ -6393,26 +6742,26 @@
             state.selectedPersonId = null;
 
             // Update the contact input to show the name
-            oppContactInput.value = name;
-            oppContactClear.classList.add('visible');
+            engContactInput.value = name;
+            engContactClear.classList.add('visible');
 
             closeInlinePersonForm();
         }
 
         // ============================================
-        // Inline Person Creation within Inline Opportunity (Todo Modal)
+        // Inline Person Creation within Inline Engagement (Todo Modal)
         // ============================================
 
         // Render inline opp contact dropdown
         function renderInlineOppContactDropdown(query) {
             const matches = filterPeople(query);
-            inlineOppContactDropdown.innerHTML = '';
+            inlineEngContactDropdown.innerHTML = '';
 
             if (matches.length === 0) {
                 const item = document.createElement('div');
                 item.className = 'autocomplete-item autocomplete-no-match';
                 item.textContent = `Press Enter to create "${query}"`;
-                inlineOppContactDropdown.appendChild(item);
+                inlineEngContactDropdown.appendChild(item);
             } else {
                 matches.forEach((person, index) => {
                     const item = document.createElement('div');
@@ -6435,31 +6784,31 @@
                     }
 
                     item.addEventListener('click', () => selectInlineOppContact(person));
-                    inlineOppContactDropdown.appendChild(item);
+                    inlineEngContactDropdown.appendChild(item);
                 });
             }
         }
 
         // Open inline opp contact dropdown
         function openInlineOppContactDropdown() {
-            state.inlineOppContactAutocompleteOpen = true;
-            state.inlineOppContactAutocompleteHighlightIndex = -1;
-            inlineOppContactDropdown.classList.add('open');
+            state.inlineEngContactAutocompleteOpen = true;
+            state.inlineEngContactAutocompleteHighlightIndex = -1;
+            inlineEngContactDropdown.classList.add('open');
         }
 
         // Close inline opp contact dropdown
         function closeInlineOppContactDropdown() {
-            state.inlineOppContactAutocompleteOpen = false;
-            state.inlineOppContactAutocompleteHighlightIndex = -1;
-            inlineOppContactDropdown.classList.remove('open');
+            state.inlineEngContactAutocompleteOpen = false;
+            state.inlineEngContactAutocompleteHighlightIndex = -1;
+            inlineEngContactDropdown.classList.remove('open');
         }
 
-        // Select contact for inline opportunity
+        // Select contact for inline engagement
         function selectInlineOppContact(person) {
             state.selectedInlineOppPersonId = person.id;
             state.pendingInlineOppPerson = null;
-            inlineOppContact.value = person.name;
-            inlineOppContactClear.classList.add('visible');
+            inlineEngContact.value = person.name;
+            inlineEngContactClear.classList.add('visible');
             closeInlineOppContactDropdown();
             closeInlineOppPersonForm();
         }
@@ -6468,80 +6817,80 @@
         function clearInlineOppContact() {
             state.selectedInlineOppPersonId = null;
             state.pendingInlineOppPerson = null;
-            inlineOppContact.value = '';
-            inlineOppContactClear.classList.remove('visible');
+            inlineEngContact.value = '';
+            inlineEngContactClear.classList.remove('visible');
             closeInlineOppContactDropdown();
             closeInlineOppPersonForm();
         }
 
-        // Open inline person form within inline opportunity
+        // Open inline person form within inline engagement
         function openInlineOppPersonForm(name) {
-            state.inlineOppPersonFormOpen = true;
+            state.inlineEngPersonFormOpen = true;
             updateTodoSaveButtonState();
-            inlineOppPersonName.value = name;
-            inlineOppPersonRole.value = '';
-            inlineOppPersonForm.classList.add('open');
+            inlineEngPersonName.value = name;
+            inlineEngPersonRole.value = '';
+            inlineEngPersonForm.classList.add('open');
             closeInlineOppContactDropdown();
 
             // Enable tab navigation for person form elements
-            setFormTabIndex(inlineOppPersonForm, true);
+            setFormTabIndex(inlineEngPersonForm, true);
 
             // Scroll to make the form visible
             setTimeout(() => {
-                inlineOppPersonRole.focus();
-                inlineOppPersonForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                inlineEngPersonRole.focus();
+                inlineEngPersonForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 350);
         }
 
-        // Close inline person form within inline opportunity
+        // Close inline person form within inline engagement
         function closeInlineOppPersonForm() {
-            state.inlineOppPersonFormOpen = false;
-            inlineOppPersonForm.classList.remove('open');
+            state.inlineEngPersonFormOpen = false;
+            inlineEngPersonForm.classList.remove('open');
             updateTodoSaveButtonState();
 
             // Disable tab navigation for person form elements
-            setFormTabIndex(inlineOppPersonForm, false);
+            setFormTabIndex(inlineEngPersonForm, false);
         }
 
-        // Cancel inline person creation within inline opportunity
+        // Cancel inline person creation within inline engagement
         function cancelInlineOppPerson() {
             state.pendingInlineOppPerson = null;
-            inlineOppContact.value = '';
-            inlineOppContactClear.classList.remove('visible');
+            inlineEngContact.value = '';
+            inlineEngContactClear.classList.remove('visible');
             closeInlineOppPersonForm();
         }
 
-        // Confirm inline person creation within inline opportunity
+        // Confirm inline person creation within inline engagement
         function confirmInlineOppPerson() {
-            const name = inlineOppPersonName.value.trim();
-            const role = inlineOppPersonRole.value.trim();
+            const name = inlineEngPersonName.value.trim();
+            const role = inlineEngPersonRole.value.trim();
 
             if (!name) {
-                inlineOppPersonName.focus();
+                inlineEngPersonName.focus();
                 return;
             }
 
-            // Store as pending person for inline opportunity
+            // Store as pending person for inline engagement
             state.pendingInlineOppPerson = { name, role };
             state.selectedInlineOppPersonId = null;
 
             // Update the contact input to show the name
-            inlineOppContact.value = name;
-            inlineOppContactClear.classList.add('visible');
+            inlineEngContact.value = name;
+            inlineEngContactClear.classList.add('visible');
 
             closeInlineOppPersonForm();
         }
 
         // Update autocomplete highlight for inline opp contact
         function updateInlineOppContactAutocompleteHighlight() {
-            const items = inlineOppContactDropdown.querySelectorAll('.autocomplete-item:not(.autocomplete-no-match)');
+            const items = inlineEngContactDropdown.querySelectorAll('.autocomplete-item:not(.autocomplete-no-match)');
             items.forEach((item, index) => {
-                item.classList.toggle('highlighted', index === state.inlineOppContactAutocompleteHighlightIndex);
+                item.classList.toggle('highlighted', index === state.inlineEngContactAutocompleteHighlightIndex);
             });
         }
 
         // Inline opp contact input event handlers
-        inlineOppContact.addEventListener('input', (e) => {
+        inlineEngContact.addEventListener('input', (e) => {
             const query = e.target.value;
 
             // Clear selected person if user types
@@ -6549,10 +6898,10 @@
             state.pendingInlineOppPerson = null;
 
             // Show/hide clear button
-            inlineOppContactClear.classList.toggle('visible', query.length > 0);
+            inlineEngContactClear.classList.toggle('visible', query.length > 0);
 
             // Close inline form if open
-            if (state.inlineOppPersonFormOpen) {
+            if (state.inlineEngPersonFormOpen) {
                 closeInlineOppPersonForm();
             }
 
@@ -6565,33 +6914,33 @@
             }
         });
 
-        inlineOppContact.addEventListener('focus', (e) => {
-            const query = inlineOppContact.value;
+        inlineEngContact.addEventListener('focus', (e) => {
+            const query = inlineEngContact.value;
             if (query.trim() !== '' && !state.selectedInlineOppPersonId && !state.pendingInlineOppPerson) {
                 renderInlineOppContactDropdown(query);
                 openInlineOppContactDropdown();
             }
             // Scroll to make contact field visible
             setTimeout(() => {
-                inlineOppContact.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                inlineEngContact.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 100);
         });
 
-        inlineOppContact.addEventListener('keydown', (e) => {
-            const items = inlineOppContactDropdown.querySelectorAll('.autocomplete-item:not(.autocomplete-no-match)');
-            const matches = filterPeople(inlineOppContact.value);
-            const query = inlineOppContact.value.trim();
+        inlineEngContact.addEventListener('keydown', (e) => {
+            const items = inlineEngContactDropdown.querySelectorAll('.autocomplete-item:not(.autocomplete-no-match)');
+            const matches = filterPeople(inlineEngContact.value);
+            const query = inlineEngContact.value.trim();
 
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
-                if (state.inlineOppContactAutocompleteOpen && items.length > 0) {
-                    state.inlineOppContactAutocompleteHighlightIndex = Math.min(state.inlineOppContactAutocompleteHighlightIndex + 1, items.length - 1);
+                if (state.inlineEngContactAutocompleteOpen && items.length > 0) {
+                    state.inlineEngContactAutocompleteHighlightIndex = Math.min(state.inlineEngContactAutocompleteHighlightIndex + 1, items.length - 1);
                     updateInlineOppContactAutocompleteHighlight();
                 }
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
-                if (state.inlineOppContactAutocompleteOpen && items.length > 0) {
-                    state.inlineOppContactAutocompleteHighlightIndex = Math.max(state.inlineOppContactAutocompleteHighlightIndex - 1, 0);
+                if (state.inlineEngContactAutocompleteOpen && items.length > 0) {
+                    state.inlineEngContactAutocompleteHighlightIndex = Math.max(state.inlineEngContactAutocompleteHighlightIndex - 1, 0);
                     updateInlineOppContactAutocompleteHighlight();
                 }
             } else if (e.key === 'Tab' && !e.shiftKey) {
@@ -6601,15 +6950,15 @@
                 // 3. If no matches but text entered, open inline person form
                 // 4. If no text, natural tab
                 if (state.selectedInlineOppPersonId || state.pendingInlineOppPerson) {
-                    // Contact is selected - confirm the inline opportunity and move to Tags
+                    // Contact is selected - confirm the inline engagement and move to Tags
                     e.preventDefault();
-                    confirmInlineOpportunity();
+                    confirmInlineEngagement();
                     todoTagInput.focus();
                 } else if (matches.length > 0) {
                     e.preventDefault();
-                    const indexToSelect = state.inlineOppContactAutocompleteHighlightIndex >= 0 ? state.inlineOppContactAutocompleteHighlightIndex : 0;
+                    const indexToSelect = state.inlineEngContactAutocompleteHighlightIndex >= 0 ? state.inlineEngContactAutocompleteHighlightIndex : 0;
                     selectInlineOppContact(matches[indexToSelect]);
-                } else if (query && !state.inlineOppPersonFormOpen) {
+                } else if (query && !state.inlineEngPersonFormOpen) {
                     e.preventDefault();
                     openInlineOppPersonForm(query);
                 }
@@ -6621,24 +6970,24 @@
                 const exactMatch = matches.find(person => person.name.toLowerCase() === query.toLowerCase());
 
                 if (state.selectedInlineOppPersonId || state.pendingInlineOppPerson) {
-                    // Contact is selected - confirm the inline opportunity and move to Tags
-                    confirmInlineOpportunity();
+                    // Contact is selected - confirm the inline engagement and move to Tags
+                    confirmInlineEngagement();
                     todoTagInput.focus();
-                } else if (state.inlineOppContactAutocompleteHighlightIndex >= 0 && matches.length > 0) {
+                } else if (state.inlineEngContactAutocompleteHighlightIndex >= 0 && matches.length > 0) {
                     // Select highlighted item
-                    selectInlineOppContact(matches[state.inlineOppContactAutocompleteHighlightIndex]);
+                    selectInlineOppContact(matches[state.inlineEngContactAutocompleteHighlightIndex]);
                 } else if (exactMatch) {
                     // Exact match - select it
                     selectInlineOppContact(exactMatch);
-                } else if (query && !state.inlineOppPersonFormOpen) {
+                } else if (query && !state.inlineEngPersonFormOpen) {
                     // Partial match or no matches - open inline creation form for new person
                     openInlineOppPersonForm(query);
-                } else if (state.inlineOppContactAutocompleteOpen) {
+                } else if (state.inlineEngContactAutocompleteOpen) {
                     // Just close dropdown
                     closeInlineOppContactDropdown();
                 }
             } else if (e.key === 'Escape') {
-                if (state.inlineOppContactAutocompleteOpen) {
+                if (state.inlineEngContactAutocompleteOpen) {
                     e.preventDefault();
                     e.stopPropagation();
                     closeInlineOppContactDropdown();
@@ -6646,19 +6995,19 @@
             }
         });
 
-        // Handle inline opp person form Enter key - confirm person AND opportunity
-        inlineOppPersonForm.addEventListener('keydown', (e) => {
+        // Handle inline eng person form Enter key - confirm person AND engagement
+        inlineEngPersonForm.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
                 e.preventDefault();
                 // First confirm the person
                 confirmInlineOppPerson();
-                // Then confirm the opportunity (which will include the person)
-                confirmInlineOpportunity();
+                // Then confirm the engagement (which will include the person)
+                confirmInlineEngagement();
             }
         });
 
         // Contact input event handlers
-        oppContactInput.addEventListener('input', (e) => {
+        engContactInput.addEventListener('input', (e) => {
             const query = e.target.value;
 
             // Clear selected person if user types
@@ -6666,7 +7015,7 @@
             state.pendingPerson = null;
 
             // Show/hide clear button
-            oppContactClear.classList.toggle('visible', query.length > 0);
+            engContactClear.classList.toggle('visible', query.length > 0);
 
             // Close inline form if open
             if (state.inlinePersonFormOpen) {
@@ -6688,18 +7037,18 @@
             }
         });
 
-        oppContactInput.addEventListener('focus', () => {
-            const query = oppContactInput.value;
+        engContactInput.addEventListener('focus', () => {
+            const query = engContactInput.value;
             if (query.trim() !== '' && !state.selectedPersonId && !state.pendingPerson) {
                 renderContactDropdown(query);
                 openContactDropdown();
             }
         });
 
-        oppContactInput.addEventListener('keydown', (e) => {
+        engContactInput.addEventListener('keydown', (e) => {
             const items = contactDropdown.querySelectorAll('.autocomplete-item');
-            const matches = filterPeople(oppContactInput.value);
-            const query = oppContactInput.value.trim();
+            const matches = filterPeople(engContactInput.value);
+            const query = engContactInput.value.trim();
 
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
@@ -6722,7 +7071,7 @@
                     e.preventDefault();
                     const indexToSelect = state.contactAutocompleteHighlightIndex >= 0 ? state.contactAutocompleteHighlightIndex : 0;
                     selectContact(matches[indexToSelect]);
-                    oppTagInput.focus();
+                    engTagInput.focus();
                 } else if (query && !state.inlinePersonFormOpen) {
                     e.preventDefault();
                     openInlinePersonForm(query);
@@ -6740,7 +7089,7 @@
                 } else if (exactMatch) {
                     // Exact match - select it and move to next field
                     selectContact(exactMatch);
-                    oppTagInput.focus();
+                    engTagInput.focus();
                 } else if (query && !state.inlinePersonFormOpen) {
                     // Partial match or no matches - open inline creation form
                     openInlinePersonForm(query);
@@ -6773,7 +7122,7 @@
             if (!e.target.closest('.autocomplete-wrapper') && state.roleAutocompleteOpen) {
                 closeRoleDropdown();
             }
-            if (!e.target.closest('.autocomplete-wrapper') && state.inlineOppContactAutocompleteOpen) {
+            if (!e.target.closest('.autocomplete-wrapper') && state.inlineEngContactAutocompleteOpen) {
                 closeInlineOppContactDropdown();
             }
         });
@@ -6781,7 +7130,7 @@
         // Add keyboard navigation (capture phase to intercept browser shortcuts)
         document.addEventListener('keydown', (e) => {
             // Skip if any modal is open and it's not Escape
-            const anyModalOpen = state.modalOpen || state.opportunityModalOpen || state.personModalOpen;
+            const anyModalOpen = state.modalOpen || state.engagementModalOpen || state.personModalOpen;
 
             // Handle Shift+N to open todo modal (only on home tab)
             if (e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && e.key.toLowerCase() === 'n' &&
@@ -6791,11 +7140,11 @@
                 return;
             }
 
-            // Handle Shift+N to open opportunity modal (only on opportunities tab)
+            // Handle Shift+N to open engagement modal (only on engagements tab)
             if (e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && e.key.toLowerCase() === 'n' &&
-                state.currentPage === 'app' && state.currentTab === 'opportunities' && !anyModalOpen) {
+                state.currentPage === 'app' && state.currentTab === 'engagements' && !anyModalOpen) {
                 e.preventDefault();
-                openOpportunityModal();
+                openEngagementModal();
                 return;
             }
 
@@ -6832,9 +7181,9 @@
                     closeModal();
                     return;
                 }
-                if (state.opportunityModalOpen) {
+                if (state.engagementModalOpen) {
                     e.preventDefault();
-                    closeOpportunityModal();
+                    closeEngagementModal();
                     return;
                 }
                 if (state.personModalOpen) {
@@ -6871,10 +7220,10 @@
 
         // Migrate existing contacts to people
         function migrateContactsToPeople() {
-            // Get all unique contacts from opportunities that don't have a contactId
+            // Get all unique contacts from engagements that don't have a contactId
             const contactsToMigrate = new Map();
 
-            state.opportunities.forEach(opp => {
+            state.engagements.forEach(opp => {
                 if (opp.contact && !opp.contactId) {
                     const normalizedContact = opp.contact.trim().toLowerCase();
                     if (!contactsToMigrate.has(normalizedContact)) {
@@ -6897,8 +7246,8 @@
                 }
             });
 
-            // Update opportunities to reference the person
-            state.opportunities.forEach(opp => {
+            // Update engagements to reference the person
+            state.engagements.forEach(opp => {
                 if (opp.contact && !opp.contactId) {
                     const normalizedContact = opp.contact.trim().toLowerCase();
                     const person = state.people.find(p => p.name.toLowerCase() === normalizedContact);
@@ -7202,14 +7551,14 @@
         function generateInsights(plan, allScored, currentDate) {
             const insights = [];
 
-            // Light day opportunity
+            // Light day - good opportunity
             const utilization = plan.availableMinutes > 0
                 ? (plan.allocatedMinutes / plan.availableMinutes) * 100
                 : 0;
             if (utilization < 50 && allScored.length > 0) {
                 insights.push({
                     type: "light_day",
-                    message: "Light day ahead! Good opportunity to get ahead on upcoming tasks or clear some backlog."
+                    message: "Light day ahead! Good chance to get ahead on upcoming tasks or clear some backlog."
                 });
             }
 
@@ -7509,7 +7858,7 @@
                         const indexToSelect = state.priorityHighlightIndex >= 0 ? state.priorityHighlightIndex : 0;
                         selectPriority(filteredOptions[indexToSelect]);
                         // Move focus to the next focusable element
-                        todoOpportunityInput.focus();
+                        todoEngagementInput.focus();
                     }
                     // If no filtered options, let Tab naturally move to next control
                 } else if (e.key === 'Enter' && state.priorityDropdownOpen) {
@@ -7586,7 +7935,7 @@
             const stats = await getStorageStats();
             document.getElementById('storage-size').textContent = formatBytes(stats.estimatedSize);
             document.getElementById('storage-todos').textContent = stats.todoCount;
-            document.getElementById('storage-opportunities').textContent = stats.opportunityCount;
+            document.getElementById('storage-engagements').textContent = stats.engagementCount;
         }
 
         function openClearStateModal() {
@@ -7613,7 +7962,7 @@
 
                 // Reset in-memory state
                 state.todos = [];
-                state.opportunities = [];
+                state.engagements = [];
                 state.people = [];
                 state.roles = [];
                 state.tags = [];
@@ -7664,7 +8013,7 @@
                 if (savedState) {
                     // Restore state from IndexedDB
                     state.todos = Array.isArray(savedState.todos) ? savedState.todos : [];
-                    state.opportunities = Array.isArray(savedState.opportunities) ? savedState.opportunities : [];
+                    state.engagements = Array.isArray(savedState.engagements) ? savedState.engagements : [];
                     state.people = Array.isArray(savedState.people) ? savedState.people : [];
                     state.roles = Array.isArray(savedState.roles) ? savedState.roles : [];
                     state.tags = Array.isArray(savedState.tags) ? savedState.tags : [];
@@ -7708,8 +8057,8 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize inline forms with disabled tab navigation (they start closed)
-            setFormTabIndex(inlineOppForm, false);
-            setFormTabIndex(inlineOppPersonForm, false);
+            setFormTabIndex(inlineEngForm, false);
+            setFormTabIndex(inlineEngPersonForm, false);
             if (inlinePersonForm) setFormTabIndex(inlinePersonForm, false);
 
             // Initialize app with IndexedDB (handles migration and navigation)
