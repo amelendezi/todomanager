@@ -3838,6 +3838,8 @@
                 document.body.style.display = 'block';
                 document.body.style.alignItems = '';
                 document.body.style.justifyContent = '';
+                // Set currentPage before switchTab so render functions pass their guards
+                state.currentPage = page;
                 switchTab(state.currentTab);
             }
 
