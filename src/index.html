@@ -5273,6 +5273,15 @@
                     state.autocompleteHighlightIndex = Math.max(state.autocompleteHighlightIndex - 1, 0);
                     updateAutocompleteHighlight();
                 }
+            } else if (e.key === 'Tab') {
+                // Tab with dropdown open and item highlighted: select and move on
+                if (state.autocompleteOpen && state.autocompleteHighlightIndex >= 0 && matches.length > 0) {
+                    e.preventDefault();
+                    selectOpportunity(matches[state.autocompleteHighlightIndex]);
+                    // Move focus to the next focusable element (Tags input)
+                    todoTagInput.focus();
+                }
+                // If no highlight, let Tab naturally move to next control
             } else if (e.key === 'Enter') {
                 e.preventDefault();
 
@@ -5771,6 +5780,21 @@
                     return;
                 }
 
+                if (e.key === 'Tab') {
+                    // Tab with dropdown open and item highlighted: select and move on
+                    const items = todoTagDropdown.querySelectorAll('.tag-dropdown-item');
+                    if (state.todoTagHighlightIndex >= 0 && state.todoTagHighlightIndex < items.length) {
+                        e.preventDefault();
+                        items[state.todoTagHighlightIndex].click();
+                    } else if (todoTagInput.value.trim()) {
+                        // If text entered but no highlight, create tag and move on
+                        e.preventDefault();
+                        createAndSelectTodoTag(todoTagInput.value.trim());
+                    }
+                    // If nothing, let Tab naturally move to next control
+                    return;
+                }
+
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     const items = todoTagDropdown.querySelectorAll('.tag-dropdown-item');
@@ -5818,6 +5842,21 @@
                     e.stopPropagation();
                     closeOppTagDropdown();
                     oppTagInput.value = '';
+                    return;
+                }
+
+                if (e.key === 'Tab') {
+                    // Tab with dropdown open and item highlighted: select and move on
+                    const items = oppTagDropdown.querySelectorAll('.tag-dropdown-item');
+                    if (state.oppTagHighlightIndex >= 0 && state.oppTagHighlightIndex < items.length) {
+                        e.preventDefault();
+                        items[state.oppTagHighlightIndex].click();
+                    } else if (oppTagInput.value.trim()) {
+                        // If text entered but no highlight, create tag and move on
+                        e.preventDefault();
+                        createAndSelectOppTag(oppTagInput.value.trim());
+                    }
+                    // If nothing, let Tab naturally move to next control
                     return;
                 }
 
@@ -6117,6 +6156,13 @@
                     state.roleAutocompleteHighlightIndex = Math.max(state.roleAutocompleteHighlightIndex - 1, 0);
                     updateRoleAutocompleteHighlight();
                 }
+            } else if (e.key === 'Tab') {
+                // Tab with dropdown open and item highlighted: select and move on
+                if (state.roleAutocompleteOpen && state.roleAutocompleteHighlightIndex >= 0 && matches.length > 0) {
+                    e.preventDefault();
+                    selectRole(matches[state.roleAutocompleteHighlightIndex]);
+                }
+                // If no highlight, let Tab naturally move to next control
             } else if (e.key === 'Enter') {
                 e.preventDefault();
                 const query = personRoleInput.value.trim();
@@ -6474,9 +6520,15 @@
                     updateInlineOppContactAutocompleteHighlight();
                 }
             } else if (e.key === 'Tab') {
-                // Tab key - if there's a query, open person form and focus role
+                // Tab key behavior:
+                // 1. If dropdown open with highlighted item: select and move on
+                // 2. If query but no selection: open person form
+                // 3. Otherwise: let Tab naturally move to next control
                 const query = inlineOppContact.value.trim();
-                if (query && !state.inlineOppPersonFormOpen && !state.selectedInlineOppPersonId && !state.pendingInlineOppPerson) {
+                if (state.inlineOppContactAutocompleteOpen && state.inlineOppContactAutocompleteHighlightIndex >= 0 && matches.length > 0) {
+                    e.preventDefault();
+                    selectInlineOppContact(matches[state.inlineOppContactAutocompleteHighlightIndex]);
+                } else if (query && !state.inlineOppPersonFormOpen && !state.selectedInlineOppPersonId && !state.pendingInlineOppPerson) {
                     e.preventDefault();
                     openInlineOppPersonForm(query);
                 }
@@ -6564,6 +6616,15 @@
                     state.contactAutocompleteHighlightIndex = Math.max(state.contactAutocompleteHighlightIndex - 1, 0);
                     updateContactAutocompleteHighlight();
                 }
+            } else if (e.key === 'Tab') {
+                // Tab with dropdown open and item highlighted: select and move on
+                if (state.contactAutocompleteOpen && state.contactAutocompleteHighlightIndex >= 0 && matches.length > 0) {
+                    e.preventDefault();
+                    selectContact(matches[state.contactAutocompleteHighlightIndex]);
+                    // Move focus to the next focusable element (Tags input)
+                    oppTagInput.focus();
+                }
+                // If no highlight, let Tab naturally move to next control
             } else if (e.key === 'Enter') {
                 e.preventDefault();
                 const query = oppContactInput.value.trim();
@@ -7321,6 +7382,15 @@
                     e.preventDefault();
                     state.priorityHighlightIndex = Math.max(state.priorityHighlightIndex - 1, 0);
                     renderPriorityDropdown(todoPriorityInput.value);
+                } else if (e.key === 'Tab' && state.priorityDropdownOpen) {
+                    // Tab with dropdown open and item highlighted: select and move on
+                    if (state.priorityHighlightIndex >= 0 && state.priorityHighlightIndex < options.length) {
+                        e.preventDefault();
+                        selectPriority(options[state.priorityHighlightIndex]);
+                        // Move focus to the next focusable element
+                        todoOpportunityInput.focus();
+                    }
+                    // If no highlight, let Tab naturally move to next control
                 } else if (e.key === 'Enter' && state.priorityDropdownOpen) {
                     e.preventDefault();
                     if (state.priorityHighlightIndex >= 0 && state.priorityHighlightIndex < options.length) {
