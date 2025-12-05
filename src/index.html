@@ -5260,6 +5260,7 @@
         todoOpportunityInput.addEventListener('keydown', (e) => {
             const items = opportunityDropdown.querySelectorAll('.autocomplete-item');
             const matches = filterOpportunities(todoOpportunityInput.value);
+            const query = todoOpportunityInput.value.trim();
 
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
@@ -5274,28 +5275,36 @@
                     updateAutocompleteHighlight();
                 }
             } else if (e.key === 'Tab') {
-                // Tab with dropdown open and item highlighted: select and move on
-                if (state.autocompleteOpen && state.autocompleteHighlightIndex >= 0 && matches.length > 0) {
+                // Tab behavior:
+                // 1. If matches exist, select first/highlighted and move to Tags
+                // 2. If no matches but text entered, open inline creation
+                // 3. If no text, natural tab
+                if (matches.length > 0) {
                     e.preventDefault();
-                    selectOpportunity(matches[state.autocompleteHighlightIndex]);
-                    // Move focus to the next focusable element (Tags input)
+                    const indexToSelect = state.autocompleteHighlightIndex >= 0 ? state.autocompleteHighlightIndex : 0;
+                    selectOpportunity(matches[indexToSelect]);
                     todoTagInput.focus();
+                } else if (query && !state.inlineOppFormOpen) {
+                    e.preventDefault();
+                    openInlineOppForm(query);
                 }
-                // If no highlight, let Tab naturally move to next control
+                // If no text entered, let Tab naturally move to next control
             } else if (e.key === 'Enter') {
                 e.preventDefault();
 
-                const query = todoOpportunityInput.value.trim();
+                // Check for exact match (case-insensitive)
+                const exactMatch = matches.find(opp => opp.name.toLowerCase() === query.toLowerCase());
 
-                if (state.autocompleteOpen && state.autocompleteHighlightIndex >= 0 && matches.length > 0) {
+                if (state.autocompleteHighlightIndex >= 0 && matches.length > 0) {
                     // Select highlighted item
                     selectOpportunity(matches[state.autocompleteHighlightIndex]);
-                } else if (query && matches.length === 0 && !state.inlineOppFormOpen) {
-                    // No matches - open inline creation form
+                } else if (exactMatch) {
+                    // Exact match - select it and move to next field
+                    selectOpportunity(exactMatch);
+                    todoTagInput.focus();
+                } else if (query && !state.inlineOppFormOpen) {
+                    // Partial match or no matches - open inline creation form
                     openInlineOppForm(query);
-                } else if (state.autocompleteOpen && matches.length > 0 && state.autocompleteHighlightIndex === -1) {
-                    // Just close dropdown if there are matches but none selected
-                    closeAutocompleteDropdown();
                 }
             } else if (e.key === 'Escape') {
                 if (state.autocompleteOpen) {
@@ -6506,6 +6515,7 @@
         inlineOppContact.addEventListener('keydown', (e) => {
             const items = inlineOppContactDropdown.querySelectorAll('.autocomplete-item:not(.autocomplete-no-match)');
             const matches = filterPeople(inlineOppContact.value);
+            const query = inlineOppContact.value.trim();
 
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
@@ -6520,28 +6530,33 @@
                     updateInlineOppContactAutocompleteHighlight();
                 }
             } else if (e.key === 'Tab') {
-                // Tab key behavior:
-                // 1. If dropdown open with highlighted item: select and move on
-                // 2. If query but no selection: open person form
-                // 3. Otherwise: let Tab naturally move to next control
-                const query = inlineOppContact.value.trim();
-                if (state.inlineOppContactAutocompleteOpen && state.inlineOppContactAutocompleteHighlightIndex >= 0 && matches.length > 0) {
+                // Tab behavior:
+                // 1. If matches exist, select first/highlighted and move on
+                // 2. If no matches but text entered, open inline person form
+                // 3. If no text, natural tab
+                if (matches.length > 0 && !state.selectedInlineOppPersonId && !state.pendingInlineOppPerson) {
                     e.preventDefault();
-                    selectInlineOppContact(matches[state.inlineOppContactAutocompleteHighlightIndex]);
+                    const indexToSelect = state.inlineOppContactAutocompleteHighlightIndex >= 0 ? state.inlineOppContactAutocompleteHighlightIndex : 0;
+                    selectInlineOppContact(matches[indexToSelect]);
                 } else if (query && !state.inlineOppPersonFormOpen && !state.selectedInlineOppPersonId && !state.pendingInlineOppPerson) {
                     e.preventDefault();
                     openInlineOppPersonForm(query);
                 }
-                // If person form is already open, Tab will naturally move to role field
+                // If no text entered or person already selected, let Tab naturally move
             } else if (e.key === 'Enter') {
                 e.preventDefault();
-                const query = inlineOppContact.value.trim();
 
-                if (state.inlineOppContactAutocompleteOpen && state.inlineOppContactAutocompleteHighlightIndex >= 0 && matches.length > 0) {
+                // Check for exact match (case-insensitive)
+                const exactMatch = matches.find(person => person.name.toLowerCase() === query.toLowerCase());
+
+                if (state.inlineOppContactAutocompleteHighlightIndex >= 0 && matches.length > 0) {
                     // Select highlighted item
                     selectInlineOppContact(matches[state.inlineOppContactAutocompleteHighlightIndex]);
+                } else if (exactMatch && !state.selectedInlineOppPersonId && !state.pendingInlineOppPerson) {
+                    // Exact match - select it
+                    selectInlineOppContact(exactMatch);
                 } else if (query && !state.inlineOppPersonFormOpen && !state.selectedInlineOppPersonId && !state.pendingInlineOppPerson) {
-                    // Has query but no selection - open inline creation form for new person
+                    // Partial match or no matches - open inline creation form for new person
                     openInlineOppPersonForm(query);
                 } else if (state.inlineOppContactAutocompleteOpen) {
                     // Just close dropdown
@@ -6603,6 +6618,7 @@
         oppContactInput.addEventListener('keydown', (e) => {
             const items = contactDropdown.querySelectorAll('.autocomplete-item');
             const matches = filterPeople(oppContactInput.value);
+            const query = oppContactInput.value.trim();
 
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
@@ -6617,27 +6633,36 @@
                     updateContactAutocompleteHighlight();
                 }
             } else if (e.key === 'Tab') {
-                // Tab with dropdown open and item highlighted: select and move on
-                if (state.contactAutocompleteOpen && state.contactAutocompleteHighlightIndex >= 0 && matches.length > 0) {
+                // Tab behavior:
+                // 1. If matches exist, select first/highlighted and move to Tags
+                // 2. If no matches but text entered, open inline creation
+                // 3. If no text, natural tab
+                if (matches.length > 0) {
                     e.preventDefault();
-                    selectContact(matches[state.contactAutocompleteHighlightIndex]);
-                    // Move focus to the next focusable element (Tags input)
+                    const indexToSelect = state.contactAutocompleteHighlightIndex >= 0 ? state.contactAutocompleteHighlightIndex : 0;
+                    selectContact(matches[indexToSelect]);
                     oppTagInput.focus();
+                } else if (query && !state.inlinePersonFormOpen) {
+                    e.preventDefault();
+                    openInlinePersonForm(query);
                 }
-                // If no highlight, let Tab naturally move to next control
+                // If no text entered, let Tab naturally move to next control
             } else if (e.key === 'Enter') {
                 e.preventDefault();
-                const query = oppContactInput.value.trim();
 
-                if (state.contactAutocompleteOpen && state.contactAutocompleteHighlightIndex >= 0 && matches.length > 0) {
+                // Check for exact match (case-insensitive)
+                const exactMatch = matches.find(person => person.name.toLowerCase() === query.toLowerCase());
+
+                if (state.contactAutocompleteHighlightIndex >= 0 && matches.length > 0) {
                     // Select highlighted item
                     selectContact(matches[state.contactAutocompleteHighlightIndex]);
-                } else if (query && matches.length === 0 && !state.inlinePersonFormOpen) {
-                    // No matches - open inline creation form
+                } else if (exactMatch) {
+                    // Exact match - select it and move to next field
+                    selectContact(exactMatch);
+                    oppTagInput.focus();
+                } else if (query && !state.inlinePersonFormOpen) {
+                    // Partial match or no matches - open inline creation form
                     openInlinePersonForm(query);
-                } else if (state.contactAutocompleteOpen && matches.length > 0 && state.contactAutocompleteHighlightIndex === -1) {
-                    // Just close dropdown if there are matches but none selected
-                    closeContactDropdown();
                 }
             } else if (e.key === 'Escape') {
                 if (state.contactAutocompleteOpen) {
