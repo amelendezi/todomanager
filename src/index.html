@@ -3282,6 +3282,48 @@
         </div>
     </div>
 
+    <!-- IndexedDB Unavailable Warning Modal -->
+    <div id="indexeddb-warning-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content confirm-modal-content">
+            <svg class="confirm-icon" style="stroke: #EF4444;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <h2 class="modal-title">Browser Storage Unavailable</h2>
+            <p style="text-align: center; color: #6C757D; margin-bottom: 20px;">
+                IndexedDB is not available in your browser. This usually happens when using private/incognito browsing mode.
+            </p>
+            <p style="text-align: center; color: #6C757D; margin-bottom: 20px;">
+                Please switch to a regular browser window to use TodoManager, as your data cannot be saved in private browsing mode.
+            </p>
+        </div>
+    </div>
+
+    <!-- Clear State Confirmation Modal -->
+    <div id="clear-state-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closeClearStateModal()"></div>
+        <div class="modal-content confirm-modal-content">
+            <svg class="confirm-icon" style="stroke: #EF4444;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            <h2 class="modal-title">Clear Browser State</h2>
+            <p style="text-align: center; color: #6C757D; margin-bottom: 20px;">
+                This will permanently delete all your data stored in the browser, including todos, opportunities, people, and settings.
+            </p>
+            <p style="text-align: center; color: #6C757D; margin-bottom: 20px;">
+                Would you like to export your data before clearing?
+            </p>
+            <div class="modal-actions" style="flex-direction: column; gap: 12px;">
+                <button type="button" class="btn btn-primary" onclick="exportThenClear()" style="width: 100%;">Export Data & Clear</button>
+                <button type="button" class="btn btn-danger" onclick="confirmClearState()" style="width: 100%;">Clear Without Export</button>
+                <button type="button" class="btn btn-secondary" onclick="closeClearStateModal()" style="width: 100%;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Delete Person Confirmation Modal -->
     <div id="delete-person-modal" class="modal hidden">
         <div class="modal-backdrop" onclick="closeDeletePersonModal()"></div>
@@ -3832,12 +3874,18 @@
             // Clear data and navigate to app
             state.todos = [];
             state.opportunities = [];
+            state.people = [];
+            state.roles = [];
+            state.tags = [];
+            state.settings = { ...DEFAULT_SETTINGS };
             state.currentTab = 'home';
             navigateTo('app');
+            // Save initial empty state to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save initial state:', err));
         }
 
         function continueWorking() {
-            // Trigger file input to load previous state
+            // Trigger file input to load previous state (for importing from file)
             document.getElementById('import-file-input').click();
         }
 
@@ -7196,11 +7244,67 @@
             return `${year}-${month}-${day}T${hours}:${minutes}`;
         }
 
+        // Show IndexedDB warning modal
+        function showIndexedDBWarning() {
+            document.getElementById('indexeddb-warning-modal').classList.remove('hidden');
+        }
+
+        // Initialize application with IndexedDB
+        async function initializeApp() {
+            try {
+                // Initialize IndexedDB
+                await initDB();
+
+                // Try to load saved state
+                const savedState = await loadStateFromIndexedDB();
+
+                if (savedState) {
+                    // Restore state from IndexedDB
+                    state.todos = Array.isArray(savedState.todos) ? savedState.todos : [];
+                    state.opportunities = Array.isArray(savedState.opportunities) ? savedState.opportunities : [];
+                    state.people = Array.isArray(savedState.people) ? savedState.people : [];
+                    state.roles = Array.isArray(savedState.roles) ? savedState.roles : [];
+                    state.tags = Array.isArray(savedState.tags) ? savedState.tags : [];
+
+                    // Restore settings (merge with defaults)
+                    if (savedState.settings && typeof savedState.settings === 'object') {
+                        state.settings = { ...DEFAULT_SETTINGS, ...savedState.settings };
+                    }
+
+                    // Ensure all todos have required fields with defaults
+                    state.todos = state.todos.map(todo => ({
+                        ...todo,
+                        title: todo.title || todo.description || 'Untitled',
+                        description: todo.description || null,
+                        deadline: todo.deadline || (todo.dueDate ? new Date(todo.dueDate).toISOString() : null),
+                        effort: todo.effort || DEFAULT_EFFORT,
+                        priority: PRIORITY_TAGS[todo.priority] ? todo.priority : DEFAULT_PRIORITY,
+                        completedAt: todo.completedAt || null,
+                        createdAt: todo.createdAt || new Date().toISOString(),
+                        updatedAt: todo.updatedAt || new Date().toISOString()
+                    }));
+
+                    // Run migration for backwards compatibility
+                    migrateContactsToPeople();
+
+                    // Navigate directly to app with home tab
+                    state.currentTab = 'home';
+                    navigateTo('app');
+                } else {
+                    // No saved state, show landing page
+                    migrateContactsToPeople();
+                    navigateTo('landing');
+                }
+            } catch (error) {
+                console.error('Failed to initialize IndexedDB:', error);
+                // Show warning modal if IndexedDB is unavailable
+                showIndexedDBWarning();
+            }
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            // Run migration on startup
-            migrateContactsToPeople();
-            navigateTo('landing');
+            initializeApp();
         });
     </script>
 </body>
