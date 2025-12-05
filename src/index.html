@@ -3982,6 +3982,9 @@
                     renderTags();
                     loadPlanningSettings();
 
+                    // Save imported data to IndexedDB
+                    saveStateToIndexedDB().catch(err => console.error('Failed to save imported state:', err));
+
                 } catch (error) {
                     alert('Error importing file: ' + error.message + '\n\nPlease ensure you selected a valid TodoApp export file.');
                 }
@@ -3998,9 +4001,9 @@
             reader.readAsText(file);
         }
 
-        // Placeholder for data persistence
+        // Data persistence - saves to IndexedDB
         function saveData() {
-            // Data persistence not implemented yet - data lives in memory
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
         // Modal functions
