@@ -578,6 +578,53 @@
             background: #E9ECEF;
         }
 
+        /* Disabled button state */
+        .btn:disabled,
+        .btn.btn-disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-primary:disabled,
+        .btn-primary.btn-disabled {
+            background: #FFB800;
+        }
+
+        /* Tooltip wrapper for disabled button */
+        .btn-tooltip-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .btn-tooltip-wrapper[data-tooltip]:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            margin-bottom: 8px;
+            z-index: 1000;
+        }
+
+        .btn-tooltip-wrapper[data-tooltip]:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #333;
+            margin-bottom: -4px;
+            z-index: 1000;
+        }
+
         /* Todo item with due date */
         .todo-due-date {
             font-size: 12px;
@@ -3182,7 +3229,9 @@
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <span id="todo-save-wrapper" class="btn-tooltip-wrapper">
+                        <button type="submit" id="todo-save-btn" class="btn btn-primary">Save</button>
+                    </span>
                 </div>
             </form>
         </div>
@@ -3684,6 +3733,8 @@
         const todoPriorityInput = document.getElementById('todo-priority');
         const priorityDropdown = document.getElementById('priority-dropdown');
         const modalTitle = document.getElementById('modal-title');
+        const todoSaveBtn = document.getElementById('todo-save-btn');
+        const todoSaveWrapper = document.getElementById('todo-save-wrapper');
 
         // DOM Elements - Recommendation Panel
         const recommendationPanel = document.getElementById('recommendation-panel');
@@ -4099,6 +4150,9 @@
             state.priorityDropdownOpen = false;
             state.priorityHighlightIndex = -1;
             closePriorityDropdown();
+
+            // Reset Save button state
+            updateTodoSaveButtonState();
 
             if (todoIndex !== null) {
                 // Edit mode - populate with existing todo data
@@ -5087,15 +5141,51 @@
             opportunityDropdown.classList.remove('open');
         }
 
+        // Update Todo Save button state based on inline forms
+        function updateTodoSaveButtonState() {
+            const isInlineFormOpen = state.inlineOppFormOpen || state.inlineOppPersonFormOpen;
+
+            if (isInlineFormOpen) {
+                todoSaveBtn.disabled = true;
+                todoSaveBtn.classList.add('btn-disabled');
+                todoSaveWrapper.setAttribute('data-tooltip', 'Complete or cancel the inline form first');
+            } else {
+                todoSaveBtn.disabled = false;
+                todoSaveBtn.classList.remove('btn-disabled');
+                todoSaveWrapper.removeAttribute('data-tooltip');
+            }
+        }
+
+        // Toggle tabindex on focusable elements inside a form container
+        // When enabled=false, sets tabindex=-1 to remove from tab order
+        // When enabled=true, removes tabindex to restore default tab behavior
+        function setFormTabIndex(formElement, enabled, excludeSelector = null) {
+            const focusables = formElement.querySelectorAll('input, button, select, textarea, [tabindex]');
+            focusables.forEach(el => {
+                // Skip elements that match the exclude selector
+                if (excludeSelector && el.closest(excludeSelector)) return;
+
+                if (enabled) {
+                    el.removeAttribute('tabindex');
+                } else {
+                    el.setAttribute('tabindex', '-1');
+                }
+            });
+        }
+
         // Open inline opportunity form with slide animation
         function openInlineOppForm(name) {
             state.inlineOppFormOpen = true;
+            updateTodoSaveButtonState();
             inlineOppName.value = name;
             inlineOppDescription.value = '';
             inlineOppStartDate.value = getTodayDate();
             inlineOppContact.value = '';
             inlineOppForm.classList.add('open');
             closeAutocompleteDropdown();
+
+            // Enable tab navigation for opp form elements, but exclude nested person form
+            setFormTabIndex(inlineOppForm, true, '#inline-opp-person-form');
 
             // Focus on description after animation
             setTimeout(() => inlineOppDescription.focus(), 350);
@@ -5105,6 +5195,10 @@
         function closeInlineOppForm() {
             state.inlineOppFormOpen = false;
             inlineOppForm.classList.remove('open');
+            updateTodoSaveButtonState();
+
+            // Disable tab navigation for all elements inside opp form
+            setFormTabIndex(inlineOppForm, false);
         }
 
         // Cancel inline opportunity creation
@@ -6140,6 +6234,9 @@
             inlinePersonForm.classList.add('open');
             closeContactDropdown();
 
+            // Enable tab navigation for person form elements
+            setFormTabIndex(inlinePersonForm, true);
+
             // Focus on role after animation
             setTimeout(() => inlinePersonRole.focus(), 350);
         }
@@ -6148,6 +6245,9 @@
         function closeInlinePersonForm() {
             state.inlinePersonFormOpen = false;
             inlinePersonForm.classList.remove('open');
+
+            // Disable tab navigation for person form elements
+            setFormTabIndex(inlinePersonForm, false);
         }
 
         // Cancel inline person creation
@@ -6257,10 +6357,14 @@
         // Open inline person form within inline opportunity
         function openInlineOppPersonForm(name) {
             state.inlineOppPersonFormOpen = true;
+            updateTodoSaveButtonState();
             inlineOppPersonName.value = name;
             inlineOppPersonRole.value = '';
             inlineOppPersonForm.classList.add('open');
             closeInlineOppContactDropdown();
+
+            // Enable tab navigation for person form elements
+            setFormTabIndex(inlineOppPersonForm, true);
 
             // Scroll to make the form visible
             setTimeout(() => {
@@ -6273,6 +6377,10 @@
         function closeInlineOppPersonForm() {
             state.inlineOppPersonFormOpen = false;
             inlineOppPersonForm.classList.remove('open');
+            updateTodoSaveButtonState();
+
+            // Disable tab navigation for person form elements
+            setFormTabIndex(inlineOppPersonForm, false);
         }
 
         // Cancel inline person creation within inline opportunity
@@ -7407,6 +7515,12 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
+            // Initialize inline forms with disabled tab navigation (they start closed)
+            setFormTabIndex(inlineOppForm, false);
+            setFormTabIndex(inlineOppPersonForm, false);
+            if (inlinePersonForm) setFormTabIndex(inlinePersonForm, false);
+
+            // Initialize app with IndexedDB (handles migration and navigation)
             initializeApp();
         });
     </script>
