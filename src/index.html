@@ -7354,18 +7354,26 @@
         // PRIORITY AUTOCOMPLETE FUNCTIONS
         // ========================================
 
-        function renderPriorityDropdown(filter = '') {
-            priorityDropdown.innerHTML = '';
+        function getFilteredPriorityOptions(filter = '') {
             const filterLower = filter.toLowerCase();
-
-            Object.entries(PRIORITY_TAGS).forEach(([key, priority], index) => {
+            return Object.keys(PRIORITY_TAGS).filter(key => {
+                const priority = PRIORITY_TAGS[key];
                 if (filter && !priority.label.toLowerCase().includes(filterLower) &&
                     !priority.name.toLowerCase().includes(filterLower)) {
-                    return;
+                    return false;
                 }
+                return true;
+            });
+        }
 
+        function renderPriorityDropdown(filter = '') {
+            priorityDropdown.innerHTML = '';
+            const filteredOptions = getFilteredPriorityOptions(filter);
+
+            filteredOptions.forEach((key, filteredIndex) => {
+                const priority = PRIORITY_TAGS[key];
                 const option = document.createElement('div');
-                option.className = `priority-option ${state.selectedPriority === key ? 'selected' : ''} ${state.priorityHighlightIndex === index ? 'highlighted' : ''}`;
+                option.className = `priority-option ${state.selectedPriority === key ? 'selected' : ''} ${state.priorityHighlightIndex === filteredIndex ? 'highlighted' : ''}`;
                 option.innerHTML = `
                     <span class="priority-option-color" style="background-color: ${priority.color}"></span>
                     <span class="priority-option-label">${priority.label}</span>
@@ -7404,32 +7412,40 @@
             todoPriorityInput.addEventListener('input', (e) => {
                 openPriorityDropdown();
                 renderPriorityDropdown(e.target.value);
+                // Auto-highlight first match when typing
+                const filteredOptions = getFilteredPriorityOptions(e.target.value);
+                if (filteredOptions.length > 0) {
+                    state.priorityHighlightIndex = 0;
+                    renderPriorityDropdown(e.target.value);
+                }
             });
 
             todoPriorityInput.addEventListener('keydown', (e) => {
-                const options = Object.keys(PRIORITY_TAGS);
+                const filteredOptions = getFilteredPriorityOptions(todoPriorityInput.value);
 
                 if (e.key === 'ArrowDown') {
                     e.preventDefault();
-                    state.priorityHighlightIndex = Math.min(state.priorityHighlightIndex + 1, options.length - 1);
+                    state.priorityHighlightIndex = Math.min(state.priorityHighlightIndex + 1, filteredOptions.length - 1);
                     renderPriorityDropdown(todoPriorityInput.value);
                 } else if (e.key === 'ArrowUp') {
                     e.preventDefault();
                     state.priorityHighlightIndex = Math.max(state.priorityHighlightIndex - 1, 0);
                     renderPriorityDropdown(todoPriorityInput.value);
                 } else if (e.key === 'Tab' && state.priorityDropdownOpen) {
-                    // Tab with dropdown open and item highlighted: select and move on
-                    if (state.priorityHighlightIndex >= 0 && state.priorityHighlightIndex < options.length) {
+                    // Tab with dropdown open: select first/highlighted match and move on
+                    if (filteredOptions.length > 0) {
                         e.preventDefault();
-                        selectPriority(options[state.priorityHighlightIndex]);
+                        const indexToSelect = state.priorityHighlightIndex >= 0 ? state.priorityHighlightIndex : 0;
+                        selectPriority(filteredOptions[indexToSelect]);
                         // Move focus to the next focusable element
                         todoOpportunityInput.focus();
                     }
-                    // If no highlight, let Tab naturally move to next control
+                    // If no filtered options, let Tab naturally move to next control
                 } else if (e.key === 'Enter' && state.priorityDropdownOpen) {
                     e.preventDefault();
-                    if (state.priorityHighlightIndex >= 0 && state.priorityHighlightIndex < options.length) {
-                        selectPriority(options[state.priorityHighlightIndex]);
+                    if (filteredOptions.length > 0) {
+                        const indexToSelect = state.priorityHighlightIndex >= 0 ? state.priorityHighlightIndex : 0;
+                        selectPriority(filteredOptions[indexToSelect]);
                     }
                 } else if (e.key === 'Escape') {
                     closePriorityDropdown();
