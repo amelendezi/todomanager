@@ -15,4 +15,6 @@ Issue-30: Implemented IndexedDB state persistence with auto-save, Storage sectio
 
 Issue-32: Improved Tab key navigation in autocomplete dropdowns. When dropdown is open with highlighted option, Tab selects the option and moves focus to next field. Updated Priority, Opportunity, Contact, Role, Tags, and Inline Contact dropdowns.
 
+Issue-35: Fixed autocomplete dropdowns resetting to previous value when re-focusing and typing new selection by auto-highlighting first match and using filtered options list.
+
 Issue-37: Fixed Shift+Tab navigation loop in Todo modal. Tab handlers were intercepting Shift+Tab and forcing focus forward to Tags, causing backward navigation to loop. Added `!e.shiftKey` check to all Tab key handlers so Shift+Tab navigates naturally backward through the form.

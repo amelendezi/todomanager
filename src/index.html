@@ -5251,6 +5251,12 @@
             if (query.trim() !== '') {
                 renderAutocompleteDropdown(query);
                 openAutocompleteDropdown();
+                // Auto-highlight first match when typing
+                const matches = filterOpportunities(query);
+                if (matches.length > 0) {
+                    state.autocompleteHighlightIndex = 0;
+                    updateAutocompleteHighlight();
+                }
             } else {
                 closeAutocompleteDropdown();
             }
@@ -5772,8 +5778,15 @@
         function setupTagInputListeners() {
             // Todo tag input
             todoTagInput.addEventListener('input', (e) => {
-                state.todoTagHighlightIndex = -1;
                 renderTodoTagDropdown(e.target.value);
+                // Auto-highlight first item when typing
+                const items = todoTagDropdown.querySelectorAll('.tag-dropdown-item');
+                if (items.length > 0) {
+                    state.todoTagHighlightIndex = 0;
+                    renderTodoTagDropdown(e.target.value);
+                } else {
+                    state.todoTagHighlightIndex = -1;
+                }
             });
 
             todoTagInput.addEventListener('focus', () => {
@@ -5790,13 +5803,14 @@
                 }
 
                 if (e.key === 'Tab' && !e.shiftKey) {
-                    // Tab (forward only) with dropdown open and item highlighted: select and move on
+                    // Tab (forward only) with dropdown open: select first/highlighted item and move on
                     const items = todoTagDropdown.querySelectorAll('.tag-dropdown-item');
-                    if (state.todoTagHighlightIndex >= 0 && state.todoTagHighlightIndex < items.length) {
+                    if (items.length > 0) {
                         e.preventDefault();
-                        items[state.todoTagHighlightIndex].click();
+                        const indexToSelect = state.todoTagHighlightIndex >= 0 ? state.todoTagHighlightIndex : 0;
+                        items[indexToSelect].click();
                     } else if (todoTagInput.value.trim()) {
-                        // If text entered but no highlight, create tag and move on
+                        // If text entered but no matches, create tag and move on
                         e.preventDefault();
                         createAndSelectTodoTag(todoTagInput.value.trim());
                     }
@@ -5807,8 +5821,9 @@
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     const items = todoTagDropdown.querySelectorAll('.tag-dropdown-item');
-                    if (state.todoTagHighlightIndex >= 0 && state.todoTagHighlightIndex < items.length) {
-                        items[state.todoTagHighlightIndex].click();
+                    if (items.length > 0) {
+                        const indexToSelect = state.todoTagHighlightIndex >= 0 ? state.todoTagHighlightIndex : 0;
+                        items[indexToSelect].click();
                     } else if (todoTagInput.value.trim()) {
                         createAndSelectTodoTag(todoTagInput.value.trim());
                     }
@@ -5837,8 +5852,15 @@
 
             // Opportunity tag input
             oppTagInput.addEventListener('input', (e) => {
-                state.oppTagHighlightIndex = -1;
                 renderOppTagDropdown(e.target.value);
+                // Auto-highlight first item when typing
+                const items = oppTagDropdown.querySelectorAll('.tag-dropdown-item');
+                if (items.length > 0) {
+                    state.oppTagHighlightIndex = 0;
+                    renderOppTagDropdown(e.target.value);
+                } else {
+                    state.oppTagHighlightIndex = -1;
+                }
             });
 
             oppTagInput.addEventListener('focus', () => {
@@ -5855,13 +5877,14 @@
                 }
 
                 if (e.key === 'Tab' && !e.shiftKey) {
-                    // Tab (forward only) with dropdown open and item highlighted: select and move on
+                    // Tab (forward only) with dropdown open: select first/highlighted item and move on
                     const items = oppTagDropdown.querySelectorAll('.tag-dropdown-item');
-                    if (state.oppTagHighlightIndex >= 0 && state.oppTagHighlightIndex < items.length) {
+                    if (items.length > 0) {
                         e.preventDefault();
-                        items[state.oppTagHighlightIndex].click();
+                        const indexToSelect = state.oppTagHighlightIndex >= 0 ? state.oppTagHighlightIndex : 0;
+                        items[indexToSelect].click();
                     } else if (oppTagInput.value.trim()) {
-                        // If text entered but no highlight, create tag and move on
+                        // If text entered but no matches, create tag and move on
                         e.preventDefault();
                         createAndSelectOppTag(oppTagInput.value.trim());
                     }
@@ -5872,8 +5895,9 @@
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     const items = oppTagDropdown.querySelectorAll('.tag-dropdown-item');
-                    if (state.oppTagHighlightIndex >= 0 && state.oppTagHighlightIndex < items.length) {
-                        items[state.oppTagHighlightIndex].click();
+                    if (items.length > 0) {
+                        const indexToSelect = state.oppTagHighlightIndex >= 0 ? state.oppTagHighlightIndex : 0;
+                        items[indexToSelect].click();
                     } else if (oppTagInput.value.trim()) {
                         createAndSelectOppTag(oppTagInput.value.trim());
                     }
@@ -6136,6 +6160,12 @@
             if (query.trim() !== '') {
                 renderRoleDropdown(query);
                 openRoleDropdown();
+                // Auto-highlight first match when typing
+                const matches = filterRoles(query);
+                if (matches.length > 0) {
+                    state.roleAutocompleteHighlightIndex = 0;
+                    updateRoleAutocompleteHighlight();
+                }
             } else {
                 closeRoleDropdown();
             }
@@ -6166,19 +6196,21 @@
                     updateRoleAutocompleteHighlight();
                 }
             } else if (e.key === 'Tab' && !e.shiftKey) {
-                // Tab (forward only) with dropdown open and item highlighted: select and move on
-                if (state.roleAutocompleteOpen && state.roleAutocompleteHighlightIndex >= 0 && matches.length > 0) {
+                // Tab (forward only) with dropdown open: select first/highlighted match and move on
+                if (state.roleAutocompleteOpen && matches.length > 0) {
                     e.preventDefault();
-                    selectRole(matches[state.roleAutocompleteHighlightIndex]);
+                    const indexToSelect = state.roleAutocompleteHighlightIndex >= 0 ? state.roleAutocompleteHighlightIndex : 0;
+                    selectRole(matches[indexToSelect]);
                 }
-                // If no highlight, let Tab naturally move to next control
+                // If no matches, let Tab naturally move to next control
             } else if (e.key === 'Enter') {
                 e.preventDefault();
                 const query = personRoleInput.value.trim();
 
-                if (state.roleAutocompleteOpen && state.roleAutocompleteHighlightIndex >= 0 && matches.length > 0) {
-                    // Select highlighted item
-                    selectRole(matches[state.roleAutocompleteHighlightIndex]);
+                if (state.roleAutocompleteOpen && matches.length > 0) {
+                    // Select first/highlighted item
+                    const indexToSelect = state.roleAutocompleteHighlightIndex >= 0 ? state.roleAutocompleteHighlightIndex : 0;
+                    selectRole(matches[indexToSelect]);
                 } else if (query) {
                     // Just accept the typed value
                     personRoleClear.classList.add('visible');
@@ -6612,6 +6644,12 @@
             if (query.trim() !== '') {
                 renderContactDropdown(query);
                 openContactDropdown();
+                // Auto-highlight first match when typing
+                const matches = filterPeople(query);
+                if (matches.length > 0) {
+                    state.contactAutocompleteHighlightIndex = 0;
+                    updateContactAutocompleteHighlight();
+                }
             } else {
                 closeContactDropdown();
             }
@@ -7354,18 +7392,26 @@
         // PRIORITY AUTOCOMPLETE FUNCTIONS
         // ========================================
 
-        function renderPriorityDropdown(filter = '') {
-            priorityDropdown.innerHTML = '';
+        function getFilteredPriorityOptions(filter = '') {
             const filterLower = filter.toLowerCase();
-
-            Object.entries(PRIORITY_TAGS).forEach(([key, priority], index) => {
+            return Object.keys(PRIORITY_TAGS).filter(key => {
+                const priority = PRIORITY_TAGS[key];
                 if (filter && !priority.label.toLowerCase().includes(filterLower) &&
                     !priority.name.toLowerCase().includes(filterLower)) {
-                    return;
+                    return false;
                 }
+                return true;
+            });
+        }
 
+        function renderPriorityDropdown(filter = '') {
+            priorityDropdown.innerHTML = '';
+            const filteredOptions = getFilteredPriorityOptions(filter);
+
+            filteredOptions.forEach((key, filteredIndex) => {
+                const priority = PRIORITY_TAGS[key];
                 const option = document.createElement('div');
-                option.className = `priority-option ${state.selectedPriority === key ? 'selected' : ''} ${state.priorityHighlightIndex === index ? 'highlighted' : ''}`;
+                option.className = `priority-option ${state.selectedPriority === key ? 'selected' : ''} ${state.priorityHighlightIndex === filteredIndex ? 'highlighted' : ''}`;
                 option.innerHTML = `
                     <span class="priority-option-color" style="background-color: ${priority.color}"></span>
                     <span class="priority-option-label">${priority.label}</span>
@@ -7404,32 +7450,40 @@
             todoPriorityInput.addEventListener('input', (e) => {
                 openPriorityDropdown();
                 renderPriorityDropdown(e.target.value);
+                // Auto-highlight first match when typing
+                const filteredOptions = getFilteredPriorityOptions(e.target.value);
+                if (filteredOptions.length > 0) {
+                    state.priorityHighlightIndex = 0;
+                    renderPriorityDropdown(e.target.value);
+                }
             });
 
             todoPriorityInput.addEventListener('keydown', (e) => {
-                const options = Object.keys(PRIORITY_TAGS);
+                const filteredOptions = getFilteredPriorityOptions(todoPriorityInput.value);
 
                 if (e.key === 'ArrowDown') {
                     e.preventDefault();
-                    state.priorityHighlightIndex = Math.min(state.priorityHighlightIndex + 1, options.length - 1);
+                    state.priorityHighlightIndex = Math.min(state.priorityHighlightIndex + 1, filteredOptions.length - 1);
                     renderPriorityDropdown(todoPriorityInput.value);
                 } else if (e.key === 'ArrowUp') {
                     e.preventDefault();
                     state.priorityHighlightIndex = Math.max(state.priorityHighlightIndex - 1, 0);
                     renderPriorityDropdown(todoPriorityInput.value);
                 } else if (e.key === 'Tab' && !e.shiftKey && state.priorityDropdownOpen) {
-                    // Tab (forward only) with dropdown open and item highlighted: select and move on
-                    if (state.priorityHighlightIndex >= 0 && state.priorityHighlightIndex < options.length) {
+                    // Tab (forward only) with dropdown open: select first/highlighted match and move on
+                    if (filteredOptions.length > 0) {
                         e.preventDefault();
-                        selectPriority(options[state.priorityHighlightIndex]);
+                        const indexToSelect = state.priorityHighlightIndex >= 0 ? state.priorityHighlightIndex : 0;
+                        selectPriority(filteredOptions[indexToSelect]);
                         // Move focus to the next focusable element
                         todoOpportunityInput.focus();
                     }
-                    // If no highlight, let Tab naturally move to next control
+                    // If no filtered options, let Tab naturally move to next control
                 } else if (e.key === 'Enter' && state.priorityDropdownOpen) {
                     e.preventDefault();
-                    if (state.priorityHighlightIndex >= 0 && state.priorityHighlightIndex < options.length) {
-                        selectPriority(options[state.priorityHighlightIndex]);
+                    if (filteredOptions.length > 0) {
+                        const indexToSelect = state.priorityHighlightIndex >= 0 ? state.priorityHighlightIndex : 0;
+                        selectPriority(filteredOptions[indexToSelect]);
                     }
                 } else if (e.key === 'Escape') {
                     closePriorityDropdown();
