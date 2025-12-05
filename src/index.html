@@ -5778,8 +5778,15 @@
         function setupTagInputListeners() {
             // Todo tag input
             todoTagInput.addEventListener('input', (e) => {
-                state.todoTagHighlightIndex = -1;
                 renderTodoTagDropdown(e.target.value);
+                // Auto-highlight first item when typing
+                const items = todoTagDropdown.querySelectorAll('.tag-dropdown-item');
+                if (items.length > 0) {
+                    state.todoTagHighlightIndex = 0;
+                    renderTodoTagDropdown(e.target.value);
+                } else {
+                    state.todoTagHighlightIndex = -1;
+                }
             });
 
             todoTagInput.addEventListener('focus', () => {
@@ -5796,13 +5803,14 @@
                 }
 
                 if (e.key === 'Tab') {
-                    // Tab with dropdown open and item highlighted: select and move on
+                    // Tab with dropdown open: select first/highlighted item and move on
                     const items = todoTagDropdown.querySelectorAll('.tag-dropdown-item');
-                    if (state.todoTagHighlightIndex >= 0 && state.todoTagHighlightIndex < items.length) {
+                    if (items.length > 0) {
                         e.preventDefault();
-                        items[state.todoTagHighlightIndex].click();
+                        const indexToSelect = state.todoTagHighlightIndex >= 0 ? state.todoTagHighlightIndex : 0;
+                        items[indexToSelect].click();
                     } else if (todoTagInput.value.trim()) {
-                        // If text entered but no highlight, create tag and move on
+                        // If text entered but no matches, create tag and move on
                         e.preventDefault();
                         createAndSelectTodoTag(todoTagInput.value.trim());
                     }
@@ -5813,8 +5821,9 @@
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     const items = todoTagDropdown.querySelectorAll('.tag-dropdown-item');
-                    if (state.todoTagHighlightIndex >= 0 && state.todoTagHighlightIndex < items.length) {
-                        items[state.todoTagHighlightIndex].click();
+                    if (items.length > 0) {
+                        const indexToSelect = state.todoTagHighlightIndex >= 0 ? state.todoTagHighlightIndex : 0;
+                        items[indexToSelect].click();
                     } else if (todoTagInput.value.trim()) {
                         createAndSelectTodoTag(todoTagInput.value.trim());
                     }
@@ -5843,8 +5852,15 @@
 
             // Opportunity tag input
             oppTagInput.addEventListener('input', (e) => {
-                state.oppTagHighlightIndex = -1;
                 renderOppTagDropdown(e.target.value);
+                // Auto-highlight first item when typing
+                const items = oppTagDropdown.querySelectorAll('.tag-dropdown-item');
+                if (items.length > 0) {
+                    state.oppTagHighlightIndex = 0;
+                    renderOppTagDropdown(e.target.value);
+                } else {
+                    state.oppTagHighlightIndex = -1;
+                }
             });
 
             oppTagInput.addEventListener('focus', () => {
@@ -5861,13 +5877,14 @@
                 }
 
                 if (e.key === 'Tab') {
-                    // Tab with dropdown open and item highlighted: select and move on
+                    // Tab with dropdown open: select first/highlighted item and move on
                     const items = oppTagDropdown.querySelectorAll('.tag-dropdown-item');
-                    if (state.oppTagHighlightIndex >= 0 && state.oppTagHighlightIndex < items.length) {
+                    if (items.length > 0) {
                         e.preventDefault();
-                        items[state.oppTagHighlightIndex].click();
+                        const indexToSelect = state.oppTagHighlightIndex >= 0 ? state.oppTagHighlightIndex : 0;
+                        items[indexToSelect].click();
                     } else if (oppTagInput.value.trim()) {
-                        // If text entered but no highlight, create tag and move on
+                        // If text entered but no matches, create tag and move on
                         e.preventDefault();
                         createAndSelectOppTag(oppTagInput.value.trim());
                     }
@@ -5878,8 +5895,9 @@
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     const items = oppTagDropdown.querySelectorAll('.tag-dropdown-item');
-                    if (state.oppTagHighlightIndex >= 0 && state.oppTagHighlightIndex < items.length) {
-                        items[state.oppTagHighlightIndex].click();
+                    if (items.length > 0) {
+                        const indexToSelect = state.oppTagHighlightIndex >= 0 ? state.oppTagHighlightIndex : 0;
+                        items[indexToSelect].click();
                     } else if (oppTagInput.value.trim()) {
                         createAndSelectOppTag(oppTagInput.value.trim());
                     }
