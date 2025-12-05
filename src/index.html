@@ -6531,31 +6531,41 @@
                 }
             } else if (e.key === 'Tab') {
                 // Tab behavior:
-                // 1. If matches exist, select first/highlighted and move on
-                // 2. If no matches but text entered, open inline person form
-                // 3. If no text, natural tab
-                if (matches.length > 0 && !state.selectedInlineOppPersonId && !state.pendingInlineOppPerson) {
+                // 1. If contact already selected, confirm inline opp and move to Tags
+                // 2. If matches exist, select first/highlighted and move on
+                // 3. If no matches but text entered, open inline person form
+                // 4. If no text, natural tab
+                if (state.selectedInlineOppPersonId || state.pendingInlineOppPerson) {
+                    // Contact is selected - confirm the inline opportunity and move to Tags
+                    e.preventDefault();
+                    confirmInlineOpportunity();
+                    todoTagInput.focus();
+                } else if (matches.length > 0) {
                     e.preventDefault();
                     const indexToSelect = state.inlineOppContactAutocompleteHighlightIndex >= 0 ? state.inlineOppContactAutocompleteHighlightIndex : 0;
                     selectInlineOppContact(matches[indexToSelect]);
-                } else if (query && !state.inlineOppPersonFormOpen && !state.selectedInlineOppPersonId && !state.pendingInlineOppPerson) {
+                } else if (query && !state.inlineOppPersonFormOpen) {
                     e.preventDefault();
                     openInlineOppPersonForm(query);
                 }
-                // If no text entered or person already selected, let Tab naturally move
+                // If no text entered, let Tab naturally move
             } else if (e.key === 'Enter') {
                 e.preventDefault();
 
                 // Check for exact match (case-insensitive)
                 const exactMatch = matches.find(person => person.name.toLowerCase() === query.toLowerCase());
 
-                if (state.inlineOppContactAutocompleteHighlightIndex >= 0 && matches.length > 0) {
+                if (state.selectedInlineOppPersonId || state.pendingInlineOppPerson) {
+                    // Contact is selected - confirm the inline opportunity and move to Tags
+                    confirmInlineOpportunity();
+                    todoTagInput.focus();
+                } else if (state.inlineOppContactAutocompleteHighlightIndex >= 0 && matches.length > 0) {
                     // Select highlighted item
                     selectInlineOppContact(matches[state.inlineOppContactAutocompleteHighlightIndex]);
-                } else if (exactMatch && !state.selectedInlineOppPersonId && !state.pendingInlineOppPerson) {
+                } else if (exactMatch) {
                     // Exact match - select it
                     selectInlineOppContact(exactMatch);
-                } else if (query && !state.inlineOppPersonFormOpen && !state.selectedInlineOppPersonId && !state.pendingInlineOppPerson) {
+                } else if (query && !state.inlineOppPersonFormOpen) {
                     // Partial match or no matches - open inline creation form for new person
                     openInlineOppPersonForm(query);
                 } else if (state.inlineOppContactAutocompleteOpen) {
