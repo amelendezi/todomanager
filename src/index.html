@@ -5251,6 +5251,12 @@
             if (query.trim() !== '') {
                 renderAutocompleteDropdown(query);
                 openAutocompleteDropdown();
+                // Auto-highlight first match when typing
+                const matches = filterOpportunities(query);
+                if (matches.length > 0) {
+                    state.autocompleteHighlightIndex = 0;
+                    updateAutocompleteHighlight();
+                }
             } else {
                 closeAutocompleteDropdown();
             }
