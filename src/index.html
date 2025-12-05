@@ -6142,6 +6142,12 @@
             if (query.trim() !== '') {
                 renderRoleDropdown(query);
                 openRoleDropdown();
+                // Auto-highlight first match when typing
+                const matches = filterRoles(query);
+                if (matches.length > 0) {
+                    state.roleAutocompleteHighlightIndex = 0;
+                    updateRoleAutocompleteHighlight();
+                }
             } else {
                 closeRoleDropdown();
             }
@@ -6172,19 +6178,21 @@
                     updateRoleAutocompleteHighlight();
                 }
             } else if (e.key === 'Tab') {
-                // Tab with dropdown open and item highlighted: select and move on
-                if (state.roleAutocompleteOpen && state.roleAutocompleteHighlightIndex >= 0 && matches.length > 0) {
+                // Tab with dropdown open: select first/highlighted match and move on
+                if (state.roleAutocompleteOpen && matches.length > 0) {
                     e.preventDefault();
-                    selectRole(matches[state.roleAutocompleteHighlightIndex]);
+                    const indexToSelect = state.roleAutocompleteHighlightIndex >= 0 ? state.roleAutocompleteHighlightIndex : 0;
+                    selectRole(matches[indexToSelect]);
                 }
-                // If no highlight, let Tab naturally move to next control
+                // If no matches, let Tab naturally move to next control
             } else if (e.key === 'Enter') {
                 e.preventDefault();
                 const query = personRoleInput.value.trim();
 
-                if (state.roleAutocompleteOpen && state.roleAutocompleteHighlightIndex >= 0 && matches.length > 0) {
-                    // Select highlighted item
-                    selectRole(matches[state.roleAutocompleteHighlightIndex]);
+                if (state.roleAutocompleteOpen && matches.length > 0) {
+                    // Select first/highlighted item
+                    const indexToSelect = state.roleAutocompleteHighlightIndex >= 0 ? state.roleAutocompleteHighlightIndex : 0;
+                    selectRole(matches[indexToSelect]);
                 } else if (query) {
                     // Just accept the typed value
                     personRoleClear.classList.add('visible');
