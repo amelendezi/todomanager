@@ -382,6 +382,30 @@
 
         .todo-content {
             flex: 1;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .todo-info {
+            flex: 0 0 auto;
+            min-width: 180px;
+            max-width: 50%;
+        }
+
+        .todo-description {
+            flex: 1;
+            font-size: 13px;
+            color: #6C757D;
+            line-height: 1.4;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        .todo-item.completed .todo-description {
+            color: #ADB5BD;
         }
 
         .todo-title {
@@ -4515,13 +4539,22 @@
                         tagsHtml = `<div class="tags-container">${tagPills.join('')}</div>`;
                     }
 
+                    // Format description for two-column layout
+                    let descriptionHtml = '';
+                    if (todo.description && todo.description.trim()) {
+                        descriptionHtml = `<div class="todo-description">${escapeHtml(todo.description)}</div>`;
+                    }
+
                     todoItem.innerHTML = `
                         <div class="todo-checkbox ${todo.completed ? 'checked' : ''}" onclick="toggleTodo(${index})"></div>
                         <div class="todo-content">
-                            <div class="todo-title">${escapeHtml(todo.title)}</div>
-                            ${dueDateHtml}
-                            ${opportunityHtml}
-                            ${tagsHtml}
+                            <div class="todo-info">
+                                <div class="todo-title">${escapeHtml(todo.title)}</div>
+                                ${dueDateHtml}
+                                ${opportunityHtml}
+                                ${tagsHtml}
+                            </div>
+                            ${descriptionHtml}
                         </div>
                         <div class="todo-actions">
                             <button class="todo-edit-btn" onclick="editTodo(${index})" title="Edit">
