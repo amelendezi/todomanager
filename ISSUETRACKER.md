@@ -22,3 +22,5 @@ Issue-37: Fixed Shift+Tab navigation loop in Todo modal. Tab handlers were inter
 Issue-39: Added Todo description to card with two-column layout displaying description on the right side of the existing info.
 
 Issue-41: Renamed Opportunities to Engagements throughout the application (UI labels, CSS classes, JavaScript variables/functions, state properties, HTML element IDs). Added edit button to engagement list view that opens modal in edit mode. Implemented inline editing for Name, Description, and Contact fields in side panel with auto-save on blur. Added comment deletion with delete button that appears on hover.
+
+Issue-43: Implemented Engagement Lifecycle Management with types (engagement, pre-project, project), status lifecycle (active, completed, closed, dropped), pre-project allocation tracking with monthly percentages, project phase with timeline and formal allocations, and charge-back system for transitioning pre-project work to formal projects.
