@@ -4205,6 +4205,8 @@
             if (state.currentTab === 'opportunities') {
                 renderOpportunities();
             }
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
         // Auto-update opportunity status based on linked todos
@@ -4403,6 +4405,8 @@
             if (state.currentTab === 'opportunities') {
                 renderOpportunities();
             }
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
         // Utility function to escape HTML
@@ -4506,6 +4510,8 @@
             closeOpportunityModal();
             renderOpportunities();
             renderPeople();  // Refresh people list if new person was created
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
         // Toggle show archived opportunities
@@ -4686,6 +4692,8 @@
 
             // Re-render opportunities list
             renderOpportunities();
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
         // Close opportunity action (set status to Closed)
@@ -4700,6 +4708,8 @@
             if (state.sidePanelOpen && state.selectedOpportunityIndex === index) {
                 updatePanelStatusBadge('closed');
             }
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
         // Open delete confirmation modal
@@ -4750,6 +4760,8 @@
             // Re-render both lists
             renderOpportunities();
             renderTodos();
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
         // =============================================
@@ -4815,6 +4827,8 @@
 
             // Re-render opportunities list
             renderOpportunities();
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
         // Format datetime for display
@@ -4878,6 +4892,8 @@
 
             // Re-render comments
             renderCommentsInPanel(opp);
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
         // =============================================
@@ -5301,6 +5317,8 @@
 
             closeTagModal();
             renderTags();
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
         // Delete tag
@@ -5322,6 +5340,8 @@
             // Remove tag from array
             state.tags.splice(index, 1);
             renderTags();
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
         // Get tag by ID
@@ -5741,6 +5761,8 @@
 
             closePersonModal();
             renderPeople();
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
         // Open delete person modal
@@ -5776,6 +5798,8 @@
                 closeDeletePersonModal();
                 renderPeople();
                 renderOpportunities();
+                // Auto-save to IndexedDB
+                saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
             }
         }
 
@@ -7135,6 +7159,9 @@
             if (state.currentPage === 'app' && state.currentTab === 'home') {
                 renderRecommendationPanel();
             }
+
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
 
             alert('Planning settings saved successfully!');
         }
