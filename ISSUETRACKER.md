@@ -26,3 +26,5 @@ Issue-41: Renamed Opportunities to Engagements throughout the application (UI la
 Issue-43: Implemented Engagement Lifecycle Management with types (engagement, pre-project, project), status lifecycle (active, completed, closed, dropped), pre-project allocation tracking with monthly percentages, project phase with timeline and formal allocations, and charge-back system for transitioning pre-project work to formal projects.
 
 Issue-45: Refactored Todo dialog inline creation to horizontal expanding layout with two-column display, smooth CSS transitions, and proper focus management.
+
+Issue-47: Fixed inline engagement form with textarea description, hidden contact separator line, and correct contact linking to engagement.
