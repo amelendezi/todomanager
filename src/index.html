@@ -12775,6 +12775,10 @@
                     if (!e.target.closest('.status-tooltip')) {
                         collapseAllStatusTooltips();
                     }
+                    // Issue-57: Collapse expanded engagement when clicking outside
+                    if (state.expandedEngagementId && !e.target.closest('.engagement-item')) {
+                        collapseEngagementExpansion();
+                    }
                 }
             });
 
