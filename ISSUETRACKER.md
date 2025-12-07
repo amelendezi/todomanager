@@ -32,3 +32,5 @@ Issue-47: Fixed inline engagement form with textarea description, hidden contact
 Issue-49: Implemented custom DateTimePicker component with side-by-side layout (time left, calendar right), keyboard navigation (arrows, Page Up/Down, Home/End, Tab, Escape), mouse wheel scrolling for months, hour/minute spinners with long-press acceleration, month/year picker overlays on hover, yellow/gold theme (#F5A623), and auto-detection of date-only vs datetime mode. Integrated with all 13 date fields.
 
 Issue-51: Fixed Enter key on Deadline control in Todo modal to open date picker instead of closing modal by adding stopPropagation to DateTimePicker keydown handler.
+
+Issue-53: Fixed Tags control Tab behavior to skip tag selection when no text entered, allowing natural focus movement to Save button.
