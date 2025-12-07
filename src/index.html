@@ -3683,32 +3683,31 @@
             color: #374151;
         }
 
+        .status-badge.status-paused {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
         /* Status tooltip container */
         .status-tooltip-container {
             position: relative;
             display: inline-block;
         }
 
-        /* Side panel tooltip should appear below and align left to avoid clipping */
+        /* Side panel tooltip aligns left to fit within panel */
         .side-panel-body .status-tooltip {
-            bottom: auto;
-            top: calc(100% + 8px);
             left: 0;
             transform: none;
         }
 
         .side-panel-body .status-tooltip::after {
-            top: auto;
-            bottom: 100%;
             left: 24px;
             transform: none;
-            border-top-color: transparent;
-            border-bottom-color: #1F2937;
         }
 
         .status-tooltip {
             position: absolute;
-            bottom: calc(100% + 8px);
+            top: calc(100% + 8px);
             left: 50%;
             transform: translateX(-50%);
             background: #1F2937;
@@ -3729,11 +3728,11 @@
         .status-tooltip::after {
             content: '';
             position: absolute;
-            top: 100%;
+            bottom: 100%;
             left: 50%;
             transform: translateX(-50%);
             border: 6px solid transparent;
-            border-top-color: #1F2937;
+            border-bottom-color: #1F2937;
         }
 
         .status-tooltip-container:hover .status-tooltip,
@@ -6406,33 +6405,48 @@
         }
 
         // Auto-update engagement status based on linked todos
-        // Status Flow: Requested → Open (when todo linked) → Paused (all todos complete) → Closed
+        // Status Flow: Active ↔ Paused (based on undone todos)
         function updateEngagementAutoStatus(engagementId) {
             const opp = state.engagements.find(o => o.id === engagementId);
             if (!opp) return;
 
-            // Don't change closed or cancelled engagements
-            if (opp.status === 'closed' || opp.status === 'cancelled') return;
+            // Don't change completed, closed, or dropped engagements
+            if (['completed', 'closed', 'dropped'].includes(opp.status)) return;
 
             // Get all todos linked to this engagement
             const linkedTodos = state.todos.filter(t => t.engagementId === engagementId);
 
             // Check if any linked todo is not completed
-            const hasActiveTodo = linkedTodos.some(t => !t.completed);
-            const hasAnyTodo = linkedTodos.length > 0;
+            const hasUndoneTodo = linkedTodos.some(t => !t.completed);
 
-            if (hasActiveTodo) {
-                // Has non-completed todos → Open
-                if (opp.status !== 'open') {
-                    opp.status = 'open';
+            if (hasUndoneTodo) {
+                // Has non-completed todos → Active
+                if (opp.status !== 'active') {
+                    opp.status = 'active';
                 }
-            } else if (hasAnyTodo) {
-                // All todos are completed → Paused
+            } else {
+                // No undone todos (either all complete or none linked) → Paused
                 if (opp.status !== 'paused') {
                     opp.status = 'paused';
                 }
             }
-            // If no todos linked, keep current status
+        }
+
+        // Update all engagements' pause/resume status based on linked todos
+        function updateAllEngagementStatuses() {
+            state.engagements.forEach(eng => {
+                // Only update active or paused engagements
+                if (['completed', 'closed', 'dropped'].includes(eng.status)) return;
+
+                const linkedTodos = state.todos.filter(t => t.engagementId === eng.id);
+                const hasUndoneTodo = linkedTodos.some(t => !t.completed);
+
+                if (hasUndoneTodo) {
+                    eng.status = 'active';
+                } else {
+                    eng.status = 'paused';
+                }
+            });
         }
 
         // Render functions
@@ -6944,7 +6958,11 @@
             const statusDescriptions = {
                 active: {
                     brief: 'Currently being worked on',
-                    detail: 'Default state for new engagements. Transitions to Completed (via Complete action), Closed (via Close action), or Dropped (via Cancel action).'
+                    detail: 'Default state for new engagements with linked Todos. Transitions to Paused (auto, when no undone Todos), Completed (Complete action), Closed (Close action), or Dropped (Cancel action).'
+                },
+                paused: {
+                    brief: 'No active Todos linked',
+                    detail: 'Auto-triggered when an Active engagement has no undone Todos linked. Auto-resumes to Active when an undone Todo is linked.'
                 },
                 completed: {
                     brief: 'Successfully finished',
@@ -6971,6 +6989,10 @@
                         <div class="status-item">
                             <div class="status-item-name">Active</div>
                             <div class="status-item-desc">${statusDescriptions.active.detail}</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-item-name">Paused</div>
+                            <div class="status-item-desc">${statusDescriptions.paused.detail}</div>
                         </div>
                         <div class="status-item">
                             <div class="status-item-name">Completed</div>
@@ -9945,12 +9967,12 @@
                 }
 
                 // Migrate old status values to new model
-                if (!['active', 'completed', 'closed', 'dropped'].includes(eng.status)) {
+                // Valid statuses: active, paused, completed, closed, dropped
+                if (!['active', 'paused', 'completed', 'closed', 'dropped'].includes(eng.status)) {
                     // Map old statuses to new ones
                     const statusMap = {
                         'requested': 'active',
                         'open': 'active',
-                        'paused': 'active',  // Paused becomes active, completion is based on type transition
                         'closed': 'closed',
                         'cancelled': 'dropped'
                     };
@@ -10749,6 +10771,9 @@
                     migrateContactsToPeople();
                     migrateEngagementLifecycle();
 
+                    // Update all engagement statuses based on linked todos (auto-pause/resume)
+                    updateAllEngagementStatuses();
+
                     // Navigate directly to app with home tab
                     state.currentTab = 'home';
                     navigateTo('app');
@@ -10756,6 +10781,7 @@
                     // No saved state, show landing page
                     migrateContactsToPeople();
                     migrateEngagementLifecycle();
+                    updateAllEngagementStatuses();
                     navigateTo('landing');
                 }
             } catch (error) {
