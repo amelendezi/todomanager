@@ -8604,18 +8604,19 @@
                 }
 
                 if (e.key === 'Tab' && !e.shiftKey) {
-                    // Tab (forward only) with dropdown open: select first/highlighted item and move on
+                    // Tab (forward only): only select if user typed text
                     const items = todoTagDropdown.querySelectorAll('.tag-dropdown-item');
-                    if (items.length > 0) {
+                    if (todoTagInput.value.trim() && items.length > 0) {
+                        // User typed text and there are matches - select the highlighted/first item
                         e.preventDefault();
                         const indexToSelect = state.todoTagHighlightIndex >= 0 ? state.todoTagHighlightIndex : 0;
                         items[indexToSelect].click();
                     } else if (todoTagInput.value.trim()) {
-                        // If text entered but no matches, create tag and move on
+                        // User typed text but no matches - create new tag
                         e.preventDefault();
                         createAndSelectTodoTag(todoTagInput.value.trim());
                     }
-                    // If nothing, let Tab naturally move to next control
+                    // If no text entered, let Tab naturally move to Save button
                     return;
                 }
 
