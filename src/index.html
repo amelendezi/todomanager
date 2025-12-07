@@ -7413,6 +7413,7 @@
         // When enabled=false, sets tabindex=-1 to remove from tab order
         // When enabled=true, removes tabindex to restore default tab behavior
         function setFormTabIndex(formElement, enabled, excludeSelector = null) {
+            if (!formElement) return; // Guard against null elements
             const focusables = formElement.querySelectorAll('input, button, select, textarea, [tabindex]');
             focusables.forEach(el => {
                 // Skip elements that match the exclude selector
@@ -10023,7 +10024,8 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize inline forms with disabled tab navigation (they start closed)
-            setFormTabIndex(inlineEngForm, false);
+            // Right panel is hidden by default (horizontal expansion)
+            setFormTabIndex(todoFormRight, false);
             setFormTabIndex(inlineEngPersonForm, false);
             if (inlinePersonForm) setFormTabIndex(inlinePersonForm, false);
 
