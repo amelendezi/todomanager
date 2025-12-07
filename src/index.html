@@ -1380,10 +1380,23 @@
             justify-content: space-between;
         }
 
+        .side-panel-title-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
         .side-panel-title {
             font-size: 18px;
             font-weight: 600;
             color: #1F1F1F;
+            margin: 0;
+        }
+
+        .side-panel-engagement-name {
+            font-size: 13px;
+            color: #6C757D;
+            font-weight: 400;
         }
 
         .side-panel-close {
@@ -1413,6 +1426,8 @@
             flex: 1;
             padding: 24px;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
 
         .detail-group {
@@ -1902,6 +1917,28 @@
         .comments-section {
             margin-top: 24px;
             padding-top: 20px;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        /* Comments-only mode (side panel) */
+        .comments-section.comments-only {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .comments-section.comments-only .comments-list {
+            flex: 1;
+            overflow-y: auto;
+            max-height: none;
+        }
+
+        .comments-section.comments-only .comment-input-area {
+            margin-top: auto;
+            padding-top: 16px;
             border-top: 1px solid #E0E0E0;
         }
 
@@ -5380,11 +5417,14 @@
         </div>
     </div>
 
-    <!-- Side Panel for Engagement Details -->
+    <!-- Side Panel for Comments Only -->
     <div id="side-panel-backdrop" class="side-panel-backdrop" onclick="closeSidePanel()"></div>
     <div id="side-panel" class="side-panel">
         <div class="side-panel-header">
-            <h2 class="side-panel-title">Engagement Details</h2>
+            <div class="side-panel-title-wrapper">
+                <h2 class="side-panel-title">Comments</h2>
+                <span id="side-panel-engagement-name" class="side-panel-engagement-name"></span>
+            </div>
             <button class="side-panel-close" onclick="closeSidePanel()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -5393,150 +5433,8 @@
             </button>
         </div>
         <div class="side-panel-body">
-            <div class="detail-group">
-                <div class="detail-label">Name</div>
-                <input type="text" id="panel-eng-name" class="detail-input" placeholder="Enter name..." onblur="savePanelEngagementField('name', this.value)">
-            </div>
-            <div class="detail-group">
-                <div class="detail-label">Description</div>
-                <textarea id="panel-eng-description" class="detail-textarea" placeholder="Enter description..." onblur="savePanelEngagementField('description', this.value)"></textarea>
-            </div>
-            <div class="detail-group">
-                <div class="detail-label">Start Date</div>
-                <div id="panel-eng-date" class="detail-value"></div>
-            </div>
-            <div class="detail-group">
-                <div class="detail-label">Contact</div>
-                <div class="panel-contact-wrapper">
-                    <input type="text" id="panel-eng-contact" class="detail-input" placeholder="Search contacts..." autocomplete="off" oninput="filterPanelContacts(this.value)" onfocus="openPanelContactDropdown()" onblur="handlePanelContactBlur(event)">
-                    <div id="panel-contact-dropdown" class="panel-contact-dropdown">
-                        <!-- Contact dropdown items will be rendered here -->
-                    </div>
-                </div>
-            </div>
-            <div class="detail-group">
-                <div class="detail-label">Status</div>
-                <div id="panel-status-container" class="status-tooltip-container">
-                    <span id="panel-eng-status" class="status-badge"></span>
-                    <div id="panel-status-tooltip" class="status-tooltip"></div>
-                </div>
-            </div>
-
-            <!-- Lifecycle Section -->
-            <div id="panel-lifecycle-section" class="lifecycle-section">
-                <div class="lifecycle-header">
-                    <div>
-                        <span class="lifecycle-title">Type: </span>
-                        <span id="panel-eng-type-badge" class="engagement-type-badge type-engagement">Engagement</span>
-                    </div>
-                    <div id="lifecycle-actions" class="lifecycle-actions">
-                        <!-- Action buttons rendered dynamically -->
-                    </div>
-                </div>
-
-                <!-- Pre-Project Section (hidden by default) -->
-                <div id="panel-preproject-section" class="pre-project-section" style="display: none;">
-                    <div class="pre-project-dates">
-                        <div class="pre-project-date-field">
-                            <label class="pre-project-date-label">Started</label>
-                            <input type="date" id="panel-preproject-started" class="pre-project-date-input" data-datetimepicker onchange="savePreProjectField('startedAt', this.value)">
-                        </div>
-                        <div class="pre-project-date-field">
-                            <label class="pre-project-date-label">Expected Formalization</label>
-                            <input type="date" id="panel-preproject-expected" class="pre-project-date-input" data-datetimepicker onchange="savePreProjectField('expectedFormalization', this.value)">
-                        </div>
-                    </div>
-
-                    <!-- Pre-Project Allocations -->
-                    <div class="allocations-section">
-                        <div class="allocations-header">
-                            <span class="allocations-title">Monthly Allocations</span>
-                            <button type="button" class="add-allocation-btn" onclick="addPreProjectAllocation()">+ Add</button>
-                        </div>
-                        <table id="panel-preproject-allocations" class="allocations-table">
-                            <thead>
-                                <tr>
-                                    <th>Month</th>
-                                    <th>%</th>
-                                    <th>Hours</th>
-                                    <th>Status</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Allocations rendered dynamically -->
-                            </tbody>
-                        </table>
-                        <div id="panel-preproject-summary" class="allocation-summary" style="display: none;">
-                            <!-- Summary rendered dynamically -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project Section (hidden by default) -->
-                <div id="panel-project-section" class="project-section" style="display: none;">
-                    <div class="project-details">
-                        <div class="project-field">
-                            <label class="project-field-label">Formalized</label>
-                            <input type="date" id="panel-project-formalized" class="project-field-input" data-datetimepicker onchange="saveProjectField('formalizedAt', this.value)">
-                        </div>
-                        <div class="project-field">
-                            <label class="project-field-label">Project Code</label>
-                            <input type="text" id="panel-project-code" class="project-field-input" placeholder="PRJ-..." onblur="saveProjectField('projectCode', this.value)">
-                        </div>
-                        <div class="project-field full-width">
-                            <label class="project-field-label">Funding Source</label>
-                            <input type="text" id="panel-project-funding" class="project-field-input" placeholder="Budget reference..." onblur="saveProjectField('fundingSource', this.value)">
-                        </div>
-                    </div>
-
-                    <!-- Project Timeline -->
-                    <div class="timeline-section">
-                        <div class="timeline-header">
-                            <span class="timeline-title">Project Timeline</span>
-                            <button type="button" class="add-allocation-btn" onclick="addProjectAllocation()">+ Add Period</button>
-                        </div>
-                        <div class="timeline-dates">
-                            <div class="project-field">
-                                <label class="project-field-label">Start Date</label>
-                                <input type="date" id="panel-project-start" class="project-field-input" data-datetimepicker onchange="saveProjectTimelineField('startDate', this.value)">
-                            </div>
-                            <div class="project-field">
-                                <label class="project-field-label">End Date</label>
-                                <input type="date" id="panel-project-end" class="project-field-input" data-datetimepicker onchange="saveProjectTimelineField('endDate', this.value)">
-                            </div>
-                        </div>
-                        <table id="panel-project-allocations" class="allocations-table">
-                            <thead>
-                                <tr>
-                                    <th>Period</th>
-                                    <th>%</th>
-                                    <th>Status</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Allocations rendered dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Charge-Back Summary (if applicable) -->
-                    <div id="panel-chargeback-section" class="chargeback-section" style="display: none;">
-                        <div class="chargeback-header">
-                            <span class="chargeback-title">Pre-Project Charge-Back</span>
-                        </div>
-                        <div id="panel-chargeback-summary" class="chargeback-summary"></div>
-                        <div id="panel-chargeback-list" class="chargeback-list">
-                            <!-- Charge-back items rendered dynamically -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Comments Section -->
-            <div class="comments-section">
-                <div class="comments-header">Comments</div>
+            <div class="comments-section comments-only">
                 <div id="panel-comments" class="comments-list">
                     <!-- Comments will be rendered here -->
                 </div>
@@ -6355,10 +6253,8 @@
             editingPersonIndex: null,  // Track which person is being edited (null = create mode)
             editingTagIndex: null,  // Track which tag is being edited (null = create mode)
             tagModalOpen: false,
-            selectedEngagementIndex: null,  // Track which engagement is open in side panel
+            selectedEngagementIndex: null,  // Track which engagement is open in side panel (comments)
             editingEngagementIndex: null,  // Track which engagement is being edited (null = create mode)
-            panelContactId: null,  // Track selected contact in side panel
-            panelContactDropdownOpen: false,  // Track panel contact dropdown state
             deleteEngagementIndex: null,  // Track which engagement is pending deletion
             deletePersonIndex: null,  // Track which person is pending deletion
             cancelEngagementIndex: null,  // Track which engagement is pending cancellation
@@ -6501,35 +6397,9 @@
         const inlinePersonName = document.getElementById('inline-person-name');
         const inlinePersonRole = document.getElementById('inline-person-role');
 
-        // DOM Elements - Side Panel
+        // DOM Elements - Side Panel (Comments Only)
         const sidePanel = document.getElementById('side-panel');
         const sidePanelBackdrop = document.getElementById('side-panel-backdrop');
-        const panelEngName = document.getElementById('panel-eng-name');
-        const panelEngDescription = document.getElementById('panel-eng-description');
-        const panelEngDate = document.getElementById('panel-eng-date');
-        const panelEngContact = document.getElementById('panel-eng-contact');
-        const panelContactDropdown = document.getElementById('panel-contact-dropdown');
-        const panelEngStatus = document.getElementById('panel-eng-status');
-
-        // DOM Elements - Lifecycle Panel
-        const panelLifecycleSection = document.getElementById('panel-lifecycle-section');
-        const panelEngTypeBadge = document.getElementById('panel-eng-type-badge');
-        const lifecycleActions = document.getElementById('lifecycle-actions');
-        const panelPreProjectSection = document.getElementById('panel-preproject-section');
-        const panelPreProjectStarted = document.getElementById('panel-preproject-started');
-        const panelPreProjectExpected = document.getElementById('panel-preproject-expected');
-        const panelPreProjectAllocations = document.getElementById('panel-preproject-allocations');
-        const panelPreProjectSummary = document.getElementById('panel-preproject-summary');
-        const panelProjectSection = document.getElementById('panel-project-section');
-        const panelProjectFormalized = document.getElementById('panel-project-formalized');
-        const panelProjectCode = document.getElementById('panel-project-code');
-        const panelProjectFunding = document.getElementById('panel-project-funding');
-        const panelProjectStart = document.getElementById('panel-project-start');
-        const panelProjectEnd = document.getElementById('panel-project-end');
-        const panelProjectAllocations = document.getElementById('panel-project-allocations');
-        const panelChargeBackSection = document.getElementById('panel-chargeback-section');
-        const panelChargeBackSummary = document.getElementById('panel-chargeback-summary');
-        const panelChargeBackList = document.getElementById('panel-chargeback-list');
 
         // DOM Elements - Promote Modals
         const promotePreProjectModal = document.getElementById('promote-preproject-modal');
@@ -8392,38 +8262,20 @@
             `;
         }
 
-        // Side Panel functions
+        // Side Panel functions (Comments Only)
         function openSidePanel(index) {
             state.selectedEngagementIndex = index;
             state.sidePanelOpen = true;
 
             const opp = state.engagements[index];
 
-            // Populate panel (use .value for input elements)
-            panelEngName.value = opp.name || '';
-            panelEngDescription.value = opp.description || '';
-            panelEngDate.textContent = opp.startDate ? formatDate(opp.startDate) : 'Not set';
-            // Get contact name - either from contactId or legacy contact field
-            let contactDisplay = '';
-            state.panelContactId = null;  // Track selected contact in panel
-            if (opp.contactId) {
-                const person = state.people.find(p => p.id === opp.contactId);
-                if (person) {
-                    contactDisplay = person.name;
-                    state.panelContactId = opp.contactId;
-                }
-            } else if (opp.contact) {
-                contactDisplay = opp.contact;
+            // Set engagement name in header
+            const engNameEl = document.getElementById('side-panel-engagement-name');
+            if (engNameEl) {
+                engNameEl.textContent = opp.name || 'Unnamed Engagement';
             }
-            panelEngContact.value = contactDisplay;
 
-            // Update status badge
-            updatePanelStatusBadge(opp.status);
-
-            // Render lifecycle section
-            renderLifecycleSection(opp);
-
-            // Render comments
+            // Render comments only
             renderCommentsInPanel(opp);
 
             // Show panel
@@ -8437,124 +8289,6 @@
 
             sidePanel.classList.remove('open');
             sidePanelBackdrop.classList.remove('open');
-        }
-
-        // Update status badge in side panel
-        function updatePanelStatusBadge(status) {
-            panelEngStatus.textContent = capitalizeFirst(status);
-            panelEngStatus.className = `status-badge status-${status}`;
-            // Update tooltip content
-            const tooltipEl = document.getElementById('panel-status-tooltip');
-            if (tooltipEl) {
-                tooltipEl.outerHTML = getStatusTooltipHtml(status);
-            }
-        }
-
-        // Save engagement field from side panel inline edit
-        function savePanelEngagementField(field, value) {
-            if (state.selectedEngagementIndex === null) return;
-
-            const eng = state.engagements[state.selectedEngagementIndex];
-            if (!eng) return;
-
-            const trimmedValue = value.trim();
-
-            if (field === 'name') {
-                if (!trimmedValue) {
-                    // Don't allow empty name, revert
-                    panelEngName.value = eng.name || '';
-                    return;
-                }
-                if (eng.name !== trimmedValue) {
-                    eng.name = trimmedValue;
-                    renderEngagements();
-                    saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
-                }
-            } else if (field === 'description') {
-                const newValue = trimmedValue || null;
-                if (eng.description !== newValue) {
-                    eng.description = newValue;
-                    saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
-                }
-            }
-        }
-
-        // Panel contact autocomplete functions
-        function openPanelContactDropdown() {
-            state.panelContactDropdownOpen = true;
-            filterPanelContacts(panelEngContact.value);
-            panelContactDropdown.classList.add('open');
-        }
-
-        function closePanelContactDropdown() {
-            state.panelContactDropdownOpen = false;
-            panelContactDropdown.classList.remove('open');
-        }
-
-        function filterPanelContacts(query) {
-            const q = query.toLowerCase();
-            const matches = state.people.filter(p =>
-                p.name.toLowerCase().includes(q)
-            );
-
-            panelContactDropdown.innerHTML = '';
-
-            if (matches.length === 0 && !query.trim()) {
-                panelContactDropdown.innerHTML = '<div class="panel-contact-item" style="color: #6C757D;">No contacts available</div>';
-                return;
-            }
-
-            if (matches.length === 0 && query.trim()) {
-                panelContactDropdown.innerHTML = '<div class="panel-contact-item" style="color: #6C757D;">No matching contacts</div>';
-                return;
-            }
-
-            matches.forEach(person => {
-                const item = document.createElement('div');
-                item.className = 'panel-contact-item';
-                item.textContent = person.name;
-                item.onclick = () => selectPanelContact(person);
-                panelContactDropdown.appendChild(item);
-            });
-        }
-
-        function selectPanelContact(person) {
-            if (state.selectedEngagementIndex === null) return;
-
-            const eng = state.engagements[state.selectedEngagementIndex];
-            if (!eng) return;
-
-            eng.contactId = person.id;
-            eng.contact = person.name;
-            state.panelContactId = person.id;
-            panelEngContact.value = person.name;
-
-            closePanelContactDropdown();
-            renderEngagements();
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
-        }
-
-        function handlePanelContactBlur(event) {
-            // Delay to allow click on dropdown item
-            setTimeout(() => {
-                if (state.panelContactDropdownOpen) {
-                    closePanelContactDropdown();
-
-                    // If value changed but no selection made, save as text contact
-                    if (state.selectedEngagementIndex !== null) {
-                        const eng = state.engagements[state.selectedEngagementIndex];
-                        if (eng) {
-                            const newContact = panelEngContact.value.trim();
-                            if (newContact !== eng.contact) {
-                                eng.contact = newContact || null;
-                                eng.contactId = state.panelContactId;  // Keep existing contactId
-                                renderEngagements();
-                                saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
-                            }
-                        }
-                    }
-                }
-            }, 200);
         }
 
         // Archive engagement (for closed/cancelled engagements)
@@ -8596,12 +8330,6 @@
             // No linked todos - proceed with close directly
             opp.status = 'closed';
             renderEngagements();
-
-            // Also update side panel if open
-            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
-                updatePanelStatusBadge('closed');
-                renderLifecycleSection(opp);
-            }
             // Auto-save to IndexedDB
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
@@ -8626,12 +8354,6 @@
 
             renderEngagements();
             renderTodos();
-
-            // Also update side panel if open
-            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
-                updatePanelStatusBadge('completed');
-                renderLifecycleSection(opp);
-            }
             // Auto-save to IndexedDB
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
@@ -8644,12 +8366,6 @@
 
             opp.status = 'paused';
             renderEngagements();
-
-            // Also update side panel if open
-            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
-                updatePanelStatusBadge('paused');
-                renderLifecycleSection(opp);
-            }
             // Auto-save to IndexedDB
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
@@ -8662,12 +8378,6 @@
 
             opp.status = 'paused';
             renderEngagements();
-
-            // Also update side panel if open
-            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
-                updatePanelStatusBadge('paused');
-                renderLifecycleSection(opp);
-            }
             // Auto-save to IndexedDB
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
@@ -9399,10 +9109,8 @@
             // Set status to dropped (new lifecycle model)
             opp.status = 'dropped';
 
-            // Update side panel if this engagement is open
+            // Refresh comments in side panel if open
             if (state.sidePanelOpen && state.selectedEngagementIndex === state.cancelEngagementIndex) {
-                updatePanelStatusBadge('dropped');
-                renderLifecycleSection(opp);
                 renderCommentsInPanel(opp);
             }
 
@@ -9519,11 +9227,6 @@
                 // Direct close without modal
                 const opp = state.engagements[index];
                 opp.status = 'closed';
-
-                if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
-                    updatePanelStatusBadge('closed');
-                    renderLifecycleSection(opp);
-                }
             } else if (actionType === 'cancel') {
                 // Open cancel modal for reason (skip todo check since we just handled them)
                 openCancelConfirmation(index, true);
