@@ -28,3 +28,5 @@ Issue-43: Implemented Engagement Lifecycle Management with types (engagement, pr
 Issue-45: Refactored Todo dialog inline creation to horizontal expanding layout with two-column display, smooth CSS transitions, and proper focus management.
 
 Issue-47: Fixed inline engagement form with textarea description, hidden contact separator line, and correct contact linking to engagement.
+
+Issue-49: Implemented custom DateTimePicker component with side-by-side layout (time left, calendar right), keyboard navigation (arrows, Page Up/Down, Home/End, Tab, Escape), mouse wheel scrolling for months, hour/minute spinners with long-press acceleration, month/year picker overlays on hover, yellow/gold theme (#F5A623), and auto-detection of date-only vs datetime mode. Integrated with all 13 date fields.
