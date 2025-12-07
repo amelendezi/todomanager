@@ -5641,6 +5641,7 @@
                     roles: state.roles,
                     tags: state.tags,
                     settings: state.settings,
+                    allocations: state.allocations,
                     lastModified: new Date().toISOString()
                 };
 
@@ -5796,7 +5797,22 @@
             promotePreProjectModalOpen: false,
             promoteProjectModalOpen: false,
             promoteEngagementIndex: null,
-            selectedChargeBackMode: 'original'
+            selectedChargeBackMode: 'original',
+            // Engagement allocations (Issue-57)
+            allocations: [],
+            // Inline expansion state (Issue-57)
+            expandedEngagementId: null,
+            // Unified promote modal state (Issue-57)
+            unifiedPromoteModalOpen: false,
+            unifiedPromoteEngagementId: null,
+            preProjectSectionEnabled: false,
+            projectSectionEnabled: false,
+            preProjectAllocationPercent: 25,
+            projectAllocationPercent: 25,
+            preProjectSelectedMonths: [],
+            projectStartMonth: null,
+            projectEndMonth: null,
+            monthTimelineOffset: 0
         };
 
         // DOM Elements - Landing and Home
@@ -10380,6 +10396,173 @@
             });
         }
 
+        // Migrate existing engagement preProject/project data to new allocations format (Issue-57)
+        function migrateEngagementAllocations() {
+            state.engagements.forEach(eng => {
+                // Check if this engagement already has an allocation entry
+                const existingAllocation = getAllocationForEngagement(eng.id);
+                if (existingAllocation) return; // Already migrated
+
+                // Only migrate if there's preProject or project data to migrate
+                if (!eng.preProject && !eng.project) return;
+
+                const allocation = {
+                    id: eng.id,
+                    updatedAt: new Date().toISOString()
+                };
+
+                // Migrate preProject data
+                if (eng.preProject && eng.preProject.allocations && eng.preProject.allocations.length > 0) {
+                    const months = eng.preProject.allocations.map(a => a.month).sort();
+                    const avgPercentage = Math.round(
+                        eng.preProject.allocations.reduce((sum, a) => sum + (a.percentage || 0), 0) /
+                        eng.preProject.allocations.length
+                    );
+                    allocation.preProject = {
+                        allocationPercentage: avgPercentage || 25,
+                        months: months
+                    };
+                }
+
+                // Migrate project data
+                if (eng.project && eng.project.timeline) {
+                    const timeline = eng.project.timeline;
+                    const avgPercentage = timeline.allocations && timeline.allocations.length > 0
+                        ? Math.round(timeline.allocations.reduce((sum, a) => sum + (a.percentage || 0), 0) / timeline.allocations.length)
+                        : 25;
+
+                    // Convert dates to YYYY-MM format
+                    const startMonth = timeline.startDate ? timeline.startDate.substring(0, 7) : null;
+                    const endMonth = timeline.endDate ? timeline.endDate.substring(0, 7) : null;
+
+                    if (startMonth && endMonth) {
+                        allocation.project = {
+                            allocationPercentage: avgPercentage,
+                            startMonth: startMonth,
+                            endMonth: endMonth
+                        };
+                    }
+                }
+
+                // Only add if there's actual allocation data
+                if (allocation.preProject || allocation.project) {
+                    state.allocations.push(allocation);
+                }
+            });
+        }
+
+        // ========================================
+        // ALLOCATION HELPER FUNCTIONS (Issue-57)
+        // ========================================
+
+        // Get allocation for an engagement by ID
+        function getAllocationForEngagement(engagementId) {
+            return state.allocations.find(a => a.id === engagementId) || null;
+        }
+
+        // Save or update an allocation
+        function saveAllocation(allocation) {
+            const existingIndex = state.allocations.findIndex(a => a.id === allocation.id);
+            allocation.updatedAt = new Date().toISOString();
+
+            if (existingIndex >= 0) {
+                state.allocations[existingIndex] = allocation;
+            } else {
+                state.allocations.push(allocation);
+            }
+
+            return saveStateToIndexedDB();
+        }
+
+        // Delete an allocation by engagement ID
+        function deleteAllocation(engagementId) {
+            const index = state.allocations.findIndex(a => a.id === engagementId);
+            if (index >= 0) {
+                state.allocations.splice(index, 1);
+                return saveStateToIndexedDB();
+            }
+            return Promise.resolve();
+        }
+
+        // Get current month in YYYY-MM format
+        function getCurrentMonth() {
+            const now = new Date();
+            return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        }
+
+        // Check if a month is within an array of months (for pre-project with gaps)
+        function isMonthInArray(month, monthsArray) {
+            return monthsArray.includes(month);
+        }
+
+        // Check if a month is within a range (for project continuous range)
+        function isMonthInRange(month, startMonth, endMonth) {
+            return month >= startMonth && month <= endMonth;
+        }
+
+        // Get the display type for an engagement based on allocations and current date
+        function getEngagementDisplayType(engagement) {
+            const allocation = getAllocationForEngagement(engagement.id);
+            const currentMonth = getCurrentMonth();
+
+            if (!allocation) {
+                return 'engagement';
+            }
+
+            // Check project allocation first (takes priority)
+            if (allocation.project && allocation.project.startMonth && allocation.project.endMonth) {
+                if (isMonthInRange(currentMonth, allocation.project.startMonth, allocation.project.endMonth)) {
+                    return 'project';
+                }
+            }
+
+            // Check pre-project allocation
+            if (allocation.preProject && allocation.preProject.months && allocation.preProject.months.length > 0) {
+                if (isMonthInArray(currentMonth, allocation.preProject.months)) {
+                    return 'pre-project';
+                }
+            }
+
+            // Has allocation but current month is not within any allocation period
+            return 'engagement';
+        }
+
+        // Generate array of months between start and end (inclusive)
+        function generateMonthRange(startMonth, endMonth) {
+            const months = [];
+            let current = startMonth;
+
+            while (current <= endMonth) {
+                months.push(current);
+                // Increment month
+                const [year, month] = current.split('-').map(Number);
+                const nextMonth = month === 12 ? 1 : month + 1;
+                const nextYear = month === 12 ? year + 1 : year;
+                current = `${nextYear}-${String(nextMonth).padStart(2, '0')}`;
+            }
+
+            return months;
+        }
+
+        // Format month for display (e.g., "2025-01" -> "January")
+        function formatMonthShort(monthStr) {
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const [year, month] = monthStr.split('-').map(Number);
+            return monthNames[month - 1];
+        }
+
+        // Format month for display with year (e.g., "2025-01" -> "January, 2025")
+        function formatMonthFull(monthStr) {
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const [year, month] = monthStr.split('-').map(Number);
+            return `${monthNames[month - 1]}, ${year}`;
+        }
+
+        // Get year from month string
+        function getYearFromMonth(monthStr) {
+            return monthStr.split('-')[0];
+        }
+
         // ========================================
         // SCORING ALGORITHM FUNCTIONS
         // ========================================
@@ -11139,6 +11322,7 @@
                     state.people = Array.isArray(savedState.people) ? savedState.people : [];
                     state.roles = Array.isArray(savedState.roles) ? savedState.roles : [];
                     state.tags = Array.isArray(savedState.tags) ? savedState.tags : [];
+                    state.allocations = Array.isArray(savedState.allocations) ? savedState.allocations : [];
 
                     // Restore settings (merge with defaults)
                     if (savedState.settings && typeof savedState.settings === 'object') {
@@ -11161,6 +11345,7 @@
                     // Run migration for backwards compatibility
                     migrateContactsToPeople();
                     migrateEngagementLifecycle();
+                    migrateEngagementAllocations();
 
                     // Update all engagement statuses based on linked todos (auto-pause/resume)
                     updateAllEngagementStatuses();
@@ -11172,6 +11357,7 @@
                     // No saved state, show landing page
                     migrateContactsToPeople();
                     migrateEngagementLifecycle();
+                    migrateEngagementAllocations();
                     updateAllEngagementStatuses();
                     navigateTo('landing');
                 }
