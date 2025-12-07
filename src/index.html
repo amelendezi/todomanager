@@ -1036,6 +1036,269 @@
             color: #6C757D;
         }
 
+        /* Expanded engagement styles (Issue-57) */
+        .engagement-item.expanded {
+            flex-direction: column;
+            align-items: stretch;
+            cursor: default;
+            transform: none;
+        }
+
+        .engagement-item.expanded:hover {
+            transform: none;
+        }
+
+        .engagement-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .engagement-expanded-content {
+            display: none;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out;
+            border-top: 1px solid #E5E7EB;
+            margin-top: 12px;
+            padding-top: 0;
+        }
+
+        .engagement-item.expanded .engagement-expanded-content {
+            display: flex;
+            max-height: 400px;
+            opacity: 1;
+            padding-top: 16px;
+        }
+
+        .engagement-expanded-panes {
+            display: flex;
+            gap: 24px;
+            width: 100%;
+        }
+
+        .engagement-left-pane {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .engagement-right-pane {
+            flex: 1;
+            min-width: 0;
+            max-height: 280px;
+            overflow-y: auto;
+            border-left: 1px solid #E5E7EB;
+            padding-left: 24px;
+        }
+
+        /* Left pane content */
+        .engagement-detail-row {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 16px;
+        }
+
+        .engagement-detail-group {
+            flex: 1;
+        }
+
+        .engagement-detail-label {
+            font-size: 12px;
+            color: #6C757D;
+            margin-bottom: 4px;
+        }
+
+        .engagement-detail-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1F1F1F;
+        }
+
+        .engagement-detail-subtitle {
+            font-size: 12px;
+            color: #9CA3AF;
+        }
+
+        .engagement-description-section {
+            margin-bottom: 16px;
+        }
+
+        .engagement-description-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .engagement-description-text {
+            font-size: 13px;
+            color: #4B5563;
+            line-height: 1.5;
+        }
+
+        .engagement-action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        .engagement-promote-btn {
+            color: #2563EB;
+            font-size: 13px;
+            font-weight: 500;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .engagement-promote-btn:hover {
+            text-decoration: underline;
+        }
+
+        .engagement-comments-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #6C757D;
+            font-size: 13px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .engagement-comments-btn:hover {
+            background: #F3F4F6;
+            color: #374151;
+        }
+
+        .engagement-comments-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .engagement-comments-count {
+            font-weight: 500;
+        }
+
+        /* Right pane - Todo list */
+        .engagement-todo-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .engagement-todo-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .engagement-todo-status {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .engagement-todo-status.open {
+            color: #9CA3AF;
+        }
+
+        .engagement-todo-status.done {
+            color: #22C55E;
+        }
+
+        .engagement-todo-status.dropped {
+            color: #EF4444;
+        }
+
+        .engagement-todo-status svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .engagement-todo-title {
+            flex: 1;
+            font-size: 13px;
+            color: #1F1F1F;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .engagement-todo-item.completed .engagement-todo-title,
+        .engagement-todo-item.dropped .engagement-todo-title {
+            text-decoration: line-through;
+            color: #9CA3AF;
+        }
+
+        .engagement-todo-priority {
+            padding: 2px 8px;
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: 4px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .engagement-todo-priority.urgent {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .engagement-todo-priority.high {
+            background: #FFEDD5;
+            color: #EA580C;
+        }
+
+        .engagement-todo-priority.normal {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .engagement-todo-priority.low {
+            background: #E5E7EB;
+            color: #6B7280;
+        }
+
+        .engagement-todo-priority.someday {
+            background: #F3F4F6;
+            color: #9CA3AF;
+        }
+
+        .engagement-todo-effort {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: #6B7280;
+            white-space: nowrap;
+        }
+
+        .engagement-todo-effort svg {
+            width: 14px;
+            height: 14px;
+            color: #22C55E;
+        }
+
+        .engagement-todos-empty {
+            text-align: center;
+            color: #9CA3AF;
+            font-size: 13px;
+            padding: 24px;
+        }
+
         /* Status badges */
         .status-badge {
             padding: 4px 12px;
@@ -1117,10 +1380,23 @@
             justify-content: space-between;
         }
 
+        .side-panel-title-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
         .side-panel-title {
             font-size: 18px;
             font-weight: 600;
             color: #1F1F1F;
+            margin: 0;
+        }
+
+        .side-panel-engagement-name {
+            font-size: 13px;
+            color: #6C757D;
+            font-weight: 400;
         }
 
         .side-panel-close {
@@ -1150,6 +1426,8 @@
             flex: 1;
             padding: 24px;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
 
         .detail-group {
@@ -1639,6 +1917,28 @@
         .comments-section {
             margin-top: 24px;
             padding-top: 20px;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        /* Comments-only mode (side panel) */
+        .comments-section.comments-only {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .comments-section.comments-only .comments-list {
+            flex: 1;
+            overflow-y: auto;
+            max-height: none;
+        }
+
+        .comments-section.comments-only .comment-input-area {
+            margin-top: auto;
+            padding-top: 16px;
             border-top: 1px solid #E0E0E0;
         }
 
@@ -3071,18 +3371,18 @@
         }
 
         .type-engagement {
-            background: #E8F4FD;
-            color: #0369A1;
+            background: #FFF7ED;
+            color: #EA580C;
         }
 
         .type-pre-project {
             background: #FEF3C7;
-            color: #92400E;
+            color: #B45309;
         }
 
         .type-project {
-            background: #D1FAE5;
-            color: #065F46;
+            background: #DCFCE7;
+            color: #16A34A;
         }
 
         /* Lifecycle section in side panel */
@@ -3519,6 +3819,277 @@
             font-size: 11px;
             color: #6C757D;
             margin-top: 2px;
+        }
+
+        /* Unified Promotion Modal (Issue-57) */
+        .unified-promote-modal {
+            max-width: 700px;
+            overflow: visible;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .unified-promote-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .unified-promote-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1F1F1F;
+        }
+
+        .unified-promote-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            color: #6C757D;
+        }
+
+        .unified-promote-close:hover {
+            color: #1F1F1F;
+        }
+
+        .allocation-section {
+            margin-bottom: 20px;
+        }
+
+        .allocation-section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            cursor: pointer;
+        }
+
+        .allocation-section-toggle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #D1D5DB;
+            background: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .allocation-section-toggle.enabled {
+            border-color: #22C55E;
+            background: #22C55E;
+        }
+
+        .allocation-section-toggle.enabled::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fff;
+        }
+
+        .allocation-section-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1F1F1F;
+            flex: 1;
+        }
+
+        .allocation-section-link {
+            color: #6C757D;
+            text-decoration: none;
+        }
+
+        .allocation-section-link:hover {
+            color: #1F1F1F;
+        }
+
+        .allocation-section-content {
+            display: none;
+            padding: 16px;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            margin-top: 8px;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out;
+        }
+
+        .allocation-section.expanded .allocation-section-content {
+            display: block;
+            max-height: 300px;
+            opacity: 1;
+            padding: 16px;
+        }
+
+        .allocation-input-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .allocation-input-label {
+            font-size: 13px;
+            color: #374151;
+            min-width: 150px;
+        }
+
+        .allocation-input {
+            width: 80px;
+            padding: 8px 12px;
+            border: 1px solid #E5E7EB;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .allocation-input:focus {
+            outline: none;
+            border-color: #FFB800;
+            box-shadow: 0 0 0 2px rgba(255, 184, 0, 0.15);
+        }
+
+        .allocation-months-label {
+            font-size: 13px;
+            color: #374151;
+            margin-bottom: 12px;
+        }
+
+        /* Month Timeline */
+        .month-timeline-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .month-timeline-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .month-timeline-arrow {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #E5E7EB;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6C757D;
+            flex-shrink: 0;
+        }
+
+        .month-timeline-arrow:hover {
+            border-color: #D1D5DB;
+            color: #374151;
+        }
+
+        .month-timeline-arrow:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .month-timeline-scroll {
+            flex: 1;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .month-timeline-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .month-timeline-years {
+            display: flex;
+            margin-bottom: 4px;
+        }
+
+        .month-timeline-year {
+            font-size: 12px;
+            color: #9CA3AF;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .month-timeline-months {
+            display: flex;
+            gap: 4px;
+        }
+
+        .month-timeline-month {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+            border: 1px solid transparent;
+            background: #F9FAFB;
+            color: #374151;
+            flex-shrink: 0;
+        }
+
+        .month-timeline-month:hover:not(.disabled):not(.selected) {
+            background: #F3F4F6;
+            border-color: #D1D5DB;
+        }
+
+        .month-timeline-month.selected.preproject {
+            background: #3B82F6;
+            color: #fff;
+            border-color: #3B82F6;
+        }
+
+        .month-timeline-month.selected.project {
+            background: #22C55E;
+            color: #fff;
+            border-color: #22C55E;
+        }
+
+        .month-timeline-month.disabled {
+            background: #F3F4F6;
+            color: #D1D5DB;
+            cursor: not-allowed;
+        }
+
+        /* Modal Footer */
+        .unified-promote-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .unified-promote-footer .btn-save {
+            background: #EAB308;
+            color: #1F1F1F;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .unified-promote-footer .btn-save:hover {
+            background: #CA8A04;
+        }
+
+        .unified-promote-footer .btn-save:disabled {
+            background: #FEF3C7;
+            color: #A3A3A3;
+            cursor: not-allowed;
         }
 
         /* Allocations Report View */
@@ -4846,11 +5417,14 @@
         </div>
     </div>
 
-    <!-- Side Panel for Engagement Details -->
+    <!-- Side Panel for Comments Only -->
     <div id="side-panel-backdrop" class="side-panel-backdrop" onclick="closeSidePanel()"></div>
     <div id="side-panel" class="side-panel">
         <div class="side-panel-header">
-            <h2 class="side-panel-title">Engagement Details</h2>
+            <div class="side-panel-title-wrapper">
+                <h2 class="side-panel-title">Comments</h2>
+                <span id="side-panel-engagement-name" class="side-panel-engagement-name"></span>
+            </div>
             <button class="side-panel-close" onclick="closeSidePanel()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -4859,150 +5433,8 @@
             </button>
         </div>
         <div class="side-panel-body">
-            <div class="detail-group">
-                <div class="detail-label">Name</div>
-                <input type="text" id="panel-eng-name" class="detail-input" placeholder="Enter name..." onblur="savePanelEngagementField('name', this.value)">
-            </div>
-            <div class="detail-group">
-                <div class="detail-label">Description</div>
-                <textarea id="panel-eng-description" class="detail-textarea" placeholder="Enter description..." onblur="savePanelEngagementField('description', this.value)"></textarea>
-            </div>
-            <div class="detail-group">
-                <div class="detail-label">Start Date</div>
-                <div id="panel-eng-date" class="detail-value"></div>
-            </div>
-            <div class="detail-group">
-                <div class="detail-label">Contact</div>
-                <div class="panel-contact-wrapper">
-                    <input type="text" id="panel-eng-contact" class="detail-input" placeholder="Search contacts..." autocomplete="off" oninput="filterPanelContacts(this.value)" onfocus="openPanelContactDropdown()" onblur="handlePanelContactBlur(event)">
-                    <div id="panel-contact-dropdown" class="panel-contact-dropdown">
-                        <!-- Contact dropdown items will be rendered here -->
-                    </div>
-                </div>
-            </div>
-            <div class="detail-group">
-                <div class="detail-label">Status</div>
-                <div id="panel-status-container" class="status-tooltip-container">
-                    <span id="panel-eng-status" class="status-badge"></span>
-                    <div id="panel-status-tooltip" class="status-tooltip"></div>
-                </div>
-            </div>
-
-            <!-- Lifecycle Section -->
-            <div id="panel-lifecycle-section" class="lifecycle-section">
-                <div class="lifecycle-header">
-                    <div>
-                        <span class="lifecycle-title">Type: </span>
-                        <span id="panel-eng-type-badge" class="engagement-type-badge type-engagement">Engagement</span>
-                    </div>
-                    <div id="lifecycle-actions" class="lifecycle-actions">
-                        <!-- Action buttons rendered dynamically -->
-                    </div>
-                </div>
-
-                <!-- Pre-Project Section (hidden by default) -->
-                <div id="panel-preproject-section" class="pre-project-section" style="display: none;">
-                    <div class="pre-project-dates">
-                        <div class="pre-project-date-field">
-                            <label class="pre-project-date-label">Started</label>
-                            <input type="date" id="panel-preproject-started" class="pre-project-date-input" data-datetimepicker onchange="savePreProjectField('startedAt', this.value)">
-                        </div>
-                        <div class="pre-project-date-field">
-                            <label class="pre-project-date-label">Expected Formalization</label>
-                            <input type="date" id="panel-preproject-expected" class="pre-project-date-input" data-datetimepicker onchange="savePreProjectField('expectedFormalization', this.value)">
-                        </div>
-                    </div>
-
-                    <!-- Pre-Project Allocations -->
-                    <div class="allocations-section">
-                        <div class="allocations-header">
-                            <span class="allocations-title">Monthly Allocations</span>
-                            <button type="button" class="add-allocation-btn" onclick="addPreProjectAllocation()">+ Add</button>
-                        </div>
-                        <table id="panel-preproject-allocations" class="allocations-table">
-                            <thead>
-                                <tr>
-                                    <th>Month</th>
-                                    <th>%</th>
-                                    <th>Hours</th>
-                                    <th>Status</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Allocations rendered dynamically -->
-                            </tbody>
-                        </table>
-                        <div id="panel-preproject-summary" class="allocation-summary" style="display: none;">
-                            <!-- Summary rendered dynamically -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project Section (hidden by default) -->
-                <div id="panel-project-section" class="project-section" style="display: none;">
-                    <div class="project-details">
-                        <div class="project-field">
-                            <label class="project-field-label">Formalized</label>
-                            <input type="date" id="panel-project-formalized" class="project-field-input" data-datetimepicker onchange="saveProjectField('formalizedAt', this.value)">
-                        </div>
-                        <div class="project-field">
-                            <label class="project-field-label">Project Code</label>
-                            <input type="text" id="panel-project-code" class="project-field-input" placeholder="PRJ-..." onblur="saveProjectField('projectCode', this.value)">
-                        </div>
-                        <div class="project-field full-width">
-                            <label class="project-field-label">Funding Source</label>
-                            <input type="text" id="panel-project-funding" class="project-field-input" placeholder="Budget reference..." onblur="saveProjectField('fundingSource', this.value)">
-                        </div>
-                    </div>
-
-                    <!-- Project Timeline -->
-                    <div class="timeline-section">
-                        <div class="timeline-header">
-                            <span class="timeline-title">Project Timeline</span>
-                            <button type="button" class="add-allocation-btn" onclick="addProjectAllocation()">+ Add Period</button>
-                        </div>
-                        <div class="timeline-dates">
-                            <div class="project-field">
-                                <label class="project-field-label">Start Date</label>
-                                <input type="date" id="panel-project-start" class="project-field-input" data-datetimepicker onchange="saveProjectTimelineField('startDate', this.value)">
-                            </div>
-                            <div class="project-field">
-                                <label class="project-field-label">End Date</label>
-                                <input type="date" id="panel-project-end" class="project-field-input" data-datetimepicker onchange="saveProjectTimelineField('endDate', this.value)">
-                            </div>
-                        </div>
-                        <table id="panel-project-allocations" class="allocations-table">
-                            <thead>
-                                <tr>
-                                    <th>Period</th>
-                                    <th>%</th>
-                                    <th>Status</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Allocations rendered dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Charge-Back Summary (if applicable) -->
-                    <div id="panel-chargeback-section" class="chargeback-section" style="display: none;">
-                        <div class="chargeback-header">
-                            <span class="chargeback-title">Pre-Project Charge-Back</span>
-                        </div>
-                        <div id="panel-chargeback-summary" class="chargeback-summary"></div>
-                        <div id="panel-chargeback-list" class="chargeback-list">
-                            <!-- Charge-back items rendered dynamically -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Comments Section -->
-            <div class="comments-section">
-                <div class="comments-header">Comments</div>
+            <div class="comments-section comments-only">
                 <div id="panel-comments" class="comments-list">
                     <!-- Comments will be rendered here -->
                 </div>
@@ -5416,6 +5848,77 @@
         </div>
     </div>
 
+    <!-- Unified Promotion Modal (Issue-57) -->
+    <div id="unified-promote-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closeUnifiedPromoteModal()"></div>
+        <div class="modal-content unified-promote-modal">
+            <div class="unified-promote-header">
+                <h2 id="unified-promote-title" class="unified-promote-title">Promote Engagement</h2>
+                <button class="unified-promote-close" onclick="closeUnifiedPromoteModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Pre-Project Section -->
+            <div id="preproject-allocation-section" class="allocation-section">
+                <div class="allocation-section-header" onclick="togglePreProjectSection()">
+                    <div id="preproject-toggle" class="allocation-section-toggle"></div>
+                    <span class="allocation-section-title">Pre-Project Time Reporting</span>
+                    <a href="#" class="allocation-section-link" onclick="event.stopPropagation();">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </a>
+                </div>
+                <div id="preproject-section-content" class="allocation-section-content">
+                    <div class="allocation-input-row">
+                        <span class="allocation-input-label">Pre-Project Allocation</span>
+                        <input type="text" id="preproject-allocation-input" class="allocation-input" value="25%" oninput="updatePreProjectAllocationValue(this.value)">
+                    </div>
+                    <div class="allocation-months-label">Pre-Project Allocation Months</div>
+                    <div id="preproject-timeline" class="month-timeline-container">
+                        <!-- Timeline will be rendered dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Section -->
+            <div id="project-allocation-section" class="allocation-section">
+                <div class="allocation-section-header" onclick="toggleProjectSection()">
+                    <div id="project-toggle" class="allocation-section-toggle"></div>
+                    <span class="allocation-section-title">Project Allocation Time Reporting</span>
+                    <a href="#" class="allocation-section-link" onclick="event.stopPropagation();">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </a>
+                </div>
+                <div id="project-section-content" class="allocation-section-content">
+                    <div class="allocation-input-row">
+                        <span class="allocation-input-label">Project Allocation</span>
+                        <input type="text" id="project-allocation-input" class="allocation-input" value="50%" oninput="updateProjectAllocationValue(this.value)">
+                    </div>
+                    <div class="allocation-months-label">Project Allocation Months</div>
+                    <div id="project-timeline" class="month-timeline-container">
+                        <!-- Timeline will be rendered dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="unified-promote-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeUnifiedPromoteModal()">Cancel</button>
+                <button type="button" id="unified-promote-save-btn" class="btn-save" onclick="saveUnifiedPromotion()" disabled>Save</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Person Modal -->
     <div id="person-modal" class="modal hidden">
         <div class="modal-backdrop" onclick="closePersonModal()"></div>
@@ -5641,6 +6144,7 @@
                     roles: state.roles,
                     tags: state.tags,
                     settings: state.settings,
+                    allocations: state.allocations,
                     lastModified: new Date().toISOString()
                 };
 
@@ -5749,10 +6253,8 @@
             editingPersonIndex: null,  // Track which person is being edited (null = create mode)
             editingTagIndex: null,  // Track which tag is being edited (null = create mode)
             tagModalOpen: false,
-            selectedEngagementIndex: null,  // Track which engagement is open in side panel
+            selectedEngagementIndex: null,  // Track which engagement is open in side panel (comments)
             editingEngagementIndex: null,  // Track which engagement is being edited (null = create mode)
-            panelContactId: null,  // Track selected contact in side panel
-            panelContactDropdownOpen: false,  // Track panel contact dropdown state
             deleteEngagementIndex: null,  // Track which engagement is pending deletion
             deletePersonIndex: null,  // Track which person is pending deletion
             cancelEngagementIndex: null,  // Track which engagement is pending cancellation
@@ -5796,7 +6298,22 @@
             promotePreProjectModalOpen: false,
             promoteProjectModalOpen: false,
             promoteEngagementIndex: null,
-            selectedChargeBackMode: 'original'
+            selectedChargeBackMode: 'original',
+            // Engagement allocations (Issue-57)
+            allocations: [],
+            // Inline expansion state (Issue-57)
+            expandedEngagementId: null,
+            // Unified promote modal state (Issue-57)
+            unifiedPromoteModalOpen: false,
+            unifiedPromoteEngagementId: null,
+            preProjectSectionEnabled: false,
+            projectSectionEnabled: false,
+            preProjectAllocationPercent: 25,
+            projectAllocationPercent: 25,
+            preProjectSelectedMonths: [],
+            projectStartMonth: null,
+            projectEndMonth: null,
+            monthTimelineOffset: 0
         };
 
         // DOM Elements - Landing and Home
@@ -5880,35 +6397,9 @@
         const inlinePersonName = document.getElementById('inline-person-name');
         const inlinePersonRole = document.getElementById('inline-person-role');
 
-        // DOM Elements - Side Panel
+        // DOM Elements - Side Panel (Comments Only)
         const sidePanel = document.getElementById('side-panel');
         const sidePanelBackdrop = document.getElementById('side-panel-backdrop');
-        const panelEngName = document.getElementById('panel-eng-name');
-        const panelEngDescription = document.getElementById('panel-eng-description');
-        const panelEngDate = document.getElementById('panel-eng-date');
-        const panelEngContact = document.getElementById('panel-eng-contact');
-        const panelContactDropdown = document.getElementById('panel-contact-dropdown');
-        const panelEngStatus = document.getElementById('panel-eng-status');
-
-        // DOM Elements - Lifecycle Panel
-        const panelLifecycleSection = document.getElementById('panel-lifecycle-section');
-        const panelEngTypeBadge = document.getElementById('panel-eng-type-badge');
-        const lifecycleActions = document.getElementById('lifecycle-actions');
-        const panelPreProjectSection = document.getElementById('panel-preproject-section');
-        const panelPreProjectStarted = document.getElementById('panel-preproject-started');
-        const panelPreProjectExpected = document.getElementById('panel-preproject-expected');
-        const panelPreProjectAllocations = document.getElementById('panel-preproject-allocations');
-        const panelPreProjectSummary = document.getElementById('panel-preproject-summary');
-        const panelProjectSection = document.getElementById('panel-project-section');
-        const panelProjectFormalized = document.getElementById('panel-project-formalized');
-        const panelProjectCode = document.getElementById('panel-project-code');
-        const panelProjectFunding = document.getElementById('panel-project-funding');
-        const panelProjectStart = document.getElementById('panel-project-start');
-        const panelProjectEnd = document.getElementById('panel-project-end');
-        const panelProjectAllocations = document.getElementById('panel-project-allocations');
-        const panelChargeBackSection = document.getElementById('panel-chargeback-section');
-        const panelChargeBackSummary = document.getElementById('panel-chargeback-summary');
-        const panelChargeBackList = document.getElementById('panel-chargeback-list');
 
         // DOM Elements - Promote Modals
         const promotePreProjectModal = document.getElementById('promote-preproject-modal');
@@ -5924,6 +6415,21 @@
         const projectEndInput = document.getElementById('project-end');
         const projectAllocationInput = document.getElementById('project-allocation');
         const chargeBackOptions = document.getElementById('chargeback-options');
+
+        // DOM Elements - Unified Promotion Modal (Issue-57)
+        const unifiedPromoteModal = document.getElementById('unified-promote-modal');
+        const unifiedPromoteTitle = document.getElementById('unified-promote-title');
+        const preprojectAllocationSection = document.getElementById('preproject-allocation-section');
+        const preprojectToggle = document.getElementById('preproject-toggle');
+        const preprojectSectionContent = document.getElementById('preproject-section-content');
+        const preprojectAllocationInputEl = document.getElementById('preproject-allocation-input');
+        const preprojectTimeline = document.getElementById('preproject-timeline');
+        const projectAllocationSection = document.getElementById('project-allocation-section');
+        const projectToggle = document.getElementById('project-toggle');
+        const projectSectionContent = document.getElementById('project-section-content');
+        const projectAllocationInputEl = document.getElementById('project-allocation-input');
+        const projectTimeline = document.getElementById('project-timeline');
+        const unifiedPromoteSaveBtn = document.getElementById('unified-promote-save-btn');
 
         // DOM Elements - Header and Tabs
         const appHeader = document.getElementById('app-header');
@@ -7000,8 +7506,10 @@
                     oppItem.className = 'engagement-item' + (opp.archived ? ' archived' : '');
 
                     const statusClass = `status-${opp.status}`;
-                    const typeClass = `type-${opp.type || 'engagement'}`;
-                    const typeName = getTypeDisplayName(opp.type || 'engagement');
+                    // Use dynamic type based on allocation dates (Issue-57)
+                    const displayType = getEngagementDisplayType(opp);
+                    const typeClass = `type-${displayType}`;
+                    const typeName = getTypeDisplayName(displayType);
 
                     // Build action buttons based on status
                     let actionButtons = '';
@@ -7098,22 +7606,571 @@
                         }
                     }
 
+                    // Check if this engagement is expanded (Issue-57)
+                    const isExpanded = state.expandedEngagementId === opp.id;
+                    if (isExpanded) {
+                        oppItem.classList.add('expanded');
+                    }
+
+                    // Build expanded content (Issue-57)
+                    const expandedContent = renderEngagementExpandedContent(opp, index);
+
                     oppItem.innerHTML = `
-                        <div class="engagement-content" onclick="openSidePanel(${index})">
-                            <div class="engagement-type-indicator">
-                                <span class="engagement-type-badge ${typeClass}">${typeName}</span>
+                        <div class="engagement-header" onclick="toggleEngagementExpansion('${opp.id}')">
+                            <div class="engagement-content">
+                                <div class="engagement-type-indicator">
+                                    <span class="engagement-type-badge ${typeClass}">${typeName}</span>
+                                </div>
+                                <div class="engagement-name">${escapeHtml(opp.name)}</div>
+                                ${opp.contact ? `<div class="engagement-contact">${escapeHtml(opp.contact)}</div>` : ''}
+                                ${oppTagsHtml}
                             </div>
-                            <div class="engagement-name">${escapeHtml(opp.name)}</div>
-                            ${opp.contact ? `<div class="engagement-contact">${escapeHtml(opp.contact)}</div>` : ''}
-                            ${oppTagsHtml}
+                            ${getStatusBadgeWithTooltip(opp.status, statusClass)}
+                            <div class="engagement-actions" onclick="event.stopPropagation()">
+                                ${actionButtons}
+                            </div>
                         </div>
-                        ${getStatusBadgeWithTooltip(opp.status, statusClass)}
-                        <div class="engagement-actions">
-                            ${actionButtons}
+                        <div class="engagement-expanded-content">
+                            ${expandedContent}
                         </div>
                     `;
                     engagementList.appendChild(oppItem);
                 });
+            }
+        }
+
+        // ========================================
+        // ENGAGEMENT EXPANSION FUNCTIONS (Issue-57)
+        // ========================================
+
+        // Toggle engagement expansion
+        function toggleEngagementExpansion(engagementId) {
+            // Accordion behavior: if already expanded, collapse; otherwise expand this one
+            if (state.expandedEngagementId === engagementId) {
+                state.expandedEngagementId = null;
+            } else {
+                state.expandedEngagementId = engagementId;
+            }
+            renderEngagements();
+        }
+
+        // Collapse engagement expansion (called when clicking outside)
+        function collapseEngagementExpansion() {
+            if (state.expandedEngagementId) {
+                state.expandedEngagementId = null;
+                renderEngagements();
+            }
+        }
+
+        // Render expanded content for an engagement
+        function renderEngagementExpandedContent(opp, index) {
+            // Get contact info
+            let contactName = '';
+            let contactRole = '';
+            if (opp.contactId) {
+                const person = state.people.find(p => p.id === opp.contactId);
+                if (person) {
+                    contactName = person.name;
+                    const role = state.roles.find(r => r.id === person.roleId);
+                    contactRole = role ? role.name : '';
+                }
+            } else if (opp.contact) {
+                contactName = opp.contact;
+            }
+
+            // Format start date as month/year
+            const startMonth = opp.startDate ? formatMonthFull(opp.startDate.substring(0, 7)) : 'Not set';
+
+            // Get comments count
+            const commentsCount = (opp.comments || []).length;
+
+            // Check if allocation exists
+            const allocation = getAllocationForEngagement(opp.id);
+            const hasAllocation = allocation && (allocation.preProject || allocation.project);
+            const promoteButtonText = hasAllocation ? 'Allocation' : 'Promote to Project';
+
+            // Render linked todos
+            const todosHtml = renderEngagementTodos(opp.id);
+
+            return `
+                <div class="engagement-expanded-panes">
+                    <div class="engagement-left-pane">
+                        <div class="engagement-detail-row">
+                            <div class="engagement-detail-group">
+                                <div class="engagement-detail-label">Contact:</div>
+                                <div class="engagement-detail-value">${escapeHtml(contactName) || 'Not set'}</div>
+                                ${contactRole ? `<div class="engagement-detail-subtitle">${escapeHtml(contactRole)}</div>` : ''}
+                            </div>
+                            <div class="engagement-detail-group">
+                                <div class="engagement-detail-label">Start Month:</div>
+                                <div class="engagement-detail-value">${startMonth}</div>
+                            </div>
+                        </div>
+                        <div class="engagement-description-section">
+                            <div class="engagement-description-label">Description</div>
+                            <div class="engagement-description-text">${opp.description ? escapeHtml(opp.description) : 'No description'}</div>
+                        </div>
+                        <div class="engagement-action-row">
+                            <button class="engagement-promote-btn" onclick="event.stopPropagation(); openUnifiedPromoteModal('${opp.id}')">${promoteButtonText}</button>
+                            <button class="engagement-comments-btn" onclick="event.stopPropagation(); openCommentsPanel('${opp.id}')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                <span class="engagement-comments-count">${commentsCount}</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="engagement-right-pane">
+                        ${todosHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render linked todos for an engagement (Issue-57)
+        function renderEngagementTodos(engagementId) {
+            const linkedTodos = state.todos.filter(t => t.engagementId === engagementId);
+
+            if (linkedTodos.length === 0) {
+                return '<div class="engagement-todos-empty">No todos linked to this engagement</div>';
+            }
+
+            // Sort: open first, then by priority, then completed, then dropped
+            const priorityOrder = { 'urgent': 0, 'high': 1, 'normal': 2, 'low': 3, 'someday': 4 };
+            linkedTodos.sort((a, b) => {
+                // Open todos first
+                if (!a.completed && !a.dropped && (b.completed || b.dropped)) return -1;
+                if ((a.completed || a.dropped) && !b.completed && !b.dropped) return 1;
+
+                // Among open, sort by priority
+                if (!a.completed && !a.dropped && !b.completed && !b.dropped) {
+                    return (priorityOrder[a.priority] || 2) - (priorityOrder[b.priority] || 2);
+                }
+
+                return 0;
+            });
+
+            const effortLabels = {
+                'very_low': '30 min',
+                'low': '2 hrs',
+                'average': '4 hrs',
+                'high': '6 hrs',
+                'very_high': '8 hrs'
+            };
+
+            const priorityLabels = {
+                'urgent': 'Urgent',
+                'high': 'High Priority',
+                'normal': 'Normal',
+                'low': 'Low',
+                'someday': 'Someday'
+            };
+
+            return `
+                <div class="engagement-todo-list">
+                    ${linkedTodos.map(todo => {
+                        const statusClass = todo.dropped ? 'dropped' : (todo.completed ? 'done' : 'open');
+                        const itemClass = todo.dropped ? 'dropped' : (todo.completed ? 'completed' : '');
+                        const effortText = effortLabels[todo.effort] || '4 hrs';
+                        const priorityText = priorityLabels[todo.priority] || 'Normal';
+
+                        // Status icon
+                        let statusIcon = '';
+                        if (todo.dropped) {
+                            statusIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+                        } else if (todo.completed) {
+                            statusIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                        } else {
+                            statusIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg>`;
+                        }
+
+                        return `
+                            <div class="engagement-todo-item ${itemClass}">
+                                <div class="engagement-todo-status ${statusClass}">${statusIcon}</div>
+                                <div class="engagement-todo-title">${escapeHtml(todo.title)}</div>
+                                <span class="engagement-todo-priority ${todo.priority || 'normal'}">${priorityText}</span>
+                                <span class="engagement-todo-effort">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    ${effortText}
+                                </span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        // ========================================
+        // UNIFIED PROMOTION MODAL FUNCTIONS (Issue-57)
+        // ========================================
+
+        // Open unified promote modal
+        function openUnifiedPromoteModal(engagementId) {
+            const eng = state.engagements.find(e => e.id === engagementId);
+            if (!eng) return;
+
+            state.unifiedPromoteModalOpen = true;
+            state.unifiedPromoteEngagementId = engagementId;
+
+            // Load existing allocation if any
+            const allocation = getAllocationForEngagement(engagementId);
+
+            // Reset state
+            state.preProjectSectionEnabled = false;
+            state.projectSectionEnabled = false;
+            state.preProjectAllocationPercent = 25;
+            state.projectAllocationPercent = 50;
+            state.preProjectSelectedMonths = [];
+            state.projectStartMonth = null;
+            state.projectEndMonth = null;
+            state.monthTimelineOffset = 0;
+
+            // Pre-fill from existing allocation
+            if (allocation) {
+                if (allocation.preProject) {
+                    state.preProjectSectionEnabled = true;
+                    state.preProjectAllocationPercent = allocation.preProject.allocationPercentage || 25;
+                    state.preProjectSelectedMonths = [...(allocation.preProject.months || [])];
+                }
+                if (allocation.project) {
+                    state.projectSectionEnabled = true;
+                    state.projectAllocationPercent = allocation.project.allocationPercentage || 50;
+                    state.projectStartMonth = allocation.project.startMonth || null;
+                    state.projectEndMonth = allocation.project.endMonth || null;
+                }
+            }
+
+            // Update modal title
+            const hasAllocation = allocation && (allocation.preProject || allocation.project);
+            unifiedPromoteTitle.textContent = hasAllocation ? 'Allocation' : 'Promote Engagement';
+
+            // Update UI
+            updateUnifiedModalUI();
+
+            // Show modal
+            unifiedPromoteModal.classList.remove('hidden');
+        }
+
+        // Close unified promote modal
+        function closeUnifiedPromoteModal() {
+            state.unifiedPromoteModalOpen = false;
+            state.unifiedPromoteEngagementId = null;
+            unifiedPromoteModal.classList.add('hidden');
+        }
+
+        // Update unified modal UI
+        function updateUnifiedModalUI() {
+            // Update pre-project section
+            if (state.preProjectSectionEnabled) {
+                preprojectToggle.classList.add('enabled');
+                preprojectAllocationSection.classList.add('expanded');
+            } else {
+                preprojectToggle.classList.remove('enabled');
+                preprojectAllocationSection.classList.remove('expanded');
+            }
+
+            // Update project section
+            if (state.projectSectionEnabled) {
+                projectToggle.classList.add('enabled');
+                projectAllocationSection.classList.add('expanded');
+            } else {
+                projectToggle.classList.remove('enabled');
+                projectAllocationSection.classList.remove('expanded');
+            }
+
+            // Update allocation inputs
+            preprojectAllocationInputEl.value = state.preProjectAllocationPercent + '%';
+            projectAllocationInputEl.value = state.projectAllocationPercent + '%';
+
+            // Render timelines
+            renderPreProjectTimeline();
+            renderProjectTimeline();
+
+            // Update save button state
+            updateUnifiedSaveButtonState();
+        }
+
+        // Toggle pre-project section
+        function togglePreProjectSection() {
+            state.preProjectSectionEnabled = !state.preProjectSectionEnabled;
+            if (!state.preProjectSectionEnabled) {
+                state.preProjectSelectedMonths = [];
+            }
+            updateUnifiedModalUI();
+        }
+
+        // Toggle project section
+        function toggleProjectSection() {
+            state.projectSectionEnabled = !state.projectSectionEnabled;
+            if (!state.projectSectionEnabled) {
+                state.projectStartMonth = null;
+                state.projectEndMonth = null;
+            }
+            updateUnifiedModalUI();
+        }
+
+        // Update pre-project allocation value
+        function updatePreProjectAllocationValue(value) {
+            const num = parseInt(value.replace('%', ''), 10);
+            if (!isNaN(num) && num >= 1 && num <= 100) {
+                state.preProjectAllocationPercent = num;
+            }
+            updateUnifiedSaveButtonState();
+        }
+
+        // Update project allocation value
+        function updateProjectAllocationValue(value) {
+            const num = parseInt(value.replace('%', ''), 10);
+            if (!isNaN(num) && num >= 1 && num <= 100) {
+                state.projectAllocationPercent = num;
+            }
+            updateUnifiedSaveButtonState();
+        }
+
+        // Render pre-project timeline
+        function renderPreProjectTimeline() {
+            preprojectTimeline.innerHTML = renderMonthTimeline('preproject');
+        }
+
+        // Render project timeline
+        function renderProjectTimeline() {
+            projectTimeline.innerHTML = renderMonthTimeline('project');
+        }
+
+        // Render month timeline for a section
+        function renderMonthTimeline(section) {
+            const currentMonth = getCurrentMonth();
+            const [currentYear, currentMonthNum] = currentMonth.split('-').map(Number);
+
+            // Generate 18 months from 6 months ago to 12 months in future
+            const months = [];
+            for (let offset = -6 + state.monthTimelineOffset; offset < 12 + state.monthTimelineOffset; offset++) {
+                let year = currentYear;
+                let month = currentMonthNum + offset;
+
+                while (month > 12) {
+                    month -= 12;
+                    year++;
+                }
+                while (month < 1) {
+                    month += 12;
+                    year--;
+                }
+
+                const monthStr = `${year}-${String(month).padStart(2, '0')}`;
+                months.push(monthStr);
+            }
+
+            // Group months by year for display
+            const yearGroups = {};
+            months.forEach(m => {
+                const year = getYearFromMonth(m);
+                if (!yearGroups[year]) {
+                    yearGroups[year] = [];
+                }
+                yearGroups[year].push(m);
+            });
+
+            // Determine disabled months for project section
+            const disabledMonths = new Set();
+            if (section === 'project' && state.preProjectSelectedMonths.length > 0) {
+                // All months up to and including the last pre-project month are disabled
+                const sortedPreProject = [...state.preProjectSelectedMonths].sort();
+                const lastPreProjectMonth = sortedPreProject[sortedPreProject.length - 1];
+                months.forEach(m => {
+                    if (m <= lastPreProjectMonth) {
+                        disabledMonths.add(m);
+                    }
+                });
+            }
+
+            // Determine selected months
+            const selectedMonths = new Set();
+            if (section === 'preproject') {
+                state.preProjectSelectedMonths.forEach(m => selectedMonths.add(m));
+            } else if (section === 'project' && state.projectStartMonth && state.projectEndMonth) {
+                const projectMonths = generateMonthRange(state.projectStartMonth, state.projectEndMonth);
+                projectMonths.forEach(m => selectedMonths.add(m));
+            }
+
+            // Build years row HTML
+            let yearsHtml = '';
+            Object.keys(yearGroups).sort().forEach(year => {
+                const monthCount = yearGroups[year].length;
+                // Calculate width based on number of months (each month is ~55px including gap)
+                yearsHtml += `<div class="month-timeline-year" style="width: ${monthCount * 55}px;">${year}</div>`;
+            });
+
+            // Build months row HTML
+            let monthsHtml = months.map(m => {
+                const isSelected = selectedMonths.has(m);
+                const isDisabled = disabledMonths.has(m);
+                const sectionClass = section === 'preproject' ? 'preproject' : 'project';
+
+                let classes = 'month-timeline-month';
+                if (isSelected) classes += ' selected ' + sectionClass;
+                if (isDisabled) classes += ' disabled';
+
+                const monthName = formatMonthShort(m);
+                const onclick = isDisabled ? '' : `onclick="handleMonthClick('${section}', '${m}', event)"`;
+
+                return `<div class="${classes}" data-month="${m}" ${onclick}>${monthName}</div>`;
+            }).join('');
+
+            return `
+                <div class="month-timeline-nav">
+                    <button class="month-timeline-arrow" onclick="scrollTimelineLeft()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <div class="month-timeline-scroll">
+                        <div class="month-timeline-years">${yearsHtml}</div>
+                        <div class="month-timeline-months">${monthsHtml}</div>
+                    </div>
+                    <button class="month-timeline-arrow" onclick="scrollTimelineRight()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+            `;
+        }
+
+        // Scroll timeline left
+        function scrollTimelineLeft() {
+            state.monthTimelineOffset -= 3;
+            renderPreProjectTimeline();
+            renderProjectTimeline();
+        }
+
+        // Scroll timeline right
+        function scrollTimelineRight() {
+            state.monthTimelineOffset += 3;
+            renderPreProjectTimeline();
+            renderProjectTimeline();
+        }
+
+        // Handle month click in timeline
+        function handleMonthClick(section, month, event) {
+            if (section === 'preproject') {
+                handlePreProjectMonthClick(month, event);
+            } else if (section === 'project') {
+                handleProjectMonthClick(month, event);
+            }
+        }
+
+        // Handle pre-project month click (allows gaps with Shift+Click)
+        function handlePreProjectMonthClick(month, event) {
+            const isShiftClick = event && event.shiftKey;
+
+            if (isShiftClick && state.preProjectSelectedMonths.includes(month)) {
+                // Shift+Click on selected month: deselect it
+                state.preProjectSelectedMonths = state.preProjectSelectedMonths.filter(m => m !== month);
+            } else if (state.preProjectSelectedMonths.includes(month)) {
+                // Regular click on selected: deselect
+                state.preProjectSelectedMonths = state.preProjectSelectedMonths.filter(m => m !== month);
+            } else {
+                // Click on unselected: select it
+                if (state.preProjectSelectedMonths.length === 0) {
+                    // First selection
+                    state.preProjectSelectedMonths = [month];
+                } else {
+                    // Already have selections - fill range if needed
+                    const sorted = [...state.preProjectSelectedMonths, month].sort();
+                    const first = sorted[0];
+                    const last = sorted[sorted.length - 1];
+                    // Auto-fill range
+                    state.preProjectSelectedMonths = generateMonthRange(first, last);
+                }
+            }
+
+            updateUnifiedModalUI();
+        }
+
+        // Handle project month click (continuous range only)
+        function handleProjectMonthClick(month, event) {
+            if (!state.projectStartMonth) {
+                // First click: set start
+                state.projectStartMonth = month;
+                state.projectEndMonth = month;
+            } else if (state.projectStartMonth === state.projectEndMonth && state.projectStartMonth === month) {
+                // Click on same month: deselect
+                state.projectStartMonth = null;
+                state.projectEndMonth = null;
+            } else if (month < state.projectStartMonth) {
+                // Click before start: reset with new start
+                state.projectStartMonth = month;
+                state.projectEndMonth = month;
+            } else {
+                // Click after start: extend to this month
+                state.projectEndMonth = month;
+            }
+
+            updateUnifiedModalUI();
+        }
+
+        // Update save button state
+        function updateUnifiedSaveButtonState() {
+            let canSave = false;
+
+            // Check if at least one section is properly configured
+            if (state.preProjectSectionEnabled) {
+                const validPercent = state.preProjectAllocationPercent >= 1 && state.preProjectAllocationPercent <= 100;
+                const hasMonths = state.preProjectSelectedMonths.length > 0;
+                if (validPercent && hasMonths) {
+                    canSave = true;
+                }
+            }
+
+            if (state.projectSectionEnabled) {
+                const validPercent = state.projectAllocationPercent >= 1 && state.projectAllocationPercent <= 100;
+                const hasRange = state.projectStartMonth && state.projectEndMonth;
+                if (validPercent && hasRange) {
+                    canSave = true;
+                }
+            }
+
+            unifiedPromoteSaveBtn.disabled = !canSave;
+        }
+
+        // Save unified promotion
+        function saveUnifiedPromotion() {
+            if (!state.unifiedPromoteEngagementId) return;
+
+            const allocation = {
+                id: state.unifiedPromoteEngagementId,
+                updatedAt: new Date().toISOString()
+            };
+
+            if (state.preProjectSectionEnabled && state.preProjectSelectedMonths.length > 0) {
+                allocation.preProject = {
+                    allocationPercentage: state.preProjectAllocationPercent,
+                    months: [...state.preProjectSelectedMonths].sort()
+                };
+            }
+
+            if (state.projectSectionEnabled && state.projectStartMonth && state.projectEndMonth) {
+                allocation.project = {
+                    allocationPercentage: state.projectAllocationPercent,
+                    startMonth: state.projectStartMonth,
+                    endMonth: state.projectEndMonth
+                };
+            }
+
+            saveAllocation(allocation)
+                .then(() => {
+                    closeUnifiedPromoteModal();
+                    renderEngagements();
+                })
+                .catch(err => console.error('Failed to save allocation:', err));
+        }
+
+        // Open comments panel for an engagement (Issue-57)
+        function openCommentsPanel(engagementId) {
+            const index = state.engagements.findIndex(e => e.id === engagementId);
+            if (index >= 0) {
+                openSidePanel(index);
             }
         }
 
@@ -7205,38 +8262,20 @@
             `;
         }
 
-        // Side Panel functions
+        // Side Panel functions (Comments Only)
         function openSidePanel(index) {
             state.selectedEngagementIndex = index;
             state.sidePanelOpen = true;
 
             const opp = state.engagements[index];
 
-            // Populate panel (use .value for input elements)
-            panelEngName.value = opp.name || '';
-            panelEngDescription.value = opp.description || '';
-            panelEngDate.textContent = opp.startDate ? formatDate(opp.startDate) : 'Not set';
-            // Get contact name - either from contactId or legacy contact field
-            let contactDisplay = '';
-            state.panelContactId = null;  // Track selected contact in panel
-            if (opp.contactId) {
-                const person = state.people.find(p => p.id === opp.contactId);
-                if (person) {
-                    contactDisplay = person.name;
-                    state.panelContactId = opp.contactId;
-                }
-            } else if (opp.contact) {
-                contactDisplay = opp.contact;
+            // Set engagement name in header
+            const engNameEl = document.getElementById('side-panel-engagement-name');
+            if (engNameEl) {
+                engNameEl.textContent = opp.name || 'Unnamed Engagement';
             }
-            panelEngContact.value = contactDisplay;
 
-            // Update status badge
-            updatePanelStatusBadge(opp.status);
-
-            // Render lifecycle section
-            renderLifecycleSection(opp);
-
-            // Render comments
+            // Render comments only
             renderCommentsInPanel(opp);
 
             // Show panel
@@ -7250,124 +8289,6 @@
 
             sidePanel.classList.remove('open');
             sidePanelBackdrop.classList.remove('open');
-        }
-
-        // Update status badge in side panel
-        function updatePanelStatusBadge(status) {
-            panelEngStatus.textContent = capitalizeFirst(status);
-            panelEngStatus.className = `status-badge status-${status}`;
-            // Update tooltip content
-            const tooltipEl = document.getElementById('panel-status-tooltip');
-            if (tooltipEl) {
-                tooltipEl.outerHTML = getStatusTooltipHtml(status);
-            }
-        }
-
-        // Save engagement field from side panel inline edit
-        function savePanelEngagementField(field, value) {
-            if (state.selectedEngagementIndex === null) return;
-
-            const eng = state.engagements[state.selectedEngagementIndex];
-            if (!eng) return;
-
-            const trimmedValue = value.trim();
-
-            if (field === 'name') {
-                if (!trimmedValue) {
-                    // Don't allow empty name, revert
-                    panelEngName.value = eng.name || '';
-                    return;
-                }
-                if (eng.name !== trimmedValue) {
-                    eng.name = trimmedValue;
-                    renderEngagements();
-                    saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
-                }
-            } else if (field === 'description') {
-                const newValue = trimmedValue || null;
-                if (eng.description !== newValue) {
-                    eng.description = newValue;
-                    saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
-                }
-            }
-        }
-
-        // Panel contact autocomplete functions
-        function openPanelContactDropdown() {
-            state.panelContactDropdownOpen = true;
-            filterPanelContacts(panelEngContact.value);
-            panelContactDropdown.classList.add('open');
-        }
-
-        function closePanelContactDropdown() {
-            state.panelContactDropdownOpen = false;
-            panelContactDropdown.classList.remove('open');
-        }
-
-        function filterPanelContacts(query) {
-            const q = query.toLowerCase();
-            const matches = state.people.filter(p =>
-                p.name.toLowerCase().includes(q)
-            );
-
-            panelContactDropdown.innerHTML = '';
-
-            if (matches.length === 0 && !query.trim()) {
-                panelContactDropdown.innerHTML = '<div class="panel-contact-item" style="color: #6C757D;">No contacts available</div>';
-                return;
-            }
-
-            if (matches.length === 0 && query.trim()) {
-                panelContactDropdown.innerHTML = '<div class="panel-contact-item" style="color: #6C757D;">No matching contacts</div>';
-                return;
-            }
-
-            matches.forEach(person => {
-                const item = document.createElement('div');
-                item.className = 'panel-contact-item';
-                item.textContent = person.name;
-                item.onclick = () => selectPanelContact(person);
-                panelContactDropdown.appendChild(item);
-            });
-        }
-
-        function selectPanelContact(person) {
-            if (state.selectedEngagementIndex === null) return;
-
-            const eng = state.engagements[state.selectedEngagementIndex];
-            if (!eng) return;
-
-            eng.contactId = person.id;
-            eng.contact = person.name;
-            state.panelContactId = person.id;
-            panelEngContact.value = person.name;
-
-            closePanelContactDropdown();
-            renderEngagements();
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
-        }
-
-        function handlePanelContactBlur(event) {
-            // Delay to allow click on dropdown item
-            setTimeout(() => {
-                if (state.panelContactDropdownOpen) {
-                    closePanelContactDropdown();
-
-                    // If value changed but no selection made, save as text contact
-                    if (state.selectedEngagementIndex !== null) {
-                        const eng = state.engagements[state.selectedEngagementIndex];
-                        if (eng) {
-                            const newContact = panelEngContact.value.trim();
-                            if (newContact !== eng.contact) {
-                                eng.contact = newContact || null;
-                                eng.contactId = state.panelContactId;  // Keep existing contactId
-                                renderEngagements();
-                                saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
-                            }
-                        }
-                    }
-                }
-            }, 200);
         }
 
         // Archive engagement (for closed/cancelled engagements)
@@ -7409,12 +8330,6 @@
             // No linked todos - proceed with close directly
             opp.status = 'closed';
             renderEngagements();
-
-            // Also update side panel if open
-            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
-                updatePanelStatusBadge('closed');
-                renderLifecycleSection(opp);
-            }
             // Auto-save to IndexedDB
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
@@ -7439,12 +8354,6 @@
 
             renderEngagements();
             renderTodos();
-
-            // Also update side panel if open
-            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
-                updatePanelStatusBadge('completed');
-                renderLifecycleSection(opp);
-            }
             // Auto-save to IndexedDB
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
@@ -7457,12 +8366,6 @@
 
             opp.status = 'paused';
             renderEngagements();
-
-            // Also update side panel if open
-            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
-                updatePanelStatusBadge('paused');
-                renderLifecycleSection(opp);
-            }
             // Auto-save to IndexedDB
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
@@ -7475,12 +8378,6 @@
 
             opp.status = 'paused';
             renderEngagements();
-
-            // Also update side panel if open
-            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
-                updatePanelStatusBadge('paused');
-                renderLifecycleSection(opp);
-            }
             // Auto-save to IndexedDB
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
@@ -7506,9 +8403,10 @@
 
         // Render lifecycle section in side panel
         function renderLifecycleSection(eng) {
-            // Update type badge
-            panelEngTypeBadge.textContent = getTypeDisplayName(eng.type);
-            panelEngTypeBadge.className = `engagement-type-badge ${getTypeClass(eng.type)}`;
+            // Update type badge using dynamic type based on allocation dates (Issue-57)
+            const displayType = getEngagementDisplayType(eng);
+            panelEngTypeBadge.textContent = getTypeDisplayName(displayType);
+            panelEngTypeBadge.className = `engagement-type-badge ${getTypeClass(displayType)}`;
 
             // Render action buttons based on type and status
             renderLifecycleActions(eng);
@@ -8211,10 +9109,8 @@
             // Set status to dropped (new lifecycle model)
             opp.status = 'dropped';
 
-            // Update side panel if this engagement is open
+            // Refresh comments in side panel if open
             if (state.sidePanelOpen && state.selectedEngagementIndex === state.cancelEngagementIndex) {
-                updatePanelStatusBadge('dropped');
-                renderLifecycleSection(opp);
                 renderCommentsInPanel(opp);
             }
 
@@ -8331,11 +9227,6 @@
                 // Direct close without modal
                 const opp = state.engagements[index];
                 opp.status = 'closed';
-
-                if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
-                    updatePanelStatusBadge('closed');
-                    renderLifecycleSection(opp);
-                }
             } else if (actionType === 'cancel') {
                 // Open cancel modal for reason (skip todo check since we just handled them)
                 openCancelConfirmation(index, true);
@@ -10380,6 +11271,173 @@
             });
         }
 
+        // Migrate existing engagement preProject/project data to new allocations format (Issue-57)
+        function migrateEngagementAllocations() {
+            state.engagements.forEach(eng => {
+                // Check if this engagement already has an allocation entry
+                const existingAllocation = getAllocationForEngagement(eng.id);
+                if (existingAllocation) return; // Already migrated
+
+                // Only migrate if there's preProject or project data to migrate
+                if (!eng.preProject && !eng.project) return;
+
+                const allocation = {
+                    id: eng.id,
+                    updatedAt: new Date().toISOString()
+                };
+
+                // Migrate preProject data
+                if (eng.preProject && eng.preProject.allocations && eng.preProject.allocations.length > 0) {
+                    const months = eng.preProject.allocations.map(a => a.month).sort();
+                    const avgPercentage = Math.round(
+                        eng.preProject.allocations.reduce((sum, a) => sum + (a.percentage || 0), 0) /
+                        eng.preProject.allocations.length
+                    );
+                    allocation.preProject = {
+                        allocationPercentage: avgPercentage || 25,
+                        months: months
+                    };
+                }
+
+                // Migrate project data
+                if (eng.project && eng.project.timeline) {
+                    const timeline = eng.project.timeline;
+                    const avgPercentage = timeline.allocations && timeline.allocations.length > 0
+                        ? Math.round(timeline.allocations.reduce((sum, a) => sum + (a.percentage || 0), 0) / timeline.allocations.length)
+                        : 25;
+
+                    // Convert dates to YYYY-MM format
+                    const startMonth = timeline.startDate ? timeline.startDate.substring(0, 7) : null;
+                    const endMonth = timeline.endDate ? timeline.endDate.substring(0, 7) : null;
+
+                    if (startMonth && endMonth) {
+                        allocation.project = {
+                            allocationPercentage: avgPercentage,
+                            startMonth: startMonth,
+                            endMonth: endMonth
+                        };
+                    }
+                }
+
+                // Only add if there's actual allocation data
+                if (allocation.preProject || allocation.project) {
+                    state.allocations.push(allocation);
+                }
+            });
+        }
+
+        // ========================================
+        // ALLOCATION HELPER FUNCTIONS (Issue-57)
+        // ========================================
+
+        // Get allocation for an engagement by ID
+        function getAllocationForEngagement(engagementId) {
+            return state.allocations.find(a => a.id === engagementId) || null;
+        }
+
+        // Save or update an allocation
+        function saveAllocation(allocation) {
+            const existingIndex = state.allocations.findIndex(a => a.id === allocation.id);
+            allocation.updatedAt = new Date().toISOString();
+
+            if (existingIndex >= 0) {
+                state.allocations[existingIndex] = allocation;
+            } else {
+                state.allocations.push(allocation);
+            }
+
+            return saveStateToIndexedDB();
+        }
+
+        // Delete an allocation by engagement ID
+        function deleteAllocation(engagementId) {
+            const index = state.allocations.findIndex(a => a.id === engagementId);
+            if (index >= 0) {
+                state.allocations.splice(index, 1);
+                return saveStateToIndexedDB();
+            }
+            return Promise.resolve();
+        }
+
+        // Get current month in YYYY-MM format
+        function getCurrentMonth() {
+            const now = new Date();
+            return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        }
+
+        // Check if a month is within an array of months (for pre-project with gaps)
+        function isMonthInArray(month, monthsArray) {
+            return monthsArray.includes(month);
+        }
+
+        // Check if a month is within a range (for project continuous range)
+        function isMonthInRange(month, startMonth, endMonth) {
+            return month >= startMonth && month <= endMonth;
+        }
+
+        // Get the display type for an engagement based on allocations and current date
+        function getEngagementDisplayType(engagement) {
+            const allocation = getAllocationForEngagement(engagement.id);
+            const currentMonth = getCurrentMonth();
+
+            if (!allocation) {
+                return 'engagement';
+            }
+
+            // Check project allocation first (takes priority)
+            if (allocation.project && allocation.project.startMonth && allocation.project.endMonth) {
+                if (isMonthInRange(currentMonth, allocation.project.startMonth, allocation.project.endMonth)) {
+                    return 'project';
+                }
+            }
+
+            // Check pre-project allocation
+            if (allocation.preProject && allocation.preProject.months && allocation.preProject.months.length > 0) {
+                if (isMonthInArray(currentMonth, allocation.preProject.months)) {
+                    return 'pre-project';
+                }
+            }
+
+            // Has allocation but current month is not within any allocation period
+            return 'engagement';
+        }
+
+        // Generate array of months between start and end (inclusive)
+        function generateMonthRange(startMonth, endMonth) {
+            const months = [];
+            let current = startMonth;
+
+            while (current <= endMonth) {
+                months.push(current);
+                // Increment month
+                const [year, month] = current.split('-').map(Number);
+                const nextMonth = month === 12 ? 1 : month + 1;
+                const nextYear = month === 12 ? year + 1 : year;
+                current = `${nextYear}-${String(nextMonth).padStart(2, '0')}`;
+            }
+
+            return months;
+        }
+
+        // Format month for display (e.g., "2025-01" -> "January")
+        function formatMonthShort(monthStr) {
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const [year, month] = monthStr.split('-').map(Number);
+            return monthNames[month - 1];
+        }
+
+        // Format month for display with year (e.g., "2025-01" -> "January, 2025")
+        function formatMonthFull(monthStr) {
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const [year, month] = monthStr.split('-').map(Number);
+            return `${monthNames[month - 1]}, ${year}`;
+        }
+
+        // Get year from month string
+        function getYearFromMonth(monthStr) {
+            return monthStr.split('-')[0];
+        }
+
         // ========================================
         // SCORING ALGORITHM FUNCTIONS
         // ========================================
@@ -11139,6 +12197,7 @@
                     state.people = Array.isArray(savedState.people) ? savedState.people : [];
                     state.roles = Array.isArray(savedState.roles) ? savedState.roles : [];
                     state.tags = Array.isArray(savedState.tags) ? savedState.tags : [];
+                    state.allocations = Array.isArray(savedState.allocations) ? savedState.allocations : [];
 
                     // Restore settings (merge with defaults)
                     if (savedState.settings && typeof savedState.settings === 'object') {
@@ -11161,6 +12220,7 @@
                     // Run migration for backwards compatibility
                     migrateContactsToPeople();
                     migrateEngagementLifecycle();
+                    migrateEngagementAllocations();
 
                     // Update all engagement statuses based on linked todos (auto-pause/resume)
                     updateAllEngagementStatuses();
@@ -11172,6 +12232,7 @@
                     // No saved state, show landing page
                     migrateContactsToPeople();
                     migrateEngagementLifecycle();
+                    migrateEngagementAllocations();
                     updateAllEngagementStatuses();
                     navigateTo('landing');
                 }
@@ -12125,6 +13186,10 @@
                     // If click is not inside a status tooltip, collapse all expanded tooltips
                     if (!e.target.closest('.status-tooltip')) {
                         collapseAllStatusTooltips();
+                    }
+                    // Issue-57: Collapse expanded engagement when clicking outside
+                    if (state.expandedEngagementId && !e.target.closest('.engagement-item')) {
+                        collapseEngagementExpansion();
                     }
                 }
             });
