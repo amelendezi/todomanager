@@ -3816,84 +3816,93 @@
         .dtp-time-panel {
             display: flex;
             flex-direction: column;
-            width: 140px;
+            width: 120px;
             flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid #E8E8E8;
+            padding-right: 16px;
         }
 
         .dtp-date-display {
-            font-size: 13px;
-            color: #333333;
-            margin-bottom: 12px;
+            font-size: 12px;
+            color: #888888;
+            margin-bottom: 8px;
             text-align: center;
         }
 
-        .dtp-time-container {
+        /* Time spinners container - horizontal layout */
+        .dtp-time-spinners {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
-            flex: 1;
+            gap: 0;
         }
 
-        .dtp-time-spinner {
+        /* Individual spinner - vertical layout (▲, value, ▼) */
+        .dtp-spinner {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 2px;
         }
 
+        /* Spinner buttons - subtle, borderless arrows */
         .dtp-spinner-btn {
-            width: 32px;
-            height: 24px;
+            width: 40px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: transparent;
-            border: 1px solid #E0E0E0;
-            border-radius: 4px;
+            border: none;
             cursor: pointer;
-            color: #666666;
-            transition: all 80ms ease;
+            color: #999999;
+            font-size: 10px;
+            transition: color 80ms ease;
         }
 
         .dtp-spinner-btn:hover {
-            background: #FEF7E6;
-            border-color: #F5A623;
             color: #F5A623;
         }
 
         .dtp-spinner-btn:active {
-            background: #F5A623;
-            color: #FFFFFF;
+            color: #D4920F;
         }
 
-        .dtp-time-value {
+        /* Time input - large, clean, borderless */
+        .dtp-time-input {
             font-family: system-ui, -apple-system, sans-serif;
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 300;
             color: #333333;
-            width: 48px;
+            width: 52px;
             text-align: center;
-            padding: 4px;
+            padding: 4px 0;
+            border: none;
             border-radius: 4px;
+            background: transparent;
             cursor: pointer;
             transition: background 80ms ease;
         }
 
-        .dtp-time-value:hover {
+        .dtp-time-input:hover {
             background: #FEF7E6;
         }
 
-        .dtp-time-value.focused {
-            background: #F5A623;
-            color: #FFFFFF;
+        .dtp-time-input:focus {
+            outline: none;
+            background: #FEF7E6;
+            color: #F5A623;
         }
 
+        /* Time separator colon */
         .dtp-time-separator {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 300;
             color: #333333;
-            padding: 0 4px;
+            padding: 0 2px;
+            align-self: center;
         }
 
         /* Calendar panel (right side) */
@@ -3951,19 +3960,30 @@
             background: #FEF7E6;
         }
 
+        /* Day headers container - grid aligned with calendar */
+        .dtp-day-headers {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-bottom: 4px;
+        }
+
+        /* Individual day header */
+        .dtp-day-header {
+            font-size: 11px;
+            font-weight: 600;
+            color: #888888;
+            text-align: center;
+            padding: 4px 0;
+            width: 32px;
+            justify-self: center;
+        }
+
         /* Calendar grid */
         .dtp-calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 2px;
-        }
-
-        .dtp-day-header {
-            font-size: 11px;
-            font-weight: 600;
-            color: #666666;
-            text-align: center;
-            padding: 4px 0;
         }
 
         .dtp-day {
