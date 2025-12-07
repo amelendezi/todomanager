@@ -1511,6 +1511,18 @@
             color: #1976D2;
         }
 
+        .opp-action-btn.complete-btn:hover:not(:disabled) svg {
+            color: #388E3C;
+        }
+
+        .opp-action-btn.reactivate-btn:hover:not(:disabled) svg {
+            color: #0288D1;
+        }
+
+        .opp-action-btn.uncancel-btn:hover:not(:disabled) svg {
+            color: #0288D1;
+        }
+
         /* Archived engagement styling */
         .engagement-item.archived {
             opacity: 0.6;
@@ -6410,8 +6422,8 @@
             const opp = state.engagements.find(o => o.id === engagementId);
             if (!opp) return;
 
-            // Don't change completed, closed, or dropped engagements
-            if (['completed', 'closed', 'dropped'].includes(opp.status)) return;
+            // Don't change completed engagements (final state)
+            if (opp.status === 'completed') return;
 
             // Get all todos linked to this engagement
             const linkedTodos = state.todos.filter(t => t.engagementId === engagementId);
@@ -6421,12 +6433,14 @@
 
             if (hasUndoneTodo) {
                 // Has non-completed todos → Active
+                // This also reactivates closed/dropped engagements when a todo is linked
                 if (opp.status !== 'active') {
                     opp.status = 'active';
                 }
             } else {
-                // No undone todos (either all complete or none linked) → Paused
-                if (opp.status !== 'paused') {
+                // No undone todos (either all complete or none linked)
+                // Only pause active engagements, don't change closed/dropped
+                if (opp.status === 'active') {
                     opp.status = 'paused';
                 }
             }
@@ -6865,36 +6879,42 @@
                     const statusClass = `status-${opp.status}`;
                     const typeClass = `type-${opp.type || 'engagement'}`;
                     const typeName = getTypeDisplayName(opp.type || 'engagement');
-                    const canClose = opp.status === 'active';  // Updated for new lifecycle model
-                    const isClosedOrCompleted = opp.status === 'closed' || opp.status === 'completed' || opp.status === 'dropped';
 
                     // Build action buttons based on status
                     let actionButtons = '';
-                    if (isClosedOrCompleted && !opp.archived) {
-                        // Only show Archive button for closed/cancelled (not yet archived)
-                        actionButtons = `
-                            <button class="opp-action-btn archive-btn" onclick="event.stopPropagation(); archiveEngagement(${index})" title="Archive Engagement">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="21 8 21 21 3 21 3 8"></polyline>
-                                    <rect x="1" y="3" width="22" height="5"></rect>
-                                    <line x1="10" y1="12" x2="14" y2="12"></line>
-                                </svg>
-                            </button>
-                        `;
-                    } else if (!opp.archived) {
-                        // Show normal action buttons for non-archived, non-closed/cancelled
-                        actionButtons = `
+                    if (!opp.archived) {
+                        const isActiveOrPaused = opp.status === 'active' || opp.status === 'paused';
+
+                        // Edit button - always shown for non-archived
+                        const editBtn = `
                             <button class="opp-action-btn edit-btn" onclick="event.stopPropagation(); openEditEngagement(${index})" title="Edit Engagement">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                 </svg>
                             </button>
-                            <button class="opp-action-btn close-btn" onclick="event.stopPropagation(); closeEngagementAction(${index})" title="${canClose ? 'Close Engagement' : 'Only Paused engagements can be closed'}" ${canClose ? '' : 'disabled'}>
+                        `;
+
+                        // Complete button (checkmark) - only for active/paused
+                        const completeBtn = isActiveOrPaused ? `
+                            <button class="opp-action-btn complete-btn" onclick="event.stopPropagation(); completeEngagement(${index})" title="Complete Engagement">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="20 6 9 17 4 12"></polyline>
                                 </svg>
                             </button>
+                        ` : '';
+
+                        // Close button (minus) - only for active/paused
+                        const closeBtn = isActiveOrPaused ? `
+                            <button class="opp-action-btn close-btn" onclick="event.stopPropagation(); closeEngagementAction(${index})" title="Close Engagement">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                        ` : '';
+
+                        // Cancel button (X in circle) - only for active/paused
+                        const cancelBtn = isActiveOrPaused ? `
                             <button class="opp-action-btn cancel-btn" onclick="event.stopPropagation(); openCancelConfirmation(${index})" title="Cancel Engagement">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
@@ -6902,6 +6922,30 @@
                                     <line x1="9" y1="9" x2="15" y2="15"></line>
                                 </svg>
                             </button>
+                        ` : '';
+
+                        // Reactivate button - only for closed
+                        const reactivateBtn = opp.status === 'closed' ? `
+                            <button class="opp-action-btn reactivate-btn" onclick="event.stopPropagation(); reactivateEngagement(${index})" title="Reactivate Engagement">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M23 4v6h-6"></path>
+                                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                                </svg>
+                            </button>
+                        ` : '';
+
+                        // Uncancel button - only for dropped
+                        const uncancelBtn = opp.status === 'dropped' ? `
+                            <button class="opp-action-btn uncancel-btn" onclick="event.stopPropagation(); uncancelEngagement(${index})" title="Uncancel Engagement">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M23 4v6h-6"></path>
+                                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                                </svg>
+                            </button>
+                        ` : '';
+
+                        // Delete button - always shown
+                        const deleteBtn = `
                             <button class="opp-action-btn delete-btn" onclick="event.stopPropagation(); openDeleteConfirmation(${index})" title="Delete Engagement">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="3 6 5 6 21 6"></polyline>
@@ -6911,6 +6955,8 @@
                                 </svg>
                             </button>
                         `;
+
+                        actionButtons = editBtn + completeBtn + closeBtn + cancelBtn + reactivateBtn + uncancelBtn + deleteBtn;
                     }
                     // No buttons for archived engagements
 
@@ -7223,8 +7269,8 @@
         // Close engagement action (set status to Closed)
         function closeEngagementAction(index) {
             const opp = state.engagements[index];
-            // Allow closing from active status in new lifecycle model
-            if (opp.status !== 'active') return;
+            // Allow closing from active or paused status
+            if (opp.status !== 'active' && opp.status !== 'paused') return;
 
             opp.status = 'closed';
             renderEngagements();
@@ -7232,6 +7278,60 @@
             // Also update side panel if open
             if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
                 updatePanelStatusBadge('closed');
+                renderLifecycleSection(opp);
+            }
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Complete engagement action (set status to Completed - final state)
+        function completeEngagement(index) {
+            const opp = state.engagements[index];
+            // Allow completing from active or paused status
+            if (opp.status !== 'active' && opp.status !== 'paused') return;
+
+            opp.status = 'completed';
+            renderEngagements();
+
+            // Also update side panel if open
+            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
+                updatePanelStatusBadge('completed');
+                renderLifecycleSection(opp);
+            }
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Reactivate engagement (from Closed to Paused)
+        function reactivateEngagement(index) {
+            const opp = state.engagements[index];
+            // Only allow reactivating from closed status
+            if (opp.status !== 'closed') return;
+
+            opp.status = 'paused';
+            renderEngagements();
+
+            // Also update side panel if open
+            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
+                updatePanelStatusBadge('paused');
+                renderLifecycleSection(opp);
+            }
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Uncancel engagement (from Dropped to Paused)
+        function uncancelEngagement(index) {
+            const opp = state.engagements[index];
+            // Only allow uncancelling from dropped status
+            if (opp.status !== 'dropped') return;
+
+            opp.status = 'paused';
+            renderEngagements();
+
+            // Also update side panel if open
+            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
+                updatePanelStatusBadge('paused');
                 renderLifecycleSection(opp);
             }
             // Auto-save to IndexedDB
@@ -8057,9 +8157,18 @@
         function filterEngagements(query) {
             if (!query || query.trim() === '') return [];
             const lowerQuery = query.toLowerCase().trim();
-            return state.engagements.filter(opp =>
-                opp.name.toLowerCase().includes(lowerQuery)
-            );
+            return state.engagements.filter(opp => {
+                const nameMatches = opp.name.toLowerCase().includes(lowerQuery);
+                if (!nameMatches) return false;
+
+                // Filter out closed and dropped engagements unless exact match
+                const isClosedOrDropped = opp.status === 'closed' || opp.status === 'dropped';
+                if (isClosedOrDropped) {
+                    // Only show if exact match (case insensitive)
+                    return opp.name.toLowerCase() === lowerQuery;
+                }
+                return true;
+            });
         }
 
         // Render autocomplete dropdown
