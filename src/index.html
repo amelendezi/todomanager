@@ -1036,6 +1036,269 @@
             color: #6C757D;
         }
 
+        /* Expanded engagement styles (Issue-57) */
+        .engagement-item.expanded {
+            flex-direction: column;
+            align-items: stretch;
+            cursor: default;
+            transform: none;
+        }
+
+        .engagement-item.expanded:hover {
+            transform: none;
+        }
+
+        .engagement-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .engagement-expanded-content {
+            display: none;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out;
+            border-top: 1px solid #E5E7EB;
+            margin-top: 12px;
+            padding-top: 0;
+        }
+
+        .engagement-item.expanded .engagement-expanded-content {
+            display: flex;
+            max-height: 400px;
+            opacity: 1;
+            padding-top: 16px;
+        }
+
+        .engagement-expanded-panes {
+            display: flex;
+            gap: 24px;
+            width: 100%;
+        }
+
+        .engagement-left-pane {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .engagement-right-pane {
+            flex: 1;
+            min-width: 0;
+            max-height: 280px;
+            overflow-y: auto;
+            border-left: 1px solid #E5E7EB;
+            padding-left: 24px;
+        }
+
+        /* Left pane content */
+        .engagement-detail-row {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 16px;
+        }
+
+        .engagement-detail-group {
+            flex: 1;
+        }
+
+        .engagement-detail-label {
+            font-size: 12px;
+            color: #6C757D;
+            margin-bottom: 4px;
+        }
+
+        .engagement-detail-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1F1F1F;
+        }
+
+        .engagement-detail-subtitle {
+            font-size: 12px;
+            color: #9CA3AF;
+        }
+
+        .engagement-description-section {
+            margin-bottom: 16px;
+        }
+
+        .engagement-description-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .engagement-description-text {
+            font-size: 13px;
+            color: #4B5563;
+            line-height: 1.5;
+        }
+
+        .engagement-action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        .engagement-promote-btn {
+            color: #2563EB;
+            font-size: 13px;
+            font-weight: 500;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .engagement-promote-btn:hover {
+            text-decoration: underline;
+        }
+
+        .engagement-comments-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #6C757D;
+            font-size: 13px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .engagement-comments-btn:hover {
+            background: #F3F4F6;
+            color: #374151;
+        }
+
+        .engagement-comments-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .engagement-comments-count {
+            font-weight: 500;
+        }
+
+        /* Right pane - Todo list */
+        .engagement-todo-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .engagement-todo-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .engagement-todo-status {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .engagement-todo-status.open {
+            color: #9CA3AF;
+        }
+
+        .engagement-todo-status.done {
+            color: #22C55E;
+        }
+
+        .engagement-todo-status.dropped {
+            color: #EF4444;
+        }
+
+        .engagement-todo-status svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .engagement-todo-title {
+            flex: 1;
+            font-size: 13px;
+            color: #1F1F1F;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .engagement-todo-item.completed .engagement-todo-title,
+        .engagement-todo-item.dropped .engagement-todo-title {
+            text-decoration: line-through;
+            color: #9CA3AF;
+        }
+
+        .engagement-todo-priority {
+            padding: 2px 8px;
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: 4px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .engagement-todo-priority.urgent {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .engagement-todo-priority.high {
+            background: #FFEDD5;
+            color: #EA580C;
+        }
+
+        .engagement-todo-priority.normal {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .engagement-todo-priority.low {
+            background: #E5E7EB;
+            color: #6B7280;
+        }
+
+        .engagement-todo-priority.someday {
+            background: #F3F4F6;
+            color: #9CA3AF;
+        }
+
+        .engagement-todo-effort {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: #6B7280;
+            white-space: nowrap;
+        }
+
+        .engagement-todo-effort svg {
+            width: 14px;
+            height: 14px;
+            color: #22C55E;
+        }
+
+        .engagement-todos-empty {
+            text-align: center;
+            color: #9CA3AF;
+            font-size: 13px;
+            padding: 24px;
+        }
+
         /* Status badges */
         .status-badge {
             padding: 4px 12px;
@@ -7116,22 +7379,219 @@
                         }
                     }
 
+                    // Check if this engagement is expanded (Issue-57)
+                    const isExpanded = state.expandedEngagementId === opp.id;
+                    if (isExpanded) {
+                        oppItem.classList.add('expanded');
+                    }
+
+                    // Build expanded content (Issue-57)
+                    const expandedContent = renderEngagementExpandedContent(opp, index);
+
                     oppItem.innerHTML = `
-                        <div class="engagement-content" onclick="openSidePanel(${index})">
-                            <div class="engagement-type-indicator">
-                                <span class="engagement-type-badge ${typeClass}">${typeName}</span>
+                        <div class="engagement-header" onclick="toggleEngagementExpansion('${opp.id}')">
+                            <div class="engagement-content">
+                                <div class="engagement-type-indicator">
+                                    <span class="engagement-type-badge ${typeClass}">${typeName}</span>
+                                </div>
+                                <div class="engagement-name">${escapeHtml(opp.name)}</div>
+                                ${opp.contact ? `<div class="engagement-contact">${escapeHtml(opp.contact)}</div>` : ''}
+                                ${oppTagsHtml}
                             </div>
-                            <div class="engagement-name">${escapeHtml(opp.name)}</div>
-                            ${opp.contact ? `<div class="engagement-contact">${escapeHtml(opp.contact)}</div>` : ''}
-                            ${oppTagsHtml}
+                            ${getStatusBadgeWithTooltip(opp.status, statusClass)}
+                            <div class="engagement-actions" onclick="event.stopPropagation()">
+                                ${actionButtons}
+                            </div>
                         </div>
-                        ${getStatusBadgeWithTooltip(opp.status, statusClass)}
-                        <div class="engagement-actions">
-                            ${actionButtons}
+                        <div class="engagement-expanded-content">
+                            ${expandedContent}
                         </div>
                     `;
                     engagementList.appendChild(oppItem);
                 });
+            }
+        }
+
+        // ========================================
+        // ENGAGEMENT EXPANSION FUNCTIONS (Issue-57)
+        // ========================================
+
+        // Toggle engagement expansion
+        function toggleEngagementExpansion(engagementId) {
+            // Accordion behavior: if already expanded, collapse; otherwise expand this one
+            if (state.expandedEngagementId === engagementId) {
+                state.expandedEngagementId = null;
+            } else {
+                state.expandedEngagementId = engagementId;
+            }
+            renderEngagements();
+        }
+
+        // Collapse engagement expansion (called when clicking outside)
+        function collapseEngagementExpansion() {
+            if (state.expandedEngagementId) {
+                state.expandedEngagementId = null;
+                renderEngagements();
+            }
+        }
+
+        // Render expanded content for an engagement
+        function renderEngagementExpandedContent(opp, index) {
+            // Get contact info
+            let contactName = '';
+            let contactRole = '';
+            if (opp.contactId) {
+                const person = state.people.find(p => p.id === opp.contactId);
+                if (person) {
+                    contactName = person.name;
+                    const role = state.roles.find(r => r.id === person.roleId);
+                    contactRole = role ? role.name : '';
+                }
+            } else if (opp.contact) {
+                contactName = opp.contact;
+            }
+
+            // Format start date as month/year
+            const startMonth = opp.startDate ? formatMonthFull(opp.startDate.substring(0, 7)) : 'Not set';
+
+            // Get comments count
+            const commentsCount = (opp.comments || []).length;
+
+            // Check if allocation exists
+            const allocation = getAllocationForEngagement(opp.id);
+            const hasAllocation = allocation && (allocation.preProject || allocation.project);
+            const promoteButtonText = hasAllocation ? 'Allocation' : 'Promote to Project';
+
+            // Render linked todos
+            const todosHtml = renderEngagementTodos(opp.id);
+
+            return `
+                <div class="engagement-expanded-panes">
+                    <div class="engagement-left-pane">
+                        <div class="engagement-detail-row">
+                            <div class="engagement-detail-group">
+                                <div class="engagement-detail-label">Contact:</div>
+                                <div class="engagement-detail-value">${escapeHtml(contactName) || 'Not set'}</div>
+                                ${contactRole ? `<div class="engagement-detail-subtitle">${escapeHtml(contactRole)}</div>` : ''}
+                            </div>
+                            <div class="engagement-detail-group">
+                                <div class="engagement-detail-label">Start Month:</div>
+                                <div class="engagement-detail-value">${startMonth}</div>
+                            </div>
+                        </div>
+                        <div class="engagement-description-section">
+                            <div class="engagement-description-label">Description</div>
+                            <div class="engagement-description-text">${opp.description ? escapeHtml(opp.description) : 'No description'}</div>
+                        </div>
+                        <div class="engagement-action-row">
+                            <button class="engagement-promote-btn" onclick="event.stopPropagation(); openUnifiedPromoteModal('${opp.id}')">${promoteButtonText}</button>
+                            <button class="engagement-comments-btn" onclick="event.stopPropagation(); openCommentsPanel('${opp.id}')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                <span class="engagement-comments-count">${commentsCount}</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="engagement-right-pane">
+                        ${todosHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render linked todos for an engagement (Issue-57)
+        function renderEngagementTodos(engagementId) {
+            const linkedTodos = state.todos.filter(t => t.engagementId === engagementId);
+
+            if (linkedTodos.length === 0) {
+                return '<div class="engagement-todos-empty">No todos linked to this engagement</div>';
+            }
+
+            // Sort: open first, then by priority, then completed, then dropped
+            const priorityOrder = { 'urgent': 0, 'high': 1, 'normal': 2, 'low': 3, 'someday': 4 };
+            linkedTodos.sort((a, b) => {
+                // Open todos first
+                if (!a.completed && !a.dropped && (b.completed || b.dropped)) return -1;
+                if ((a.completed || a.dropped) && !b.completed && !b.dropped) return 1;
+
+                // Among open, sort by priority
+                if (!a.completed && !a.dropped && !b.completed && !b.dropped) {
+                    return (priorityOrder[a.priority] || 2) - (priorityOrder[b.priority] || 2);
+                }
+
+                return 0;
+            });
+
+            const effortLabels = {
+                'very_low': '30 min',
+                'low': '2 hrs',
+                'average': '4 hrs',
+                'high': '6 hrs',
+                'very_high': '8 hrs'
+            };
+
+            const priorityLabels = {
+                'urgent': 'Urgent',
+                'high': 'High Priority',
+                'normal': 'Normal',
+                'low': 'Low',
+                'someday': 'Someday'
+            };
+
+            return `
+                <div class="engagement-todo-list">
+                    ${linkedTodos.map(todo => {
+                        const statusClass = todo.dropped ? 'dropped' : (todo.completed ? 'done' : 'open');
+                        const itemClass = todo.dropped ? 'dropped' : (todo.completed ? 'completed' : '');
+                        const effortText = effortLabels[todo.effort] || '4 hrs';
+                        const priorityText = priorityLabels[todo.priority] || 'Normal';
+
+                        // Status icon
+                        let statusIcon = '';
+                        if (todo.dropped) {
+                            statusIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+                        } else if (todo.completed) {
+                            statusIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                        } else {
+                            statusIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg>`;
+                        }
+
+                        return `
+                            <div class="engagement-todo-item ${itemClass}">
+                                <div class="engagement-todo-status ${statusClass}">${statusIcon}</div>
+                                <div class="engagement-todo-title">${escapeHtml(todo.title)}</div>
+                                <span class="engagement-todo-priority ${todo.priority || 'normal'}">${priorityText}</span>
+                                <span class="engagement-todo-effort">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    ${effortText}
+                                </span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        // Open unified promote modal (Issue-57 - placeholder, will be implemented in Phase 6)
+        function openUnifiedPromoteModal(engagementId) {
+            // For now, fallback to old behavior
+            const index = state.engagements.findIndex(e => e.id === engagementId);
+            if (index >= 0) {
+                const eng = state.engagements[index];
+                if (eng.type === 'engagement') {
+                    openPromotePreProjectModal(index);
+                } else if (eng.type === 'pre-project') {
+                    openPromoteProjectModal(index);
+                }
+            }
+        }
+
+        // Open comments panel for an engagement (Issue-57)
+        function openCommentsPanel(engagementId) {
+            const index = state.engagements.findIndex(e => e.id === engagementId);
+            if (index >= 0) {
+                openSidePanel(index);
             }
         }
 
