@@ -3071,18 +3071,18 @@
         }
 
         .type-engagement {
-            background: #E8F4FD;
-            color: #0369A1;
+            background: #FFF7ED;
+            color: #EA580C;
         }
 
         .type-pre-project {
             background: #FEF3C7;
-            color: #92400E;
+            color: #B45309;
         }
 
         .type-project {
-            background: #D1FAE5;
-            color: #065F46;
+            background: #DCFCE7;
+            color: #16A34A;
         }
 
         /* Lifecycle section in side panel */
@@ -7016,8 +7016,10 @@
                     oppItem.className = 'engagement-item' + (opp.archived ? ' archived' : '');
 
                     const statusClass = `status-${opp.status}`;
-                    const typeClass = `type-${opp.type || 'engagement'}`;
-                    const typeName = getTypeDisplayName(opp.type || 'engagement');
+                    // Use dynamic type based on allocation dates (Issue-57)
+                    const displayType = getEngagementDisplayType(opp);
+                    const typeClass = `type-${displayType}`;
+                    const typeName = getTypeDisplayName(displayType);
 
                     // Build action buttons based on status
                     let actionButtons = '';
@@ -7522,9 +7524,10 @@
 
         // Render lifecycle section in side panel
         function renderLifecycleSection(eng) {
-            // Update type badge
-            panelEngTypeBadge.textContent = getTypeDisplayName(eng.type);
-            panelEngTypeBadge.className = `engagement-type-badge ${getTypeClass(eng.type)}`;
+            // Update type badge using dynamic type based on allocation dates (Issue-57)
+            const displayType = getEngagementDisplayType(eng);
+            panelEngTypeBadge.textContent = getTypeDisplayName(displayType);
+            panelEngTypeBadge.className = `engagement-type-badge ${getTypeClass(displayType)}`;
 
             // Render action buttons based on type and status
             renderLifecycleActions(eng);
