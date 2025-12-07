@@ -3736,7 +3736,8 @@
             border-top-color: #1F2937;
         }
 
-        .status-tooltip-container:hover .status-tooltip {
+        .status-tooltip-container:hover .status-tooltip,
+        .status-tooltip-container .status-tooltip.expanded {
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
@@ -6943,29 +6944,29 @@
             const statusDescriptions = {
                 active: {
                     brief: 'Currently being worked on',
-                    detail: 'Default state for engagements being actively worked on. Can transition to Completed, Closed, or Dropped.'
+                    detail: 'Default state for new engagements. Transitions to Completed (via Complete action), Closed (via Close action), or Dropped (via Cancel action).'
                 },
                 completed: {
                     brief: 'Successfully finished',
-                    detail: 'Successfully finished with all deliverables met. Final state indicating full success.'
+                    detail: 'Transitioned from Active via the Complete action. Indicates all deliverables were met successfully. This is a final state.'
                 },
                 closed: {
                     brief: 'Ended normally',
-                    detail: 'Ended normally but not necessarily with full delivery. Can be reactivated if needed.'
+                    detail: 'Transitioned from Active via the Close action. Ended normally but not necessarily with full delivery. Can be reactivated if needed.'
                 },
                 dropped: {
                     brief: 'Cancelled or abandoned',
-                    detail: 'Cancelled or abandoned before completion. Typically due to changing priorities or external factors.'
+                    detail: 'Transitioned from Active via the Cancel action. Cancelled or abandoned before completion due to changing priorities or external factors.'
                 }
             };
 
             const currentDesc = statusDescriptions[currentStatus] || statusDescriptions.active;
 
             return `
-                <div class="status-tooltip">
+                <div class="status-tooltip" onclick="event.stopPropagation();">
                     <div class="status-tooltip-header">Status: ${capitalizeFirst(currentStatus)}</div>
                     <div class="status-tooltip-brief">${currentDesc.brief}</div>
-                    <span class="status-tooltip-link" onclick="event.stopPropagation(); this.closest('.status-tooltip').classList.add('expanded');">Read more</span>
+                    <span class="status-tooltip-link" onclick="event.stopPropagation(); event.preventDefault(); expandStatusTooltip(this);">Read more</span>
                     <div class="status-tooltip-expanded">
                         <div class="status-item">
                             <div class="status-item-name">Active</div>
@@ -6986,6 +6987,21 @@
                     </div>
                 </div>
             `;
+        }
+
+        // Expand status tooltip
+        function expandStatusTooltip(linkElement) {
+            const tooltip = linkElement.closest('.status-tooltip');
+            if (tooltip) {
+                tooltip.classList.add('expanded');
+            }
+        }
+
+        // Collapse all expanded status tooltips
+        function collapseAllStatusTooltips() {
+            document.querySelectorAll('.status-tooltip.expanded').forEach(tooltip => {
+                tooltip.classList.remove('expanded');
+            });
         }
 
         // Generate status badge with tooltip
@@ -11679,12 +11695,22 @@
                     const container = e.target.closest('.status-tooltip-container');
                     if (container) {
                         const tooltip = container.querySelector('.status-tooltip');
-                        if (tooltip) {
+                        if (tooltip && !tooltip.classList.contains('expanded')) {
                             tooltip.classList.remove('expanded');
                         }
                     }
                 }
             }, true);
+
+            // Collapse expanded status tooltips when clicking outside
+            document.addEventListener('click', (e) => {
+                if (e.target && e.target.closest) {
+                    // If click is not inside a status tooltip, collapse all expanded tooltips
+                    if (!e.target.closest('.status-tooltip')) {
+                        collapseAllStatusTooltips();
+                    }
+                }
+            });
 
             // Initialize app with IndexedDB (handles migration and navigation)
             initializeApp();
