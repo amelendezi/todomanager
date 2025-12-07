@@ -3373,6 +3373,8 @@
         /* Promote to Pre-Project Modal */
         .promote-modal-content {
             max-width: 500px;
+            overflow: visible;
+            max-height: none;
         }
 
         .promote-form-group {
@@ -3775,6 +3777,17 @@
         .dtp-picker.open {
             opacity: 1;
             visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Position picker above input when insufficient space below */
+        .dtp-picker.above {
+            top: auto;
+            bottom: calc(100% + 4px);
+            transform: translateY(8px) scale(0.98);
+        }
+
+        .dtp-picker.above.open {
             transform: translateY(0) scale(1);
         }
 
@@ -10793,6 +10806,10 @@
                 }
 
                 this.render();
+
+                // Detect if picker should appear above input (smart positioning)
+                this.positionPicker();
+
                 this.picker.classList.add('open');
                 this.focusedElement = 'calendar';
 
@@ -10800,10 +10817,27 @@
                 setTimeout(() => this.calendarGrid.focus(), 50);
             }
 
+            positionPicker() {
+                // Reset position class
+                this.picker.classList.remove('above');
+
+                // Get input position and picker dimensions
+                const inputRect = this.displayInput.getBoundingClientRect();
+                const pickerHeight = this.picker.offsetHeight || 380; // Estimated height
+                const viewportHeight = window.innerHeight;
+                const spaceBelow = viewportHeight - inputRect.bottom;
+                const spaceAbove = inputRect.top;
+
+                // Position above if insufficient space below and more space above
+                if (spaceBelow < pickerHeight + 20 && spaceAbove > spaceBelow) {
+                    this.picker.classList.add('above');
+                }
+            }
+
             close() {
                 if (!this.isOpen) return;
                 this.isOpen = false;
-                this.picker.classList.remove('open');
+                this.picker.classList.remove('open', 'above');
                 this.hideMonthPicker();
                 this.hideYearPicker();
                 this.displayInput.focus();
