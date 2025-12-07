@@ -612,19 +612,21 @@
         /* Contact inline form within right panel */
         .inline-contact-form {
             background: #F9FAFB;
-            border: 1px solid #E5E7EB;
+            border: 1px solid transparent;
             border-radius: 8px;
             padding: 0;
             margin-top: 12px;
             max-height: 0;
             overflow: hidden;
             transition: max-height 250ms cubic-bezier(0.4, 0, 0.2, 1),
-                        padding 250ms cubic-bezier(0.4, 0, 0.2, 1);
+                        padding 250ms cubic-bezier(0.4, 0, 0.2, 1),
+                        border-color 150ms ease-in-out;
         }
 
         .inline-contact-form.open {
             max-height: 250px;
             padding: 16px;
+            border-color: #E5E7EB;
         }
 
         .inline-contact-form .inline-contact-header {
@@ -667,6 +669,13 @@
             height: 40px;
             padding: 8px 12px;
             font-size: 13px;
+        }
+
+        /* Inline engagement textarea styling */
+        .inline-eng-textarea {
+            min-height: 60px;
+            max-height: 100px;
+            resize: vertical;
         }
 
         /* Panel actions at bottom of right column */
@@ -4399,7 +4408,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="inline-eng-description" class="form-label">Description</label>
-                                <input type="text" id="inline-eng-description" class="form-input" placeholder="Brief description">
+                                <textarea id="inline-eng-description" class="form-textarea inline-eng-textarea" placeholder="Additional details (optional)"></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="inline-eng-start-date" class="form-label">Start Date</label>
