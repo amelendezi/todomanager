@@ -3678,6 +3678,126 @@
             color: #991B1B;
         }
 
+        .status-badge.status-closed {
+            background: #E5E7EB;
+            color: #374151;
+        }
+
+        /* Status tooltip container */
+        .status-tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Side panel tooltip should appear below and align left to avoid clipping */
+        .side-panel-body .status-tooltip {
+            bottom: auto;
+            top: calc(100% + 8px);
+            left: 0;
+            transform: none;
+        }
+
+        .side-panel-body .status-tooltip::after {
+            top: auto;
+            bottom: 100%;
+            left: 24px;
+            transform: none;
+            border-top-color: transparent;
+            border-bottom-color: #1F2937;
+        }
+
+        .status-tooltip {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F2937;
+            color: #F9FAFB;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+            width: 280px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .status-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #1F2937;
+        }
+
+        .status-tooltip-container:hover .status-tooltip {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .status-tooltip-header {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #F9FAFB;
+        }
+
+        .status-tooltip-brief {
+            color: #D1D5DB;
+            margin-bottom: 8px;
+        }
+
+        .status-tooltip-link {
+            color: #60A5FA;
+            cursor: pointer;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .status-tooltip-link:hover {
+            text-decoration: underline;
+        }
+
+        .status-tooltip-expanded {
+            display: none;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #374151;
+        }
+
+        .status-tooltip.expanded .status-tooltip-expanded {
+            display: block;
+        }
+
+        .status-tooltip.expanded .status-tooltip-link {
+            display: none;
+        }
+
+        .status-item {
+            margin-bottom: 10px;
+        }
+
+        .status-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .status-item-name {
+            font-weight: 600;
+            color: #F9FAFB;
+            margin-bottom: 2px;
+        }
+
+        .status-item-desc {
+            font-size: 12px;
+            color: #9CA3AF;
+        }
+
         /* Engagement item type indicator */
         .engagement-type-indicator {
             display: flex;
@@ -4693,7 +4813,10 @@
             </div>
             <div class="detail-group">
                 <div class="detail-label">Status</div>
-                <span id="panel-eng-status" class="status-badge"></span>
+                <div id="panel-status-container" class="status-tooltip-container">
+                    <span id="panel-eng-status" class="status-badge"></span>
+                    <div id="panel-status-tooltip" class="status-tooltip"></div>
+                </div>
             </div>
 
             <!-- Lifecycle Section -->
@@ -6800,7 +6923,7 @@
                             ${opp.contact ? `<div class="engagement-contact">${escapeHtml(opp.contact)}</div>` : ''}
                             ${oppTagsHtml}
                         </div>
-                        <span class="status-badge ${statusClass}">${capitalizeFirst(opp.status)}</span>
+                        ${getStatusBadgeWithTooltip(opp.status, statusClass)}
                         <div class="engagement-actions">
                             ${actionButtons}
                         </div>
@@ -6813,6 +6936,66 @@
         // Capitalize first letter
         function capitalizeFirst(str) {
             return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Generate status tooltip HTML
+        function getStatusTooltipHtml(currentStatus) {
+            const statusDescriptions = {
+                active: {
+                    brief: 'Currently being worked on',
+                    detail: 'Default state for engagements being actively worked on. Can transition to Completed, Closed, or Dropped.'
+                },
+                completed: {
+                    brief: 'Successfully finished',
+                    detail: 'Successfully finished with all deliverables met. Final state indicating full success.'
+                },
+                closed: {
+                    brief: 'Ended normally',
+                    detail: 'Ended normally but not necessarily with full delivery. Can be reactivated if needed.'
+                },
+                dropped: {
+                    brief: 'Cancelled or abandoned',
+                    detail: 'Cancelled or abandoned before completion. Typically due to changing priorities or external factors.'
+                }
+            };
+
+            const currentDesc = statusDescriptions[currentStatus] || statusDescriptions.active;
+
+            return `
+                <div class="status-tooltip">
+                    <div class="status-tooltip-header">Status: ${capitalizeFirst(currentStatus)}</div>
+                    <div class="status-tooltip-brief">${currentDesc.brief}</div>
+                    <span class="status-tooltip-link" onclick="event.stopPropagation(); this.closest('.status-tooltip').classList.add('expanded');">Read more</span>
+                    <div class="status-tooltip-expanded">
+                        <div class="status-item">
+                            <div class="status-item-name">Active</div>
+                            <div class="status-item-desc">${statusDescriptions.active.detail}</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-item-name">Completed</div>
+                            <div class="status-item-desc">${statusDescriptions.completed.detail}</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-item-name">Closed</div>
+                            <div class="status-item-desc">${statusDescriptions.closed.detail}</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-item-name">Dropped</div>
+                            <div class="status-item-desc">${statusDescriptions.dropped.detail}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Generate status badge with tooltip
+        function getStatusBadgeWithTooltip(status, statusClass) {
+            return `
+                <div class="status-tooltip-container">
+                    <span class="status-badge ${statusClass}">${capitalizeFirst(status)}</span>
+                    ${getStatusTooltipHtml(status)}
+                </div>
+            `;
         }
 
         // Side Panel functions
@@ -6866,6 +7049,11 @@
         function updatePanelStatusBadge(status) {
             panelEngStatus.textContent = capitalizeFirst(status);
             panelEngStatus.className = `status-badge status-${status}`;
+            // Update tooltip content
+            const tooltipEl = document.getElementById('panel-status-tooltip');
+            if (tooltipEl) {
+                tooltipEl.outerHTML = getStatusTooltipHtml(status);
+            }
         }
 
         // Save engagement field from side panel inline edit
@@ -11484,6 +11672,19 @@
 
             // Initialize DateTimePickers
             initDateTimePickers();
+
+            // Collapse status tooltips when mouse leaves container
+            document.addEventListener('mouseleave', (e) => {
+                if (e.target && e.target.closest) {
+                    const container = e.target.closest('.status-tooltip-container');
+                    if (container) {
+                        const tooltip = container.querySelector('.status-tooltip');
+                        if (tooltip) {
+                            tooltip.classList.remove('expanded');
+                        }
+                    }
+                }
+            }, true);
 
             // Initialize app with IndexedDB (handles migration and navigation)
             initializeApp();
