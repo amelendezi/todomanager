@@ -408,6 +408,10 @@
             color: #ADB5BD;
         }
 
+        .todo-item.dropped .todo-description {
+            color: #E57373;
+        }
+
         .todo-title {
             font-size: 14px;
             font-weight: 500;
@@ -874,6 +878,34 @@
         .todo-item.completed .todo-title {
             text-decoration: line-through;
             color: #ADB5BD;
+        }
+
+        .todo-item.dropped {
+            opacity: 0.6;
+        }
+
+        .todo-item.dropped .todo-title {
+            text-decoration: line-through;
+            color: #E57373;
+        }
+
+        .todo-item.dropped .todo-checkbox {
+            background: #FFCDD2;
+            border-color: #E57373;
+        }
+
+        .todo-item.dropped .todo-checkbox::after {
+            content: '✕';
+            display: block;
+            color: #C62828;
+            font-size: 10px;
+            line-height: 16px;
+            text-align: center;
+            border: none;
+            transform: none;
+            width: auto;
+            height: auto;
+            margin: 0;
         }
 
         /* Checkmark icon inside checkbox */
@@ -1511,6 +1543,18 @@
             color: #1976D2;
         }
 
+        .opp-action-btn.complete-btn:hover:not(:disabled) svg {
+            color: #388E3C;
+        }
+
+        .opp-action-btn.reactivate-btn:hover:not(:disabled) svg {
+            color: #0288D1;
+        }
+
+        .opp-action-btn.uncancel-btn:hover:not(:disabled) svg {
+            color: #0288D1;
+        }
+
         /* Archived engagement styling */
         .engagement-item.archived {
             opacity: 0.6;
@@ -1797,6 +1841,31 @@
 
         .btn-warning:hover {
             background: #E65100;
+        }
+
+        .btn-success {
+            background: #388E3C;
+            color: #FFFFFF;
+        }
+
+        .btn-success:hover {
+            background: #2E7D32;
+        }
+
+        /* Todo Action Modal */
+        .todo-action-modal-content {
+            max-width: 400px;
+        }
+
+        .todo-action-buttons {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .todo-action-buttons .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* People page styles */
@@ -3678,6 +3747,126 @@
             color: #991B1B;
         }
 
+        .status-badge.status-closed {
+            background: #E5E7EB;
+            color: #374151;
+        }
+
+        .status-badge.status-paused {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        /* Status tooltip container */
+        .status-tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Side panel tooltip aligns left to fit within panel */
+        .side-panel-body .status-tooltip {
+            left: 0;
+            transform: none;
+        }
+
+        .side-panel-body .status-tooltip::after {
+            left: 24px;
+            transform: none;
+        }
+
+        .status-tooltip {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F2937;
+            color: #F9FAFB;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+            width: 280px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .status-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-bottom-color: #1F2937;
+        }
+
+        .status-tooltip-container:hover .status-tooltip,
+        .status-tooltip-container .status-tooltip.expanded {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .status-tooltip-header {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #F9FAFB;
+        }
+
+        .status-tooltip-brief {
+            color: #D1D5DB;
+            margin-bottom: 8px;
+        }
+
+        .status-tooltip-link {
+            color: #60A5FA;
+            cursor: pointer;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .status-tooltip-link:hover {
+            text-decoration: underline;
+        }
+
+        .status-tooltip-expanded {
+            display: none;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #374151;
+        }
+
+        .status-tooltip.expanded .status-tooltip-expanded {
+            display: block;
+        }
+
+        .status-tooltip.expanded .status-tooltip-link {
+            display: none;
+        }
+
+        .status-item {
+            margin-bottom: 10px;
+        }
+
+        .status-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .status-item-name {
+            font-weight: 600;
+            color: #F9FAFB;
+            margin-bottom: 2px;
+        }
+
+        .status-item-desc {
+            font-size: 12px;
+            color: #9CA3AF;
+        }
+
         /* Engagement item type indicator */
         .engagement-type-indicator {
             display: flex;
@@ -4693,7 +4882,10 @@
             </div>
             <div class="detail-group">
                 <div class="detail-label">Status</div>
-                <span id="panel-eng-status" class="status-badge"></span>
+                <div id="panel-status-container" class="status-tooltip-container">
+                    <span id="panel-eng-status" class="status-badge"></span>
+                    <div id="panel-status-tooltip" class="status-tooltip"></div>
+                </div>
             </div>
 
             <!-- Lifecycle Section -->
@@ -5075,6 +5267,51 @@
             <div class="modal-actions">
                 <button type="button" class="btn btn-secondary" onclick="closeCancelModal()">Back</button>
                 <button type="button" class="btn btn-warning" onclick="confirmCancelEngagement()">Cancel Engagement</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Todo Action Modal (for Close/Cancel engagement with linked todos) -->
+    <div id="todo-action-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closeTodoActionModal()"></div>
+        <div class="modal-content todo-action-modal-content">
+            <svg class="cancel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            <h2 class="modal-title" id="todo-action-modal-title">Handle Linked Todos</h2>
+            <p id="todo-action-eng-name" style="text-align: center; color: #6C757D; margin-bottom: 10px;"></p>
+            <p id="todo-action-count" style="text-align: center; color: #495057; margin-bottom: 20px; font-size: 14px;"></p>
+            <p style="font-size: 13px; color: #495057; margin-bottom: 16px; text-align: center;">
+                What would you like to do with the linked todos?
+            </p>
+            <div class="todo-action-buttons">
+                <button type="button" class="btn btn-success" onclick="todoActionComplete()" style="width: 100%; margin-bottom: 8px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px; margin-right: 6px;">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Complete All Todos
+                </button>
+                <button type="button" class="btn btn-warning" onclick="todoActionDrop()" style="width: 100%; margin-bottom: 8px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px; margin-right: 6px;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                    Drop All Todos
+                </button>
+                <button type="button" class="btn btn-danger" onclick="todoActionDelete()" style="width: 100%; margin-bottom: 16px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px; margin-right: 6px;">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Delete All Todos
+                </button>
+            </div>
+            <div class="modal-actions" style="border-top: 1px solid #E9ECEF; padding-top: 16px;">
+                <button type="button" class="btn btn-secondary" onclick="closeTodoActionModal()" style="width: 100%;">Cancel</button>
             </div>
         </div>
     </div>
@@ -5519,6 +5756,9 @@
             deleteEngagementIndex: null,  // Track which engagement is pending deletion
             deletePersonIndex: null,  // Track which person is pending deletion
             cancelEngagementIndex: null,  // Track which engagement is pending cancellation
+            todoActionModalOpen: false,  // Track if todo action modal is open
+            todoActionEngagementIndex: null,  // Track which engagement's todos are being handled
+            todoActionType: null,  // 'close' or 'cancel' - to continue after handling todos
             // Autocomplete state
             selectedEngagementId: null,  // ID of selected engagement for todo linking
             selectedPersonId: null,  // ID of selected person for engagement contact
@@ -5698,6 +5938,12 @@
         const cancelModal = document.getElementById('cancel-modal');
         const cancelOppName = document.getElementById('cancel-eng-name');
         const cancelReason = document.getElementById('cancel-reason');
+
+        // DOM Elements - Todo Action Modal
+        const todoActionModal = document.getElementById('todo-action-modal');
+        const todoActionModalTitle = document.getElementById('todo-action-modal-title');
+        const todoActionEngName = document.getElementById('todo-action-eng-name');
+        const todoActionCount = document.getElementById('todo-action-count');
 
         // DOM Elements - Comments
         const panelComments = document.getElementById('panel-comments');
@@ -6260,6 +6506,8 @@
                     tagIds: [...state.selectedTodoTagIds],
                     completed: false,
                     completedAt: null,
+                    dropped: false,
+                    droppedAt: null,
                     createdAt: now,
                     updatedAt: now
                 };
@@ -6282,33 +6530,50 @@
         }
 
         // Auto-update engagement status based on linked todos
-        // Status Flow: Requested → Open (when todo linked) → Paused (all todos complete) → Closed
+        // Status Flow: Active ↔ Paused (based on undone todos)
         function updateEngagementAutoStatus(engagementId) {
             const opp = state.engagements.find(o => o.id === engagementId);
             if (!opp) return;
 
-            // Don't change closed or cancelled engagements
-            if (opp.status === 'closed' || opp.status === 'cancelled') return;
+            // Don't change completed engagements (final state)
+            if (opp.status === 'completed') return;
 
-            // Get all todos linked to this engagement
-            const linkedTodos = state.todos.filter(t => t.engagementId === engagementId);
+            // Get all todos linked to this engagement (excluding dropped)
+            const linkedTodos = state.todos.filter(t => t.engagementId === engagementId && !t.dropped);
 
             // Check if any linked todo is not completed
-            const hasActiveTodo = linkedTodos.some(t => !t.completed);
-            const hasAnyTodo = linkedTodos.length > 0;
+            const hasUndoneTodo = linkedTodos.some(t => !t.completed);
 
-            if (hasActiveTodo) {
-                // Has non-completed todos → Open
-                if (opp.status !== 'open') {
-                    opp.status = 'open';
+            if (hasUndoneTodo) {
+                // Has non-completed todos → Active
+                // This also reactivates closed/dropped engagements when a todo is linked
+                if (opp.status !== 'active') {
+                    opp.status = 'active';
                 }
-            } else if (hasAnyTodo) {
-                // All todos are completed → Paused
-                if (opp.status !== 'paused') {
+            } else {
+                // No undone todos (either all complete or none linked)
+                // Only pause active engagements, don't change closed/dropped
+                if (opp.status === 'active') {
                     opp.status = 'paused';
                 }
             }
-            // If no todos linked, keep current status
+        }
+
+        // Update all engagements' pause/resume status based on linked todos
+        function updateAllEngagementStatuses() {
+            state.engagements.forEach(eng => {
+                // Only update active or paused engagements
+                if (['completed', 'closed', 'dropped'].includes(eng.status)) return;
+
+                const linkedTodos = state.todos.filter(t => t.engagementId === eng.id && !t.dropped);
+                const hasUndoneTodo = linkedTodos.some(t => !t.completed);
+
+                if (hasUndoneTodo) {
+                    eng.status = 'active';
+                } else {
+                    eng.status = 'paused';
+                }
+            });
         }
 
         // Render functions
@@ -6336,18 +6601,23 @@
                 const sortedTodos = state.todos
                     .map((todo, index) => ({ todo, originalIndex: index }))
                     .sort((a, b) => {
-                        // Incomplete todos first, then completed
-                        if (a.todo.completed !== b.todo.completed) {
-                            return a.todo.completed ? 1 : -1;
+                        // Active todos first, then completed/dropped
+                        const aActive = !a.todo.completed && !a.todo.dropped;
+                        const bActive = !b.todo.completed && !b.todo.dropped;
+
+                        if (aActive !== bActive) {
+                            return aActive ? -1 : 1;
                         }
 
-                        if (a.todo.completed) {
-                            // Both completed: sort by completedAt (most recent first)
-                            const aTime = a.todo.completedAt ? new Date(a.todo.completedAt).getTime() : 0;
-                            const bTime = b.todo.completedAt ? new Date(b.todo.completedAt).getTime() : 0;
+                        if (!aActive) {
+                            // Both completed or dropped: sort by completedAt/droppedAt (most recent first)
+                            const aTime = a.todo.completedAt || a.todo.droppedAt
+                                ? new Date(a.todo.completedAt || a.todo.droppedAt).getTime() : 0;
+                            const bTime = b.todo.completedAt || b.todo.droppedAt
+                                ? new Date(b.todo.completedAt || b.todo.droppedAt).getTime() : 0;
                             return bTime - aTime;
                         } else {
-                            // Both incomplete: sort by dueDate (earliest first)
+                            // Both active: sort by dueDate (earliest first)
                             const aDate = a.todo.dueDate ? new Date(a.todo.dueDate).getTime() : Infinity;
                             const bDate = b.todo.dueDate ? new Date(b.todo.dueDate).getTime() : Infinity;
                             return aDate - bDate;
@@ -6356,7 +6626,8 @@
 
                 sortedTodos.forEach(({ todo, originalIndex: index }) => {
                     const todoItem = document.createElement('div');
-                    todoItem.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+                    const stateClass = todo.dropped ? 'dropped' : (todo.completed ? 'completed' : '');
+                    todoItem.className = `todo-item ${stateClass}`;
 
                     // Format deadline (supports both old dueDate and new deadline)
                     let dueDateHtml = '';
@@ -6365,7 +6636,7 @@
                         const dueDate = new Date(deadlineValue);
                         const today = new Date();
                         today.setHours(0, 0, 0, 0);
-                        const isOverdue = dueDate < today && !todo.completed;
+                        const isOverdue = dueDate < today && !todo.completed && !todo.dropped;
                         dueDateHtml = `<div class="todo-due-date ${isOverdue ? 'overdue' : ''}">📅 ${formatDeadlineDisplay(deadlineValue)}</div>`;
                     }
 
@@ -6438,8 +6709,12 @@
                         descriptionHtml = `<div class="todo-description">${escapeHtml(todo.description)}</div>`;
                     }
 
+                    // Checkbox class and click handler (dropped todos can't be toggled)
+                    const checkboxClass = todo.dropped ? 'dropped' : (todo.completed ? 'checked' : '');
+                    const checkboxClick = todo.dropped ? '' : `onclick="toggleTodo(${index})"`;
+
                     todoItem.innerHTML = `
-                        <div class="todo-checkbox ${todo.completed ? 'checked' : ''}" onclick="toggleTodo(${index})"></div>
+                        <div class="todo-checkbox ${checkboxClass}" ${checkboxClick}></div>
                         <div class="todo-content">
                             <div class="todo-info">
                                 <div class="todo-title">${escapeHtml(todo.title)}</div>
@@ -6727,36 +7002,42 @@
                     const statusClass = `status-${opp.status}`;
                     const typeClass = `type-${opp.type || 'engagement'}`;
                     const typeName = getTypeDisplayName(opp.type || 'engagement');
-                    const canClose = opp.status === 'active';  // Updated for new lifecycle model
-                    const isClosedOrCompleted = opp.status === 'closed' || opp.status === 'completed' || opp.status === 'dropped';
 
                     // Build action buttons based on status
                     let actionButtons = '';
-                    if (isClosedOrCompleted && !opp.archived) {
-                        // Only show Archive button for closed/cancelled (not yet archived)
-                        actionButtons = `
-                            <button class="opp-action-btn archive-btn" onclick="event.stopPropagation(); archiveEngagement(${index})" title="Archive Engagement">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="21 8 21 21 3 21 3 8"></polyline>
-                                    <rect x="1" y="3" width="22" height="5"></rect>
-                                    <line x1="10" y1="12" x2="14" y2="12"></line>
-                                </svg>
-                            </button>
-                        `;
-                    } else if (!opp.archived) {
-                        // Show normal action buttons for non-archived, non-closed/cancelled
-                        actionButtons = `
+                    if (!opp.archived) {
+                        const isActiveOrPaused = opp.status === 'active' || opp.status === 'paused';
+
+                        // Edit button - always shown for non-archived
+                        const editBtn = `
                             <button class="opp-action-btn edit-btn" onclick="event.stopPropagation(); openEditEngagement(${index})" title="Edit Engagement">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                 </svg>
                             </button>
-                            <button class="opp-action-btn close-btn" onclick="event.stopPropagation(); closeEngagementAction(${index})" title="${canClose ? 'Close Engagement' : 'Only Paused engagements can be closed'}" ${canClose ? '' : 'disabled'}>
+                        `;
+
+                        // Complete button (checkmark) - only for active/paused
+                        const completeBtn = isActiveOrPaused ? `
+                            <button class="opp-action-btn complete-btn" onclick="event.stopPropagation(); completeEngagement(${index})" title="Complete Engagement">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="20 6 9 17 4 12"></polyline>
                                 </svg>
                             </button>
+                        ` : '';
+
+                        // Close button (minus) - only for active/paused
+                        const closeBtn = isActiveOrPaused ? `
+                            <button class="opp-action-btn close-btn" onclick="event.stopPropagation(); closeEngagementAction(${index})" title="Close Engagement">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                        ` : '';
+
+                        // Cancel button (X in circle) - only for active/paused
+                        const cancelBtn = isActiveOrPaused ? `
                             <button class="opp-action-btn cancel-btn" onclick="event.stopPropagation(); openCancelConfirmation(${index})" title="Cancel Engagement">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
@@ -6764,6 +7045,30 @@
                                     <line x1="9" y1="9" x2="15" y2="15"></line>
                                 </svg>
                             </button>
+                        ` : '';
+
+                        // Reactivate button - only for closed
+                        const reactivateBtn = opp.status === 'closed' ? `
+                            <button class="opp-action-btn reactivate-btn" onclick="event.stopPropagation(); reactivateEngagement(${index})" title="Reactivate Engagement">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M23 4v6h-6"></path>
+                                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                                </svg>
+                            </button>
+                        ` : '';
+
+                        // Uncancel button - only for dropped
+                        const uncancelBtn = opp.status === 'dropped' ? `
+                            <button class="opp-action-btn uncancel-btn" onclick="event.stopPropagation(); uncancelEngagement(${index})" title="Uncancel Engagement">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M23 4v6h-6"></path>
+                                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                                </svg>
+                            </button>
+                        ` : '';
+
+                        // Delete button - always shown
+                        const deleteBtn = `
                             <button class="opp-action-btn delete-btn" onclick="event.stopPropagation(); openDeleteConfirmation(${index})" title="Delete Engagement">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="3 6 5 6 21 6"></polyline>
@@ -6773,6 +7078,8 @@
                                 </svg>
                             </button>
                         `;
+
+                        actionButtons = editBtn + completeBtn + closeBtn + cancelBtn + reactivateBtn + uncancelBtn + deleteBtn;
                     }
                     // No buttons for archived engagements
 
@@ -6800,7 +7107,7 @@
                             ${opp.contact ? `<div class="engagement-contact">${escapeHtml(opp.contact)}</div>` : ''}
                             ${oppTagsHtml}
                         </div>
-                        <span class="status-badge ${statusClass}">${capitalizeFirst(opp.status)}</span>
+                        ${getStatusBadgeWithTooltip(opp.status, statusClass)}
                         <div class="engagement-actions">
                             ${actionButtons}
                         </div>
@@ -6813,6 +7120,89 @@
         // Capitalize first letter
         function capitalizeFirst(str) {
             return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Generate status tooltip HTML
+        function getStatusTooltipHtml(currentStatus) {
+            const statusDescriptions = {
+                active: {
+                    brief: 'Currently being worked on',
+                    detail: 'Default state for new engagements with linked Todos. Transitions to Paused (auto, when no undone Todos), Completed (Complete action), Closed (Close action), or Dropped (Cancel action).'
+                },
+                paused: {
+                    brief: 'No active Todos linked',
+                    detail: 'Auto-triggered when an Active engagement has no undone Todos linked. Auto-resumes to Active when an undone Todo is linked.'
+                },
+                completed: {
+                    brief: 'Successfully finished',
+                    detail: 'Transitioned from Active via the Complete action. Indicates all deliverables were met successfully. This is a final state.'
+                },
+                closed: {
+                    brief: 'Ended normally',
+                    detail: 'Transitioned from Active via the Close action. Ended normally but not necessarily with full delivery. Can be reactivated if needed.'
+                },
+                dropped: {
+                    brief: 'Cancelled or abandoned',
+                    detail: 'Transitioned from Active via the Cancel action. Cancelled or abandoned before completion due to changing priorities or external factors.'
+                }
+            };
+
+            const currentDesc = statusDescriptions[currentStatus] || statusDescriptions.active;
+
+            return `
+                <div class="status-tooltip" onclick="event.stopPropagation();">
+                    <div class="status-tooltip-header">Status: ${capitalizeFirst(currentStatus)}</div>
+                    <div class="status-tooltip-brief">${currentDesc.brief}</div>
+                    <span class="status-tooltip-link" onclick="event.stopPropagation(); event.preventDefault(); expandStatusTooltip(this);">Read more</span>
+                    <div class="status-tooltip-expanded">
+                        <div class="status-item">
+                            <div class="status-item-name">Active</div>
+                            <div class="status-item-desc">${statusDescriptions.active.detail}</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-item-name">Paused</div>
+                            <div class="status-item-desc">${statusDescriptions.paused.detail}</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-item-name">Completed</div>
+                            <div class="status-item-desc">${statusDescriptions.completed.detail}</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-item-name">Closed</div>
+                            <div class="status-item-desc">${statusDescriptions.closed.detail}</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-item-name">Dropped</div>
+                            <div class="status-item-desc">${statusDescriptions.dropped.detail}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Expand status tooltip
+        function expandStatusTooltip(linkElement) {
+            const tooltip = linkElement.closest('.status-tooltip');
+            if (tooltip) {
+                tooltip.classList.add('expanded');
+            }
+        }
+
+        // Collapse all expanded status tooltips
+        function collapseAllStatusTooltips() {
+            document.querySelectorAll('.status-tooltip.expanded').forEach(tooltip => {
+                tooltip.classList.remove('expanded');
+            });
+        }
+
+        // Generate status badge with tooltip
+        function getStatusBadgeWithTooltip(status, statusClass) {
+            return `
+                <div class="status-tooltip-container">
+                    <span class="status-badge ${statusClass}">${capitalizeFirst(status)}</span>
+                    ${getStatusTooltipHtml(status)}
+                </div>
+            `;
         }
 
         // Side Panel functions
@@ -6866,6 +7256,11 @@
         function updatePanelStatusBadge(status) {
             panelEngStatus.textContent = capitalizeFirst(status);
             panelEngStatus.className = `status-badge status-${status}`;
+            // Update tooltip content
+            const tooltipEl = document.getElementById('panel-status-tooltip');
+            if (tooltipEl) {
+                tooltipEl.outerHTML = getStatusTooltipHtml(status);
+            }
         }
 
         // Save engagement field from side panel inline edit
@@ -6997,15 +7392,93 @@
         // Close engagement action (set status to Closed)
         function closeEngagementAction(index) {
             const opp = state.engagements[index];
-            // Allow closing from active status in new lifecycle model
-            if (opp.status !== 'active') return;
+            // Allow closing from active or paused status
+            if (opp.status !== 'active' && opp.status !== 'paused') return;
 
+            // Check for linked undone todos
+            const undoneTodos = state.todos.filter(t =>
+                t.engagementId === opp.id && !t.completed && !t.dropped
+            );
+
+            if (undoneTodos.length > 0) {
+                // Show todo action modal to handle linked todos
+                openTodoActionModal(index, 'close');
+                return;
+            }
+
+            // No linked todos - proceed with close directly
             opp.status = 'closed';
             renderEngagements();
 
             // Also update side panel if open
             if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
                 updatePanelStatusBadge('closed');
+                renderLifecycleSection(opp);
+            }
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Complete engagement action (set status to Completed - final state)
+        function completeEngagement(index) {
+            const opp = state.engagements[index];
+            // Allow completing from active or paused status
+            if (opp.status !== 'active' && opp.status !== 'paused') return;
+
+            opp.status = 'completed';
+
+            // Auto-complete all linked todos that are not already completed or dropped
+            const now = new Date().toISOString();
+            state.todos.forEach(todo => {
+                if (todo.engagementId === opp.id && !todo.completed && !todo.dropped) {
+                    todo.completed = true;
+                    todo.completedAt = now;
+                    todo.updatedAt = now;
+                }
+            });
+
+            renderEngagements();
+            renderTodos();
+
+            // Also update side panel if open
+            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
+                updatePanelStatusBadge('completed');
+                renderLifecycleSection(opp);
+            }
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Reactivate engagement (from Closed to Paused)
+        function reactivateEngagement(index) {
+            const opp = state.engagements[index];
+            // Only allow reactivating from closed status
+            if (opp.status !== 'closed') return;
+
+            opp.status = 'paused';
+            renderEngagements();
+
+            // Also update side panel if open
+            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
+                updatePanelStatusBadge('paused');
+                renderLifecycleSection(opp);
+            }
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Uncancel engagement (from Dropped to Paused)
+        function uncancelEngagement(index) {
+            const opp = state.engagements[index];
+            // Only allow uncancelling from dropped status
+            if (opp.status !== 'dropped') return;
+
+            opp.status = 'paused';
+            renderEngagements();
+
+            // Also update side panel if open
+            if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
+                updatePanelStatusBadge('paused');
                 renderLifecycleSection(opp);
             }
             // Auto-save to IndexedDB
@@ -7676,11 +8149,26 @@
         // =============================================
 
         // Open cancel confirmation modal
-        function openCancelConfirmation(index) {
+        function openCancelConfirmation(index, skipTodoCheck = false) {
+            const opp = state.engagements[index];
+
+            // Check for linked undone todos (unless we already handled them)
+            if (!skipTodoCheck) {
+                const undoneTodos = state.todos.filter(t =>
+                    t.engagementId === opp.id && !t.completed && !t.dropped
+                );
+
+                if (undoneTodos.length > 0) {
+                    // Show todo action modal to handle linked todos
+                    openTodoActionModal(index, 'cancel');
+                    return;
+                }
+            }
+
+            // No linked todos or already handled - show cancel reason modal
             state.cancelEngagementIndex = index;
             state.cancelModalOpen = true;
 
-            const opp = state.engagements[index];
             cancelOppName.textContent = `"${opp.name}"`;
             cancelReason.value = '';
 
@@ -7733,9 +8221,129 @@
             // Close cancel modal
             closeCancelModal();
 
-            // Re-render engagements list
+            // Re-render engagements and todos list
             renderEngagements();
+            renderTodos();
             // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // ========================================
+        // TODO ACTION MODAL (for Close/Cancel with linked todos)
+        // ========================================
+
+        // Get linked undone todos for an engagement
+        function getLinkedUndoneTodos(engagementId) {
+            return state.todos.filter(t =>
+                t.engagementId === engagementId && !t.completed && !t.dropped
+            );
+        }
+
+        // Open Todo Action Modal
+        function openTodoActionModal(index, actionType) {
+            const opp = state.engagements[index];
+            const undoneTodos = getLinkedUndoneTodos(opp.id);
+
+            state.todoActionModalOpen = true;
+            state.todoActionEngagementIndex = index;
+            state.todoActionType = actionType;
+
+            todoActionModalTitle.textContent = actionType === 'close'
+                ? 'Close Engagement'
+                : 'Cancel Engagement';
+            todoActionEngName.textContent = `"${opp.name}"`;
+            todoActionCount.textContent = `${undoneTodos.length} linked todo${undoneTodos.length !== 1 ? 's' : ''} will be affected`;
+
+            todoActionModal.classList.remove('hidden');
+        }
+
+        // Close Todo Action Modal
+        function closeTodoActionModal() {
+            todoActionModal.classList.add('hidden');
+            state.todoActionModalOpen = false;
+            state.todoActionEngagementIndex = null;
+            state.todoActionType = null;
+        }
+
+        // Todo Action: Complete all linked todos
+        function todoActionComplete() {
+            if (state.todoActionEngagementIndex === null) return;
+
+            const opp = state.engagements[state.todoActionEngagementIndex];
+            const now = new Date().toISOString();
+
+            // Complete all linked undone todos
+            state.todos.forEach(todo => {
+                if (todo.engagementId === opp.id && !todo.completed && !todo.dropped) {
+                    todo.completed = true;
+                    todo.completedAt = now;
+                    todo.updatedAt = now;
+                }
+            });
+
+            // Continue with the close/cancel action
+            finishEngagementAction();
+        }
+
+        // Todo Action: Drop all linked todos
+        function todoActionDrop() {
+            if (state.todoActionEngagementIndex === null) return;
+
+            const opp = state.engagements[state.todoActionEngagementIndex];
+            const now = new Date().toISOString();
+
+            // Drop all linked undone todos
+            state.todos.forEach(todo => {
+                if (todo.engagementId === opp.id && !todo.completed && !todo.dropped) {
+                    todo.dropped = true;
+                    todo.droppedAt = now;
+                    todo.updatedAt = now;
+                }
+            });
+
+            // Continue with the close/cancel action
+            finishEngagementAction();
+        }
+
+        // Todo Action: Delete all linked todos
+        function todoActionDelete() {
+            if (state.todoActionEngagementIndex === null) return;
+
+            const opp = state.engagements[state.todoActionEngagementIndex];
+
+            // Delete all linked undone todos
+            state.todos = state.todos.filter(todo =>
+                !(todo.engagementId === opp.id && !todo.completed && !todo.dropped)
+            );
+
+            // Continue with the close/cancel action
+            finishEngagementAction();
+        }
+
+        // Finish the engagement close/cancel action after handling todos
+        function finishEngagementAction() {
+            const index = state.todoActionEngagementIndex;
+            const actionType = state.todoActionType;
+
+            closeTodoActionModal();
+
+            if (actionType === 'close') {
+                // Direct close without modal
+                const opp = state.engagements[index];
+                opp.status = 'closed';
+
+                if (state.sidePanelOpen && state.selectedEngagementIndex === index) {
+                    updatePanelStatusBadge('closed');
+                    renderLifecycleSection(opp);
+                }
+            } else if (actionType === 'cancel') {
+                // Open cancel modal for reason (skip todo check since we just handled them)
+                openCancelConfirmation(index, true);
+                return; // Don't save or render yet - wait for cancel confirmation
+            }
+
+            renderEngagements();
+            renderTodos();
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
         }
 
@@ -7831,9 +8439,18 @@
         function filterEngagements(query) {
             if (!query || query.trim() === '') return [];
             const lowerQuery = query.toLowerCase().trim();
-            return state.engagements.filter(opp =>
-                opp.name.toLowerCase().includes(lowerQuery)
-            );
+            return state.engagements.filter(opp => {
+                const nameMatches = opp.name.toLowerCase().includes(lowerQuery);
+                if (!nameMatches) return false;
+
+                // Filter out closed and dropped engagements unless exact match
+                const isClosedOrDropped = opp.status === 'closed' || opp.status === 'dropped';
+                if (isClosedOrDropped) {
+                    // Only show if exact match (case insensitive)
+                    return opp.name.toLowerCase() === lowerQuery;
+                }
+                return true;
+            });
         }
 
         // Render autocomplete dropdown
@@ -9741,12 +10358,12 @@
                 }
 
                 // Migrate old status values to new model
-                if (!['active', 'completed', 'closed', 'dropped'].includes(eng.status)) {
+                // Valid statuses: active, paused, completed, closed, dropped
+                if (!['active', 'paused', 'completed', 'closed', 'dropped'].includes(eng.status)) {
                     // Map old statuses to new ones
                     const statusMap = {
                         'requested': 'active',
                         'open': 'active',
-                        'paused': 'active',  // Paused becomes active, completion is based on type transition
                         'closed': 'closed',
                         'cancelled': 'dropped'
                     };
@@ -9970,8 +10587,8 @@
                 config.workdayMinutes * (1 - config.bufferPercentage / 100)
             );
 
-            // 1. Filter incomplete todos
-            const incomplete = state.todos.filter(t => !t.completed);
+            // 1. Filter incomplete and non-dropped todos
+            const incomplete = state.todos.filter(t => !t.completed && !t.dropped);
 
             // 2. Score and sort
             const scored = incomplete
@@ -10545,6 +11162,9 @@
                     migrateContactsToPeople();
                     migrateEngagementLifecycle();
 
+                    // Update all engagement statuses based on linked todos (auto-pause/resume)
+                    updateAllEngagementStatuses();
+
                     // Navigate directly to app with home tab
                     state.currentTab = 'home';
                     navigateTo('app');
@@ -10552,6 +11172,7 @@
                     // No saved state, show landing page
                     migrateContactsToPeople();
                     migrateEngagementLifecycle();
+                    updateAllEngagementStatuses();
                     navigateTo('landing');
                 }
             } catch (error) {
@@ -11484,6 +12105,29 @@
 
             // Initialize DateTimePickers
             initDateTimePickers();
+
+            // Collapse status tooltips when mouse leaves container
+            document.addEventListener('mouseleave', (e) => {
+                if (e.target && e.target.closest) {
+                    const container = e.target.closest('.status-tooltip-container');
+                    if (container) {
+                        const tooltip = container.querySelector('.status-tooltip');
+                        if (tooltip && !tooltip.classList.contains('expanded')) {
+                            tooltip.classList.remove('expanded');
+                        }
+                    }
+                }
+            }, true);
+
+            // Collapse expanded status tooltips when clicking outside
+            document.addEventListener('click', (e) => {
+                if (e.target && e.target.closest) {
+                    // If click is not inside a status tooltip, collapse all expanded tooltips
+                    if (!e.target.closest('.status-tooltip')) {
+                        collapseAllStatusTooltips();
+                    }
+                }
+            });
 
             // Initialize app with IndexedDB (handles migration and navigation)
             initializeApp();

@@ -34,3 +34,5 @@ Issue-49: Implemented custom DateTimePicker component with side-by-side layout (
 Issue-51: Fixed Enter key on Deadline control in Todo modal to open date picker instead of closing modal by adding stopPropagation to DateTimePicker keydown handler.
 
 Issue-53: Fixed Tags control Tab behavior to skip tag selection when no text entered, allowing natural focus movement to Save button.
+
+Issue-55: Added expandable tooltip on Engagement Status badge showing status descriptions. Tooltip displays brief description on hover with "Read more" link to expand and show all status states (Active, Completed, Closed, Dropped) with detailed explanations. Implemented in both engagement list and side panel with appropriate positioning.
