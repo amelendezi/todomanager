@@ -506,6 +506,208 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             animation: modalSlideIn 0.3s ease;
             transform-origin: center center;
+            transition: max-width 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Expanded state for horizontal inline creation */
+        .modal-content.expanded {
+            max-width: 900px;
+            overflow-y: visible;
+        }
+
+        /* Two-column layout container */
+        .todo-form-columns {
+            display: flex;
+            gap: 0;
+        }
+
+        .todo-form-columns.expanded {
+            gap: 24px;
+        }
+
+        /* Left column - main todo form */
+        .todo-form-left {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Vertical separator between columns */
+        .column-separator {
+            width: 0;
+            background-color: #E5E7EB;
+            align-self: stretch;
+            opacity: 0;
+            transition: width 200ms ease-in-out 100ms, opacity 200ms ease-in-out 100ms;
+        }
+
+        .todo-form-columns.expanded .column-separator {
+            width: 1px;
+            opacity: 1;
+        }
+
+        /* Right column - inline engagement panel */
+        .todo-form-right {
+            flex: 0 0 0;
+            min-width: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: flex-basis 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 200ms ease-in-out;
+        }
+
+        .todo-form-columns.expanded .todo-form-right {
+            flex: 0 0 380px;
+            opacity: 1;
+        }
+
+        /* Disabled state for main form when inline is active */
+        .todo-form-left.disabled .form-input,
+        .todo-form-left.disabled .form-textarea,
+        .todo-form-left.disabled .effort-select,
+        .todo-form-left.disabled .priority-input,
+        .todo-form-left.disabled .autocomplete-input,
+        .todo-form-left.disabled .tag-input {
+            background-color: #F9FAFB;
+            color: #9CA3AF;
+            pointer-events: none;
+        }
+
+        .todo-form-left.disabled .form-label {
+            color: #9CA3AF;
+        }
+
+        /* Right panel engagement inline form - visible by default when in right column */
+        .inline-eng-panel {
+            padding: 0;
+        }
+
+        .inline-eng-panel .inline-eng-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .inline-eng-panel .inline-eng-panel-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .inline-eng-panel .inline-eng-panel-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .inline-eng-panel .form-group {
+            margin-bottom: 16px;
+        }
+
+        .inline-eng-panel .form-group:last-of-type {
+            margin-bottom: 20px;
+        }
+
+        /* Contact inline form within right panel */
+        .inline-contact-form {
+            background: #F9FAFB;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 0;
+            margin-top: 12px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 250ms cubic-bezier(0.4, 0, 0.2, 1),
+                        padding 250ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .inline-contact-form.open {
+            max-height: 250px;
+            padding: 16px;
+        }
+
+        .inline-contact-form .inline-contact-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .inline-contact-form .inline-contact-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .inline-contact-form .inline-contact-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .inline-contact-form .inline-contact-actions .btn {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .inline-contact-form .form-group {
+            margin-bottom: 12px;
+        }
+
+        .inline-contact-form .form-group:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .inline-contact-form .form-label {
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .inline-contact-form .form-input {
+            height: 40px;
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+
+        /* Panel actions at bottom of right column */
+        .inline-eng-panel-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        /* Animation for right panel slide-in */
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .todo-form-right.animate-in {
+            animation: slideInRight 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            .modal-content {
+                transition: none;
+            }
+            .todo-form-right,
+            .column-separator,
+            .inline-contact-form {
+                transition: none;
+            }
+            .todo-form-right.animate-in {
+                animation: none;
+            }
         }
 
         @keyframes modalSlideIn {
@@ -727,6 +929,28 @@
 
             .btn {
                 width: 100%;
+            }
+        }
+
+        /* Responsive fallback for horizontal expansion on narrow screens */
+        @media (max-width: 950px) {
+            .modal-content.expanded {
+                max-width: 95%;
+            }
+
+            .todo-form-columns.expanded {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .todo-form-columns.expanded .column-separator {
+                width: 100%;
+                height: 1px;
+                margin: 8px 0;
+            }
+
+            .todo-form-columns.expanded .todo-form-right {
+                flex: 1 1 auto;
             }
         }
 
@@ -4083,127 +4307,145 @@
     <!-- Create Todo Modal -->
     <div id="todo-modal" class="modal hidden">
         <div class="modal-backdrop" onclick="closeModal()"></div>
-        <div class="modal-content">
+        <div class="modal-content" id="todo-modal-content">
             <h2 id="modal-title" class="modal-title">New Todo</h2>
             <form id="todo-form" onsubmit="saveTodo(event)">
-                <div class="form-group">
-                    <label for="todo-title" class="form-label">Title <span class="required">*</span></label>
-                    <input type="text" id="todo-title" class="form-input" placeholder="What needs to be done?" required autofocus>
-                </div>
-                <div class="form-group">
-                    <label for="todo-description" class="form-label">Description</label>
-                    <textarea id="todo-description" class="form-textarea" placeholder="Additional details (optional)"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="todo-deadline" class="form-label">Deadline <span class="required">*</span></label>
-                    <input type="datetime-local" id="todo-deadline" class="datetime-input" required>
-                </div>
-                <div class="form-group">
-                    <label for="todo-effort" class="form-label">Effort Level <span class="required">*</span></label>
-                    <select id="todo-effort" class="effort-select" required>
-                        <option value="very_low">Very Low (30 min)</option>
-                        <option value="low">Low (2 hours)</option>
-                        <option value="average" selected>Average (4 hours)</option>
-                        <option value="high">High (6 hours)</option>
-                        <option value="very_high">Very High (8 hours)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="todo-priority" class="form-label">Priority <span class="required">*</span></label>
-                    <div class="priority-autocomplete-wrapper">
-                        <input type="text" id="todo-priority" class="priority-input" placeholder="Type to select priority..." autocomplete="off" required>
-                        <div id="priority-dropdown" class="priority-dropdown">
-                            <!-- Priority options will be rendered here -->
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="todo-engagement" class="form-label">Linked Engagement</label>
-                    <div class="autocomplete-wrapper">
-                        <div class="autocomplete-input-wrapper">
-                            <input type="text" id="todo-engagement" class="autocomplete-input" placeholder="Type to search or create..." autocomplete="off">
-                            <button type="button" id="todo-engagement-clear" class="autocomplete-clear" onclick="clearEngagementSelection()">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                </svg>
-                            </button>
-                        </div>
-                        <div id="engagement-dropdown" class="autocomplete-dropdown">
-                            <!-- Dropdown items will be rendered here -->
-                        </div>
-                    </div>
-                    <!-- Inline Engagement Creation Form -->
-                    <div id="inline-eng-form" class="inline-eng-form">
-                        <div class="inline-eng-header">
-                            <span class="inline-eng-title">Create New Engagement</span>
-                            <div class="inline-eng-actions">
-                                <button type="button" class="btn btn-secondary" onclick="cancelInlineEngagement()">Cancel</button>
-                                <button type="button" class="btn btn-primary" onclick="confirmInlineEngagement()">Add</button>
-                            </div>
+                <div id="todo-form-columns" class="todo-form-columns">
+                    <!-- Left Column - Main Todo Form -->
+                    <div id="todo-form-left" class="todo-form-left">
+                        <div class="form-group">
+                            <label for="todo-title" class="form-label">Title <span class="required">*</span></label>
+                            <input type="text" id="todo-title" class="form-input" placeholder="What needs to be done?" required autofocus>
                         </div>
                         <div class="form-group">
-                            <label for="inline-eng-name" class="form-label">Name</label>
-                            <input type="text" id="inline-eng-name" class="form-input" placeholder="Engagement name" readonly>
+                            <label for="todo-description" class="form-label">Description</label>
+                            <textarea id="todo-description" class="form-textarea" placeholder="Additional details (optional)"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="inline-eng-description" class="form-label">Description</label>
-                            <input type="text" id="inline-eng-description" class="form-input" placeholder="Brief description">
+                            <label for="todo-deadline" class="form-label">Deadline <span class="required">*</span></label>
+                            <input type="datetime-local" id="todo-deadline" class="datetime-input" required>
                         </div>
                         <div class="form-group">
-                            <label for="inline-eng-start-date" class="form-label">Start Date</label>
-                            <input type="date" id="inline-eng-start-date" class="form-input">
+                            <label for="todo-effort" class="form-label">Effort Level <span class="required">*</span></label>
+                            <select id="todo-effort" class="effort-select" required>
+                                <option value="very_low">Very Low (30 min)</option>
+                                <option value="low">Low (2 hours)</option>
+                                <option value="average" selected>Average (4 hours)</option>
+                                <option value="high">High (6 hours)</option>
+                                <option value="very_high">Very High (8 hours)</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="inline-eng-contact" class="form-label">Contact</label>
-                            <div class="autocomplete-wrapper">
-                                <input type="text" id="inline-eng-contact" class="form-input" placeholder="Type to search or create person..." autocomplete="off">
-                                <button type="button" id="inline-eng-contact-clear" class="autocomplete-clear" onclick="clearInlineOppContact()">×</button>
-                                <div id="inline-eng-contact-dropdown" class="autocomplete-dropdown">
-                                    <!-- Contact dropdown items will be rendered here -->
+                            <label for="todo-priority" class="form-label">Priority <span class="required">*</span></label>
+                            <div class="priority-autocomplete-wrapper">
+                                <input type="text" id="todo-priority" class="priority-input" placeholder="Type to select priority..." autocomplete="off" required>
+                                <div id="priority-dropdown" class="priority-dropdown">
+                                    <!-- Priority options will be rendered here -->
                                 </div>
                             </div>
-                            <!-- Inline Person Creation Form (within inline engagement) -->
-                            <div id="inline-eng-person-form" class="inline-person-form">
-                                <div class="inline-person-header">
-                                    <span class="inline-person-title">Create New Person</span>
-                                    <div class="inline-person-actions">
-                                        <button type="button" class="btn btn-secondary" onclick="cancelInlineOppPerson()">Cancel</button>
-                                        <button type="button" class="btn btn-primary" onclick="confirmInlineOppPerson()">Add</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="todo-engagement" class="form-label">Linked Engagement</label>
+                            <div class="autocomplete-wrapper">
+                                <div class="autocomplete-input-wrapper">
+                                    <input type="text" id="todo-engagement" class="autocomplete-input" placeholder="Type to search or create..." autocomplete="off">
+                                    <button type="button" id="todo-engagement-clear" class="autocomplete-clear" onclick="clearEngagementSelection()">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div id="engagement-dropdown" class="autocomplete-dropdown">
+                                    <!-- Dropdown items will be rendered here -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Tags Section -->
+                        <div class="form-group">
+                            <label class="form-label">Tags</label>
+                            <div class="tag-input-container" id="todo-tag-container">
+                                <div class="selected-tags" id="todo-selected-tags">
+                                    <!-- Selected tags will be rendered here -->
+                                </div>
+                                <div class="tag-input-wrapper">
+                                    <input type="text" id="todo-tag-input" class="tag-input" placeholder="Type to add tags..." autocomplete="off">
+                                    <div id="todo-tag-dropdown" class="tag-dropdown">
+                                        <!-- Tag suggestions will be rendered here -->
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="inline-eng-person-name" class="form-label">Name</label>
-                                    <input type="text" id="inline-eng-person-name" class="form-input" placeholder="Person's name" readonly>
+                            </div>
+                        </div>
+                        <div class="modal-actions" id="modal-actions">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                            <span id="todo-save-wrapper" class="btn-tooltip-wrapper">
+                                <button type="submit" id="todo-save-btn" class="btn btn-primary">Save</button>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Column Separator -->
+                    <div id="column-separator" class="column-separator"></div>
+
+                    <!-- Right Column - Inline Engagement Panel -->
+                    <div id="todo-form-right" class="todo-form-right">
+                        <div class="inline-eng-panel">
+                            <div class="inline-eng-panel-header">
+                                <span class="inline-eng-panel-title">New Engagement</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="inline-eng-name" class="form-label">Name</label>
+                                <input type="text" id="inline-eng-name" class="form-input" placeholder="Engagement name" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="inline-eng-description" class="form-label">Description</label>
+                                <input type="text" id="inline-eng-description" class="form-input" placeholder="Brief description">
+                            </div>
+                            <div class="form-group">
+                                <label for="inline-eng-start-date" class="form-label">Start Date</label>
+                                <input type="date" id="inline-eng-start-date" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="inline-eng-contact" class="form-label">Contact</label>
+                                <div class="autocomplete-wrapper">
+                                    <div class="autocomplete-input-wrapper">
+                                        <input type="text" id="inline-eng-contact" class="form-input" placeholder="Type to search or create person..." autocomplete="off">
+                                        <button type="button" id="inline-eng-contact-clear" class="autocomplete-clear" onclick="clearInlineOppContact()">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div id="inline-eng-contact-dropdown" class="autocomplete-dropdown">
+                                        <!-- Contact dropdown items will be rendered here -->
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="inline-eng-person-role" class="form-label">Role</label>
-                                    <input type="text" id="inline-eng-person-role" class="form-input" placeholder="Person's role">
+                                <!-- Inline Person Creation Form (within inline engagement) -->
+                                <div id="inline-eng-person-form" class="inline-contact-form">
+                                    <div class="inline-contact-header">
+                                        <span class="inline-contact-title">Create New Person</span>
+                                        <div class="inline-contact-actions">
+                                            <button type="button" class="btn btn-secondary" onclick="cancelInlineOppPerson()">Cancel</button>
+                                            <button type="button" class="btn btn-primary" id="inline-eng-person-add-btn" onclick="confirmInlineOppPerson()">Add</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inline-eng-person-name" class="form-label">Name</label>
+                                        <input type="text" id="inline-eng-person-name" class="form-input" placeholder="Person's name" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inline-eng-person-role" class="form-label">Role</label>
+                                        <input type="text" id="inline-eng-person-role" class="form-input" placeholder="Person's role">
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="inline-eng-panel-footer">
+                                <button type="button" class="btn btn-secondary" id="inline-eng-cancel-btn" onclick="cancelInlineEngagement()">Cancel</button>
+                                <button type="button" class="btn btn-primary" id="inline-eng-add-btn" onclick="confirmInlineEngagement()">Add</button>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- Tags Section -->
-                <div class="form-group">
-                    <label class="form-label">Tags</label>
-                    <div class="tag-input-container" id="todo-tag-container">
-                        <div class="selected-tags" id="todo-selected-tags">
-                            <!-- Selected tags will be rendered here -->
-                        </div>
-                        <div class="tag-input-wrapper">
-                            <input type="text" id="todo-tag-input" class="tag-input" placeholder="Type to add tags..." autocomplete="off">
-                            <div id="todo-tag-dropdown" class="tag-dropdown">
-                                <!-- Tag suggestions will be rendered here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <span id="todo-save-wrapper" class="btn-tooltip-wrapper">
-                        <button type="submit" id="todo-save-btn" class="btn btn-primary">Save</button>
-                    </span>
                 </div>
             </form>
         </div>
@@ -4852,6 +5094,16 @@
         const inlineEngPersonName = document.getElementById('inline-eng-person-name');
         const inlineEngPersonRole = document.getElementById('inline-eng-person-role');
 
+        // DOM Elements - Horizontal Expansion
+        const todoModalContent = document.getElementById('todo-modal-content');
+        const todoFormColumns = document.getElementById('todo-form-columns');
+        const todoFormLeft = document.getElementById('todo-form-left');
+        const todoFormRight = document.getElementById('todo-form-right');
+        const columnSeparator = document.getElementById('column-separator');
+        const inlineEngAddBtn = document.getElementById('inline-eng-add-btn');
+        const inlineEngCancelBtn = document.getElementById('inline-eng-cancel-btn');
+        const inlineEngPersonAddBtn = document.getElementById('inline-eng-person-add-btn');
+
         // DOM Elements - Engagements
         const engagementsPage = document.getElementById('engagements-page');
         const engagementList = document.getElementById('engagement-list');
@@ -5247,12 +5499,25 @@
             todoEngagementInput.value = '';
             todoEngagementClear.classList.remove('visible');
             engagementDropdown.classList.remove('open');
-            inlineEngForm.classList.remove('open');
             // Reset inline opp contact fields
             inlineEngContact.value = '';
             inlineEngContactClear.classList.remove('visible');
             inlineEngContactDropdown.classList.remove('open');
             inlineEngPersonForm.classList.remove('open');
+
+            // Reset horizontal expansion state
+            todoModalContent.classList.remove('expanded');
+            todoFormColumns.classList.remove('expanded');
+            todoFormLeft.classList.remove('disabled');
+            todoFormRight.classList.remove('animate-in');
+
+            // Reset engagement panel button states
+            if (inlineEngAddBtn) inlineEngAddBtn.disabled = false;
+            if (inlineEngCancelBtn) inlineEngCancelBtn.disabled = false;
+
+            // Ensure right panel is not tabbable, left panel is tabbable
+            setFormTabIndex(todoFormLeft, true);
+            setFormTabIndex(todoFormRight, false);
 
             // Reset tag input state
             state.selectedTodoTagIds = [];
@@ -5351,9 +5616,26 @@
             state.pendingEngagement = null;
             state.autocompleteOpen = false;
             state.inlineEngFormOpen = false;
+            state.inlineEngPersonFormOpen = false;
+            state.selectedInlineOppPersonId = null;
+            state.pendingInlineOppPerson = null;
             todoForm.reset();
             engagementDropdown.classList.remove('open');
-            inlineEngForm.classList.remove('open');
+
+            // Reset horizontal expansion state
+            todoModalContent.classList.remove('expanded');
+            todoFormColumns.classList.remove('expanded');
+            todoFormLeft.classList.remove('disabled');
+            todoFormRight.classList.remove('animate-in');
+            inlineEngPersonForm.classList.remove('open');
+
+            // Reset button states
+            if (inlineEngAddBtn) inlineEngAddBtn.disabled = false;
+            if (inlineEngCancelBtn) inlineEngCancelBtn.disabled = false;
+
+            // Reset tab navigation
+            setFormTabIndex(todoFormLeft, true);
+            setFormTabIndex(todoFormRight, false);
         }
 
         // Generate unique ID
@@ -7131,6 +7413,7 @@
         // When enabled=false, sets tabindex=-1 to remove from tab order
         // When enabled=true, removes tabindex to restore default tab behavior
         function setFormTabIndex(formElement, enabled, excludeSelector = null) {
+            if (!formElement) return; // Guard against null elements
             const focusables = formElement.querySelectorAll('input, button, select, textarea, [tabindex]');
             focusables.forEach(el => {
                 // Skip elements that match the exclude selector
@@ -7152,24 +7435,48 @@
             inlineEngDescription.value = '';
             inlineEngStartDate.value = getTodayDate();
             inlineEngContact.value = '';
-            inlineEngForm.classList.add('open');
+            state.selectedInlineOppPersonId = null;
+            state.pendingInlineOppPerson = null;
+            inlineEngContactClear.classList.remove('visible');
             closeAutocompleteDropdown();
 
-            // Enable tab navigation for opp form elements, but exclude nested person form
-            setFormTabIndex(inlineEngForm, true, '#inline-eng-person-form');
+            // Expand dialog horizontally
+            todoModalContent.classList.add('expanded');
+            todoFormColumns.classList.add('expanded');
+            todoFormLeft.classList.add('disabled');
+            todoFormRight.classList.add('animate-in');
 
-            // Focus on description after animation
-            setTimeout(() => inlineEngDescription.focus(), 350);
+            // Enable tab navigation for right panel, but exclude nested person form
+            setFormTabIndex(todoFormRight, true, '#inline-eng-person-form');
+
+            // Disable tab navigation for left form (except engagement field which shows selection)
+            setFormTabIndex(todoFormLeft, false);
+
+            // Focus on description after animation (150ms as per spec)
+            setTimeout(() => inlineEngDescription.focus(), 150);
         }
 
         // Close inline engagement form
         function closeInlineOppForm() {
             state.inlineEngFormOpen = false;
-            inlineEngForm.classList.remove('open');
             updateTodoSaveButtonState();
 
-            // Disable tab navigation for all elements inside opp form
-            setFormTabIndex(inlineEngForm, false);
+            // Also close nested person form if open
+            if (state.inlineEngPersonFormOpen) {
+                closeInlineOppPersonForm();
+            }
+
+            // Collapse dialog horizontally
+            todoModalContent.classList.remove('expanded');
+            todoFormColumns.classList.remove('expanded');
+            todoFormLeft.classList.remove('disabled');
+            todoFormRight.classList.remove('animate-in');
+
+            // Disable tab navigation for all elements inside right panel
+            setFormTabIndex(todoFormRight, false);
+
+            // Re-enable tab navigation for left form
+            setFormTabIndex(todoFormLeft, true);
         }
 
         // Cancel inline engagement creation
@@ -7178,6 +7485,8 @@
             todoEngagementInput.value = '';
             todoEngagementClear.classList.remove('visible');
             closeInlineOppForm();
+            // Focus back to engagement field
+            setTimeout(() => todoEngagementInput.focus(), 150);
         }
 
         // Confirm inline engagement creation
@@ -7200,6 +7509,8 @@
             todoEngagementInput.value = name + ' (new)';
             todoEngagementClear.classList.add('visible');
             closeInlineOppForm();
+            // Focus on Tags field after collapse
+            setTimeout(() => todoTagInput.focus(), 150);
         }
 
         // Handle autocomplete input events
@@ -8421,14 +8732,17 @@
             inlineEngPersonForm.classList.add('open');
             closeInlineOppContactDropdown();
 
+            // Disable engagement form buttons while person form is open
+            if (inlineEngAddBtn) inlineEngAddBtn.disabled = true;
+            if (inlineEngCancelBtn) inlineEngCancelBtn.disabled = true;
+
             // Enable tab navigation for person form elements
             setFormTabIndex(inlineEngPersonForm, true);
 
-            // Scroll to make the form visible
+            // Focus on role field after animation
             setTimeout(() => {
                 inlineEngPersonRole.focus();
-                inlineEngPersonForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 350);
+            }, 150);
         }
 
         // Close inline person form within inline engagement
@@ -8436,6 +8750,10 @@
             state.inlineEngPersonFormOpen = false;
             inlineEngPersonForm.classList.remove('open');
             updateTodoSaveButtonState();
+
+            // Re-enable engagement form buttons
+            if (inlineEngAddBtn) inlineEngAddBtn.disabled = false;
+            if (inlineEngCancelBtn) inlineEngCancelBtn.disabled = false;
 
             // Disable tab navigation for person form elements
             setFormTabIndex(inlineEngPersonForm, false);
@@ -8447,6 +8765,8 @@
             inlineEngContact.value = '';
             inlineEngContactClear.classList.remove('visible');
             closeInlineOppPersonForm();
+            // Focus back to contact field
+            setTimeout(() => inlineEngContact.focus(), 150);
         }
 
         // Confirm inline person creation within inline engagement
@@ -8468,6 +8788,10 @@
             inlineEngContactClear.classList.add('visible');
 
             closeInlineOppPersonForm();
+            // Focus on engagement Add button after collapse
+            setTimeout(() => {
+                if (inlineEngAddBtn) inlineEngAddBtn.focus();
+            }, 150);
         }
 
         // Update autocomplete highlight for inline opp contact
@@ -8754,6 +9078,7 @@
             }
 
             // Handle Escape key to close modals or side panel
+            // Priority: innermost inline form first, then modals, then side panel
             if (e.key === 'Escape') {
                 if (state.cancelModalOpen) {
                     e.preventDefault();
@@ -8765,12 +9090,32 @@
                     closeConfirmModal();
                     return;
                 }
+                // Handle inline forms within todo modal (innermost first)
                 if (state.modalOpen) {
+                    // First check if person inline form is open within engagement inline
+                    if (state.inlineEngPersonFormOpen) {
+                        e.preventDefault();
+                        cancelInlineOppPerson();
+                        return;
+                    }
+                    // Then check if engagement inline form is open
+                    if (state.inlineEngFormOpen) {
+                        e.preventDefault();
+                        cancelInlineEngagement();
+                        return;
+                    }
+                    // Otherwise close the whole modal
                     e.preventDefault();
                     closeModal();
                     return;
                 }
                 if (state.engagementModalOpen) {
+                    // Check for inline person form in engagement modal
+                    if (state.inlinePersonFormOpen) {
+                        e.preventDefault();
+                        cancelInlinePerson();
+                        return;
+                    }
                     e.preventDefault();
                     closeEngagementModal();
                     return;
@@ -9679,7 +10024,8 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize inline forms with disabled tab navigation (they start closed)
-            setFormTabIndex(inlineEngForm, false);
+            // Right panel is hidden by default (horizontal expansion)
+            setFormTabIndex(todoFormRight, false);
             setFormTabIndex(inlineEngPersonForm, false);
             if (inlinePersonForm) setFormTabIndex(inlinePersonForm, false);
 
