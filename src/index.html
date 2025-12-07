@@ -10704,6 +10704,7 @@
                 this.displayInput.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
+                        e.stopPropagation(); // Prevent form submission when inside a form
                         this.open();
                     }
                 });
