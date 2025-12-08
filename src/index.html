@@ -5796,11 +5796,11 @@
                                     <div class="daily-load-label">Today</div>
                                 </div>
                                 <div class="daily-load-column">
-                                    <div id="daily-load-hours-tomorrow" class="daily-load-column-hours">0hrs</div>
-                                    <div id="daily-load-bar-tomorrow" class="daily-load-bar">
+                                    <div id="daily-load-hours-nextday" class="daily-load-column-hours">0hrs</div>
+                                    <div id="daily-load-bar-nextday" class="daily-load-bar">
                                         <div class="daily-load-empty">-</div>
                                     </div>
-                                    <div class="daily-load-label">Tomorrow</div>
+                                    <div id="daily-load-label-nextday" class="daily-load-label">Next Day</div>
                                 </div>
                             </div>
                         </div>
@@ -13360,17 +13360,18 @@
         const dailyLoadStatus = document.getElementById('daily-load-status');
         const dailyLoadHoursOverdue = document.getElementById('daily-load-hours-overdue');
         const dailyLoadHoursToday = document.getElementById('daily-load-hours-today');
-        const dailyLoadHoursTomorrow = document.getElementById('daily-load-hours-tomorrow');
+        const dailyLoadHoursNextDay = document.getElementById('daily-load-hours-nextday');
         const dailyLoadBarOverdue = document.getElementById('daily-load-bar-overdue');
         const dailyLoadBarToday = document.getElementById('daily-load-bar-today');
-        const dailyLoadBarTomorrow = document.getElementById('daily-load-bar-tomorrow');
+        const dailyLoadBarNextDay = document.getElementById('daily-load-bar-nextday');
+        const dailyLoadLabelNextDay = document.getElementById('daily-load-label-nextday');
 
         // Track highlighted todo for Daily Load chart
         let highlightedTodoId = null;
 
         /**
-         * Categorizes todos by deadline into Overdue, Today, Tomorrow
-         * Only includes todos with deadlines
+         * Categorizes todos by deadline into Overdue, Today, Next Work Day
+         * Only includes todos with deadlines (Issue-76: uses work calendar)
          */
         function categorizeTodosForDailyLoad() {
             const today = new Date();
@@ -13379,13 +13380,19 @@
             const tomorrow = new Date(today);
             tomorrow.setDate(tomorrow.getDate() + 1);
 
-            const dayAfterTomorrow = new Date(today);
-            dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+            // Get the next work day (might not be tomorrow if it's a weekend/holiday)
+            const nextWorkDay = getNextWorkDay(today);
+            nextWorkDay.setHours(0, 0, 0, 0);
+
+            // Day after the next work day
+            const dayAfterNextWorkDay = getNextWorkDay(nextWorkDay);
+            dayAfterNextWorkDay.setHours(0, 0, 0, 0);
 
             const categories = {
                 overdue: [],
                 today: [],
-                tomorrow: []
+                nextDay: [],
+                nextWorkDayDate: nextWorkDay // Store the actual date for the label
             };
 
             state.todos.forEach(todo => {
@@ -13400,8 +13407,8 @@
                     categories.overdue.push(todo);
                 } else if (deadline >= today && deadline < tomorrow) {
                     categories.today.push(todo);
-                } else if (deadline >= tomorrow && deadline < dayAfterTomorrow) {
-                    categories.tomorrow.push(todo);
+                } else if (deadline >= nextWorkDay && deadline < dayAfterNextWorkDay) {
+                    categories.nextDay.push(todo);
                 }
             });
 
@@ -13415,7 +13422,7 @@
 
             categories.overdue.sort(sortByPriority);
             categories.today.sort(sortByPriority);
-            categories.tomorrow.sort(sortByPriority);
+            categories.nextDay.sort(sortByPriority);
 
             return categories;
         }
@@ -13588,10 +13595,24 @@
             dailyLoadStatus.className = `daily-load-status ${status.class}`;
             dailyLoadStatus.textContent = status.text;
 
+            // Update the Next Day label to show the actual day name (Issue-76)
+            const nextDayName = DAY_ABBREVS[categories.nextWorkDayDate.getDay()];
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            // Show "Tomorrow" if next work day is tomorrow, otherwise show day name
+            if (categories.nextWorkDayDate.getTime() === tomorrow.getTime()) {
+                dailyLoadLabelNextDay.textContent = 'Tomorrow';
+            } else {
+                dailyLoadLabelNextDay.textContent = nextDayName;
+            }
+
             // Render each bar (overdue bar uses light red, others use heat gradient)
             renderDailyLoadBar(dailyLoadBarOverdue, categories.overdue, dailyLoadHoursOverdue, true);
             renderDailyLoadBar(dailyLoadBarToday, categories.today, dailyLoadHoursToday, false);
-            renderDailyLoadBar(dailyLoadBarTomorrow, categories.tomorrow, dailyLoadHoursTomorrow, false);
+            renderDailyLoadBar(dailyLoadBarNextDay, categories.nextDay, dailyLoadHoursNextDay, false);
         }
 
         // ========================================
