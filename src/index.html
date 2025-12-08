@@ -295,6 +295,58 @@
             gap: 8px;
         }
 
+        /* Search Control Styles */
+        .header-search {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            justify-content: flex-end;
+            margin-right: 16px;
+        }
+
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 240px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            width: 16px;
+            height: 16px;
+            color: #9CA3AF;
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 36px;
+            padding: 0 12px 0 36px;
+            font-size: 14px;
+            color: #1F1F1F;
+            background: #F8F9FA;
+            border: 1px solid #E5E7EB;
+            border-radius: 18px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .search-input::placeholder {
+            color: #9CA3AF;
+        }
+
+        .search-input:focus {
+            background: #FFFFFF;
+            border-color: #FFB800;
+            box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.15);
+        }
+
+        .search-input:hover:not(:focus) {
+            border-color: #D1D5DB;
+        }
+
         .icon-button {
             width: 40px;
             height: 40px;
@@ -5050,6 +5102,15 @@
                 <button id="tab-engagements" class="tab-btn" onclick="switchTab('engagements')">Engagements</button>
             </nav>
         </div>
+        <div class="header-search">
+            <div class="search-container">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="global-search-input" class="search-input" placeholder="Search... (Shift+Space)" oninput="handleSearchInput(this.value)">
+            </div>
+        </div>
         <div class="header-actions">
             <button class="icon-button" onclick="openSettings()" title="Settings">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -6313,7 +6374,9 @@
             preProjectSelectedMonths: [],
             projectStartMonth: null,
             projectEndMonth: null,
-            monthTimelineOffset: 0
+            monthTimelineOffset: 0,
+            // Search state (Issue-59)
+            searchQuery: ''
         };
 
         // DOM Elements - Landing and Home
@@ -6435,6 +6498,7 @@
         const appHeader = document.getElementById('app-header');
         const tabHome = document.getElementById('tab-home');
         const tabEngagements = document.getElementById('tab-engagements');
+        const globalSearchInput = document.getElementById('global-search-input');
 
         // DOM Elements - Confirmation Modal
         const confirmModal = document.getElementById('confirm-modal');
@@ -6540,6 +6604,10 @@
         function switchTab(tab) {
             state.currentTab = tab;
 
+            // Clear search when switching tabs (Issue-59)
+            state.searchQuery = '';
+            globalSearchInput.value = '';
+
             // Update tab buttons (settings doesn't have a tab button)
             tabHome.classList.toggle('active', tab === 'home');
             tabEngagements.classList.toggle('active', tab === 'engagements');
@@ -6571,6 +6639,103 @@
         // Close Settings and return to previous page
         function closeSettings() {
             switchTab(state.previousTab);
+        }
+
+        // Search functions (Issue-59)
+        function handleSearchInput(value) {
+            state.searchQuery = value.toLowerCase().trim();
+            // Re-render the current list based on tab
+            if (state.currentTab === 'home') {
+                renderTodos();
+            } else if (state.currentTab === 'engagements') {
+                renderEngagements();
+            }
+        }
+
+        function clearSearch() {
+            state.searchQuery = '';
+            globalSearchInput.value = '';
+            globalSearchInput.blur();
+            // Re-render the current list
+            if (state.currentTab === 'home') {
+                renderTodos();
+            } else if (state.currentTab === 'engagements') {
+                renderEngagements();
+            }
+        }
+
+        function focusSearch() {
+            globalSearchInput.focus();
+            globalSearchInput.select();
+        }
+
+        function matchesTodo(todo, query) {
+            if (!query) return true;
+
+            // Search in title
+            if (todo.title && todo.title.toLowerCase().includes(query)) return true;
+
+            // Search in description
+            if (todo.description && todo.description.toLowerCase().includes(query)) return true;
+
+            // Search in priority
+            const priority = todo.priority || DEFAULT_PRIORITY;
+            const priorityConfig = PRIORITY_TAGS[priority];
+            if (priorityConfig && priorityConfig.label.toLowerCase().includes(query)) return true;
+
+            // Search in linked engagement name
+            if (todo.engagementId) {
+                const engagement = state.engagements.find(e => e.id === todo.engagementId);
+                if (engagement && engagement.name && engagement.name.toLowerCase().includes(query)) return true;
+            }
+
+            // Search in tags
+            if (todo.tagIds && todo.tagIds.length > 0) {
+                for (const tagId of todo.tagIds) {
+                    const tag = state.tags.find(t => t.id === tagId);
+                    if (tag && tag.name && tag.name.toLowerCase().includes(query)) return true;
+                }
+            }
+
+            return false;
+        }
+
+        function matchesEngagement(engagement, query) {
+            if (!query) return true;
+
+            // Search in name (title)
+            if (engagement.name && engagement.name.toLowerCase().includes(query)) return true;
+
+            // Search in description
+            if (engagement.description && engagement.description.toLowerCase().includes(query)) return true;
+
+            // Search in status
+            if (engagement.status && engagement.status.toLowerCase().includes(query)) return true;
+
+            // Search in contact name
+            if (engagement.contact && engagement.contact.toLowerCase().includes(query)) return true;
+
+            // Search in contact person (from people list)
+            if (engagement.contactId) {
+                const person = state.people.find(p => p.id === engagement.contactId);
+                if (person && person.name && person.name.toLowerCase().includes(query)) return true;
+            }
+
+            // Search in role
+            if (engagement.contactId) {
+                const person = state.people.find(p => p.id === engagement.contactId);
+                if (person && person.role && person.role.toLowerCase().includes(query)) return true;
+            }
+
+            // Search in type (engagement, pre-project, project)
+            const displayType = getEngagementDisplayType(engagement);
+            const typeName = getTypeDisplayName(displayType);
+            if (typeName.toLowerCase().includes(query)) return true;
+
+            // Also match raw type values
+            if (engagement.type && engagement.type.toLowerCase().includes(query)) return true;
+
+            return false;
         }
 
         // Switch settings section
@@ -7092,7 +7257,12 @@
             // Also render recommendation panel
             renderRecommendationPanel();
 
-            if (state.todos.length === 0) {
+            // Apply search filter (Issue-59)
+            const filteredTodos = state.searchQuery
+                ? state.todos.filter(todo => matchesTodo(todo, state.searchQuery))
+                : state.todos;
+
+            if (filteredTodos.length === 0) {
                 // Show empty state
                 todoList.classList.add('hidden');
                 emptyState.classList.remove('hidden');
@@ -7104,8 +7274,8 @@
                 todoShortcutHintFloating.classList.remove('hidden');
 
                 // Create sorted array with original indices preserved
-                const sortedTodos = state.todos
-                    .map((todo, index) => ({ todo, originalIndex: index }))
+                const sortedTodos = filteredTodos
+                    .map((todo) => ({ todo, originalIndex: state.todos.indexOf(todo) }))
                     .sort((a, b) => {
                         // Active todos first, then completed/dropped
                         const aActive = !a.todo.completed && !a.todo.dropped;
@@ -7482,10 +7652,13 @@
             // Clear current list
             engagementList.innerHTML = '';
 
-            // Filter engagements based on archived state
+            // Filter engagements based on archived state and search query (Issue-59)
             const filteredEngagements = state.engagements.filter(opp => {
-                if (state.showArchived) return true;
-                return !opp.archived;
+                // First apply archived filter
+                if (!state.showArchived && opp.archived) return false;
+                // Then apply search filter
+                if (state.searchQuery && !matchesEngagement(opp, state.searchQuery)) return false;
+                return true;
             });
 
             if (filteredEngagements.length === 0) {
@@ -11093,6 +11266,16 @@
             // Skip if any modal is open and it's not Escape
             const anyModalOpen = state.modalOpen || state.engagementModalOpen || state.personModalOpen;
 
+            // Handle Shift+Spacebar to focus search (Issue-59)
+            // Only on Todos or Engagements page, no modals open, side panel not open
+            if (e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && e.code === 'Space' &&
+                state.currentPage === 'app' && (state.currentTab === 'home' || state.currentTab === 'engagements') &&
+                !anyModalOpen && !state.sidePanelOpen) {
+                e.preventDefault();
+                focusSearch();
+                return;
+            }
+
             // Handle Shift+N to open todo modal (only on home tab)
             if (e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && e.key.toLowerCase() === 'n' &&
                 state.currentPage === 'app' && state.currentTab === 'home' && !anyModalOpen) {
@@ -11186,6 +11369,12 @@
                 if (state.sidePanelOpen) {
                     e.preventDefault();
                     closeSidePanel();
+                    return;
+                }
+                // Clear search if active or search input is focused (Issue-59)
+                if (state.searchQuery || document.activeElement === globalSearchInput) {
+                    e.preventDefault();
+                    clearSearch();
                     return;
                 }
             }
