@@ -47,4 +47,4 @@ Issue-67: Added "Blocked" status for Todos with visual indicators, block/unblock
 
 Issue-69: Added allocation timeline bar to Engagement list items showing monthly allocations as colored pebbles (yellow for pre-project, green for project) with month labels, percentage display, and left/right arrow scrolling for timelines with more than 6 months.
 
-Issue-72: Extended allocation timeline bar to show 12 months at a time instead of 6, with scrolling for timelines exceeding 12 months.
+Issue-72: Extended allocation timeline bar to show 18 months at a time (up from 6), fixed pebble clipping by removing overflow constraints, scrolling appears for timelines exceeding 18 months.

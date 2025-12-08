@@ -2007,13 +2007,12 @@
             color: #0288D1;
         }
 
-        /* Allocation timeline bar in engagement list (Issue-69) */
+        /* Allocation timeline bar in engagement list (Issue-69, Issue-72) */
         .allocation-timeline-bar {
             display: flex;
             align-items: center;
             gap: 4px;
             flex-shrink: 0;
-            max-width: 320px;
             margin-left: auto;
             margin-right: 16px;
         }
@@ -2046,7 +2045,6 @@
         .allocation-timeline-months {
             display: flex;
             gap: 4px;
-            overflow: hidden;
         }
 
         .allocation-pebble {
@@ -12303,11 +12301,11 @@
             // Get offset for this engagement's timeline
             const offset = engagementTimelineOffsets[engagement.id] || 0;
 
-            // Determine visible months (12 at a time) - Issue-72
-            const visibleMonths = allMonths.slice(offset, offset + 12);
+            // Determine visible months (18 at a time) - Issue-72
+            const visibleMonths = allMonths.slice(offset, offset + 18);
             const canScrollLeft = offset > 0;
-            const canScrollRight = offset + 12 < allMonths.length;
-            const needsArrows = allMonths.length > 12;
+            const canScrollRight = offset + 18 < allMonths.length;
+            const needsArrows = allMonths.length > 18;
 
             // Build pebbles HTML
             const pebblesHtml = visibleMonths.map(month => {
@@ -12377,7 +12375,7 @@
                     ? generateMonthRange(allocation.project.startMonth, allocation.project.endMonth)
                     : [];
                 const allMonths = [...new Set([...preProjectMonths, ...projectMonths])].sort();
-                const maxOffset = Math.max(0, allMonths.length - 12);
+                const maxOffset = Math.max(0, allMonths.length - 18);
                 engagementTimelineOffsets[engagementId] = Math.max(0, Math.min(engagementTimelineOffsets[engagementId], maxOffset));
             }
             renderEngagements();
