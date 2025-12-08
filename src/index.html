@@ -5390,6 +5390,7 @@
             color: #E5E7EB;
             background: #FAFAFA;
         }
+/* Range selection styles for PTO picker */        .dtp-day.range-start {            background: #F5A623;            color: white;            border-radius: 50% 0 0 50%;        }        .dtp-day.range-end {            background: #F5A623;            color: white;            border-radius: 0 50% 50% 0;        }        .dtp-day.range-start.range-end {            border-radius: 50%;        }        .dtp-day.in-range {            background: #FEF3C7;            color: #92400E;            border-radius: 0;        }        .dtp-day.in-range:hover {            background: #FDE68A;        }        .dtp-day.range-preview {            background: #FEF9C3;            color: #A16207;        }
 
         /* Month picker overlay */
         .dtp-overlay {
@@ -6025,9 +6026,9 @@
                         <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 16px;">Holidays</h3>
                         <p style="color: #6C757D; font-size: 13px; margin-bottom: 16px;">Add holidays when you won't be working.</p>
 
-                        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
-                            <input type="date" id="holiday-date-input" class="form-input" style="flex: 1; max-width: 200px;">
-                            <button type="button" class="btn btn-secondary" onclick="addHoliday()">Add Holiday</button>
+                        <div style="display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start;">
+                            <input type="date" id="holiday-date-input" class="form-input" style="width: 200px;" placeholder="Select date">
+                            <button type="button" class="btn btn-secondary" onclick="addHolidayFromPicker()">Add Holiday</button>
                         </div>
 
                         <div id="holidays-list" style="display: flex; flex-wrap: wrap; gap: 8px;">
@@ -6038,12 +6039,15 @@
                     <!-- PTO Configuration -->
                     <div class="calendar-pto" style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
                         <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 16px;">Paid Time Off (PTO)</h3>
-                        <p style="color: #6C757D; font-size: 13px; margin-bottom: 16px;">Add PTO days when you'll be away from work.</p>
+                        <p style="color: #6C757D; font-size: 13px; margin-bottom: 16px;">Add PTO days when you'll be away from work. <span style="color: #F5A623; font-style: italic;">Click two dates to select a range.</span></p>
 
-                        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
-                            <input type="date" id="pto-date-input" class="form-input" style="flex: 1; max-width: 200px;">
-                            <button type="button" class="btn btn-secondary" onclick="addPTO()">Add PTO</button>
+                        <div style="display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start;">
+                            <input type="date" id="pto-date-input" class="form-input" style="width: 200px;" placeholder="Select date or range">
+                            <button type="button" class="btn btn-secondary" onclick="addPTOFromPicker()">Add PTO</button>
+                            <button type="button" id="pto-clear-range" class="btn btn-secondary" onclick="clearPTORangeSelection()" style="display: none;">Clear</button>
                         </div>
+
+                        <div id="pto-range-status" style="display: none; color: #F5A623; font-size: 13px; margin-bottom: 12px;"></div>
 
                         <div id="pto-list" style="display: flex; flex-wrap: wrap; gap: 8px;">
                             <!-- PTO days will be rendered here -->
@@ -13815,6 +13819,8 @@
          * Render the work calendar settings section
          */
         function renderCalendarSettings() {
+            // Initialize date pickers after DOM is ready
+            setTimeout(initializeCalendarPickers, 0);
             renderWorkDaysGrid();
             renderHolidaysList();
             renderPTOList();
@@ -14010,6 +14016,228 @@
         function removePTO(dateStr) {
             state.workCalendar.pto = state.workCalendar.pto.filter(d => d !== dateStr);
             renderPTOList();
+        }
+
+        // PTO Range Selection State
+        let ptoRangeStart = null;
+        let ptoRangeEnd = null;
+        let holidayPickerInstance = null;
+        let ptoPickerInstance = null;
+
+        /**
+         * Initialize DateTimePickers for calendar settings
+         */
+        function initializeCalendarPickers() {
+            const holidayInput = document.getElementById('holiday-date-input');
+            const ptoInput = document.getElementById('pto-date-input');
+
+            // Initialize holiday picker (simple date-only)
+            if (holidayInput && !holidayInput._dtpInstance) {
+                holidayPickerInstance = new DateTimePicker(holidayInput, {
+                    dateOnly: true,
+                    closeOnSelect: true
+                });
+            }
+
+            // Initialize PTO picker with range selection support
+            if (ptoInput && !ptoInput._dtpInstance) {
+                ptoPickerInstance = new DateTimePicker(ptoInput, {
+                    dateOnly: true,
+                    closeOnSelect: false,
+                    rangeMode: true,
+                    onDateClick: handlePTODateClick,
+                    onDateHover: handlePTODateHover
+                });
+            }
+        }
+
+        /**
+         * Handle date click in PTO picker for range selection
+         */
+        function handlePTODateClick(date, picker) {
+            const dateStr = formatDateStr(date);
+            if (state.workCalendar.holidays.includes(dateStr)) {
+                return;
+            }
+
+            if (!ptoRangeStart) {
+                ptoRangeStart = new Date(date);
+                ptoRangeEnd = null;
+                updatePTORangeStatus();
+                picker.renderCalendar();
+                document.getElementById('pto-clear-range').style.display = 'inline-block';
+            } else if (!ptoRangeEnd) {
+                ptoRangeEnd = new Date(date);
+                if (ptoRangeStart > ptoRangeEnd) {
+                    [ptoRangeStart, ptoRangeEnd] = [ptoRangeEnd, ptoRangeStart];
+                }
+                updatePTORangeStatus();
+                picker.renderCalendar();
+            } else {
+                ptoRangeStart = new Date(date);
+                ptoRangeEnd = null;
+                updatePTORangeStatus();
+                picker.renderCalendar();
+            }
+        }
+
+        /**
+         * Handle date hover in PTO picker for range preview
+         */
+        function handlePTODateHover(date, picker) {
+            if (ptoRangeStart && !ptoRangeEnd) {
+                picker.previewDate = date;
+                picker.renderCalendar();
+            }
+        }
+
+        /**
+         * Update PTO range status display
+         */
+        function updatePTORangeStatus() {
+            const statusEl = document.getElementById('pto-range-status');
+            if (!statusEl) return;
+
+            if (ptoRangeStart && !ptoRangeEnd) {
+                const startStr = ptoRangeStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                statusEl.textContent = 'Range start: ' + startStr + ' - Click another date to complete range, or click "Add PTO" for single day';
+                statusEl.style.display = 'block';
+            } else if (ptoRangeStart && ptoRangeEnd) {
+                const startStr = ptoRangeStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                const endStr = ptoRangeEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                const count = countWorkDaysInRange(ptoRangeStart, ptoRangeEnd);
+                statusEl.textContent = 'Range: ' + startStr + ' to ' + endStr + ' (' + count + ' work day' + (count !== 1 ? 's' : '') + ') - Click "Add PTO" to add';
+                statusEl.style.display = 'block';
+            } else {
+                statusEl.style.display = 'none';
+            }
+        }
+
+        /**
+         * Count work days in a date range (excluding holidays and existing PTO)
+         */
+        function countWorkDaysInRange(start, end) {
+            let count = 0;
+            const current = new Date(start);
+            while (current <= end) {
+                const dateStr = formatDateStr(current);
+                if (isWorkDay(current) && !state.workCalendar.holidays.includes(dateStr) && !state.workCalendar.pto.includes(dateStr)) {
+                    count++;
+                }
+                current.setDate(current.getDate() + 1);
+            }
+            return count;
+        }
+
+        /**
+         * Format date as YYYY-MM-DD string
+         */
+        function formatDateStr(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return year + '-' + month + '-' + day;
+        }
+
+        /**
+         * Add holiday from DateTimePicker
+         */
+        function addHolidayFromPicker() {
+            const input = document.getElementById('holiday-date-input');
+            const dateStr = input.value;
+            if (!dateStr) {
+                alert('Please select a date');
+                return;
+            }
+
+            if (state.workCalendar.holidays.includes(dateStr)) {
+                alert('This date is already added as a holiday');
+                return;
+            }
+
+            const date = new Date(dateStr + 'T00:00:00');
+            if (!isWorkDay(date)) {
+                alert('This date is already a non-work day');
+                return;
+            }
+
+            state.workCalendar.holidays.push(dateStr);
+            input.value = '';
+            if (holidayPickerInstance) {
+                holidayPickerInstance.selectedDate = null;
+                holidayPickerInstance.displayInput.value = "";
+            }
+            renderHolidaysList();
+        }
+
+        /**
+         * Add PTO from DateTimePicker (supports range selection)
+         */
+        function addPTOFromPicker() {
+            if (ptoRangeStart && ptoRangeEnd) {
+                const current = new Date(ptoRangeStart);
+                let addedCount = 0;
+                while (current <= ptoRangeEnd) {
+                    const dateStr = formatDateStr(current);
+                    if (isWorkDay(current) && !state.workCalendar.holidays.includes(dateStr) && !state.workCalendar.pto.includes(dateStr)) {
+                        state.workCalendar.pto.push(dateStr);
+                        addedCount++;
+                    }
+                    current.setDate(current.getDate() + 1);
+                }
+                clearPTORangeSelection();
+                renderPTOList();
+            } else if (ptoRangeStart) {
+                const dateStr = formatDateStr(ptoRangeStart);
+                if (state.workCalendar.pto.includes(dateStr)) {
+                    alert('This date is already added as PTO');
+                    return;
+                }
+                if (!isWorkDay(ptoRangeStart)) {
+                    alert('This date is not a work day');
+                    return;
+                }
+                if (state.workCalendar.holidays.includes(dateStr)) {
+                    alert('This date is a holiday');
+                    return;
+                }
+                state.workCalendar.pto.push(dateStr);
+                clearPTORangeSelection();
+                renderPTOList();
+            } else {
+                const input = document.getElementById('pto-date-input');
+                const dateStr = input.value;
+                if (!dateStr) {
+                    alert('Please select a date');
+                    return;
+                }
+                if (state.workCalendar.pto.includes(dateStr)) {
+                    alert('This date is already added as PTO');
+                    return;
+                }
+                state.workCalendar.pto.push(dateStr);
+                input.value = '';
+                renderPTOList();
+            }
+        }
+
+        /**
+         * Clear PTO range selection
+         */
+        function clearPTORangeSelection() {
+            ptoRangeStart = null;
+            ptoRangeEnd = null;
+            const input = document.getElementById('pto-date-input');
+            if (input) input.value = '';
+            if (ptoPickerInstance) {
+                ptoPickerInstance.selectedDate = null;
+                ptoPickerInstance.previewDate = null;
+                ptoPickerInstance.displayInput.value = "";
+                ptoPickerInstance.renderCalendar();
+            }
+            updatePTORangeStatus();
+            const clearBtn = document.getElementById('pto-clear-range');
+            if (clearBtn) clearBtn.style.display = 'none';
         }
 
         /**
@@ -14379,6 +14607,9 @@
                     closeOnSelect: true,
                     dateOnly: isDateOnly,
                     onChange: null,
+                    rangeMode: false,
+                    onDateClick: null,
+                    onDateHover: null,
                     ...options
                 };
 
@@ -14393,6 +14624,9 @@
                 this.monthPickerOpen = false;
                 this.yearPickerOpen = false;
                 this.yearRangeStart = new Date().getFullYear() - 5;
+
+                // Range selection preview state
+                this.previewDate = null;
 
                 // Long press state
                 this.pressTimer = null;
@@ -14546,6 +14780,15 @@
 
                 // Mouse wheel on calendar
                 this.calendarGrid.addEventListener('wheel', (e) => this.handleCalendarWheel(e));
+
+                // Hover handler for range preview
+                this.calendarGrid.addEventListener('mouseover', (e) => {
+                    if (!this.options.rangeMode || !this.options.onDateHover) return;
+                    const dayEl = e.target.closest('.dtp-day');
+                    if (!dayEl || dayEl.classList.contains('disabled-day')) return;
+                    const date = new Date(dayEl.dataset.date);
+                    this.options.onDateHover(date, this);
+                });
 
                 // Time spinner buttons
                 this.picker.querySelectorAll('.dtp-spinner-btn').forEach(btn => {
@@ -14751,6 +14994,32 @@
                     // Check if this is a valid work day (Issue-76)
                     if (!isWorkDay(dateObj)) {
                         classes.push('disabled-day');
+
+                    // Range selection highlighting (Issue-76 PTO picker)
+                    if (this.options.rangeMode && ptoRangeStart) {
+                        const rangeStartKey = this.dateToKey(ptoRangeStart);
+                        const rangeEndKey = ptoRangeEnd ? this.dateToKey(ptoRangeEnd) : null;
+                        const previewKey = this.previewDate ? this.dateToKey(this.previewDate) : null;
+
+                        if (dateKey === rangeStartKey) {
+                            classes.push('range-start');
+                        }
+                        if (rangeEndKey && dateKey === rangeEndKey) {
+                            classes.push('range-end');
+                        }
+
+                        // Check if date is in range
+                        let effectiveEnd = rangeEndKey || previewKey;
+                        if (effectiveEnd && rangeStartKey) {
+                            let startTime = ptoRangeStart.getTime();
+                            let endTime = (ptoRangeEnd || this.previewDate).getTime();
+                            if (startTime > endTime) [startTime, endTime] = [endTime, startTime];
+                            const dateTime = dateObj.getTime();
+                            if (dateTime > startTime && dateTime < endTime) {
+                                classes.push('in-range');
+                            }
+                        }
+                    }
                     }
 
                     html += `<button type="button" class="${classes.join(' ')}" data-date="${dateObj.toISOString()}" tabindex="-1">${dayNum}</button>`;
@@ -15011,6 +15280,15 @@
                 if (!dayEl) return;
 
                 const date = new Date(dayEl.dataset.date);
+
+                // Dont allow clicking on disabled days
+                if (dayEl.classList.contains('disabled-day')) return;
+
+                // If in range mode with callback, use custom handler
+                if (this.options.rangeMode && this.options.onDateClick) {
+                    this.options.onDateClick(date, this);
+                    return;
+                }
                 this.focusedDate = date;
                 this.viewDate = new Date(date);
                 this.selectFocusedDate();
