@@ -38,3 +38,5 @@ Issue-53: Fixed Tags control Tab behavior to skip tag selection when no text ent
 Issue-55: Added expandable tooltip on Engagement Status badge showing status descriptions. Tooltip displays brief description on hover with "Read more" link to expand and show all status states (Active, Completed, Closed, Dropped) with detailed explanations. Implemented in both engagement list and side panel with appropriate positioning.
 
 Issue-59: Implemented global search functionality with Shift+Spacebar keyboard shortcut, real-time filtering for Todos and Engagements pages, and Escape to clear search.
+
+Issue-61: Fixed CSS injection vulnerability by validating hex color format on tag imports and IndexedDB loads.
