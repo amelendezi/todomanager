@@ -5864,6 +5864,21 @@
                         </svg>
                         <span>Planning</span>
                     </li>
+                    <li class="settings-menu-item" data-section="calendar" onclick="switchSettingsSection('calendar')">
+                        <!-- Calendar icon -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                            <path d="M8 14h.01"></path>
+                            <path d="M12 14h.01"></path>
+                            <path d="M16 14h.01"></path>
+                            <path d="M8 18h.01"></path>
+                            <path d="M12 18h.01"></path>
+                        </svg>
+                        <span>Calendar</span>
+                    </li>
                     <li class="settings-menu-item" data-section="storage" onclick="switchSettingsSection('storage')">
                         <!-- Database/Storage icon -->
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -5974,6 +5989,54 @@
 
                         <button type="submit" class="btn btn-primary btn-save-settings">Save Settings</button>
                     </form>
+                </div>
+
+                <!-- Calendar Section (Issue-76) -->
+                <div id="settings-section-calendar" class="settings-section hidden">
+                    <h2 class="settings-section-title">Work Calendar</h2>
+                    <p style="color: #6C757D; margin-bottom: 24px;">Configure your available work days, hours per day, holidays, and time off.</p>
+
+                    <!-- Work Days Configuration -->
+                    <div class="calendar-work-days" style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+                        <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 16px;">Work Days & Hours</h3>
+                        <p style="color: #6C757D; font-size: 13px; margin-bottom: 16px;">Enable days you work and set hours per day.</p>
+
+                        <div id="work-days-grid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;">
+                            <!-- Work days will be rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- Holidays Configuration -->
+                    <div class="calendar-holidays" style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+                        <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 16px;">Holidays</h3>
+                        <p style="color: #6C757D; font-size: 13px; margin-bottom: 16px;">Add holidays when you won't be working.</p>
+
+                        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                            <input type="date" id="holiday-date-input" class="form-input" style="flex: 1; max-width: 200px;">
+                            <button type="button" class="btn btn-secondary" onclick="addHoliday()">Add Holiday</button>
+                        </div>
+
+                        <div id="holidays-list" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            <!-- Holidays will be rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- PTO Configuration -->
+                    <div class="calendar-pto" style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+                        <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 16px;">Paid Time Off (PTO)</h3>
+                        <p style="color: #6C757D; font-size: 13px; margin-bottom: 16px;">Add PTO days when you'll be away from work.</p>
+
+                        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                            <input type="date" id="pto-date-input" class="form-input" style="flex: 1; max-width: 200px;">
+                            <button type="button" class="btn btn-secondary" onclick="addPTO()">Add PTO</button>
+                        </div>
+
+                        <div id="pto-list" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            <!-- PTO days will be rendered here -->
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="saveCalendarSettings()">Save Calendar Settings</button>
                 </div>
 
                 <!-- Storage Section -->
@@ -7388,12 +7451,14 @@
             const peopleSection = document.getElementById('settings-section-people');
             const tagsSection = document.getElementById('settings-section-tags');
             const planningSection = document.getElementById('settings-section-planning');
+            const calendarSection = document.getElementById('settings-section-calendar');
             const storageSection = document.getElementById('settings-section-storage');
 
             // Hide all sections
             peopleSection.classList.add('hidden');
             tagsSection.classList.add('hidden');
             planningSection.classList.add('hidden');
+            calendarSection.classList.add('hidden');
             storageSection.classList.add('hidden');
 
             if (section === 'people') {
@@ -7405,6 +7470,9 @@
             } else if (section === 'planning') {
                 planningSection.classList.remove('hidden');
                 renderPlanningSettings();
+            } else if (section === 'calendar') {
+                calendarSection.classList.remove('hidden');
+                renderCalendarSettings();
             } else if (section === 'storage') {
                 storageSection.classList.remove('hidden');
                 renderStorageSection();
@@ -13670,6 +13738,285 @@
         }
 
         // ========================================
+        // CALENDAR SECTION FUNCTIONS (Issue-76)
+        // ========================================
+
+        const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const DAY_ABBREVS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        /**
+         * Render the work calendar settings section
+         */
+        function renderCalendarSettings() {
+            renderWorkDaysGrid();
+            renderHolidaysList();
+            renderPTOList();
+        }
+
+        /**
+         * Render the work days grid with toggles and hour inputs
+         */
+        function renderWorkDaysGrid() {
+            const grid = document.getElementById('work-days-grid');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < 7; i++) {
+                const dayConfig = state.workCalendar.workDays[i];
+                const dayCard = document.createElement('div');
+                dayCard.style.cssText = `
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    padding: 12px 8px;
+                    background: ${dayConfig.enabled ? '#fff' : '#e5e7eb'};
+                    border-radius: 8px;
+                    border: 2px solid ${dayConfig.enabled ? '#F5A623' : 'transparent'};
+                    transition: all 0.2s;
+                `;
+
+                dayCard.innerHTML = `
+                    <div style="font-weight: 600; font-size: 12px; color: #1F1F1F; margin-bottom: 8px;">${DAY_ABBREVS[i]}</div>
+                    <label style="display: flex; align-items: center; cursor: pointer; margin-bottom: 8px;">
+                        <input type="checkbox" ${dayConfig.enabled ? 'checked' : ''}
+                            onchange="toggleWorkDay(${i}, this.checked)"
+                            style="width: 18px; height: 18px; accent-color: #F5A623;">
+                    </label>
+                    <input type="number" min="0" max="24" value="${dayConfig.hours}"
+                        onchange="setWorkDayHours(${i}, this.value)"
+                        ${dayConfig.enabled ? '' : 'disabled'}
+                        style="width: 50px; padding: 4px; text-align: center; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;">
+                    <div style="font-size: 10px; color: #6C757D; margin-top: 4px;">hours</div>
+                `;
+
+                grid.appendChild(dayCard);
+            }
+        }
+
+        /**
+         * Toggle a work day enabled/disabled
+         */
+        function toggleWorkDay(dayIndex, enabled) {
+            state.workCalendar.workDays[dayIndex].enabled = enabled;
+            if (!enabled) {
+                state.workCalendar.workDays[dayIndex].hours = 0;
+            } else if (state.workCalendar.workDays[dayIndex].hours === 0) {
+                state.workCalendar.workDays[dayIndex].hours = 8; // Default to 8 hours when enabling
+            }
+            renderWorkDaysGrid();
+        }
+
+        /**
+         * Set hours for a specific work day
+         */
+        function setWorkDayHours(dayIndex, hours) {
+            const numHours = parseInt(hours, 10);
+            if (!isNaN(numHours) && numHours >= 0 && numHours <= 24) {
+                state.workCalendar.workDays[dayIndex].hours = numHours;
+            }
+        }
+
+        /**
+         * Render the holidays list
+         */
+        function renderHolidaysList() {
+            const list = document.getElementById('holidays-list');
+            list.innerHTML = '';
+
+            if (state.workCalendar.holidays.length === 0) {
+                list.innerHTML = '<span style="color: #9CA3AF; font-size: 13px;">No holidays added</span>';
+                return;
+            }
+
+            // Sort holidays by date
+            const sortedHolidays = [...state.workCalendar.holidays].sort();
+
+            sortedHolidays.forEach(dateStr => {
+                const date = new Date(dateStr + 'T00:00:00');
+                const chip = document.createElement('div');
+                chip.style.cssText = `
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 6px 12px;
+                    background: #FEE2E2;
+                    color: #DC2626;
+                    border-radius: 16px;
+                    font-size: 13px;
+                `;
+                chip.innerHTML = `
+                    <span>${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                    <button onclick="removeHoliday('${dateStr}')" style="background: none; border: none; cursor: pointer; color: #DC2626; font-size: 14px; line-height: 1;">×</button>
+                `;
+                list.appendChild(chip);
+            });
+        }
+
+        /**
+         * Add a holiday
+         */
+        function addHoliday() {
+            const input = document.getElementById('holiday-date-input');
+            const dateStr = input.value;
+            if (!dateStr) {
+                alert('Please select a date');
+                return;
+            }
+
+            if (state.workCalendar.holidays.includes(dateStr)) {
+                alert('This date is already added as a holiday');
+                return;
+            }
+
+            state.workCalendar.holidays.push(dateStr);
+            input.value = '';
+            renderHolidaysList();
+        }
+
+        /**
+         * Remove a holiday
+         */
+        function removeHoliday(dateStr) {
+            state.workCalendar.holidays = state.workCalendar.holidays.filter(d => d !== dateStr);
+            renderHolidaysList();
+        }
+
+        /**
+         * Render the PTO list
+         */
+        function renderPTOList() {
+            const list = document.getElementById('pto-list');
+            list.innerHTML = '';
+
+            if (state.workCalendar.pto.length === 0) {
+                list.innerHTML = '<span style="color: #9CA3AF; font-size: 13px;">No PTO days added</span>';
+                return;
+            }
+
+            // Sort PTO by date
+            const sortedPTO = [...state.workCalendar.pto].sort();
+
+            sortedPTO.forEach(dateStr => {
+                const date = new Date(dateStr + 'T00:00:00');
+                const chip = document.createElement('div');
+                chip.style.cssText = `
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 6px 12px;
+                    background: #DBEAFE;
+                    color: #1D4ED8;
+                    border-radius: 16px;
+                    font-size: 13px;
+                `;
+                chip.innerHTML = `
+                    <span>${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                    <button onclick="removePTO('${dateStr}')" style="background: none; border: none; cursor: pointer; color: #1D4ED8; font-size: 14px; line-height: 1;">×</button>
+                `;
+                list.appendChild(chip);
+            });
+        }
+
+        /**
+         * Add a PTO day
+         */
+        function addPTO() {
+            const input = document.getElementById('pto-date-input');
+            const dateStr = input.value;
+            if (!dateStr) {
+                alert('Please select a date');
+                return;
+            }
+
+            if (state.workCalendar.pto.includes(dateStr)) {
+                alert('This date is already added as PTO');
+                return;
+            }
+
+            state.workCalendar.pto.push(dateStr);
+            input.value = '';
+            renderPTOList();
+        }
+
+        /**
+         * Remove a PTO day
+         */
+        function removePTO(dateStr) {
+            state.workCalendar.pto = state.workCalendar.pto.filter(d => d !== dateStr);
+            renderPTOList();
+        }
+
+        /**
+         * Save calendar settings
+         */
+        function saveCalendarSettings() {
+            saveStateToIndexedDB().then(() => {
+                alert('Calendar settings saved successfully!');
+            }).catch(err => {
+                console.error('Failed to save calendar settings:', err);
+                alert('Failed to save calendar settings. Please try again.');
+            });
+        }
+
+        /**
+         * Check if a date is a valid work day
+         * @param {Date} date - The date to check
+         * @returns {boolean} - True if the date is a valid work day
+         */
+        function isWorkDay(date) {
+            const dayOfWeek = date.getDay();
+            const dateStr = date.toISOString().split('T')[0];
+
+            // Check if day of week is enabled
+            if (!state.workCalendar.workDays[dayOfWeek].enabled) {
+                return false;
+            }
+
+            // Check if it's a holiday
+            if (state.workCalendar.holidays.includes(dateStr)) {
+                return false;
+            }
+
+            // Check if it's a PTO day
+            if (state.workCalendar.pto.includes(dateStr)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        /**
+         * Get the next work day from a given date
+         * @param {Date} date - The starting date
+         * @returns {Date} - The next work day
+         */
+        function getNextWorkDay(date) {
+            const nextDay = new Date(date);
+            nextDay.setDate(nextDay.getDate() + 1);
+
+            // Safety: limit to 365 iterations to prevent infinite loops
+            let iterations = 0;
+            while (!isWorkDay(nextDay) && iterations < 365) {
+                nextDay.setDate(nextDay.getDate() + 1);
+                iterations++;
+            }
+
+            return nextDay;
+        }
+
+        /**
+         * Get work hours for a specific date
+         * @param {Date} date - The date to check
+         * @returns {number} - Hours available for that day (0 if not a work day)
+         */
+        function getWorkHoursForDate(date) {
+            if (!isWorkDay(date)) {
+                return 0;
+            }
+            const dayOfWeek = date.getDay();
+            return state.workCalendar.workDays[dayOfWeek].hours;
+        }
+
+        // ========================================
         // STORAGE SECTION FUNCTIONS
         // ========================================
 
@@ -13769,6 +14116,16 @@
                     // Restore settings (merge with defaults)
                     if (savedState.settings && typeof savedState.settings === 'object') {
                         state.settings = { ...DEFAULT_SETTINGS, ...savedState.settings };
+                    }
+
+                    // Restore work calendar (Issue-76)
+                    if (savedState.workCalendar && typeof savedState.workCalendar === 'object') {
+                        // Deep merge with defaults to handle new fields
+                        state.workCalendar = {
+                            workDays: savedState.workCalendar.workDays || JSON.parse(JSON.stringify(DEFAULT_WORK_CALENDAR.workDays)),
+                            holidays: Array.isArray(savedState.workCalendar.holidays) ? savedState.workCalendar.holidays : [],
+                            pto: Array.isArray(savedState.workCalendar.pto) ? savedState.workCalendar.pto : []
+                        };
                     }
 
                     // Ensure all todos have required fields with defaults
