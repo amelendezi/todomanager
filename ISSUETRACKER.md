@@ -44,3 +44,5 @@ Issue-61: Fixed CSS injection vulnerability by validating hex color format on ta
 Issue-63: Added comprehensive JSON import validation with schema sanitization, array size limits, and type/enum validation.
 
 Issue-67: Added "Blocked" status for Todos with visual indicators, block/unblock actions, optional reason capture, and Blocked section in Daily Plan.
+
+Issue-69: Added allocation timeline bar to Engagement list items showing monthly allocations as colored pebbles (yellow for pre-project, green for project) with month labels, percentage display, and left/right arrow scrolling for timelines with more than 6 months.
