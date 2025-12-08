@@ -14259,7 +14259,7 @@
          */
         function isWorkDay(date) {
             const dayOfWeek = date.getDay();
-            const dateStr = date.toISOString().split('T')[0];
+            const dateStr = formatDateStr(date);
 
             // Check if day of week is enabled
             if (!state.workCalendar.workDays[dayOfWeek].enabled) {
