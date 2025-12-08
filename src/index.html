@@ -12303,11 +12303,11 @@
             // Get offset for this engagement's timeline
             const offset = engagementTimelineOffsets[engagement.id] || 0;
 
-            // Determine visible months (6 at a time)
-            const visibleMonths = allMonths.slice(offset, offset + 6);
+            // Determine visible months (12 at a time) - Issue-72
+            const visibleMonths = allMonths.slice(offset, offset + 12);
             const canScrollLeft = offset > 0;
-            const canScrollRight = offset + 6 < allMonths.length;
-            const needsArrows = allMonths.length > 6;
+            const canScrollRight = offset + 12 < allMonths.length;
+            const needsArrows = allMonths.length > 12;
 
             // Build pebbles HTML
             const pebblesHtml = visibleMonths.map(month => {
@@ -12377,7 +12377,7 @@
                     ? generateMonthRange(allocation.project.startMonth, allocation.project.endMonth)
                     : [];
                 const allMonths = [...new Set([...preProjectMonths, ...projectMonths])].sort();
-                const maxOffset = Math.max(0, allMonths.length - 6);
+                const maxOffset = Math.max(0, allMonths.length - 12);
                 engagementTimelineOffsets[engagementId] = Math.max(0, Math.min(engagementTimelineOffsets[engagementId], maxOffset));
             }
             renderEngagements();
