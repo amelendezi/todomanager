@@ -3791,8 +3791,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            flex: 1;
-            max-width: 80px;
+            width: 60px;
+            flex-shrink: 0;
         }
 
         .daily-load-column-header {
@@ -3831,14 +3831,12 @@
             transition: opacity 0.2s, transform 0.2s;
             position: relative;
             border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-            font-size: 9px;
-            color: white;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            padding: 2px 4px;
             box-sizing: border-box;
+        }
+
+        /* Overdue segments always light red */
+        .daily-load-segment.overdue {
+            background: #F87171 !important;
         }
 
         .daily-load-segment:hover {
@@ -13387,7 +13385,7 @@
         /**
          * Render a single bar column with stacked todo segments
          */
-        function renderDailyLoadBar(barElement, todos, hoursElement) {
+        function renderDailyLoadBar(barElement, todos, hoursElement, isOverdue = false) {
             const hours = calculateTotalHours(todos);
             hoursElement.textContent = formatHoursDisplay(hours);
 
@@ -13417,10 +13415,11 @@
                 const segmentHeight = Math.max(scaledHours * pixelsPerHour, 16); // Minimum 16px for visibility
 
                 cumulativeHours += todoHours;
-                const heatClass = getHeatClass(cumulativeHours);
+                // Use 'overdue' class for overdue column, heat gradient for others
+                const colorClass = isOverdue ? 'overdue' : getHeatClass(cumulativeHours);
 
                 const segment = document.createElement('div');
-                segment.className = `daily-load-segment ${heatClass}`;
+                segment.className = `daily-load-segment ${colorClass}`;
                 if (todo.completed) {
                     segment.classList.add('completed');
                 }
@@ -13430,15 +13429,6 @@
                 segment.style.height = `${segmentHeight}px`;
                 segment.dataset.todoId = todo.id;
                 segment.title = `${escapeHtml(todo.title)} (${formatEffortDisplay(effort)})`;
-
-                // Show abbreviated title if segment is tall enough
-                if (segmentHeight >= 20) {
-                    const maxChars = Math.floor(segmentHeight / 3);
-                    const displayTitle = todo.title.length > maxChars
-                        ? todo.title.substring(0, maxChars - 1) + '…'
-                        : todo.title;
-                    segment.textContent = displayTitle;
-                }
 
                 segment.onclick = () => highlightTodoInList(todo.id);
 
@@ -13498,10 +13488,10 @@
             dailyLoadStatus.className = `daily-load-status ${status.class}`;
             dailyLoadStatus.textContent = status.text;
 
-            // Render each bar
-            renderDailyLoadBar(dailyLoadBarOverdue, categories.overdue, dailyLoadHoursOverdue);
-            renderDailyLoadBar(dailyLoadBarToday, categories.today, dailyLoadHoursToday);
-            renderDailyLoadBar(dailyLoadBarTomorrow, categories.tomorrow, dailyLoadHoursTomorrow);
+            // Render each bar (overdue bar uses light red, others use heat gradient)
+            renderDailyLoadBar(dailyLoadBarOverdue, categories.overdue, dailyLoadHoursOverdue, true);
+            renderDailyLoadBar(dailyLoadBarToday, categories.today, dailyLoadHoursToday, false);
+            renderDailyLoadBar(dailyLoadBarTomorrow, categories.tomorrow, dailyLoadHoursTomorrow, false);
         }
 
         // ========================================
