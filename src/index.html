@@ -996,6 +996,17 @@
             color: #BDBDBD;
         }
 
+        /* Daily Load highlight (Issue-74) */
+        .todo-item.daily-load-highlighted {
+            box-shadow: 0 0 0 3px #F5A623, 0 4px 12px rgba(245, 166, 35, 0.3);
+            animation: daily-load-pulse 0.5s ease-out;
+        }
+
+        @keyframes daily-load-pulse {
+            0% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
         /* Block/Unblock button styles */
         .todo-block-btn {
             width: 32px;
@@ -3031,7 +3042,7 @@
         .home-split-container {
             display: flex;
             gap: 24px;
-            max-width: 1400px;
+            max-width: 1800px;
             margin: 0 auto;
         }
 
@@ -3044,10 +3055,19 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
-        /* Todo Panel (Right) */
+        /* Todo Panel (Center) */
         .todo-panel {
             flex: 1;
             min-width: 0;
+        }
+
+        /* KPI Panel (Right) - Issue-74 */
+        .kpi-panel {
+            width: 320px;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
         /* Recommendation Header */
@@ -3685,7 +3705,217 @@
             margin-top: 24px;
         }
 
+        /* ========================================
+           DAILY LOAD KPI CHART - Issue-74
+           ======================================== */
+
+        .daily-load-chart {
+            background: #FFFFFF;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+        }
+
+        .daily-load-header {
+            margin-bottom: 16px;
+        }
+
+        .daily-load-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1F1F1F;
+            margin-bottom: 4px;
+        }
+
+        .daily-load-status {
+            font-size: 13px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .daily-load-status.overloaded {
+            background: #FFEBEE;
+            color: #DC3545;
+        }
+
+        .daily-load-status.careful {
+            background: #FFF3E0;
+            color: #F57C00;
+        }
+
+        .daily-load-status.balanced {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .daily-load-status.light {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .daily-load-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .daily-load-scale {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            padding-right: 8px;
+            width: 40px;
+        }
+
+        .daily-load-scale-mark {
+            font-size: 10px;
+            color: #9CA3AF;
+            height: 32px;
+            display: flex;
+            align-items: center;
+        }
+
+        .daily-load-bars {
+            display: flex;
+            flex: 1;
+            gap: 8px;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .daily-load-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            max-width: 80px;
+        }
+
+        .daily-load-column-header {
+            font-size: 11px;
+            color: #6C757D;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+
+        .daily-load-column-hours {
+            font-size: 10px;
+            color: #9CA3AF;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        .daily-load-bar {
+            width: 100%;
+            min-height: 160px;
+            max-height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background: #F9FAFB;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .daily-load-segment {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.2s;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 9px;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            padding: 2px 4px;
+            box-sizing: border-box;
+        }
+
+        .daily-load-segment:hover {
+            opacity: 0.85;
+            transform: scaleX(1.02);
+        }
+
+        .daily-load-segment.highlighted {
+            box-shadow: inset 0 0 0 2px #1F1F1F;
+        }
+
+        .daily-load-segment.completed {
+            background: #9CA3AF !important;
+        }
+
+        .daily-load-segment.completed::after {
+            content: "✓";
+            position: absolute;
+            right: 4px;
+            font-size: 8px;
+        }
+
+        /* Heat gradient colors */
+        .daily-load-segment.heat-green-1 { background: #22C55E; }
+        .daily-load-segment.heat-green-2 { background: #4ADE80; }
+        .daily-load-segment.heat-green-3 { background: #86EFAC; }
+        .daily-load-segment.heat-yellow-1 { background: #FACC15; }
+        .daily-load-segment.heat-yellow-2 { background: #FDE047; }
+        .daily-load-segment.heat-orange-1 { background: #FB923C; }
+        .daily-load-segment.heat-orange-2 { background: #F97316; }
+        .daily-load-segment.heat-red-light { background: #F87171; }
+        .daily-load-segment.heat-red-intense { background: #EF4444; }
+
+        .daily-load-empty {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #D1D5DB;
+            font-size: 11px;
+        }
+
+        .daily-load-label {
+            font-size: 11px;
+            color: #6C757D;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
         /* Responsive split-panel */
+        @media (max-width: 1400px) {
+            .kpi-panel {
+                width: 280px;
+                min-width: 280px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .home-split-container {
+                flex-wrap: wrap;
+            }
+
+            .kpi-panel {
+                width: 100%;
+                min-width: 100%;
+                order: -1;
+                margin-bottom: 24px;
+            }
+
+            .daily-load-bars {
+                justify-content: center;
+            }
+
+            .daily-load-column {
+                max-width: 120px;
+            }
+        }
+
         @media (max-width: 1024px) {
             .home-split-container {
                 flex-direction: column;
@@ -5531,6 +5761,49 @@
                         </svg>
                         <p class="empty-text">No Todos</p>
                         <p class="shortcut-hint">Press Shift + N to create new items</p>
+                    </div>
+                </div>
+
+                <!-- KPI Panel (Right) - Issue-74 -->
+                <div class="kpi-panel">
+                    <!-- Daily Load Chart -->
+                    <div id="daily-load-chart" class="daily-load-chart">
+                        <div class="daily-load-header">
+                            <div class="daily-load-title">Daily Load</div>
+                            <div id="daily-load-status" class="daily-load-status balanced">Balanced workload</div>
+                        </div>
+                        <div class="daily-load-container">
+                            <div class="daily-load-scale">
+                                <div class="daily-load-scale-mark">10hrs</div>
+                                <div class="daily-load-scale-mark">8hrs</div>
+                                <div class="daily-load-scale-mark">6hrs</div>
+                                <div class="daily-load-scale-mark">4hrs</div>
+                                <div class="daily-load-scale-mark">2hrs</div>
+                            </div>
+                            <div class="daily-load-bars">
+                                <div class="daily-load-column">
+                                    <div id="daily-load-hours-overdue" class="daily-load-column-hours">0hrs</div>
+                                    <div id="daily-load-bar-overdue" class="daily-load-bar">
+                                        <div class="daily-load-empty">-</div>
+                                    </div>
+                                    <div class="daily-load-label">Overdue</div>
+                                </div>
+                                <div class="daily-load-column">
+                                    <div id="daily-load-hours-today" class="daily-load-column-hours">0hrs</div>
+                                    <div id="daily-load-bar-today" class="daily-load-bar">
+                                        <div class="daily-load-empty">-</div>
+                                    </div>
+                                    <div class="daily-load-label">Today</div>
+                                </div>
+                                <div class="daily-load-column">
+                                    <div id="daily-load-hours-tomorrow" class="daily-load-column-hours">0hrs</div>
+                                    <div id="daily-load-bar-tomorrow" class="daily-load-bar">
+                                        <div class="daily-load-empty">-</div>
+                                    </div>
+                                    <div class="daily-load-label">Tomorrow</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -7621,6 +7894,9 @@
             // Also render recommendation panel
             renderRecommendationPanel();
 
+            // Render Daily Load KPI chart (Issue-74)
+            renderDailyLoadChart();
+
             // Apply search filter (Issue-59)
             const filteredTodos = state.searchQuery
                 ? state.todos.filter(todo => matchesTodo(todo, state.searchQuery))
@@ -7668,6 +7944,7 @@
                     const todoItem = document.createElement('div');
                     const stateClass = todo.blocked ? 'blocked' : (todo.dropped ? 'dropped' : (todo.completed ? 'completed' : ''));
                     todoItem.className = `todo-item ${stateClass}`;
+                    todoItem.dataset.todoId = todo.id; // For Daily Load chart highlighting (Issue-74)
 
                     // Format deadline (supports both old dueDate and new deadline)
                     let dueDateHtml = '';
@@ -12975,6 +13252,260 @@
             `;
 
             return div;
+        }
+
+        // ========================================
+        // DAILY LOAD KPI CHART - Issue-74
+        // ========================================
+
+        // Get DOM elements for Daily Load chart
+        const dailyLoadStatus = document.getElementById('daily-load-status');
+        const dailyLoadHoursOverdue = document.getElementById('daily-load-hours-overdue');
+        const dailyLoadHoursToday = document.getElementById('daily-load-hours-today');
+        const dailyLoadHoursTomorrow = document.getElementById('daily-load-hours-tomorrow');
+        const dailyLoadBarOverdue = document.getElementById('daily-load-bar-overdue');
+        const dailyLoadBarToday = document.getElementById('daily-load-bar-today');
+        const dailyLoadBarTomorrow = document.getElementById('daily-load-bar-tomorrow');
+
+        // Track highlighted todo for Daily Load chart
+        let highlightedTodoId = null;
+
+        /**
+         * Categorizes todos by deadline into Overdue, Today, Tomorrow
+         * Only includes todos with deadlines
+         */
+        function categorizeTodosForDailyLoad() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            const dayAfterTomorrow = new Date(today);
+            dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+
+            const categories = {
+                overdue: [],
+                today: [],
+                tomorrow: []
+            };
+
+            state.todos.forEach(todo => {
+                // Skip todos without deadline or dropped/blocked todos
+                const deadlineValue = todo.deadline || todo.dueDate;
+                if (!deadlineValue || todo.dropped || todo.blocked) return;
+
+                const deadline = new Date(deadlineValue);
+                deadline.setHours(0, 0, 0, 0);
+
+                if (deadline < today) {
+                    categories.overdue.push(todo);
+                } else if (deadline >= today && deadline < tomorrow) {
+                    categories.today.push(todo);
+                } else if (deadline >= tomorrow && deadline < dayAfterTomorrow) {
+                    categories.tomorrow.push(todo);
+                }
+            });
+
+            // Sort each category by priority (highest priority at bottom of stack)
+            // Weight: urgent=100, high=75, normal=50, low=25, someday=10
+            const sortByPriority = (a, b) => {
+                const weightA = PRIORITY_TAGS[a.priority || DEFAULT_PRIORITY]?.weight || 50;
+                const weightB = PRIORITY_TAGS[b.priority || DEFAULT_PRIORITY]?.weight || 50;
+                return weightA - weightB; // Lower weight first, so higher priority ends up at bottom
+            };
+
+            categories.overdue.sort(sortByPriority);
+            categories.today.sort(sortByPriority);
+            categories.tomorrow.sort(sortByPriority);
+
+            return categories;
+        }
+
+        /**
+         * Calculate total hours for a list of todos
+         */
+        function calculateTotalHours(todos) {
+            let totalMinutes = 0;
+            let completedMinutes = 0;
+
+            todos.forEach(todo => {
+                const effort = todo.effort || DEFAULT_EFFORT;
+                const minutes = EFFORT_CONFIG[effort]?.minutes || 240;
+                totalMinutes += minutes;
+                if (todo.completed) {
+                    completedMinutes += minutes;
+                }
+            });
+
+            return {
+                total: totalMinutes / 60,
+                completed: completedMinutes / 60,
+                remaining: (totalMinutes - completedMinutes) / 60
+            };
+        }
+
+        /**
+         * Get heat gradient class based on cumulative hours
+         */
+        function getHeatClass(cumulativeHours) {
+            if (cumulativeHours <= 2) return 'heat-green-1';
+            if (cumulativeHours <= 3) return 'heat-green-2';
+            if (cumulativeHours <= 4) return 'heat-green-3';
+            if (cumulativeHours <= 5) return 'heat-yellow-1';
+            if (cumulativeHours <= 6) return 'heat-yellow-2';
+            if (cumulativeHours <= 7) return 'heat-orange-1';
+            if (cumulativeHours <= 8) return 'heat-orange-2';
+            if (cumulativeHours <= 10) return 'heat-red-light';
+            return 'heat-red-intense';
+        }
+
+        /**
+         * Get workload status based on today's hours
+         */
+        function getWorkloadStatus(todayHours) {
+            if (todayHours > 8) {
+                return { class: 'overloaded', text: 'You are overloaded' };
+            } else if (todayHours >= 6) {
+                return { class: 'careful', text: 'Careful not to exceed yourself today' };
+            } else if (todayHours >= 4) {
+                return { class: 'balanced', text: 'Balanced workload' };
+            } else {
+                return { class: 'light', text: 'You should ask for work' };
+            }
+        }
+
+        /**
+         * Format hours display with remaining
+         */
+        function formatHoursDisplay(hours) {
+            if (hours.total === 0) return '0hrs';
+            const totalStr = hours.total % 1 === 0 ? hours.total.toFixed(0) : hours.total.toFixed(1);
+            const remainingStr = hours.remaining % 1 === 0 ? hours.remaining.toFixed(0) : hours.remaining.toFixed(1);
+            if (hours.completed > 0) {
+                return `${totalStr}hrs (${remainingStr} left)`;
+            }
+            return `${totalStr}hrs`;
+        }
+
+        /**
+         * Render a single bar column with stacked todo segments
+         */
+        function renderDailyLoadBar(barElement, todos, hoursElement) {
+            const hours = calculateTotalHours(todos);
+            hoursElement.textContent = formatHoursDisplay(hours);
+
+            if (todos.length === 0) {
+                barElement.innerHTML = '<div class="daily-load-empty">-</div>';
+                return;
+            }
+
+            barElement.innerHTML = '';
+
+            // Max height is 160px, representing 10 hours
+            const maxHeight = 160;
+            const maxHours = 10;
+            const pixelsPerHour = maxHeight / maxHours;
+
+            // Calculate scale factor if total exceeds 10 hours
+            const scaleFactor = hours.total > maxHours ? maxHours / hours.total : 1;
+
+            let cumulativeHours = 0;
+
+            // Render segments from bottom to top (lowest priority first, highest at bottom)
+            todos.forEach(todo => {
+                const effort = todo.effort || DEFAULT_EFFORT;
+                const todoMinutes = EFFORT_CONFIG[effort]?.minutes || 240;
+                const todoHours = todoMinutes / 60;
+                const scaledHours = todoHours * scaleFactor;
+                const segmentHeight = Math.max(scaledHours * pixelsPerHour, 16); // Minimum 16px for visibility
+
+                cumulativeHours += todoHours;
+                const heatClass = getHeatClass(cumulativeHours);
+
+                const segment = document.createElement('div');
+                segment.className = `daily-load-segment ${heatClass}`;
+                if (todo.completed) {
+                    segment.classList.add('completed');
+                }
+                if (todo.id === highlightedTodoId) {
+                    segment.classList.add('highlighted');
+                }
+                segment.style.height = `${segmentHeight}px`;
+                segment.dataset.todoId = todo.id;
+                segment.title = `${escapeHtml(todo.title)} (${formatEffortDisplay(effort)})`;
+
+                // Show abbreviated title if segment is tall enough
+                if (segmentHeight >= 20) {
+                    const maxChars = Math.floor(segmentHeight / 3);
+                    const displayTitle = todo.title.length > maxChars
+                        ? todo.title.substring(0, maxChars - 1) + '…'
+                        : todo.title;
+                    segment.textContent = displayTitle;
+                }
+
+                segment.onclick = () => highlightTodoInList(todo.id);
+
+                barElement.appendChild(segment);
+            });
+        }
+
+        /**
+         * Highlight a todo in the main list when clicked in Daily Load chart
+         */
+        function highlightTodoInList(todoId) {
+            // Remove previous highlight
+            if (highlightedTodoId) {
+                const prevSegments = document.querySelectorAll(`.daily-load-segment[data-todo-id="${highlightedTodoId}"]`);
+                prevSegments.forEach(seg => seg.classList.remove('highlighted'));
+                const prevTodoCard = document.querySelector(`.todo-item[data-todo-id="${highlightedTodoId}"]`);
+                if (prevTodoCard) {
+                    prevTodoCard.classList.remove('daily-load-highlighted');
+                }
+            }
+
+            highlightedTodoId = todoId;
+
+            // Highlight new segment
+            const segments = document.querySelectorAll(`.daily-load-segment[data-todo-id="${todoId}"]`);
+            segments.forEach(seg => seg.classList.add('highlighted'));
+
+            // Find and scroll to the todo card using data-todo-id
+            const todoCard = document.querySelector(`.todo-item[data-todo-id="${todoId}"]`);
+            if (todoCard) {
+                todoCard.classList.add('daily-load-highlighted');
+                todoCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            // Clear highlight after 3 seconds
+            setTimeout(() => {
+                if (highlightedTodoId === todoId) {
+                    highlightedTodoId = null;
+                    segments.forEach(seg => seg.classList.remove('highlighted'));
+                    const highlightedCards = document.querySelectorAll('.todo-item.daily-load-highlighted');
+                    highlightedCards.forEach(card => card.classList.remove('daily-load-highlighted'));
+                }
+            }, 3000);
+        }
+
+        /**
+         * Render the complete Daily Load chart
+         */
+        function renderDailyLoadChart() {
+            if (state.currentPage !== 'app' || state.currentTab !== 'home') return;
+
+            const categories = categorizeTodosForDailyLoad();
+            const todayHours = calculateTotalHours(categories.today);
+
+            // Update status message
+            const status = getWorkloadStatus(todayHours.total);
+            dailyLoadStatus.className = `daily-load-status ${status.class}`;
+            dailyLoadStatus.textContent = status.text;
+
+            // Render each bar
+            renderDailyLoadBar(dailyLoadBarOverdue, categories.overdue, dailyLoadHoursOverdue);
+            renderDailyLoadBar(dailyLoadBarToday, categories.today, dailyLoadHoursToday);
+            renderDailyLoadBar(dailyLoadBarTomorrow, categories.tomorrow, dailyLoadHoursTomorrow);
         }
 
         // ========================================
