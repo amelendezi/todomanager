@@ -960,6 +960,91 @@
             margin: 0;
         }
 
+        /* Blocked todo styles (Issue-67) */
+        .todo-item.blocked {
+            opacity: 0.5;
+            background: #F5F5F5;
+        }
+
+        .todo-item.blocked .todo-title {
+            color: #9E9E9E;
+        }
+
+        .todo-item.blocked .todo-checkbox {
+            background: #E0E0E0;
+            border-color: #BDBDBD;
+            cursor: not-allowed;
+        }
+
+        .todo-item.blocked .todo-checkbox::after {
+            content: '⏸';
+            display: block;
+            color: #757575;
+            font-size: 10px;
+            line-height: 16px;
+            text-align: center;
+            border: none;
+            transform: none;
+            width: auto;
+            height: auto;
+            margin: 0;
+        }
+
+        .todo-item.blocked .todo-due-date,
+        .todo-item.blocked .todo-engagement,
+        .todo-item.blocked .todo-description {
+            color: #BDBDBD;
+        }
+
+        /* Block/Unblock button styles */
+        .todo-block-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9E9E9E;
+            transition: all 0.2s ease;
+        }
+
+        .todo-block-btn:hover {
+            background: #FFF3E0;
+            color: #FF9800;
+        }
+
+        .todo-block-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .todo-unblock-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FF9800;
+            transition: all 0.2s ease;
+        }
+
+        .todo-unblock-btn:hover {
+            background: #E8F5E9;
+            color: #4CAF50;
+        }
+
+        .todo-unblock-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
         /* Checkmark icon inside checkbox */
         .todo-checkbox.checked::after {
             content: '';
@@ -1293,6 +1378,43 @@
         .engagement-todo-item.dropped .engagement-todo-title {
             text-decoration: line-through;
             color: #9CA3AF;
+        }
+
+        /* Blocked todo in engagement sub-list (Issue-67) */
+        .engagement-todo-item.blocked {
+            position: relative;
+            background: #F5F5F5;
+        }
+
+        .engagement-todo-item.blocked .engagement-todo-title {
+            color: #BDBDBD;
+        }
+
+        .engagement-todo-item.blocked .engagement-todo-status.blocked svg {
+            color: #9E9E9E;
+        }
+
+        .blocked-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(158, 158, 158, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            pointer-events: none;
+        }
+
+        .blocked-overlay-text {
+            font-size: 11px;
+            font-weight: 600;
+            color: #757575;
+            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .engagement-todo-priority {
@@ -2220,6 +2342,35 @@
             justify-content: center;
         }
 
+        /* Block Reason Modal (Issue-67) */
+        .block-reason-modal-content {
+            max-width: 400px;
+        }
+
+        .block-reason-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #E9ECEF;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 16px;
+        }
+
+        .block-reason-input:focus {
+            outline: none;
+            border-color: #FF9800;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        .block-reason-hint {
+            font-size: 12px;
+            color: #6C757D;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
         /* People page styles */
         .people-list {
             display: flex;
@@ -2915,6 +3066,15 @@
             color: #6C757D;
         }
 
+        /* Blocked section in Daily Plan (Issue-67) */
+        .recommendation-section.blocked .recommendation-section-header {
+            color: #9E9E9E;
+        }
+
+        .recommendation-section.blocked .recommendation-section-icon {
+            opacity: 0.6;
+        }
+
         /* Recommendation Item */
         .recommendation-item {
             background: #F8F9FA;
@@ -2974,6 +3134,54 @@
         .recommendation-item.completed .recommendation-item-title {
             text-decoration: line-through;
             color: #ADB5BD;
+        }
+
+        /* Blocked recommendation item styles (Issue-67) */
+        .recommendation-item.blocked {
+            opacity: 0.5;
+            background: #EEEEEE;
+        }
+
+        .recommendation-item.blocked .recommendation-item-title {
+            color: #9E9E9E;
+        }
+
+        .recommendation-item.blocked .recommendation-item-checkbox {
+            background: #E0E0E0;
+            border-color: #BDBDBD;
+            cursor: not-allowed;
+        }
+
+        .recommendation-item-block-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9E9E9E;
+            transition: all 0.2s ease;
+            opacity: 0;
+        }
+
+        .recommendation-item:hover .recommendation-item-block-btn {
+            opacity: 1;
+        }
+
+        .recommendation-item-block-btn:hover {
+            background: #FFF3E0;
+            color: #FF9800;
+        }
+
+        .recommendation-item-block-btn svg {
+            width: 14px;
+            height: 14px;
         }
 
         .recommendation-item-meta {
@@ -5191,6 +5399,16 @@
                             <div id="if-time-items" class="recommendation-items"></div>
                         </div>
 
+                        <!-- Blocked Section (Issue-67) -->
+                        <div id="blocked-section" class="recommendation-section blocked hidden">
+                            <div class="recommendation-section-header">
+                                <span class="recommendation-section-icon">⏸️</span>
+                                <span>Blocked</span>
+                                <span id="blocked-count" class="recommendation-section-count">0</span>
+                            </div>
+                            <div id="blocked-items" class="recommendation-items"></div>
+                        </div>
+
                         <!-- Insights Section -->
                         <div id="insights-section" class="insights-section hidden">
                             <div class="insights-header">
@@ -5809,6 +6027,27 @@
         </div>
     </div>
 
+    <!-- Block Reason Modal (Issue-67) -->
+    <div id="block-reason-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closeBlockReasonModal()"></div>
+        <div class="modal-content block-reason-modal-content">
+            <svg class="cancel-icon" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+            </svg>
+            <h2 class="modal-title">Block Todo</h2>
+            <p id="block-todo-title" style="text-align: center; color: #6C757D; margin-bottom: 10px; font-weight: 500;"></p>
+            <p class="block-reason-hint">
+                Optionally provide a reason why this task is blocked.
+            </p>
+            <textarea id="block-reason-input" class="block-reason-input" placeholder="e.g., Waiting for client approval..."></textarea>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeBlockReasonModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="confirmBlockTodo()" style="background: #FF9800; border-color: #FF9800;">Block</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Promote to Pre-Project Modal -->
     <div id="promote-preproject-modal" class="modal hidden">
         <div class="modal-backdrop" onclick="closePromotePreProjectModal()"></div>
@@ -6393,7 +6632,10 @@
             projectEndMonth: null,
             monthTimelineOffset: 0,
             // Search state (Issue-59)
-            searchQuery: ''
+            searchQuery: '',
+            // Block todo state (Issue-67)
+            blockReasonModalOpen: false,
+            todoIndexToBlock: null
         };
 
         // DOM Elements - Landing and Home
@@ -6431,6 +6673,9 @@
         const ifTimeSection = document.getElementById('if-time-section');
         const ifTimeItems = document.getElementById('if-time-items');
         const ifTimeCount = document.getElementById('if-time-count');
+        const blockedSection = document.getElementById('blocked-section');
+        const blockedItems = document.getElementById('blocked-items');
+        const blockedCount = document.getElementById('blocked-count');
         const insightsSection = document.getElementById('insights-section');
         const insightsItems = document.getElementById('insights-items');
         const recommendationEmpty = document.getElementById('recommendation-empty');
@@ -7336,7 +7581,7 @@
 
                 sortedTodos.forEach(({ todo, originalIndex: index }) => {
                     const todoItem = document.createElement('div');
-                    const stateClass = todo.dropped ? 'dropped' : (todo.completed ? 'completed' : '');
+                    const stateClass = todo.blocked ? 'blocked' : (todo.dropped ? 'dropped' : (todo.completed ? 'completed' : ''));
                     todoItem.className = `todo-item ${stateClass}`;
 
                     // Format deadline (supports both old dueDate and new deadline)
@@ -7346,7 +7591,7 @@
                         const dueDate = new Date(deadlineValue);
                         const today = new Date();
                         today.setHours(0, 0, 0, 0);
-                        const isOverdue = dueDate < today && !todo.completed && !todo.dropped;
+                        const isOverdue = dueDate < today && !todo.completed && !todo.dropped && !todo.blocked;
                         dueDateHtml = `<div class="todo-due-date ${isOverdue ? 'overdue' : ''}">📅 ${formatDeadlineDisplay(deadlineValue)}</div>`;
                     }
 
@@ -7419,9 +7664,48 @@
                         descriptionHtml = `<div class="todo-description">${escapeHtml(todo.description)}</div>`;
                     }
 
-                    // Checkbox class and click handler (dropped todos can't be toggled)
-                    const checkboxClass = todo.dropped ? 'dropped' : (todo.completed ? 'checked' : '');
-                    const checkboxClick = todo.dropped ? '' : `onclick="toggleTodo(${index})"`;
+                    // Checkbox class and click handler (dropped and blocked todos can't be toggled)
+                    const checkboxClass = todo.blocked ? 'blocked' : (todo.dropped ? 'dropped' : (todo.completed ? 'checked' : ''));
+                    const checkboxClick = (todo.dropped || todo.blocked) ? '' : `onclick="toggleTodo(${index})"`;
+
+                    // Build action buttons based on state
+                    let actionsHtml = '';
+                    if (todo.blocked) {
+                        // Blocked: only show Unblock button
+                        actionsHtml = `
+                            <button class="todo-unblock-btn" onclick="unblockTodo(${index})" title="Unblock">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                            </button>
+                        `;
+                    } else if (!todo.completed && !todo.dropped) {
+                        // Active: show Edit and Block buttons
+                        actionsHtml = `
+                            <button class="todo-edit-btn" onclick="editTodo(${index})" title="Edit">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                            <button class="todo-block-btn" onclick="openBlockReasonModal(${index})" title="Block">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="6" y="4" width="4" height="16"></rect>
+                                    <rect x="14" y="4" width="4" height="16"></rect>
+                                </svg>
+                            </button>
+                        `;
+                    } else {
+                        // Completed or Dropped: only show Edit
+                        actionsHtml = `
+                            <button class="todo-edit-btn" onclick="editTodo(${index})" title="Edit">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                        `;
+                    }
 
                     todoItem.innerHTML = `
                         <div class="todo-checkbox ${checkboxClass}" ${checkboxClick}></div>
@@ -7435,12 +7719,7 @@
                             ${descriptionHtml}
                         </div>
                         <div class="todo-actions">
-                            <button class="todo-edit-btn" onclick="editTodo(${index})" title="Edit">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                            </button>
+                            ${actionsHtml}
                         </div>
                     `;
                     todoList.appendChild(todoItem);
@@ -7473,6 +7752,92 @@
             }
             // Auto-save to IndexedDB
             saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // ========================================
+        // BLOCK/UNBLOCK TODO FUNCTIONS (Issue-67)
+        // ========================================
+
+        // Open the block reason modal
+        function openBlockReasonModal(index) {
+            const todo = state.todos[index];
+            // Can't block completed or dropped todos
+            if (todo.completed || todo.dropped) return;
+
+            state.todoIndexToBlock = index;
+            state.blockReasonModalOpen = true;
+
+            const modal = document.getElementById('block-reason-modal');
+            const todoTitle = document.getElementById('block-todo-title');
+            const reasonInput = document.getElementById('block-reason-input');
+
+            todoTitle.textContent = todo.title;
+            reasonInput.value = '';
+
+            modal.classList.remove('hidden');
+            reasonInput.focus();
+        }
+
+        // Close the block reason modal
+        function closeBlockReasonModal() {
+            state.blockReasonModalOpen = false;
+            state.todoIndexToBlock = null;
+            document.getElementById('block-reason-modal').classList.add('hidden');
+        }
+
+        // Confirm blocking a todo
+        function confirmBlockTodo() {
+            if (state.todoIndexToBlock === null) return;
+
+            const todo = state.todos[state.todoIndexToBlock];
+            const reasonInput = document.getElementById('block-reason-input');
+            const reason = reasonInput.value.trim();
+
+            // Set blocked state
+            todo.blocked = true;
+            todo.blockedAt = new Date().toISOString();
+            todo.blockedReason = reason || null;
+            todo.updatedAt = new Date().toISOString();
+
+            closeBlockReasonModal();
+            renderTodos();
+            if (state.currentTab === 'engagements') {
+                renderEngagements();
+            }
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Unblock a todo
+        function unblockTodo(index) {
+            const todo = state.todos[index];
+            if (!todo.blocked) return;
+
+            todo.blocked = false;
+            todo.blockedAt = null;
+            todo.blockedReason = null;
+            todo.updatedAt = new Date().toISOString();
+
+            renderTodos();
+            if (state.currentTab === 'engagements') {
+                renderEngagements();
+            }
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+        }
+
+        // Block todo from recommendation panel (by ID)
+        function blockTodoFromRecommendation(todoId) {
+            const index = state.todos.findIndex(t => t.id === todoId);
+            if (index !== -1) {
+                openBlockReasonModal(index);
+            }
+        }
+
+        // Unblock todo from recommendation panel (by ID)
+        function unblockTodoFromRecommendation(todoId) {
+            const index = state.todos.findIndex(t => t.id === todoId);
+            if (index !== -1) {
+                unblockTodo(index);
+            }
         }
 
         // Utility function to escape HTML
@@ -7534,6 +7899,9 @@
                 completedAt: isValidISODate(todo.completedAt) ? todo.completedAt : null,
                 dropped: typeof todo.dropped === 'boolean' ? todo.dropped : false,
                 droppedAt: isValidISODate(todo.droppedAt) ? todo.droppedAt : null,
+                blocked: typeof todo.blocked === 'boolean' ? todo.blocked : false,
+                blockedAt: isValidISODate(todo.blockedAt) ? todo.blockedAt : null,
+                blockedReason: sanitizeString(todo.blockedReason),
                 createdAt: isValidISODate(todo.createdAt) ? todo.createdAt : new Date().toISOString(),
                 updatedAt: isValidISODate(todo.updatedAt) ? todo.updatedAt : new Date().toISOString()
             };
@@ -8073,15 +8441,21 @@
                 return '<div class="engagement-todos-empty">No todos linked to this engagement</div>';
             }
 
-            // Sort: open first, then by priority, then completed, then dropped
+            // Sort: open first, then blocked, then by priority, then completed, then dropped
             const priorityOrder = { 'urgent': 0, 'high': 1, 'normal': 2, 'low': 3, 'someday': 4 };
             linkedTodos.sort((a, b) => {
-                // Open todos first
-                if (!a.completed && !a.dropped && (b.completed || b.dropped)) return -1;
-                if ((a.completed || a.dropped) && !b.completed && !b.dropped) return 1;
+                // Active (not completed, dropped, or blocked) first
+                const aActive = !a.completed && !a.dropped && !a.blocked;
+                const bActive = !b.completed && !b.dropped && !b.blocked;
+                if (aActive && !bActive) return -1;
+                if (!aActive && bActive) return 1;
 
-                // Among open, sort by priority
-                if (!a.completed && !a.dropped && !b.completed && !b.dropped) {
+                // Blocked before completed/dropped
+                if (a.blocked && !b.blocked) return -1;
+                if (!a.blocked && b.blocked) return 1;
+
+                // Among active, sort by priority
+                if (aActive && bActive) {
                     return (priorityOrder[a.priority] || 2) - (priorityOrder[b.priority] || 2);
                 }
 
@@ -8107,20 +8481,25 @@
             return `
                 <div class="engagement-todo-list">
                     ${linkedTodos.map(todo => {
-                        const statusClass = todo.dropped ? 'dropped' : (todo.completed ? 'done' : 'open');
-                        const itemClass = todo.dropped ? 'dropped' : (todo.completed ? 'completed' : '');
+                        const statusClass = todo.blocked ? 'blocked' : (todo.dropped ? 'dropped' : (todo.completed ? 'done' : 'open'));
+                        const itemClass = todo.blocked ? 'blocked' : (todo.dropped ? 'dropped' : (todo.completed ? 'completed' : ''));
                         const effortText = effortLabels[todo.effort] || '4 hrs';
                         const priorityText = priorityLabels[todo.priority] || 'Normal';
 
                         // Status icon
                         let statusIcon = '';
-                        if (todo.dropped) {
+                        if (todo.blocked) {
+                            statusIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
+                        } else if (todo.dropped) {
                             statusIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
                         } else if (todo.completed) {
                             statusIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
                         } else {
                             statusIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg>`;
                         }
+
+                        // Blocked overlay (Issue-67)
+                        const blockedOverlay = todo.blocked ? `<div class="blocked-overlay"><span class="blocked-overlay-text">Blocked</span></div>` : '';
 
                         return `
                             <div class="engagement-todo-item ${itemClass}">
@@ -8131,6 +8510,7 @@
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                                     ${effortText}
                                 </span>
+                                ${blockedOverlay}
                             </div>
                         `;
                     }).join('')}
@@ -11429,7 +11809,7 @@
         // Add keyboard navigation (capture phase to intercept browser shortcuts)
         document.addEventListener('keydown', (e) => {
             // Skip if any modal is open and it's not Escape
-            const anyModalOpen = state.modalOpen || state.engagementModalOpen || state.personModalOpen;
+            const anyModalOpen = state.modalOpen || state.engagementModalOpen || state.personModalOpen || state.blockReasonModalOpen;
 
             // Handle Shift+Spacebar to focus search (Issue-59)
             // Only on Todos or Engagements page, no modals open, side panel not open
@@ -11476,6 +11856,11 @@
             // Handle Escape key to close modals or side panel
             // Priority: innermost inline form first, then modals, then side panel
             if (e.key === 'Escape') {
+                if (state.blockReasonModalOpen) {
+                    e.preventDefault();
+                    closeBlockReasonModal();
+                    return;
+                }
                 if (state.cancelModalOpen) {
                     e.preventDefault();
                     closeCancelModal();
@@ -11999,10 +12384,13 @@
                 config.workdayMinutes * (1 - config.bufferPercentage / 100)
             );
 
-            // 1. Filter incomplete and non-dropped todos
-            const incomplete = state.todos.filter(t => !t.completed && !t.dropped);
+            // 1. Filter incomplete and non-dropped todos (excluding blocked)
+            const incomplete = state.todos.filter(t => !t.completed && !t.dropped && !t.blocked);
 
-            // 2. Score and sort
+            // 1b. Get blocked todos separately (Issue-67)
+            const blockedTodos = state.todos.filter(t => t.blocked && !t.completed && !t.dropped);
+
+            // 2. Score and sort active todos
             const scored = incomplete
                 .map(todo => ({
                     todo,
@@ -12011,11 +12399,23 @@
                 }))
                 .sort((a, b) => b.score.total - a.score.total);
 
+            // 2b. Create blocked items for display (Issue-67)
+            const blockedItems = blockedTodos.map(todo => ({
+                todo,
+                urgencyScore: 0,
+                scoreBreakdown: { deadline: 0, priority: 0, staleness: 0 },
+                estimatedMinutes: EFFORT_CONFIG[todo.effort || DEFAULT_EFFORT]?.minutes || 240,
+                reasoning: todo.blockedReason || 'Blocked'
+            }));
+
             // 3. Classify by deadline status
             const classified = classifyTodos(scored, currentDate);
 
             // 4. Build the plan with time constraints
             const plan = buildPlan(classified, effectiveMinutes, config);
+
+            // 4b. Add blocked section (Issue-67)
+            plan.sections.blocked = blockedItems;
 
             // 5. Generate warnings and insights
             plan.warnings = generateWarnings(plan, scored, currentDate, config);
@@ -12200,6 +12600,9 @@
             renderRecommendationSection(recommendedSection, recommendedItems, recommendedCount, plan.sections.recommended);
             renderRecommendationSection(ifTimeSection, ifTimeItems, ifTimeCount, plan.sections.ifTimePermits);
 
+            // Render blocked section (Issue-67)
+            renderBlockedSection(blockedSection, blockedItems, blockedCount, plan.sections.blocked);
+
             // Render insights
             renderInsights(plan.insights);
 
@@ -12248,10 +12651,16 @@
             }
 
             div.innerHTML = `
-                <div class="recommendation-item-header">
+                <div class="recommendation-item-header" style="position: relative;">
                     <div class="recommendation-item-checkbox ${item.todo.completed ? 'checked' : ''}"
                          onclick="toggleTodoFromRecommendation('${item.todo.id}')"></div>
                     <div class="recommendation-item-title">${escapeHtml(item.todo.title)}</div>
+                    <button class="recommendation-item-block-btn" onclick="blockTodoFromRecommendation('${item.todo.id}')" title="Block">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="6" y="4" width="4" height="16"></rect>
+                            <rect x="14" y="4" width="4" height="16"></rect>
+                        </svg>
+                    </button>
                 </div>
                 <div class="recommendation-item-meta">
                     <span class="recommendation-item-effort">⏱️ ${formatEffortDisplay(effort)}</span>
@@ -12302,6 +12711,66 @@
             if (index !== -1) {
                 toggleTodo(index);
             }
+        }
+
+        // Render blocked section with special styling (Issue-67)
+        function renderBlockedSection(sectionEl, itemsEl, countEl, items) {
+            sectionEl.classList.toggle('hidden', items.length === 0);
+            countEl.textContent = items.length;
+            itemsEl.innerHTML = '';
+
+            items.forEach((item, index) => {
+                const itemEl = createBlockedItemElement(item);
+                itemsEl.appendChild(itemEl);
+            });
+        }
+
+        // Create blocked item element (Issue-67)
+        function createBlockedItemElement(item) {
+            const div = document.createElement('div');
+            div.className = 'recommendation-item blocked';
+
+            const priority = item.todo.priority || DEFAULT_PRIORITY;
+            const effort = item.todo.effort || DEFAULT_EFFORT;
+
+            // Build tags HTML
+            let tagsHtml = '';
+            if (priority !== 'normal') {
+                const priorityTag = PRIORITY_TAGS[priority];
+                tagsHtml += `<span class="priority-pill priority-${priority}">${priorityTag.label}</span>`;
+            }
+
+            // Add user tags
+            if (item.todo.tagIds && item.todo.tagIds.length > 0) {
+                item.todo.tagIds.forEach(tagId => {
+                    const tag = state.tags.find(t => t.id === tagId);
+                    if (tag) {
+                        tagsHtml += `<span class="tag-pill" style="background-color: ${tag.color}20; color: ${tag.color}; border: 1px solid ${tag.color}40;">${escapeHtml(tag.name)}</span>`;
+                    }
+                });
+            }
+
+            const reasonText = item.todo.blockedReason ? escapeHtml(item.todo.blockedReason) : 'No reason provided';
+
+            div.innerHTML = `
+                <div class="recommendation-item-header">
+                    <div class="recommendation-item-checkbox blocked"></div>
+                    <div class="recommendation-item-title">${escapeHtml(item.todo.title)}</div>
+                    <button class="todo-unblock-btn" onclick="unblockTodoFromRecommendation('${item.todo.id}')" title="Unblock" style="margin-left: auto;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                <div class="recommendation-item-meta">
+                    <span class="recommendation-item-effort">⏱️ ${formatEffortDisplay(effort)}</span>
+                    <span class="recommendation-item-deadline">📅 ${formatDeadlineDisplay(item.todo.deadline)}</span>
+                </div>
+                ${tagsHtml ? `<div class="recommendation-item-tags">${tagsHtml}</div>` : ''}
+                <div class="recommendation-item-reasoning" style="color: #757575; font-style: italic;">⏸️ ${reasonText}</div>
+            `;
+
+            return div;
         }
 
         // ========================================
