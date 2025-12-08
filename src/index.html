@@ -6731,6 +6731,11 @@
         const VALID_ENGAGEMENT_STATUSES = ['active', 'completed', 'closed', 'dropped', 'requested'];
 
         // ========================================
+        // APP VERSION
+        // ========================================
+        const APP_VERSION = '1.0.0';
+
+        // ========================================
         // PLANNING SETTINGS - Defaults
         // ========================================
         const DEFAULT_SETTINGS = Object.freeze({
@@ -6738,6 +6743,24 @@
             bufferPercentage: 15,       // 15% buffer for interruptions
             maxOverdueToShow: 5,        // Limit overdue display
             planningHorizonDays: 14     // Look-ahead window
+        });
+
+        // ========================================
+        // WORK CALENDAR - Defaults
+        // ========================================
+        const DEFAULT_WORK_CALENDAR = Object.freeze({
+            // Days of week: 0=Sunday, 1=Monday, ..., 6=Saturday
+            workDays: {
+                0: { enabled: false, hours: 0 },  // Sunday
+                1: { enabled: true, hours: 8 },   // Monday
+                2: { enabled: true, hours: 8 },   // Tuesday
+                3: { enabled: true, hours: 8 },   // Wednesday
+                4: { enabled: true, hours: 8 },   // Thursday
+                5: { enabled: true, hours: 8 },   // Friday
+                6: { enabled: false, hours: 0 }   // Saturday
+            },
+            holidays: [],  // Array of ISO date strings
+            pto: []        // Array of ISO date strings
         });
 
         // ========================================
@@ -6799,12 +6822,14 @@
 
                 const persistableState = {
                     id: 'state',
+                    appVersion: APP_VERSION,
                     todos: state.todos,
                     engagements: state.engagements,
                     people: state.people,
                     roles: state.roles,
                     tags: state.tags,
                     settings: state.settings,
+                    workCalendar: state.workCalendar,
                     allocations: state.allocations,
                     lastModified: new Date().toISOString()
                 };
@@ -6979,7 +7004,12 @@
             searchQuery: '',
             // Block todo state (Issue-67)
             blockReasonModalOpen: false,
-            todoIndexToBlock: null
+            todoIndexToBlock: null,
+            // Work Calendar (Issue-76)
+            workCalendar: JSON.parse(JSON.stringify(DEFAULT_WORK_CALENDAR)),
+            // What's New screen state (Issue-76)
+            showWhatsNew: false,
+            migrationSummary: null
         };
 
         // DOM Elements - Landing and Home
