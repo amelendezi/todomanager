@@ -14994,6 +14994,7 @@
                     // Check if this is a valid work day (Issue-76)
                     if (!isWorkDay(dateObj)) {
                         classes.push('disabled-day');
+                    }
 
                     // Range selection highlighting (Issue-76 PTO picker)
                     if (this.options.rangeMode && ptoRangeStart) {
@@ -15019,7 +15020,6 @@
                                 classes.push('in-range');
                             }
                         }
-                    }
                     }
 
                     html += `<button type="button" class="${classes.join(' ')}" data-date="${dateObj.toISOString()}" tabindex="-1">${dayNum}</button>`;
