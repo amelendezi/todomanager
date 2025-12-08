@@ -6710,6 +6710,38 @@
         </div>
     </div>
 
+    <!-- What's New Modal (Issue-76) -->
+    <div id="whats-new-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <div style="font-size: 48px; margin-bottom: 12px;">🎉</div>
+                <h2 class="modal-title" style="margin-bottom: 8px;">Welcome to Version <span id="whats-new-version">1.0.0</span></h2>
+                <p style="color: #6C757D; font-size: 14px;">Your data has been migrated to support new features</p>
+            </div>
+
+            <div style="text-align: left; margin-bottom: 24px;">
+                <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 12px;">What's New</h3>
+                <ul style="margin: 0; padding-left: 20px; color: #374151; font-size: 14px; line-height: 1.8;">
+                    <li><strong>Work Calendar</strong> - Configure work days, hours, holidays, and PTO in Settings</li>
+                    <li><strong>Smart Deadlines</strong> - Date picker now prevents selecting non-work days</li>
+                    <li><strong>Next Work Day</strong> - Daily Load shows your next working day instead of tomorrow</li>
+                    <li><strong>App Versioning</strong> - Track updates and data migrations</li>
+                </ul>
+            </div>
+
+            <div id="whats-new-migration" style="display: none; background: #FEF3C7; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+                <h3 style="font-size: 14px; font-weight: 600; color: #92400E; margin-bottom: 8px;">📅 Data Migration Performed</h3>
+                <p id="whats-new-migration-count" style="color: #92400E; font-size: 13px; margin-bottom: 8px;"></p>
+                <div id="whats-new-migration-list" style="max-height: 150px; overflow-y: auto; font-size: 12px; color: #92400E;"></div>
+            </div>
+
+            <div style="text-align: center;">
+                <button type="button" class="btn btn-primary" onclick="closeWhatsNewModal()" style="min-width: 200px;">Continue</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Delete Person Confirmation Modal -->
     <div id="delete-person-modal" class="modal hidden">
         <div class="modal-backdrop" onclick="closeDeletePersonModal()"></div>
@@ -14051,6 +14083,70 @@
             return state.workCalendar.workDays[dayOfWeek].hours;
         }
 
+        /**
+         * Get the closest valid work day for a date (same day if valid, next if not)
+         * @param {Date} date - The date to check
+         * @returns {Date} - The closest valid work day
+         */
+        function getClosestWorkDay(date) {
+            const checkDate = new Date(date);
+            checkDate.setHours(0, 0, 0, 0);
+
+            // If it's already a work day, return same date
+            if (isWorkDay(checkDate)) {
+                return new Date(date); // Return original date with time preserved
+            }
+
+            // Otherwise find the next work day
+            let iterations = 0;
+            while (!isWorkDay(checkDate) && iterations < 365) {
+                checkDate.setDate(checkDate.getDate() + 1);
+                iterations++;
+            }
+
+            // Preserve the original time
+            const result = new Date(checkDate);
+            result.setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
+            return result;
+        }
+
+        /**
+         * Migrate todos with deadlines on disabled days to valid work days (Issue-76)
+         * @returns {object} Migration summary
+         */
+        function migrateTodosToWorkDays() {
+            const migrated = [];
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            state.todos = state.todos.map(todo => {
+                if (!todo.deadline) return todo;
+
+                const deadlineDate = new Date(todo.deadline);
+                if (isWorkDay(deadlineDate)) return todo;
+
+                // Deadline is on a non-work day, move it forward
+                const newDeadline = getClosestWorkDay(deadlineDate);
+
+                migrated.push({
+                    todoTitle: todo.title,
+                    oldDate: deadlineDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+                    newDate: newDeadline.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+                });
+
+                return {
+                    ...todo,
+                    deadline: newDeadline.toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+            });
+
+            return {
+                migratedCount: migrated.length,
+                items: migrated
+            };
+        }
+
         // ========================================
         // STORAGE SECTION FUNCTIONS
         // ========================================
@@ -14068,6 +14164,47 @@
 
         function closeClearStateModal() {
             document.getElementById('clear-state-modal').classList.add('hidden');
+        }
+
+        // ========================================
+        // WHAT'S NEW MODAL FUNCTIONS (Issue-76)
+        // ========================================
+
+        /**
+         * Show the What's New modal with migration summary
+         * @param {object} migrationSummary - Result from migrateTodosToWorkDays
+         */
+        function showWhatsNewModal(migrationSummary) {
+            document.getElementById('whats-new-version').textContent = APP_VERSION;
+
+            // Show migration details if any todos were migrated
+            const migrationSection = document.getElementById('whats-new-migration');
+            if (migrationSummary && migrationSummary.migratedCount > 0) {
+                migrationSection.style.display = 'block';
+                document.getElementById('whats-new-migration-count').textContent =
+                    `${migrationSummary.migratedCount} todo(s) had deadlines on non-work days and were moved to the next available work day:`;
+
+                const listHtml = migrationSummary.items.map(item =>
+                    `<div style="margin: 4px 0;">• "${item.todoTitle}" moved from ${item.oldDate} → ${item.newDate}</div>`
+                ).join('');
+                document.getElementById('whats-new-migration-list').innerHTML = listHtml;
+            } else {
+                migrationSection.style.display = 'none';
+            }
+
+            document.getElementById('whats-new-modal').classList.remove('hidden');
+        }
+
+        /**
+         * Close the What's New modal
+         */
+        function closeWhatsNewModal() {
+            document.getElementById('whats-new-modal').classList.add('hidden');
+            state.showWhatsNew = false;
+            state.migrationSummary = null;
+
+            // Save state to mark upgrade as complete
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state after upgrade:', err));
         }
 
         function exportThenClear() {
@@ -14184,9 +14321,27 @@
                     // Update all engagement statuses based on linked todos (auto-pause/resume)
                     updateAllEngagementStatuses();
 
+                    // Check for version upgrade (Issue-76)
+                    const savedVersion = savedState.appVersion || '0.0.0';
+                    const isUpgrade = savedVersion !== APP_VERSION;
+                    let migrationSummary = null;
+
+                    if (isUpgrade) {
+                        // Run v1.0.0 migration: move todos on disabled days to work days
+                        migrationSummary = migrateTodosToWorkDays();
+
+                        // Save state after migration
+                        await saveStateToIndexedDB();
+                    }
+
                     // Navigate directly to app with home tab
                     state.currentTab = 'home';
                     navigateTo('app');
+
+                    // Show What's New modal if this is an upgrade with existing data
+                    if (isUpgrade) {
+                        showWhatsNewModal(migrationSummary);
+                    }
                 } else {
                     // No saved state, show landing page
                     migrateContactsToPeople();
