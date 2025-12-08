@@ -5377,6 +5377,20 @@
             pointer-events: none;
         }
 
+        /* Non-work days (weekends, holidays, PTO) - Issue-76 */
+        .dtp-day.disabled-day {
+            color: #D1D5DB;
+            background: #F3F4F6;
+            cursor: not-allowed;
+            pointer-events: none;
+            text-decoration: line-through;
+        }
+
+        .dtp-day.disabled-day.other-month {
+            color: #E5E7EB;
+            background: #FAFAFA;
+        }
+
         /* Month picker overlay */
         .dtp-overlay {
             position: absolute;
@@ -14557,6 +14571,11 @@
                     if (dateKey === todayKey) classes.push('today');
                     if (dateKey === selectedKey) classes.push('selected');
                     if (dateKey === focusedKey) classes.push('focused');
+
+                    // Check if this is a valid work day (Issue-76)
+                    if (!isWorkDay(dateObj)) {
+                        classes.push('disabled-day');
+                    }
 
                     html += `<button type="button" class="${classes.join(' ')}" data-date="${dateObj.toISOString()}" tabindex="-1">${dayNum}</button>`;
                 }
