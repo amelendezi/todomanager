@@ -8628,7 +8628,7 @@
             state.preProjectSectionEnabled = false;
             state.projectSectionEnabled = false;
             state.preProjectAllocationPercent = 25;
-            state.projectAllocationPercent = 50;
+            state.projectAllocationPercent = 25;
             state.preProjectSelectedMonths = [];
             state.projectStartMonth = null;
             state.projectEndMonth = null;
@@ -8643,7 +8643,7 @@
                 }
                 if (allocation.project) {
                     state.projectSectionEnabled = true;
-                    state.projectAllocationPercent = allocation.project.allocationPercentage || 50;
+                    state.projectAllocationPercent = allocation.project.allocationPercentage || 25;
                     state.projectStartMonth = allocation.project.startMonth || null;
                     state.projectEndMonth = allocation.project.endMonth || null;
                 }
@@ -12320,8 +12320,11 @@
                 let pctLabel = '';
                 if (isPreProject && !isProject && allocation.preProject?.allocationPercentage) {
                     pctLabel = `${allocation.preProject.allocationPercentage}%`;
+                } else if (isProject) {
+                    // Use project allocation percentage, default to 25% if not set
+                    const projectPct = allocation.project?.allocationPercentage || 25;
+                    pctLabel = `${projectPct}%`;
                 }
-                // For project months, we could look up from timeline.allocations if needed
 
                 return `
                     <div class="allocation-pebble">
