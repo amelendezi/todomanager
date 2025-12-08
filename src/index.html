@@ -2007,6 +2007,93 @@
             color: #0288D1;
         }
 
+        /* Allocation timeline bar in engagement list (Issue-69) */
+        .allocation-timeline-bar {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: 16px;
+        }
+
+        .allocation-timeline-nav-btn {
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: transparent;
+            color: #6C757D;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .allocation-timeline-nav-btn:hover:not(:disabled) {
+            background: #F3F4F6;
+            color: #374151;
+        }
+
+        .allocation-timeline-nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .allocation-timeline-months {
+            display: flex;
+            gap: 4px;
+            overflow: hidden;
+        }
+
+        .allocation-pebble {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .allocation-pebble-dot {
+            width: 32px;
+            height: 18px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .allocation-pebble-dot.preproject {
+            background: #F5A623;
+        }
+
+        .allocation-pebble-dot.project {
+            background: #10B981;
+        }
+
+        .allocation-pebble-dot.empty {
+            background: #E5E7EB;
+            color: transparent;
+        }
+
+        .allocation-pebble-label {
+            font-size: 9px;
+            color: #9CA3AF;
+            font-weight: 500;
+        }
+
+        /* Hide timeline bar on smaller screens */
+        @media (max-width: 900px) {
+            .allocation-timeline-bar {
+                display: none;
+            }
+        }
+
         /* Archived engagement styling */
         .engagement-item.archived {
             opacity: 0.6;
@@ -8321,6 +8408,9 @@
                     // Build expanded content (Issue-57)
                     const expandedContent = renderEngagementExpandedContent(opp, index);
 
+                    // Build allocation timeline bar (Issue-69)
+                    const allocationTimelineHtml = renderAllocationTimelineBar(opp);
+
                     oppItem.innerHTML = `
                         <div class="engagement-header" onclick="toggleEngagementExpansion('${opp.id}')">
                             <div class="engagement-content">
@@ -8331,6 +8421,7 @@
                                 ${opp.contact ? `<div class="engagement-contact">${escapeHtml(opp.contact)}</div>` : ''}
                                 ${oppTagsHtml}
                             </div>
+                            ${allocationTimelineHtml}
                             ${getStatusBadgeWithTooltip(opp.status, statusClass)}
                             <div class="engagement-actions" onclick="event.stopPropagation()">
                                 ${actionButtons}
@@ -8537,7 +8628,7 @@
             state.preProjectSectionEnabled = false;
             state.projectSectionEnabled = false;
             state.preProjectAllocationPercent = 25;
-            state.projectAllocationPercent = 50;
+            state.projectAllocationPercent = 25;
             state.preProjectSelectedMonths = [];
             state.projectStartMonth = null;
             state.projectEndMonth = null;
@@ -8552,7 +8643,7 @@
                 }
                 if (allocation.project) {
                     state.projectSectionEnabled = true;
-                    state.projectAllocationPercent = allocation.project.allocationPercentage || 50;
+                    state.projectAllocationPercent = allocation.project.allocationPercentage || 25;
                     state.projectStartMonth = allocation.project.startMonth || null;
                     state.projectEndMonth = allocation.project.endMonth || null;
                 }
@@ -12175,6 +12266,121 @@
         // Get year from month string
         function getYearFromMonth(monthStr) {
             return monthStr.split('-')[0];
+        }
+
+        // ========================================
+        // ALLOCATION TIMELINE BAR (Issue-69)
+        // ========================================
+
+        // Track timeline offsets for each engagement (not persisted)
+        const engagementTimelineOffsets = {};
+
+        // Render allocation timeline bar for engagement list (Issue-69)
+        function renderAllocationTimelineBar(engagement) {
+            const allocation = getAllocationForEngagement(engagement.id);
+            if (!allocation) {
+                return ''; // No allocation data, don't show timeline
+            }
+
+            // Collect all allocation months
+            const preProjectMonths = allocation.preProject?.months || [];
+            const projectMonths = (allocation.project?.startMonth && allocation.project?.endMonth)
+                ? generateMonthRange(allocation.project.startMonth, allocation.project.endMonth)
+                : [];
+
+            // If no months at all, don't show
+            if (preProjectMonths.length === 0 && projectMonths.length === 0) {
+                return '';
+            }
+
+            // Create sets for quick lookup
+            const preProjectSet = new Set(preProjectMonths);
+            const projectSet = new Set(projectMonths);
+
+            // Combine and sort all months
+            const allMonths = [...new Set([...preProjectMonths, ...projectMonths])].sort();
+
+            // Get offset for this engagement's timeline
+            const offset = engagementTimelineOffsets[engagement.id] || 0;
+
+            // Determine visible months (6 at a time)
+            const visibleMonths = allMonths.slice(offset, offset + 6);
+            const canScrollLeft = offset > 0;
+            const canScrollRight = offset + 6 < allMonths.length;
+            const needsArrows = allMonths.length > 6;
+
+            // Build pebbles HTML
+            const pebblesHtml = visibleMonths.map(month => {
+                const isPreProject = preProjectSet.has(month);
+                const isProject = projectSet.has(month);
+                // Project takes priority if a month is in both
+                const type = isProject ? 'project' : (isPreProject ? 'preproject' : 'empty');
+
+                // Get percentage for display
+                let pctLabel = '';
+                if (isPreProject && !isProject && allocation.preProject?.allocationPercentage) {
+                    pctLabel = `${allocation.preProject.allocationPercentage}%`;
+                } else if (isProject) {
+                    // Use project allocation percentage, default to 25% if not set
+                    const projectPct = allocation.project?.allocationPercentage || 25;
+                    pctLabel = `${projectPct}%`;
+                }
+
+                return `
+                    <div class="allocation-pebble">
+                        <div class="allocation-pebble-dot ${type}">${pctLabel}</div>
+                        <div class="allocation-pebble-label">${formatMonthShort(month)}</div>
+                    </div>
+                `;
+            }).join('');
+
+            // Build arrow buttons if needed
+            const leftArrow = needsArrows ? `
+                <button class="allocation-timeline-nav-btn"
+                        onclick="event.stopPropagation(); scrollEngagementTimeline('${engagement.id}', -1)"
+                        ${canScrollLeft ? '' : 'disabled'}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+            ` : '';
+
+            const rightArrow = needsArrows ? `
+                <button class="allocation-timeline-nav-btn"
+                        onclick="event.stopPropagation(); scrollEngagementTimeline('${engagement.id}', 1)"
+                        ${canScrollRight ? '' : 'disabled'}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            ` : '';
+
+            return `
+                <div class="allocation-timeline-bar" onclick="event.stopPropagation()">
+                    ${leftArrow}
+                    <div class="allocation-timeline-months">
+                        ${pebblesHtml}
+                    </div>
+                    ${rightArrow}
+                </div>
+            `;
+        }
+
+        // Scroll engagement timeline (Issue-69)
+        function scrollEngagementTimeline(engagementId, direction) {
+            engagementTimelineOffsets[engagementId] = (engagementTimelineOffsets[engagementId] || 0) + direction;
+            // Clamp to valid range
+            const allocation = getAllocationForEngagement(engagementId);
+            if (allocation) {
+                const preProjectMonths = allocation.preProject?.months || [];
+                const projectMonths = (allocation.project?.startMonth && allocation.project?.endMonth)
+                    ? generateMonthRange(allocation.project.startMonth, allocation.project.endMonth)
+                    : [];
+                const allMonths = [...new Set([...preProjectMonths, ...projectMonths])].sort();
+                const maxOffset = Math.max(0, allMonths.length - 6);
+                engagementTimelineOffsets[engagementId] = Math.max(0, Math.min(engagementTimelineOffsets[engagementId], maxOffset));
+            }
+            renderEngagements();
         }
 
         // ========================================
