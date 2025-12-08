@@ -6129,6 +6129,7 @@
         });
 
         const DEFAULT_EFFORT = "average";
+        const DEFAULT_TAG_COLOR = '#F59E0B'; // Default amber color for tags
 
         // ========================================
         // PLANNING SETTINGS - Defaults
@@ -6858,6 +6859,11 @@
                     // Support both old 'tags' and new 'userTags' format
                     state.tags = Array.isArray(importedData.userTags) ? importedData.userTags :
                                  Array.isArray(importedData.tags) ? importedData.tags : [];
+                    // Sanitize tag colors to prevent CSS injection (Issue #61)
+                    state.tags = state.tags.map(tag => ({
+                        ...tag,
+                        color: isValidHexColor(tag.color) ? tag.color : DEFAULT_TAG_COLOR
+                    }));
 
                     // Restore planning settings (merge with defaults)
                     if (importedData.settings && typeof importedData.settings === 'object') {
@@ -7446,6 +7452,11 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        // Utility function to validate hex color format (prevents CSS injection)
+        function isValidHexColor(color) {
+            return typeof color === 'string' && /^#[0-9A-Fa-f]{6}$/.test(color);
         }
 
         // Format date for display
@@ -12386,6 +12397,11 @@
                     state.people = Array.isArray(savedState.people) ? savedState.people : [];
                     state.roles = Array.isArray(savedState.roles) ? savedState.roles : [];
                     state.tags = Array.isArray(savedState.tags) ? savedState.tags : [];
+                    // Sanitize tag colors to prevent CSS injection (Issue #61)
+                    state.tags = state.tags.map(tag => ({
+                        ...tag,
+                        color: isValidHexColor(tag.color) ? tag.color : DEFAULT_TAG_COLOR
+                    }));
                     state.allocations = Array.isArray(savedState.allocations) ? savedState.allocations : [];
 
                     // Restore settings (merge with defaults)
