@@ -42,3 +42,5 @@ Issue-59: Implemented global search functionality with Shift+Spacebar keyboard s
 Issue-61: Fixed CSS injection vulnerability by validating hex color format on tag imports and IndexedDB loads.
 
 Issue-63: Added comprehensive JSON import validation with schema sanitization, array size limits, and type/enum validation.
+
+Issue-67: Added "Blocked" status for Todos with visual indicators, block/unblock actions, optional reason capture, and Blocked section in Daily Plan.
