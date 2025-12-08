@@ -50,3 +50,5 @@ Issue-69: Added allocation timeline bar to Engagement list items showing monthly
 Issue-72: Extended allocation timeline bar to show 18 months at a time (up from 6), fixed pebble clipping by removing overflow constraints, scrolling appears for timelines exceeding 18 months.
 
 Issue-74: Added Daily Load KPI chart to Todo page with 3-column layout, stacked bar visualization for Overdue/Today/Tomorrow todos, heat gradient colors, workload status messages, click-to-highlight interactivity, and completed todo tracking with remaining hours display.
+
+Issue-76: Added Work Calendar system with configurable work days (Mon-Fri default, 8hrs each), variable hours per day, holidays and PTO management. DateTimePicker now disables non-work days (grayed out, unselectable). Daily Load "Tomorrow" column renamed to "Next Day" showing next available work day with dynamic label. Introduced app versioning (v1.0.0) with VERSION.md, data migration for todos with deadlines on disabled days (moved to next work day), and What's New modal shown on upgrade.
