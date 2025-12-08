@@ -3791,8 +3791,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 60px;
-            flex-shrink: 0;
+            flex: 1;
         }
 
         .daily-load-column-header {
@@ -5767,13 +5766,6 @@
                             <div id="daily-load-status" class="daily-load-status balanced">Balanced workload</div>
                         </div>
                         <div class="daily-load-container">
-                            <div class="daily-load-scale">
-                                <div class="daily-load-scale-mark">10hrs</div>
-                                <div class="daily-load-scale-mark">8hrs</div>
-                                <div class="daily-load-scale-mark">6hrs</div>
-                                <div class="daily-load-scale-mark">4hrs</div>
-                                <div class="daily-load-scale-mark">2hrs</div>
-                            </div>
                             <div class="daily-load-bars">
                                 <div class="daily-load-column">
                                     <div id="daily-load-hours-overdue" class="daily-load-column-hours">0hrs</div>
@@ -13370,16 +13362,12 @@
         }
 
         /**
-         * Format hours display with remaining
+         * Format hours display - shows only remaining hours
          */
         function formatHoursDisplay(hours) {
-            if (hours.total === 0) return '0hrs';
-            const totalStr = hours.total % 1 === 0 ? hours.total.toFixed(0) : hours.total.toFixed(1);
+            if (hours.remaining === 0) return '0hrs';
             const remainingStr = hours.remaining % 1 === 0 ? hours.remaining.toFixed(0) : hours.remaining.toFixed(1);
-            if (hours.completed > 0) {
-                return `${totalStr}hrs (${remainingStr} left)`;
-            }
-            return `${totalStr}hrs`;
+            return `${remainingStr}hrs`;
         }
 
         /**
