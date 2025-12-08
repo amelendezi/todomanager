@@ -6132,6 +6132,22 @@
         const DEFAULT_TAG_COLOR = '#F59E0B'; // Default amber color for tags
 
         // ========================================
+        // IMPORT VALIDATION - Limits (Issue #63)
+        // ========================================
+        const IMPORT_LIMITS = Object.freeze({
+            MAX_STRING_LENGTH: 10000,      // Max length for any string field
+            MAX_ARRAY_SIZE: 10000,         // Max items in any array (todos, engagements, etc.)
+            MAX_COMMENTS_PER_ENGAGEMENT: 1000,  // Max comments per engagement
+            MAX_ID_LENGTH: 100             // Max length for ID fields
+        });
+
+        // Valid enum values for validation
+        const VALID_EFFORT_VALUES = Object.keys(EFFORT_CONFIG);
+        const VALID_PRIORITY_VALUES = Object.keys(PRIORITY_TAGS);
+        const VALID_ENGAGEMENT_TYPES = ['engagement', 'pre-project', 'project'];
+        const VALID_ENGAGEMENT_STATUSES = ['active', 'completed', 'closed', 'dropped', 'requested'];
+
+        // ========================================
         // PLANNING SETTINGS - Defaults
         // ========================================
         const DEFAULT_SETTINGS = Object.freeze({
@@ -6851,39 +6867,51 @@
                         throw new Error('Invalid file format');
                     }
 
-                    // Restore state data entities (with fallbacks for missing fields)
-                    state.todos = Array.isArray(importedData.todos) ? importedData.todos : [];
-                    state.engagements = Array.isArray(importedData.engagements) ? importedData.engagements : [];
-                    state.people = Array.isArray(importedData.people) ? importedData.people : [];
-                    state.roles = Array.isArray(importedData.roles) ? importedData.roles : [];
-                    // Support both old 'tags' and new 'userTags' format
-                    state.tags = Array.isArray(importedData.userTags) ? importedData.userTags :
-                                 Array.isArray(importedData.tags) ? importedData.tags : [];
-                    // Sanitize tag colors to prevent CSS injection (Issue #61)
-                    state.tags = state.tags.map(tag => ({
-                        ...tag,
-                        color: isValidHexColor(tag.color) ? tag.color : DEFAULT_TAG_COLOR
-                    }));
+                    // ========================================
+                    // Issue #63: Comprehensive input validation
+                    // ========================================
 
-                    // Restore planning settings (merge with defaults)
+                    // Extract and limit array sizes to prevent DoS
+                    const rawTodos = Array.isArray(importedData.todos)
+                        ? importedData.todos.slice(0, IMPORT_LIMITS.MAX_ARRAY_SIZE) : [];
+                    const rawEngagements = Array.isArray(importedData.engagements)
+                        ? importedData.engagements.slice(0, IMPORT_LIMITS.MAX_ARRAY_SIZE) : [];
+                    const rawPeople = Array.isArray(importedData.people)
+                        ? importedData.people.slice(0, IMPORT_LIMITS.MAX_ARRAY_SIZE) : [];
+                    const rawRoles = Array.isArray(importedData.roles)
+                        ? importedData.roles.slice(0, IMPORT_LIMITS.MAX_ARRAY_SIZE) : [];
+                    // Support both old 'tags' and new 'userTags' format
+                    const rawTags = Array.isArray(importedData.userTags)
+                        ? importedData.userTags.slice(0, IMPORT_LIMITS.MAX_ARRAY_SIZE)
+                        : Array.isArray(importedData.tags)
+                            ? importedData.tags.slice(0, IMPORT_LIMITS.MAX_ARRAY_SIZE) : [];
+
+                    // Sanitize and validate all entities, filtering out invalid ones
+                    state.roles = rawRoles.map(sanitizeRole).filter(r => r !== null);
+                    state.people = rawPeople.map(sanitizePerson).filter(p => p !== null);
+                    state.tags = rawTags.map(sanitizeTag).filter(t => t !== null);
+                    state.engagements = rawEngagements.map(sanitizeEngagement).filter(e => e !== null);
+                    state.todos = rawTodos.map(sanitizeTodo).filter(t => t !== null);
+
+                    // Restore planning settings (merge with defaults, validate numeric values)
                     if (importedData.settings && typeof importedData.settings === 'object') {
-                        state.settings = { ...DEFAULT_SETTINGS, ...importedData.settings };
+                        const s = importedData.settings;
+                        state.settings = {
+                            workdayMinutes: typeof s.workdayMinutes === 'number' && s.workdayMinutes > 0 && s.workdayMinutes <= 1440
+                                ? s.workdayMinutes : DEFAULT_SETTINGS.workdayMinutes,
+                            bufferPercentage: typeof s.bufferPercentage === 'number' && s.bufferPercentage >= 0 && s.bufferPercentage <= 100
+                                ? s.bufferPercentage : DEFAULT_SETTINGS.bufferPercentage,
+                            maxOverdueToShow: typeof s.maxOverdueToShow === 'number' && s.maxOverdueToShow >= 0 && s.maxOverdueToShow <= 100
+                                ? s.maxOverdueToShow : DEFAULT_SETTINGS.maxOverdueToShow,
+                            planningHorizonDays: typeof s.planningHorizonDays === 'number' && s.planningHorizonDays >= 1 && s.planningHorizonDays <= 365
+                                ? s.planningHorizonDays : DEFAULT_SETTINGS.planningHorizonDays
+                        };
                     } else {
                         state.settings = { ...DEFAULT_SETTINGS };
                     }
 
-                    // Ensure all todos have required new fields with defaults
-                    state.todos = state.todos.map(todo => ({
-                        ...todo,
-                        title: todo.title || todo.description || 'Untitled',
-                        description: todo.description || null,
-                        deadline: todo.deadline || (todo.dueDate ? new Date(todo.dueDate).toISOString() : null),
-                        effort: todo.effort || DEFAULT_EFFORT,
-                        priority: PRIORITY_TAGS[todo.priority] ? todo.priority : DEFAULT_PRIORITY,
-                        completedAt: todo.completedAt || null,
-                        createdAt: todo.createdAt || new Date().toISOString(),
-                        updatedAt: todo.updatedAt || new Date().toISOString()
-                    }));
+                    // Log import summary for debugging
+                    console.log(`Import completed: ${state.todos.length} todos, ${state.engagements.length} engagements, ${state.people.length} people, ${state.tags.length} tags, ${state.roles.length} roles`);
 
                     // Navigate to app and render
                     navigateTo('app');
@@ -7457,6 +7485,132 @@
         // Utility function to validate hex color format (prevents CSS injection)
         function isValidHexColor(color) {
             return typeof color === 'string' && /^#[0-9A-Fa-f]{6}$/.test(color);
+        }
+
+        // ========================================
+        // IMPORT VALIDATION - Helper Functions (Issue #63)
+        // ========================================
+
+        // Validate and truncate string fields
+        function sanitizeString(val, maxLength = IMPORT_LIMITS.MAX_STRING_LENGTH) {
+            if (val === null || val === undefined) return null;
+            if (typeof val !== 'string') return String(val);
+            return val.slice(0, maxLength);
+        }
+
+        // Validate ID format (non-empty string, reasonable length)
+        function isValidId(val) {
+            return typeof val === 'string' && val.length > 0 && val.length <= IMPORT_LIMITS.MAX_ID_LENGTH;
+        }
+
+        // Validate ISO date string format
+        function isValidISODate(val) {
+            if (typeof val !== 'string') return false;
+            const date = new Date(val);
+            return !isNaN(date.getTime());
+        }
+
+        // Validate YYYY-MM-DD date format
+        function isValidDateString(val) {
+            if (typeof val !== 'string') return false;
+            return /^\d{4}-\d{2}-\d{2}$/.test(val) && !isNaN(new Date(val).getTime());
+        }
+
+        // Sanitize a todo object - returns null if invalid
+        function sanitizeTodo(todo) {
+            if (!todo || typeof todo !== 'object') return null;
+            if (!isValidId(todo.id)) return null;
+
+            return {
+                id: todo.id,
+                title: sanitizeString(todo.title) || 'Untitled',
+                description: sanitizeString(todo.description),
+                deadline: isValidISODate(todo.deadline) ? todo.deadline : null,
+                effort: VALID_EFFORT_VALUES.includes(todo.effort) ? todo.effort : DEFAULT_EFFORT,
+                priority: VALID_PRIORITY_VALUES.includes(todo.priority) ? todo.priority : DEFAULT_PRIORITY,
+                engagementId: isValidId(todo.engagementId) ? todo.engagementId : null,
+                tagIds: Array.isArray(todo.tagIds) ? todo.tagIds.filter(isValidId).slice(0, 100) : [],
+                completed: typeof todo.completed === 'boolean' ? todo.completed : false,
+                completedAt: isValidISODate(todo.completedAt) ? todo.completedAt : null,
+                dropped: typeof todo.dropped === 'boolean' ? todo.dropped : false,
+                droppedAt: isValidISODate(todo.droppedAt) ? todo.droppedAt : null,
+                createdAt: isValidISODate(todo.createdAt) ? todo.createdAt : new Date().toISOString(),
+                updatedAt: isValidISODate(todo.updatedAt) ? todo.updatedAt : new Date().toISOString()
+            };
+        }
+
+        // Sanitize an engagement object - returns null if invalid
+        function sanitizeEngagement(eng) {
+            if (!eng || typeof eng !== 'object') return null;
+            if (!isValidId(eng.id)) return null;
+
+            // Sanitize comments array
+            let comments = [];
+            if (Array.isArray(eng.comments)) {
+                comments = eng.comments
+                    .slice(0, IMPORT_LIMITS.MAX_COMMENTS_PER_ENGAGEMENT)
+                    .filter(c => c && typeof c === 'object')
+                    .map(c => ({
+                        id: isValidId(c.id) ? c.id : generateId(),
+                        text: sanitizeString(c.text) || '',
+                        createdAt: isValidISODate(c.createdAt) ? c.createdAt : new Date().toISOString()
+                    }));
+            }
+
+            return {
+                id: eng.id,
+                name: sanitizeString(eng.name) || 'Unnamed Engagement',
+                description: sanitizeString(eng.description),
+                startDate: isValidDateString(eng.startDate) ? eng.startDate : getTodayDate(),
+                contact: sanitizeString(eng.contact),
+                contactId: isValidId(eng.contactId) ? eng.contactId : null,
+                tagIds: Array.isArray(eng.tagIds) ? eng.tagIds.filter(isValidId).slice(0, 100) : [],
+                type: VALID_ENGAGEMENT_TYPES.includes(eng.type) ? eng.type : 'engagement',
+                status: VALID_ENGAGEMENT_STATUSES.includes(eng.status) ? eng.status : 'active',
+                comments: comments,
+                archived: typeof eng.archived === 'boolean' ? eng.archived : false,
+                createdAt: isValidISODate(eng.createdAt) ? eng.createdAt : new Date().toISOString(),
+                // Preserve lifecycle data if present (validated separately)
+                preProject: eng.preProject && typeof eng.preProject === 'object' ? eng.preProject : null,
+                project: eng.project && typeof eng.project === 'object' ? eng.project : null
+            };
+        }
+
+        // Sanitize a person object - returns null if invalid
+        function sanitizePerson(person) {
+            if (!person || typeof person !== 'object') return null;
+            if (!isValidId(person.id)) return null;
+
+            return {
+                id: person.id,
+                name: sanitizeString(person.name) || 'Unnamed Person',
+                roleId: isValidId(person.roleId) ? person.roleId : null,
+                createdAt: isValidISODate(person.createdAt) ? person.createdAt : new Date().toISOString()
+            };
+        }
+
+        // Sanitize a tag object - returns null if invalid
+        function sanitizeTag(tag) {
+            if (!tag || typeof tag !== 'object') return null;
+            if (!isValidId(tag.id)) return null;
+
+            return {
+                id: tag.id,
+                name: sanitizeString(tag.name) || 'Unnamed Tag',
+                color: isValidHexColor(tag.color) ? tag.color : DEFAULT_TAG_COLOR,
+                createdAt: isValidISODate(tag.createdAt) ? tag.createdAt : new Date().toISOString()
+            };
+        }
+
+        // Sanitize a role object - returns null if invalid
+        function sanitizeRole(role) {
+            if (!role || typeof role !== 'object') return null;
+            if (!isValidId(role.id)) return null;
+
+            return {
+                id: role.id,
+                name: sanitizeString(role.name) || 'Unnamed Role'
+            };
         }
 
         // Format date for display
