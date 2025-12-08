@@ -40,3 +40,5 @@ Issue-55: Added expandable tooltip on Engagement Status badge showing status des
 Issue-59: Implemented global search functionality with Shift+Spacebar keyboard shortcut, real-time filtering for Todos and Engagements pages, and Escape to clear search.
 
 Issue-61: Fixed CSS injection vulnerability by validating hex color format on tag imports and IndexedDB loads.
+
+Issue-63: Added comprehensive JSON import validation with schema sanitization, array size limits, and type/enum validation.
