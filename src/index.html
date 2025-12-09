@@ -3934,6 +3934,136 @@
             max-width: 400px;
             max-height: none;
             overflow: visible;
+            transition: max-width 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .meeting-modal-content.expanded {
+            max-width: 580px;
+        }
+
+        .meeting-form-container {
+            display: flex;
+            gap: 0;
+        }
+
+        .meeting-form-left {
+            flex: 0 0 352px;
+            min-width: 352px;
+        }
+
+        .meeting-duration-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .meeting-duration-field {
+            flex: 0 0 auto;
+        }
+
+        .meeting-recurring-checkbox {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding-top: 28px;
+        }
+
+        .recurring-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #374151;
+            white-space: nowrap;
+        }
+
+        .recurring-checkbox-label input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #F5A623;
+        }
+
+        /* Recurring panel (right side) */
+        .meeting-recurring-panel {
+            width: 0;
+            overflow: hidden;
+            opacity: 0;
+            padding: 0;
+            border-left: none;
+            transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                        padding 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .meeting-recurring-panel.visible {
+            width: 180px;
+            opacity: 1;
+            padding: 0 0 0 20px;
+            border-left: 1px solid #E5E7EB;
+            margin-left: 20px;
+        }
+
+        .recurring-panel-header {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+        }
+
+        .recurring-frequency-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .recurring-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #374151;
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            transition: background-color 150ms, border-color 150ms;
+        }
+
+        .recurring-option:hover {
+            background: #F9FAFB;
+        }
+
+        .recurring-option.selected {
+            background: #FEF3C7;
+            border-color: #F5A623;
+        }
+
+        .recurring-option input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+            accent-color: #F5A623;
+        }
+
+        .recurring-end-date {
+            margin-top: 12px;
+        }
+
+        .recurring-end-date .form-label {
+            font-size: 12px;
+            color: #6B7280;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .recurring-end-date .datetime-input {
+            font-size: 12px;
+            padding: 6px 10px;
         }
 
         .meeting-duration-input {
@@ -6626,31 +6756,74 @@
         <div class="modal-backdrop" onclick="closeMeetingModal()"></div>
         <div class="modal-content meeting-modal-content">
             <h2 class="modal-title" id="meeting-modal-title">New Meeting</h2>
-            <form id="meeting-form" onsubmit="saveMeeting(event)">
-                <div class="form-group">
-                    <label for="meeting-title" class="form-label">Title <span class="required">*</span></label>
-                    <input type="text" id="meeting-title" class="form-input" placeholder="What needs to be done?" required>
-                </div>
-                <div class="form-group">
-                    <label for="meeting-description" class="form-label">Description</label>
-                    <textarea id="meeting-description" class="form-input" placeholder="Additional details (optional)" rows="2"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="meeting-date" class="form-label">Date <span class="required">*</span></label>
-                    <div class="datetime-input-wrapper">
-                        <input type="datetime-local" id="meeting-date" class="datetime-input" data-datetimepicker required>
+            <div class="meeting-form-container">
+                <!-- Main form (left side) -->
+                <form id="meeting-form" class="meeting-form-left" onsubmit="saveMeeting(event)">
+                    <div class="form-group">
+                        <label for="meeting-title" class="form-label">Title <span class="required">*</span></label>
+                        <input type="text" id="meeting-title" class="form-input" placeholder="What needs to be done?" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="meeting-description" class="form-label">Description</label>
+                        <textarea id="meeting-description" class="form-input" placeholder="Additional details (optional)" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="meeting-date" class="form-label">Date <span class="required">*</span></label>
+                        <div class="datetime-input-wrapper">
+                            <input type="datetime-local" id="meeting-date" class="datetime-input" data-datetimepicker required>
+                        </div>
+                    </div>
+                    <div class="form-group meeting-duration-row">
+                        <div class="meeting-duration-field">
+                            <label for="meeting-duration" class="form-label">Duration <span class="required">*</span></label>
+                            <input type="text" id="meeting-duration" class="form-input meeting-duration-input" value="1 hr" placeholder="1 hr (default)" required>
+                            <span class="meeting-duration-hint">(default)</span>
+                        </div>
+                        <div class="meeting-recurring-checkbox">
+                            <label class="recurring-checkbox-label">
+                                <input type="checkbox" id="meeting-recurring-check" onchange="toggleRecurringPanel()">
+                                <span>Make this a recurring meeting</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeMeetingModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="meeting-save-btn">Save</button>
+                    </div>
+                </form>
+                <!-- Recurring panel (right side) -->
+                <div id="meeting-recurring-panel" class="meeting-recurring-panel">
+                    <div class="recurring-panel-header">Recurring</div>
+                    <div class="recurring-frequency-options">
+                        <label class="recurring-option">
+                            <input type="checkbox" name="recurring-freq" value="daily" onchange="selectRecurringFrequency('daily')">
+                            <span>Daily</span>
+                        </label>
+                        <label class="recurring-option selected">
+                            <input type="checkbox" name="recurring-freq" value="weekly" checked onchange="selectRecurringFrequency('weekly')">
+                            <span>Weekly</span>
+                        </label>
+                        <label class="recurring-option">
+                            <input type="checkbox" name="recurring-freq" value="biweekly" onchange="selectRecurringFrequency('biweekly')">
+                            <span>Bi-Weekly</span>
+                        </label>
+                        <label class="recurring-option">
+                            <input type="checkbox" name="recurring-freq" value="3weeks" onchange="selectRecurringFrequency('3weeks')">
+                            <span>3 Weeks</span>
+                        </label>
+                        <label class="recurring-option">
+                            <input type="checkbox" name="recurring-freq" value="monthly" onchange="selectRecurringFrequency('monthly')">
+                            <span>Monthly</span>
+                        </label>
+                    </div>
+                    <div class="recurring-end-date">
+                        <label class="form-label">End By: <span id="recurring-end-icon">📅</span></label>
+                        <div class="datetime-input-wrapper">
+                            <input type="date" id="meeting-recurring-end" class="datetime-input" data-datetimepicker onchange="updateMeetingSaveButton()">
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="meeting-duration" class="form-label">Duration <span class="required">*</span></label>
-                    <input type="text" id="meeting-duration" class="form-input meeting-duration-input" value="1 hr" placeholder="1 hr (default)" required>
-                    <span class="meeting-duration-hint">(default)</span>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeMeetingModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary" id="meeting-save-btn">Save</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -13964,6 +14137,14 @@
             document.getElementById('meeting-duration').value = '1 hr';
             document.getElementById('meeting-modal-title').textContent = 'New Meeting';
 
+            // Reset recurring options
+            document.getElementById('meeting-recurring-check').checked = false;
+            document.getElementById('meeting-recurring-end').value = '';
+            document.querySelector('.meeting-modal-content').classList.remove('expanded');
+            document.getElementById('meeting-recurring-panel').classList.remove('visible');
+            selectRecurringFrequency('weekly'); // Reset to default weekly
+            updateMeetingSaveButton();
+
             // Set default date to current date and time
             const now = new Date();
             // Round to next 30 minutes
@@ -13989,6 +14170,119 @@
             state.meetingModalOpen = false;
             state.editingMeetingIndex = null;
             document.getElementById('meeting-modal').classList.add('hidden');
+            // Reset expanded state
+            document.querySelector('.meeting-modal-content').classList.remove('expanded');
+            document.getElementById('meeting-recurring-panel').classList.remove('visible');
+        }
+
+        /**
+         * Toggle the recurring panel visibility
+         */
+        function toggleRecurringPanel() {
+            const checkbox = document.getElementById('meeting-recurring-check');
+            const panel = document.getElementById('meeting-recurring-panel');
+            const modalContent = document.querySelector('.meeting-modal-content');
+            const endDateInput = document.getElementById('meeting-recurring-end');
+
+            if (checkbox.checked) {
+                modalContent.classList.add('expanded');
+                panel.classList.add('visible');
+                // Set default end date to 1 year from meeting date
+                const meetingDate = document.getElementById('meeting-date').value;
+                if (meetingDate) {
+                    const startDate = new Date(meetingDate);
+                    const endDate = new Date(startDate);
+                    endDate.setFullYear(endDate.getFullYear() + 1);
+                    endDateInput.value = endDate.toISOString().split('T')[0];
+                }
+            } else {
+                modalContent.classList.remove('expanded');
+                panel.classList.remove('visible');
+                endDateInput.value = '';
+            }
+            updateMeetingSaveButton();
+        }
+
+        /**
+         * Select a recurring frequency option (only one can be selected)
+         */
+        function selectRecurringFrequency(frequency) {
+            const options = document.querySelectorAll('.recurring-option');
+            options.forEach(option => {
+                const input = option.querySelector('input[name="recurring-freq"]');
+                if (input.value === frequency) {
+                    input.checked = true;
+                    option.classList.add('selected');
+                } else {
+                    input.checked = false;
+                    option.classList.remove('selected');
+                }
+            });
+        }
+
+        /**
+         * Update Save button state based on recurring settings
+         */
+        function updateMeetingSaveButton() {
+            const saveBtn = document.getElementById('meeting-save-btn');
+            const isRecurring = document.getElementById('meeting-recurring-check').checked;
+            const endDate = document.getElementById('meeting-recurring-end').value;
+
+            if (isRecurring && !endDate) {
+                saveBtn.disabled = true;
+                saveBtn.style.opacity = '0.5';
+                saveBtn.style.cursor = 'not-allowed';
+                saveBtn.title = 'Please select an end date for recurring meetings';
+            } else {
+                saveBtn.disabled = false;
+                saveBtn.style.opacity = '1';
+                saveBtn.style.cursor = 'pointer';
+                saveBtn.title = '';
+            }
+        }
+
+        /**
+         * Get selected recurring frequency
+         */
+        function getSelectedRecurringFrequency() {
+            const checked = document.querySelector('input[name="recurring-freq"]:checked');
+            return checked ? checked.value : 'weekly';
+        }
+
+        /**
+         * Generate recurring meeting dates based on frequency and end date
+         * Respects Work Calendar settings (skips non-work days)
+         */
+        function generateRecurringDates(startDate, frequency, endDate) {
+            const dates = [];
+            let current = new Date(startDate);
+            const end = new Date(endDate);
+            end.setHours(23, 59, 59, 999); // Include the end date
+
+            // Get interval in days based on frequency
+            const intervals = {
+                'daily': 1,
+                'weekly': 7,
+                'biweekly': 14,
+                '3weeks': 21,
+                'monthly': 0 // Special handling for monthly
+            };
+
+            while (current <= end) {
+                // Check if current date is a work day
+                if (isWorkDay(current)) {
+                    dates.push(new Date(current));
+                }
+
+                // Advance to next occurrence
+                if (frequency === 'monthly') {
+                    current.setMonth(current.getMonth() + 1);
+                } else {
+                    current.setDate(current.getDate() + intervals[frequency]);
+                }
+            }
+
+            return dates;
         }
 
         /**
@@ -14046,28 +14340,65 @@
             const description = document.getElementById('meeting-description').value.trim();
             const dateValue = document.getElementById('meeting-date').value;
             const durationStr = document.getElementById('meeting-duration').value;
+            const isRecurring = document.getElementById('meeting-recurring-check').checked;
+            const recurringEndDate = document.getElementById('meeting-recurring-end').value;
 
             if (!title || !dateValue) {
                 alert('Please fill in all required fields.');
                 return;
             }
 
+            // Validate recurring settings
+            if (isRecurring && !recurringEndDate) {
+                alert('Please select an end date for recurring meetings.');
+                return;
+            }
+
             const durationMinutes = parseDurationToMinutes(durationStr);
+            const startDate = new Date(dateValue);
 
-            const meeting = {
-                id: state.editingMeetingIndex !== null ? state.meetings[state.editingMeetingIndex].id : generateId(),
-                title: title,
-                description: description,
-                date: new Date(dateValue).toISOString(),
-                duration: durationMinutes,
-                createdAt: state.editingMeetingIndex !== null ? state.meetings[state.editingMeetingIndex].createdAt : new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            };
+            if (isRecurring) {
+                // Generate all recurring meeting instances
+                const frequency = getSelectedRecurringFrequency();
+                const recurringDates = generateRecurringDates(startDate, frequency, recurringEndDate);
+                const now = new Date().toISOString();
+                const recurringGroupId = generateId(); // Link all instances together
 
-            if (state.editingMeetingIndex !== null) {
-                state.meetings[state.editingMeetingIndex] = meeting;
+                recurringDates.forEach((date, index) => {
+                    // Preserve the time from the original meeting
+                    date.setHours(startDate.getHours(), startDate.getMinutes(), 0, 0);
+
+                    const meeting = {
+                        id: generateId(),
+                        title: title,
+                        description: description,
+                        date: date.toISOString(),
+                        duration: durationMinutes,
+                        recurringGroupId: recurringGroupId,
+                        recurringFrequency: frequency,
+                        recurringIndex: index,
+                        createdAt: now,
+                        updatedAt: now
+                    };
+                    state.meetings.push(meeting);
+                });
             } else {
-                state.meetings.push(meeting);
+                // Single meeting
+                const meeting = {
+                    id: state.editingMeetingIndex !== null ? state.meetings[state.editingMeetingIndex].id : generateId(),
+                    title: title,
+                    description: description,
+                    date: startDate.toISOString(),
+                    duration: durationMinutes,
+                    createdAt: state.editingMeetingIndex !== null ? state.meetings[state.editingMeetingIndex].createdAt : new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+
+                if (state.editingMeetingIndex !== null) {
+                    state.meetings[state.editingMeetingIndex] = meeting;
+                } else {
+                    state.meetings.push(meeting);
+                }
             }
 
             closeMeetingModal();
