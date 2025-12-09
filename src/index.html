@@ -3925,6 +3925,141 @@
             }
         }
 
+        /* ========================================
+           MEETINGS - Issue-80
+           ======================================== */
+
+        /* Meeting modal styles */
+        .meeting-modal-content {
+            max-width: 400px;
+        }
+
+        .meeting-duration-input {
+            width: 100px !important;
+            display: inline-block;
+        }
+
+        .meeting-duration-hint {
+            font-size: 12px;
+            color: #9CA3AF;
+            font-style: italic;
+            margin-left: 8px;
+        }
+
+        /* Meetings list section */
+        .meetings-section {
+            background: #FFFFFF;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 16px;
+            margin-top: 16px;
+            max-height: 226px;
+            min-height: 226px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .meetings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .meetings-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1F1F1F;
+        }
+
+        .meetings-count {
+            font-size: 11px;
+            color: #9CA3AF;
+        }
+
+        .meetings-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .meetings-empty {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9CA3AF;
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        .meeting-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            background: #F9FAFB;
+            border-radius: 8px;
+            font-size: 12px;
+            min-height: 32px;
+        }
+
+        .meeting-item:hover {
+            background: #F3F4F6;
+        }
+
+        .meeting-date-label {
+            font-weight: 600;
+            color: #9B59B6;
+            white-space: nowrap;
+            min-width: 60px;
+        }
+
+        .meeting-title-text {
+            flex: 1;
+            color: #374151;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .meeting-duration-text {
+            color: #6B7280;
+            white-space: nowrap;
+            font-size: 11px;
+        }
+
+        .meeting-delete-btn {
+            background: none;
+            border: none;
+            color: #9CA3AF;
+            cursor: pointer;
+            padding: 2px 6px;
+            font-size: 14px;
+            line-height: 1;
+            border-radius: 4px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .meeting-delete-btn:hover {
+            background: #FEE2E2;
+            color: #DC3545;
+        }
+
+        /* Meeting segment in Daily Load (purple) */
+        .daily-load-segment.meeting {
+            background: #9B59B6 !important;
+        }
+
+        .daily-load-segment.meeting::before {
+            content: "📅";
+            position: absolute;
+            left: 4px;
+            font-size: 8px;
+        }
+
         /* Engagement Lifecycle Styles */
         .engagement-type-badge {
             display: inline-flex;
@@ -5806,6 +5941,16 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Meetings Section (Issue-80) -->
+                    <div id="meetings-section" class="meetings-section">
+                        <div class="meetings-header">
+                            <div class="meetings-title">📅 Meetings</div>
+                            <div id="meetings-count" class="meetings-count"></div>
+                        </div>
+                        <div id="meetings-list" class="meetings-list">
+                            <div class="meetings-empty">No upcoming meetings</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -6474,6 +6619,39 @@
         </div>
     </div>
 
+    <!-- Meeting Modal (Issue-80) -->
+    <div id="meeting-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closeMeetingModal()"></div>
+        <div class="modal-content meeting-modal-content">
+            <h2 class="modal-title" id="meeting-modal-title">New Meeting</h2>
+            <form id="meeting-form" onsubmit="saveMeeting(event)">
+                <div class="form-group">
+                    <label for="meeting-title" class="form-label">Title <span class="required">*</span></label>
+                    <input type="text" id="meeting-title" class="form-input" placeholder="What needs to be done?" required>
+                </div>
+                <div class="form-group">
+                    <label for="meeting-description" class="form-label">Description</label>
+                    <textarea id="meeting-description" class="form-input" placeholder="Additional details (optional)" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="meeting-date" class="form-label">Date <span class="required">*</span></label>
+                    <div class="datetime-input-wrapper">
+                        <input type="datetime-local" id="meeting-date" class="datetime-input" data-datetimepicker required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="meeting-duration" class="form-label">Duration <span class="required">*</span></label>
+                    <input type="text" id="meeting-duration" class="form-input meeting-duration-input" value="1 hr" placeholder="1 hr (default)" required>
+                    <span class="meeting-duration-hint">(default)</span>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeMeetingModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="meeting-save-btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Promote to Pre-Project Modal -->
     <div id="promote-preproject-modal" class="modal hidden">
         <div class="modal-backdrop" onclick="closePromotePreProjectModal()"></div>
@@ -6728,9 +6906,8 @@
             <div style="text-align: left; margin-bottom: 24px;">
                 <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 12px;">What's New</h3>
                 <ul style="margin: 0; padding-left: 20px; color: #374151; font-size: 14px; line-height: 1.8;">
-                    <li><strong>Minimal Work Effort</strong> - New effort level for quick 30-minute tasks</li>
-                    <li><strong>Updated Very Low</strong> - Very Low effort is now 1 hour instead of 30 minutes</li>
-                    <li><strong>Holiday Templates</strong> - Quickly add public holidays for NL, DE, UK, US, or India</li>
+                    <li><strong>Meetings</strong> - Track meetings with Shift+M shortcut, see them in Daily Load (purple bars)</li>
+                    <li><strong>Meetings List</strong> - View upcoming meetings below Daily Load, grouped by Today/Tomorrow/Date</li>
                 </ul>
             </div>
 
@@ -6906,7 +7083,7 @@
         // ========================================
         // APP VERSION
         // ========================================
-        const APP_VERSION = '1.1.0';
+        const APP_VERSION = '1.2.0';
 
         // ========================================
         // PLANNING SETTINGS - Defaults
@@ -7004,6 +7181,7 @@
                     settings: state.settings,
                     workCalendar: state.workCalendar,
                     allocations: state.allocations,
+                    meetings: state.meetings,
                     lastModified: new Date().toISOString()
                 };
 
@@ -7182,7 +7360,11 @@
             workCalendar: JSON.parse(JSON.stringify(DEFAULT_WORK_CALENDAR)),
             // What's New screen state (Issue-76)
             showWhatsNew: false,
-            migrationSummary: null
+            migrationSummary: null,
+            // Meetings (Issue-80)
+            meetings: [],
+            meetingModalOpen: false,
+            editingMeetingIndex: null
         };
 
         // DOM Elements - Landing and Home
@@ -7596,6 +7778,7 @@
             state.people = [];
             state.roles = [];
             state.tags = [];
+            state.meetings = [];
             state.settings = { ...DEFAULT_SETTINGS };
             // Reset work calendar to defaults (Mon-Fri 8hrs, no holidays, no PTO)
             state.workCalendar = JSON.parse(JSON.stringify(DEFAULT_WORK_CALENDAR));
@@ -8092,6 +8275,9 @@
 
             // Render Daily Load KPI chart (Issue-74)
             renderDailyLoadChart();
+
+            // Render Meetings list (Issue-80)
+            renderMeetingsList();
 
             // Apply search filter (Issue-59)
             const filteredTodos = state.searchQuery
@@ -12371,7 +12557,7 @@
         // Add keyboard navigation (capture phase to intercept browser shortcuts)
         document.addEventListener('keydown', (e) => {
             // Skip if any modal is open and it's not Escape
-            const anyModalOpen = state.modalOpen || state.engagementModalOpen || state.personModalOpen || state.blockReasonModalOpen;
+            const anyModalOpen = state.modalOpen || state.engagementModalOpen || state.personModalOpen || state.blockReasonModalOpen || state.meetingModalOpen;
 
             // Handle Shift+Spacebar to focus search (Issue-59)
             // Only on Todos or Engagements page, no modals open, side panel not open
@@ -12412,6 +12598,14 @@
                 state.currentPage === 'app' && state.currentTab === 'settings' && state.settingsSection === 'tags' && !anyModalOpen) {
                 e.preventDefault();
                 openTagModal();
+                return;
+            }
+
+            // Handle Shift+M to open meeting modal (only on home tab) - Issue-80
+            if (e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && e.key.toLowerCase() === 'm' &&
+                state.currentPage === 'app' && state.currentTab === 'home' && !anyModalOpen) {
+                e.preventDefault();
+                openMeetingModal();
                 return;
             }
 
@@ -12471,6 +12665,11 @@
                 if (state.tagModalOpen) {
                     e.preventDefault();
                     closeTagModal();
+                    return;
+                }
+                if (state.meetingModalOpen) {
+                    e.preventDefault();
+                    closeMeetingModal();
                     return;
                 }
                 if (state.deletePersonIndex !== null) {
@@ -13588,13 +13787,23 @@
         }
 
         /**
-         * Render a single bar column with stacked todo segments
+         * Render a single bar column with stacked todo and meeting segments
          */
-        function renderDailyLoadBar(barElement, todos, hoursElement, isOverdue = false) {
-            const hours = calculateTotalHours(todos);
-            hoursElement.textContent = formatHoursDisplay(hours);
+        function renderDailyLoadBar(barElement, todos, meetings, hoursElement, isOverdue = false) {
+            const todoHours = calculateTotalHours(todos);
+            const meetingMinutes = meetings.reduce((sum, m) => sum + m.duration, 0);
+            const meetingHoursValue = meetingMinutes / 60;
+            const totalHours = todoHours.total + meetingHoursValue;
 
-            if (todos.length === 0) {
+            // Format hours display including meetings
+            const displayHours = {
+                total: totalHours,
+                completed: todoHours.completed,
+                remaining: totalHours - todoHours.completed
+            };
+            hoursElement.textContent = formatHoursDisplay(displayHours);
+
+            if (todos.length === 0 && meetings.length === 0) {
                 barElement.innerHTML = '<div class="daily-load-empty">-</div>';
                 return;
             }
@@ -13607,19 +13816,19 @@
             const pixelsPerHour = maxHeight / maxHours;
 
             // Calculate scale factor if total exceeds 10 hours
-            const scaleFactor = hours.total > maxHours ? maxHours / hours.total : 1;
+            const scaleFactor = totalHours > maxHours ? maxHours / totalHours : 1;
 
             let cumulativeHours = 0;
 
-            // Render segments from bottom to top (lowest priority first, highest at bottom)
+            // Render todo segments first (from bottom to top)
             todos.forEach(todo => {
                 const effort = todo.effort || DEFAULT_EFFORT;
                 const todoMinutes = EFFORT_CONFIG[effort]?.minutes || 240;
-                const todoHours = todoMinutes / 60;
-                const scaledHours = todoHours * scaleFactor;
+                const todoHoursVal = todoMinutes / 60;
+                const scaledHours = todoHoursVal * scaleFactor;
                 const segmentHeight = Math.max(scaledHours * pixelsPerHour, 16); // Minimum 16px for visibility
 
-                cumulativeHours += todoHours;
+                cumulativeHours += todoHoursVal;
                 // Use 'overdue' class for overdue column, heat gradient for others
                 const colorClass = isOverdue ? 'overdue' : getHeatClass(cumulativeHours);
 
@@ -13636,6 +13845,23 @@
                 segment.title = `${escapeHtml(todo.title)} (${formatEffortDisplay(effort)})`;
 
                 segment.onclick = () => highlightTodoInList(todo.id);
+
+                barElement.appendChild(segment);
+            });
+
+            // Render meeting segments (purple) on top of todos
+            meetings.forEach(meeting => {
+                const meetingHrs = meeting.duration / 60;
+                const scaledHours = meetingHrs * scaleFactor;
+                const segmentHeight = Math.max(scaledHours * pixelsPerHour, 16);
+
+                cumulativeHours += meetingHrs;
+
+                const segment = document.createElement('div');
+                segment.className = 'daily-load-segment meeting';
+                segment.style.height = `${segmentHeight}px`;
+                segment.dataset.meetingId = meeting.id;
+                segment.title = `📅 ${escapeHtml(meeting.title)} (${formatDurationDisplay(meeting.duration)})`;
 
                 barElement.appendChild(segment);
             });
@@ -13685,32 +13911,278 @@
         function renderDailyLoadChart() {
             if (state.currentPage !== 'app' || state.currentTab !== 'home') return;
 
-            const categories = categorizeTodosForDailyLoad();
-            const todayHours = calculateTotalHours(categories.today);
+            const todoCategories = categorizeTodosForDailyLoad();
+            const meetingCategories = categorizeMeetingsForDailyLoad();
+
+            // Calculate total hours for today including meetings
+            const todayTodoHours = calculateTotalHours(todoCategories.today);
+            const todayMeetingMinutes = meetingCategories.today.reduce((sum, m) => sum + m.duration, 0);
+            const totalTodayHours = todayTodoHours.total + (todayMeetingMinutes / 60);
 
             // Update status message
-            const status = getWorkloadStatus(todayHours.total);
+            const status = getWorkloadStatus(totalTodayHours);
             dailyLoadStatus.className = `daily-load-status ${status.class}`;
             dailyLoadStatus.textContent = status.text;
 
             // Update the Next Day label to show the actual day name (Issue-76)
-            const nextDayName = DAY_ABBREVS[categories.nextWorkDayDate.getDay()];
+            const nextDayName = DAY_ABBREVS[todoCategories.nextWorkDayDate.getDay()];
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             const tomorrow = new Date(today);
             tomorrow.setDate(tomorrow.getDate() + 1);
 
             // Show "Tomorrow" if next work day is tomorrow, otherwise show day name
-            if (categories.nextWorkDayDate.getTime() === tomorrow.getTime()) {
+            if (todoCategories.nextWorkDayDate.getTime() === tomorrow.getTime()) {
                 dailyLoadLabelNextDay.textContent = 'Tomorrow';
             } else {
                 dailyLoadLabelNextDay.textContent = nextDayName;
             }
 
             // Render each bar (overdue bar uses light red, others use heat gradient)
-            renderDailyLoadBar(dailyLoadBarOverdue, categories.overdue, dailyLoadHoursOverdue, true);
-            renderDailyLoadBar(dailyLoadBarToday, categories.today, dailyLoadHoursToday, false);
-            renderDailyLoadBar(dailyLoadBarNextDay, categories.nextDay, dailyLoadHoursNextDay, false);
+            // Pass both todos and meetings to render combined bars
+            renderDailyLoadBar(dailyLoadBarOverdue, todoCategories.overdue, meetingCategories.overdue, dailyLoadHoursOverdue, true);
+            renderDailyLoadBar(dailyLoadBarToday, todoCategories.today, meetingCategories.today, dailyLoadHoursToday, false);
+            renderDailyLoadBar(dailyLoadBarNextDay, todoCategories.nextDay, meetingCategories.nextDay, dailyLoadHoursNextDay, false);
+        }
+
+        // ========================================
+        // MEETING FUNCTIONS (Issue-80)
+        // ========================================
+
+        /**
+         * Open the meeting modal for creating a new meeting
+         */
+        function openMeetingModal() {
+            state.meetingModalOpen = true;
+            state.editingMeetingIndex = null;
+
+            // Reset form
+            document.getElementById('meeting-title').value = '';
+            document.getElementById('meeting-description').value = '';
+            document.getElementById('meeting-duration').value = '1 hr';
+            document.getElementById('meeting-modal-title').textContent = 'New Meeting';
+
+            // Set default date to current date and time
+            const now = new Date();
+            // Round to next 30 minutes
+            const minutes = now.getMinutes();
+            now.setMinutes(minutes < 30 ? 30 : 60, 0, 0);
+            if (minutes >= 30) now.setHours(now.getHours() + 1);
+
+            const dateInput = document.getElementById('meeting-date');
+            dateInput.value = formatDateTimeLocal(now);
+
+            document.getElementById('meeting-modal').classList.remove('hidden');
+
+            // Focus on title field
+            setTimeout(() => {
+                document.getElementById('meeting-title').focus();
+            }, 50);
+        }
+
+        /**
+         * Close the meeting modal
+         */
+        function closeMeetingModal() {
+            state.meetingModalOpen = false;
+            state.editingMeetingIndex = null;
+            document.getElementById('meeting-modal').classList.add('hidden');
+        }
+
+        /**
+         * Parse duration string to minutes
+         * Supports formats: "1 hr", "1.5 hrs", "30 min", "1h", "90m", etc.
+         */
+        function parseDurationToMinutes(durationStr) {
+            if (!durationStr) return 60; // Default 1 hour
+
+            const str = durationStr.toLowerCase().trim();
+
+            // Try hours format: "1 hr", "1.5 hrs", "2h", "1 hour"
+            const hoursMatch = str.match(/^(\d+(?:\.\d+)?)\s*(?:hr|hrs|h|hour|hours)$/);
+            if (hoursMatch) {
+                return Math.round(parseFloat(hoursMatch[1]) * 60);
+            }
+
+            // Try minutes format: "30 min", "45m", "90 minutes"
+            const minsMatch = str.match(/^(\d+)\s*(?:min|mins|m|minute|minutes)$/);
+            if (minsMatch) {
+                return parseInt(minsMatch[1]);
+            }
+
+            // Try plain number (assume hours if <= 8, else minutes)
+            const numMatch = str.match(/^(\d+(?:\.\d+)?)$/);
+            if (numMatch) {
+                const num = parseFloat(numMatch[1]);
+                return num <= 8 ? Math.round(num * 60) : Math.round(num);
+            }
+
+            return 60; // Default 1 hour
+        }
+
+        /**
+         * Format minutes to display string
+         */
+        function formatDurationDisplay(minutes) {
+            if (minutes < 60) {
+                return `${minutes}m`;
+            }
+            const hours = minutes / 60;
+            if (hours === Math.floor(hours)) {
+                return `${hours}h`;
+            }
+            return `${hours.toFixed(1)}h`;
+        }
+
+        /**
+         * Save meeting from modal
+         */
+        function saveMeeting(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('meeting-title').value.trim();
+            const description = document.getElementById('meeting-description').value.trim();
+            const dateValue = document.getElementById('meeting-date').value;
+            const durationStr = document.getElementById('meeting-duration').value;
+
+            if (!title || !dateValue) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            const durationMinutes = parseDurationToMinutes(durationStr);
+
+            const meeting = {
+                id: state.editingMeetingIndex !== null ? state.meetings[state.editingMeetingIndex].id : generateId(),
+                title: title,
+                description: description,
+                date: new Date(dateValue).toISOString(),
+                duration: durationMinutes,
+                createdAt: state.editingMeetingIndex !== null ? state.meetings[state.editingMeetingIndex].createdAt : new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+
+            if (state.editingMeetingIndex !== null) {
+                state.meetings[state.editingMeetingIndex] = meeting;
+            } else {
+                state.meetings.push(meeting);
+            }
+
+            closeMeetingModal();
+            renderMeetingsList();
+            renderDailyLoadChart();
+            saveStateToIndexedDB();
+        }
+
+        /**
+         * Delete a meeting
+         */
+        function deleteMeeting(meetingId) {
+            state.meetings = state.meetings.filter(m => m.id !== meetingId);
+            renderMeetingsList();
+            renderDailyLoadChart();
+            saveStateToIndexedDB();
+        }
+
+        /**
+         * Get date label for meeting (Today, Tomorrow, or date)
+         */
+        function getMeetingDateLabel(meetingDate) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            const meetingDay = new Date(meetingDate);
+            meetingDay.setHours(0, 0, 0, 0);
+
+            if (meetingDay.getTime() === today.getTime()) {
+                return 'Today';
+            } else if (meetingDay.getTime() === tomorrow.getTime()) {
+                return 'Tomorrow';
+            } else {
+                return meetingDay.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            }
+        }
+
+        /**
+         * Render the meetings list
+         */
+        function renderMeetingsList() {
+            const listEl = document.getElementById('meetings-list');
+            const countEl = document.getElementById('meetings-count');
+
+            if (!listEl) return;
+
+            // Get upcoming meetings (today and future)
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+
+            const upcomingMeetings = state.meetings
+                .filter(m => {
+                    const meetingDate = new Date(m.date);
+                    meetingDate.setHours(0, 0, 0, 0);
+                    return meetingDate >= now;
+                })
+                .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            // Update count
+            if (countEl) {
+                countEl.textContent = upcomingMeetings.length > 0 ? `${upcomingMeetings.length} upcoming` : '';
+            }
+
+            if (upcomingMeetings.length === 0) {
+                listEl.innerHTML = '<div class="meetings-empty">No upcoming meetings</div>';
+                return;
+            }
+
+            listEl.innerHTML = upcomingMeetings.map(meeting => `
+                <div class="meeting-item" data-meeting-id="${meeting.id}">
+                    <span class="meeting-date-label">${getMeetingDateLabel(meeting.date)}</span>
+                    <span class="meeting-title-text" title="${escapeHtml(meeting.title)}">${escapeHtml(meeting.title)}</span>
+                    <span class="meeting-duration-text">${formatDurationDisplay(meeting.duration)}</span>
+                    <button class="meeting-delete-btn" onclick="deleteMeeting('${meeting.id}')" title="Delete meeting">×</button>
+                </div>
+            `).join('');
+        }
+
+        /**
+         * Categorize meetings for Daily Load (similar to todos)
+         */
+        function categorizeMeetingsForDailyLoad() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            const nextWorkDay = getNextWorkDay(today);
+            nextWorkDay.setHours(0, 0, 0, 0);
+
+            const dayAfterNextWorkDay = getNextWorkDay(nextWorkDay);
+            dayAfterNextWorkDay.setHours(0, 0, 0, 0);
+
+            const categories = {
+                overdue: [],
+                today: [],
+                nextDay: []
+            };
+
+            state.meetings.forEach(meeting => {
+                const meetingDate = new Date(meeting.date);
+                meetingDate.setHours(0, 0, 0, 0);
+
+                if (meetingDate < today) {
+                    categories.overdue.push(meeting);
+                } else if (meetingDate >= today && meetingDate < tomorrow) {
+                    categories.today.push(meeting);
+                } else if (meetingDate >= nextWorkDay && meetingDate < dayAfterNextWorkDay) {
+                    categories.nextDay.push(meeting);
+                }
+            });
+
+            return categories;
         }
 
         // ========================================
@@ -15561,6 +16033,7 @@
                 state.people = [];
                 state.roles = [];
                 state.tags = [];
+                state.meetings = [];
                 state.settings = { ...DEFAULT_SETTINGS };
                 // Reset work calendar to defaults (Mon-Fri 8hrs, no holidays, no PTO)
                 state.workCalendar = JSON.parse(JSON.stringify(DEFAULT_WORK_CALENDAR));
@@ -15620,6 +16093,7 @@
                         color: isValidHexColor(tag.color) ? tag.color : DEFAULT_TAG_COLOR
                     }));
                     state.allocations = Array.isArray(savedState.allocations) ? savedState.allocations : [];
+                    state.meetings = Array.isArray(savedState.meetings) ? savedState.meetings : [];
 
                     // Restore settings (merge with defaults)
                     if (savedState.settings && typeof savedState.settings === 'object') {

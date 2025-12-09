@@ -54,3 +54,5 @@ Issue-74: Added Daily Load KPI chart to Todo page with 3-column layout, stacked 
 Issue-76: Added Work Calendar system with configurable work days (Mon-Fri default, 8hrs each), variable hours per day, holidays and PTO management. DateTimePicker now disables non-work days (grayed out, unselectable). Daily Load "Tomorrow" column renamed to "Next Day" showing next available work day with dynamic label. Introduced app versioning (v1.0.0) with VERSION.md, data migration for todos with deadlines on disabled days (moved to next work day), and What's New modal shown on upgrade.
 
 Issue-78: Added "Minimal Work" effort level (30 min), updated "Very Low" to 1 hour, bumped app to v1.1.0 with migration converting existing very_low todos to minimal.
+
+Issue-80: Introduced Meetings feature with new entity type (title, description, date, duration), Shift+M keyboard shortcut to create meetings on Todo's page, dedicated Meetings list section below Daily Load showing upcoming meetings grouped by Today/Tomorrow/Date, integration with Daily Load KPI (purple color coding), IndexedDB persistence, and bumped app to v1.2.0.
