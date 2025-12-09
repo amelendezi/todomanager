@@ -6012,45 +6012,45 @@
                     <p style="color: #6C757D; margin-bottom: 24px;">Configure your available work days, hours per day, holidays, and time off.</p>
 
                     <!-- Work Days Configuration -->
-                    <div class="calendar-work-days" style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
-                        <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 16px;">Work Days & Hours</h3>
-                        <p style="color: #6C757D; font-size: 13px; margin-bottom: 16px;">Enable days you work and set hours per day.</p>
-
-                        <div id="work-days-grid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;">
+                    <div class="calendar-work-days" style="background: #f8f9fa; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 24px;">
+                        <div style="flex: 0 0 auto; min-width: 140px;">
+                            <h3 style="font-size: 14px; font-weight: 600; color: #1F1F1F; margin-bottom: 4px;">Work Days & Hours</h3>
+                            <p style="color: #6C757D; font-size: 12px; margin: 0; line-height: 1.4;">Enable days you work and set hours per day.</p>
+                        </div>
+                        <div id="work-days-grid" style="display: flex; gap: 6px; flex: 1;">
                             <!-- Work days will be rendered here -->
                         </div>
                     </div>
 
                     <!-- Holidays Configuration -->
-                    <div class="calendar-holidays" style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
-                        <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 16px;">Holidays</h3>
-                        <p style="color: #6C757D; font-size: 13px; margin-bottom: 16px;">Add holidays when you won't be working.</p>
-
-                        <div style="display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start;">
-                            <input type="date" id="holiday-date-input" class="form-input" style="width: 200px;" placeholder="Select date">
-                            <button type="button" class="btn btn-secondary" onclick="addHolidayFromPicker()">Add Holiday</button>
-                        </div>
-
-                        <div id="holidays-list" style="display: flex; flex-wrap: wrap; gap: 8px;">
-                            <!-- Holidays will be rendered here -->
+                    <div class="calendar-holidays" style="background: #f8f9fa; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px;">
+                        <h3 style="font-size: 14px; font-weight: 600; color: #1F1F1F; margin-bottom: 4px;">Holidays</h3>
+                        <p style="color: #6C757D; font-size: 12px; margin-bottom: 12px; line-height: 1.4;">Add holidays when you won't be working. <span style="color: #F5A623; font-style: italic;">Click a date to add it.</span></p>
+                        <div style="display: flex; gap: 20px; align-items: stretch;">
+                            <div id="holiday-picker-container" style="flex: 0 0 auto;"></div>
+                            <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                                <div style="display: flex; justify-content: flex-end;">
+                                    <button type="button" class="btn btn-secondary" onclick="openHolidayTemplateModal()" style="font-size: 12px; padding: 6px 12px;">Apply Holiday Template</button>
+                                </div>
+                                <div id="holidays-list" style="flex: 1; display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; overflow-y: auto; border: 1px solid #E5E7EB; border-radius: 6px; padding: 8px; background: white;">
+                                    <!-- Holidays will be rendered here -->
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- PTO Configuration -->
-                    <div class="calendar-pto" style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
-                        <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 16px;">Paid Time Off (PTO)</h3>
-                        <p style="color: #6C757D; font-size: 13px; margin-bottom: 16px;">Add PTO days when you'll be away from work. <span style="color: #F5A623; font-style: italic;">Click two dates to select a range.</span></p>
-
-                        <div style="display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start;">
-                            <input type="date" id="pto-date-input" class="form-input" style="width: 200px;" placeholder="Select date or range">
-                            <button type="button" class="btn btn-secondary" onclick="addPTOFromPicker()">Add PTO</button>
-                            <button type="button" id="pto-clear-range" class="btn btn-secondary" onclick="clearPTORangeSelection()" style="display: none;">Clear</button>
-                        </div>
-
-                        <div id="pto-range-status" style="display: none; color: #F5A623; font-size: 13px; margin-bottom: 12px;"></div>
-
-                        <div id="pto-list" style="display: flex; flex-wrap: wrap; gap: 8px;">
-                            <!-- PTO days will be rendered here -->
+                    <div class="calendar-pto" style="background: #f8f9fa; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px;">
+                        <h3 style="font-size: 14px; font-weight: 600; color: #1F1F1F; margin-bottom: 4px;">Paid Time Off (PTO)</h3>
+                        <p style="color: #6C757D; font-size: 12px; margin-bottom: 12px; line-height: 1.4;">Add PTO days when you'll be away from work. <span style="color: #F5A623; font-style: italic;">Click to select a range, then click Add PTO.</span></p>
+                        <div style="display: flex; gap: 20px; align-items: stretch;">
+                            <div style="flex: 0 0 auto;">
+                                <div id="pto-picker-container"></div>
+                                <div id="pto-range-status" style="color: #F5A623; font-size: 11px; margin-top: 8px;"></div>
+                            </div>
+                            <div id="pto-list" style="flex: 1; display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; overflow-y: auto; border: 1px solid #E5E7EB; border-radius: 6px; padding: 8px; background: white;">
+                                <!-- PTO days will be rendered here -->
+                            </div>
                         </div>
                     </div>
 
@@ -6746,6 +6746,46 @@
         </div>
     </div>
 
+    <!-- Holiday Template Modal -->
+    <div id="holiday-template-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closeHolidayTemplateModal()"></div>
+        <div class="modal-content" style="max-width: 450px;">
+            <h2 class="modal-title" style="margin-bottom: 16px;">Apply Holiday Template</h2>
+            <p style="color: #6C757D; font-size: 13px; margin-bottom: 20px;">
+                Select a country template and end year to automatically add public holidays to your calendar.
+            </p>
+
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Country</label>
+                <select id="holiday-template-country" style="width: 100%; padding: 8px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 14px;">
+                    <option value="">Select a country...</option>
+                    <option value="NL">Netherlands</option>
+                    <option value="DE">Germany</option>
+                    <option value="UK">United Kingdom</option>
+                    <option value="US">United States of America</option>
+                    <option value="IN">India</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Add holidays up to and including</label>
+                <select id="holiday-template-end-year" style="width: 100%; padding: 8px 12px; border: 1px solid #D1D5DB; border-radius: 6px; font-size: 14px;">
+                    <!-- Years will be populated dynamically -->
+                </select>
+            </div>
+
+            <div id="holiday-template-preview" style="display: none; background: #F3F4F6; border-radius: 6px; padding: 12px; margin-bottom: 20px; max-height: 150px; overflow-y: auto;">
+                <p style="font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 8px;">Preview:</p>
+                <p id="holiday-template-preview-text" style="font-size: 12px; color: #6B7280; margin: 0;"></p>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeHolidayTemplateModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="applyHolidayTemplate()">Apply Template</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Delete Person Confirmation Modal -->
     <div id="delete-person-modal" class="modal hidden">
         <div class="modal-backdrop" onclick="closeDeletePersonModal()"></div>
@@ -6761,6 +6801,25 @@
                 <button type="button" class="btn btn-secondary" onclick="closeDeletePersonModal()">Cancel</button>
                 <button type="button" class="btn btn-danger" onclick="confirmDeletePerson()">Delete</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Work Day Hours Modal -->
+    <div id="workday-hours-modal" class="modal hidden">
+        <div class="modal-backdrop" onclick="closeWorkDayHoursModal()"></div>
+        <div class="modal-content" style="max-width: 320px;">
+            <h2 class="modal-title" id="workday-hours-modal-title">Edit Hours</h2>
+            <form id="workday-hours-form" onsubmit="saveWorkDayHours(event)">
+                <input type="hidden" id="workday-hours-day-index">
+                <div class="form-group">
+                    <label for="workday-hours-input" class="form-label">Hours per day</label>
+                    <input type="number" id="workday-hours-input" class="form-input" min="0" max="24" step="0.5" required style="text-align: center; font-size: 18px; padding: 12px;">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeWorkDayHoursModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -7537,6 +7596,8 @@
             state.roles = [];
             state.tags = [];
             state.settings = { ...DEFAULT_SETTINGS };
+            // Reset work calendar to defaults (Mon-Fri 8hrs, no holidays, no PTO)
+            state.workCalendar = JSON.parse(JSON.stringify(DEFAULT_WORK_CALENDAR));
             state.currentTab = 'home';
             navigateTo('app');
             // Save initial empty state to IndexedDB
@@ -13840,25 +13901,34 @@
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    padding: 12px 8px;
-                    background: ${dayConfig.enabled ? '#fff' : '#e5e7eb'};
-                    border-radius: 8px;
+                    padding: 8px 6px;
+                    background: ${dayConfig.enabled ? '#fff' : '#f3f4f6'};
+                    border-radius: 6px;
                     border: 2px solid ${dayConfig.enabled ? '#F5A623' : 'transparent'};
                     transition: all 0.2s;
+                    min-width: 54px;
                 `;
 
+                const hoursDisplay = dayConfig.enabled
+                    ? `<span style="font-size: 11px; color: #1F1F1F;">${dayConfig.hours}</span>
+                       <span style="font-size: 10px; color: #6C757D; margin-right: 2px;">hrs</span>
+                       <button onclick="openWorkDayHoursModal(${i})" style="background: none; border: none; cursor: pointer; padding: 0; line-height: 1;" title="Edit hours">
+                           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#6C757D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                               <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                           </svg>
+                       </button>`
+                    : `<span style="font-size: 11px; color: #9CA3AF;">0 hrs</span>`;
+
                 dayCard.innerHTML = `
-                    <div style="font-weight: 600; font-size: 12px; color: #1F1F1F; margin-bottom: 8px;">${DAY_ABBREVS[i]}</div>
-                    <label style="display: flex; align-items: center; cursor: pointer; margin-bottom: 8px;">
+                    <div style="font-weight: 600; font-size: 11px; color: ${dayConfig.enabled ? '#1F1F1F' : '#9CA3AF'}; margin-bottom: 4px;">${DAY_ABBREVS[i]}</div>
+                    <label style="display: flex; align-items: center; cursor: pointer; margin-bottom: 4px;">
                         <input type="checkbox" ${dayConfig.enabled ? 'checked' : ''}
                             onchange="toggleWorkDay(${i}, this.checked)"
-                            style="width: 18px; height: 18px; accent-color: #F5A623;">
+                            style="width: 14px; height: 14px; accent-color: #F5A623;">
                     </label>
-                    <input type="number" min="0" max="24" value="${dayConfig.hours}"
-                        onchange="setWorkDayHours(${i}, this.value)"
-                        ${dayConfig.enabled ? '' : 'disabled'}
-                        style="width: 50px; padding: 4px; text-align: center; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;">
-                    <div style="font-size: 10px; color: #6C757D; margin-top: 4px;">hours</div>
+                    <div style="display: flex; align-items: center; gap: 1px;">
+                        ${hoursDisplay}
+                    </div>
                 `;
 
                 grid.appendChild(dayCard);
@@ -13882,9 +13952,51 @@
          * Set hours for a specific work day
          */
         function setWorkDayHours(dayIndex, hours) {
-            const numHours = parseInt(hours, 10);
+            const numHours = parseFloat(hours);
             if (!isNaN(numHours) && numHours >= 0 && numHours <= 24) {
                 state.workCalendar.workDays[dayIndex].hours = numHours;
+            }
+        }
+
+        /**
+         * Open the work day hours modal
+         */
+        function openWorkDayHoursModal(dayIndex) {
+            const modal = document.getElementById('workday-hours-modal');
+            const titleEl = document.getElementById('workday-hours-modal-title');
+            const dayIndexInput = document.getElementById('workday-hours-day-index');
+            const hoursInput = document.getElementById('workday-hours-input');
+
+            const dayConfig = state.workCalendar.workDays[dayIndex];
+            titleEl.textContent = `Edit ${DAY_NAMES[dayIndex]} Hours`;
+            dayIndexInput.value = dayIndex;
+            hoursInput.value = dayConfig.hours;
+
+            modal.classList.remove('hidden');
+            hoursInput.focus();
+            hoursInput.select();
+        }
+
+        /**
+         * Close the work day hours modal
+         */
+        function closeWorkDayHoursModal() {
+            const modal = document.getElementById('workday-hours-modal');
+            modal.classList.add('hidden');
+        }
+
+        /**
+         * Save work day hours from modal
+         */
+        function saveWorkDayHours(event) {
+            event.preventDefault();
+            const dayIndex = parseInt(document.getElementById('workday-hours-day-index').value, 10);
+            const hours = parseFloat(document.getElementById('workday-hours-input').value);
+
+            if (!isNaN(hours) && hours >= 0 && hours <= 24) {
+                state.workCalendar.workDays[dayIndex].hours = hours;
+                renderWorkDaysGrid();
+                closeWorkDayHoursModal();
             }
         }
 
@@ -14028,31 +14140,556 @@
          * Initialize DateTimePickers for calendar settings
          */
         function initializeCalendarPickers() {
-            const holidayInput = document.getElementById('holiday-date-input');
-            const ptoInput = document.getElementById('pto-date-input');
+            const holidayPickerContainer = document.getElementById('holiday-picker-container');
+            const ptoPickerContainer = document.getElementById('pto-picker-container');
 
-            // Initialize holiday picker (simple date-only)
-            if (holidayInput && !holidayInput._dtpInstance) {
-                holidayPickerInstance = new DateTimePicker(holidayInput, {
-                    dateOnly: true,
-                    closeOnSelect: true
-                });
+            // Initialize embedded holiday picker
+            if (holidayPickerContainer && !holidayPickerContainer._dtpInitialized) {
+                holidayPickerContainer._dtpInitialized = true;
+                initializeEmbeddedHolidayPicker(holidayPickerContainer);
             }
 
-            // Initialize PTO picker with range selection support
-            if (ptoInput && !ptoInput._dtpInstance) {
-                ptoPickerInstance = new DateTimePicker(ptoInput, {
-                    dateOnly: true,
-                    closeOnSelect: false,
-                    rangeMode: true,
-                    onDateClick: handlePTODateClick,
-                    onDateHover: handlePTODateHover
-                });
+            // Initialize PTO picker as embedded inline picker
+            if (ptoPickerContainer && !ptoPickerContainer._dtpInitialized) {
+                ptoPickerContainer._dtpInitialized = true;
+                initializeEmbeddedPTOPicker(ptoPickerContainer);
             }
         }
 
         /**
+         * Initialize embedded Holiday picker (always visible, click to add)
+         */
+        function initializeEmbeddedHolidayPicker(container) {
+            const pickerHTML = `
+                <div class="dtp-embedded" style="border: 1px solid #E0E0E0; border-radius: 8px; padding: 12px; background: white; width: 280px;">
+                    <div class="dtp-calendar-panel">
+                        <div class="dtp-calendar-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <button type="button" class="dtp-nav-btn dtp-prev-month" aria-label="Previous month" style="border: none; background: none; cursor: pointer; padding: 4px 8px;">◀</button>
+                            <span class="dtp-month-year" style="font-weight: 600;">
+                                <span class="dtp-month-name"></span>
+                                <span class="dtp-year"></span>
+                            </span>
+                            <button type="button" class="dtp-nav-btn dtp-next-month" aria-label="Next month" style="border: none; background: none; cursor: pointer; padding: 4px 8px;">▶</button>
+                        </div>
+                        <div class="dtp-day-headers" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-bottom: 4px;"></div>
+                        <div class="dtp-calendar-grid" tabindex="0" role="grid" aria-label="Holiday Calendar" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;"></div>
+                    </div>
+                    <div class="dtp-footer" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #E0E0E0; height: 36px;"></div>
+                </div>
+            `;
+            container.innerHTML = pickerHTML;
+
+            const picker = {
+                container: container,
+                calendarGrid: container.querySelector('.dtp-calendar-grid'),
+                dayHeaders: container.querySelector('.dtp-day-headers'),
+                monthName: container.querySelector('.dtp-month-name'),
+                yearDisplay: container.querySelector('.dtp-year'),
+                viewDate: new Date(),
+                focusedDate: new Date(),
+
+                renderDayHeaders() {
+                    this.dayHeaders.innerHTML = DTP_DAY_NAMES.map(day =>
+                        `<span style="font-size: 11px; font-weight: 600; color: #888; text-align: center;">${day}</span>`
+                    ).join('');
+                },
+
+                renderMonthYearHeader() {
+                    this.monthName.textContent = DTP_MONTH_NAMES[this.viewDate.getMonth()] + ' ';
+                    this.yearDisplay.textContent = this.viewDate.getFullYear();
+                },
+
+                renderCalendar() {
+                    const year = this.viewDate.getFullYear();
+                    const month = this.viewDate.getMonth();
+                    const firstDay = new Date(year, month, 1);
+                    const lastDay = new Date(year, month + 1, 0);
+
+                    let startDay = firstDay.getDay();
+                    if (startDay === 0) startDay = 7;
+                    startDay = startDay - 1;
+
+                    let html = '';
+                    let dayCount = 1;
+                    let nextMonthDay = 1;
+                    const prevMonthLastDay = new Date(year, month, 0).getDate();
+
+                    for (let i = 0; i < 42; i++) {
+                        let dayNum, dateObj, classes = ['dtp-day'];
+                        const baseStyle = 'width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid transparent; border-radius: 4px; cursor: pointer; font-size: 13px; background: none;';
+
+                        if (i < startDay) {
+                            dayNum = prevMonthLastDay - startDay + i + 1;
+                            dateObj = new Date(year, month - 1, dayNum);
+                            classes.push('other-month');
+                        } else if (dayCount <= lastDay.getDate()) {
+                            dayNum = dayCount;
+                            dateObj = new Date(year, month, dayNum);
+                            dayCount++;
+                        } else {
+                            dayNum = nextMonthDay;
+                            dateObj = new Date(year, month + 1, dayNum);
+                            classes.push('other-month');
+                            nextMonthDay++;
+                        }
+
+                        const dateKey = formatDateStr(dateObj);
+                        let extraStyle = '';
+
+                        // Check if it's a weekend (non-work day by default)
+                        const dayOfWeek = dateObj.getDay();
+                        if (!state.workCalendar.workDays[dayOfWeek].enabled) {
+                            classes.push('disabled-day');
+                            extraStyle += 'color: #D1D5DB; background: #F3F4F6; cursor: not-allowed; pointer-events: none;';
+                        }
+
+                        // Check if already a holiday
+                        if (state.workCalendar.holidays.includes(dateKey)) {
+                            classes.push('holiday-added');
+                            extraStyle += 'background: #FEE2E2; color: #DC2626; font-weight: 600;';
+                        }
+
+                        // Check if other month
+                        if (classes.includes('other-month')) {
+                            extraStyle += 'color: #999;';
+                        }
+
+                        html += `<button type="button" class="${classes.join(' ')}" data-date="${dateObj.toISOString()}" tabindex="-1" style="${baseStyle}${extraStyle}">${dayNum}</button>`;
+                    }
+
+                    this.calendarGrid.innerHTML = html;
+                    this.renderMonthYearHeader();
+                },
+
+                navigateMonth(delta) {
+                    this.viewDate.setMonth(this.viewDate.getMonth() + delta);
+                    this.renderCalendar();
+                }
+            };
+
+            holidayPickerInstance = picker;
+
+            container.querySelector('.dtp-prev-month').addEventListener('click', () => picker.navigateMonth(-1));
+            container.querySelector('.dtp-next-month').addEventListener('click', () => picker.navigateMonth(1));
+
+            // Click to add/remove holiday
+            picker.calendarGrid.addEventListener('click', (e) => {
+                const dayEl = e.target.closest('.dtp-day');
+                if (!dayEl || dayEl.classList.contains('disabled-day')) return;
+                const date = new Date(dayEl.dataset.date);
+                handleHolidayDateClickEmbedded(date, picker);
+            });
+
+            // Keyboard navigation
+            picker.calendarGrid.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const focused = picker.calendarGrid.querySelector('.dtp-day:focus');
+                    if (focused && !focused.classList.contains('disabled-day')) {
+                        const date = new Date(focused.dataset.date);
+                        handleHolidayDateClickEmbedded(date, picker);
+                    }
+                }
+            });
+
+            picker.renderDayHeaders();
+            picker.renderCalendar();
+        }
+
+        /**
+         * Handle holiday date click from embedded picker
+         */
+        function handleHolidayDateClickEmbedded(date, picker) {
+            const dateStr = formatDateStr(date);
+            const dayOfWeek = date.getDay();
+
+            if (!state.workCalendar.workDays[dayOfWeek].enabled) {
+                return;
+            }
+
+            if (state.workCalendar.holidays.includes(dateStr)) {
+                // Already a holiday - remove it
+                state.workCalendar.holidays = state.workCalendar.holidays.filter(d => d !== dateStr);
+                picker.renderCalendar();
+                renderHolidaysList();
+                if (ptoPickerInstance) ptoPickerInstance.renderCalendar();
+            } else {
+                // Check if this date is already a PTO day
+                if (state.workCalendar.pto.includes(dateStr)) {
+                    // Show confirmation dialog
+                    const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    if (confirm(`${formattedDate} is currently marked as PTO. Adding it as a holiday will remove it from your PTO days. Continue?`)) {
+                        // Remove from PTO
+                        state.workCalendar.pto = state.workCalendar.pto.filter(d => d !== dateStr);
+                        renderPTOList();
+                        // Add as holiday
+                        state.workCalendar.holidays.push(dateStr);
+                        picker.renderCalendar();
+                        renderHolidaysList();
+                        if (ptoPickerInstance) ptoPickerInstance.renderCalendar();
+                    }
+                } else {
+                    // Add as holiday
+                    state.workCalendar.holidays.push(dateStr);
+                    picker.renderCalendar();
+                    renderHolidaysList();
+                    if (ptoPickerInstance) ptoPickerInstance.renderCalendar();
+                }
+            }
+        }
+
+        /**
+         * Initialize embedded PTO picker (always visible, no popup)
+         */
+        function initializeEmbeddedPTOPicker(container) {
+            // Create a minimal picker structure
+            const pickerHTML = `
+                <div class="dtp-embedded" style="border: 1px solid #E0E0E0; border-radius: 8px; padding: 12px; background: white; width: 280px;">
+                    <div class="dtp-calendar-panel">
+                        <div class="dtp-calendar-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <button type="button" class="dtp-nav-btn dtp-prev-month" aria-label="Previous month" style="border: none; background: none; cursor: pointer; padding: 4px 8px;">◀</button>
+                            <span class="dtp-month-year" style="font-weight: 600;">
+                                <span class="dtp-month-name"></span>
+                                <span class="dtp-year"></span>
+                            </span>
+                            <button type="button" class="dtp-nav-btn dtp-next-month" aria-label="Next month" style="border: none; background: none; cursor: pointer; padding: 4px 8px;">▶</button>
+                        </div>
+                        <div class="dtp-day-headers" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-bottom: 4px;"></div>
+                        <div class="dtp-calendar-grid" tabindex="0" role="grid" aria-label="Calendar" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;"></div>
+                    </div>
+                    <div class="dtp-footer" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #E0E0E0;">
+                        <button type="button" class="dtp-select-btn btn btn-primary" style="width: 100%;">Add PTO</button>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = pickerHTML;
+
+            // Create a picker-like object to manage state
+            const picker = {
+                container: container,
+                calendarGrid: container.querySelector('.dtp-calendar-grid'),
+                dayHeaders: container.querySelector('.dtp-day-headers'),
+                monthName: container.querySelector('.dtp-month-name'),
+                yearDisplay: container.querySelector('.dtp-year'),
+                selectBtn: container.querySelector('.dtp-select-btn'),
+                viewDate: new Date(),
+                focusedDate: new Date(),
+
+                renderDayHeaders() {
+                    this.dayHeaders.innerHTML = DTP_DAY_NAMES.map(day =>
+                        `<span style="font-size: 11px; font-weight: 600; color: #888; text-align: center;">${day}</span>`
+                    ).join('');
+                },
+
+                renderMonthYearHeader() {
+                    this.monthName.textContent = DTP_MONTH_NAMES[this.viewDate.getMonth()] + ' ';
+                    this.yearDisplay.textContent = this.viewDate.getFullYear();
+                },
+
+                renderCalendar() {
+                    const year = this.viewDate.getFullYear();
+                    const month = this.viewDate.getMonth();
+                    const firstDay = new Date(year, month, 1);
+                    const lastDay = new Date(year, month + 1, 0);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    let startDay = firstDay.getDay();
+                    if (startDay === 0) startDay = 7;
+                    startDay = startDay - 1;
+
+                    let html = '';
+                    let dayCount = 1;
+                    let nextMonthDay = 1;
+                    const prevMonthLastDay = new Date(year, month, 0).getDate();
+
+                    for (let i = 0; i < 42; i++) {
+                        let dayNum, dateObj, classes = ['dtp-day'];
+                        const baseStyle = 'width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid transparent; border-radius: 4px; cursor: pointer; font-size: 13px; background: none;';
+
+                        if (i < startDay) {
+                            dayNum = prevMonthLastDay - startDay + i + 1;
+                            dateObj = new Date(year, month - 1, dayNum);
+                            classes.push('other-month');
+                        } else if (dayCount <= lastDay.getDate()) {
+                            dayNum = dayCount;
+                            dateObj = new Date(year, month, dayNum);
+                            dayCount++;
+                        } else {
+                            dayNum = nextMonthDay;
+                            dateObj = new Date(year, month + 1, dayNum);
+                            classes.push('other-month');
+                            nextMonthDay++;
+                        }
+
+                        const dateKey = formatDateStr(dateObj);
+                        let extraStyle = '';
+
+                        // Check if disabled (non-work day)
+                        if (!isWorkDay(dateObj)) {
+                            classes.push('disabled-day');
+                            extraStyle += 'color: #D1D5DB; background: #F3F4F6; cursor: not-allowed; pointer-events: none; text-decoration: line-through;';
+                        }
+
+                        // Check if other month
+                        if (classes.includes('other-month')) {
+                            extraStyle += 'color: #999;';
+                        }
+
+                        // Range highlighting
+                        if (ptoRangeStart) {
+                            const startKey = formatDateStr(ptoRangeStart);
+                            const endKey = ptoRangeEnd ? formatDateStr(ptoRangeEnd) : null;
+
+                            if (dateKey === startKey) {
+                                classes.push('range-start');
+                                extraStyle += 'background: #F5A623; color: white; border-radius: 50% 0 0 50%;';
+                            }
+                            if (endKey && dateKey === endKey) {
+                                classes.push('range-end');
+                                extraStyle += 'background: #F5A623; color: white; border-radius: 0 50% 50% 0;';
+                            }
+                            if (dateKey === startKey && endKey && dateKey === endKey) {
+                                extraStyle += 'border-radius: 50%;';
+                            }
+
+                            // In range
+                            if (endKey) {
+                                const startTime = ptoRangeStart.getTime();
+                                const endTime = ptoRangeEnd.getTime();
+                                const [rangeMin, rangeMax] = startTime < endTime ? [startTime, endTime] : [endTime, startTime];
+                                const dateTime = dateObj.getTime();
+                                if (dateTime > rangeMin && dateTime < rangeMax) {
+                                    classes.push('in-range');
+                                    extraStyle += 'background: #FEF3C7; color: #92400E; border-radius: 0;';
+                                }
+                            }
+                        }
+
+                        html += `<button type="button" class="${classes.join(' ')}" data-date="${dateObj.toISOString()}" tabindex="-1" style="${baseStyle}${extraStyle}">${dayNum}</button>`;
+                    }
+
+                    this.calendarGrid.innerHTML = html;
+                    this.renderMonthYearHeader();
+                },
+
+                navigateMonth(delta) {
+                    this.viewDate.setMonth(this.viewDate.getMonth() + delta);
+                    this.renderCalendar();
+                }
+            };
+
+            // Store reference
+            ptoPickerInstance = picker;
+
+            // Set up event listeners
+            container.querySelector('.dtp-prev-month').addEventListener('click', () => picker.navigateMonth(-1));
+            container.querySelector('.dtp-next-month').addEventListener('click', () => picker.navigateMonth(1));
+
+            picker.calendarGrid.addEventListener('click', (e) => {
+                const dayEl = e.target.closest('.dtp-day');
+                if (!dayEl || dayEl.classList.contains('disabled-day')) return;
+                const date = new Date(dayEl.dataset.date);
+                handlePTODateClick(date, picker);
+            });
+
+            // Keyboard navigation for PTO picker
+            picker.calendarGrid.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const focused = picker.calendarGrid.querySelector('.dtp-day:focus');
+                    if (focused && !focused.classList.contains('disabled-day')) {
+                        const date = new Date(focused.dataset.date);
+                        handlePTODateClick(date, picker);
+                        // If we have a complete range, add it
+                        if (ptoRangeStart && ptoRangeEnd) {
+                            addPTOFromRange();
+                        }
+                    }
+                }
+            });
+
+            picker.selectBtn.addEventListener('click', () => {
+                addPTOFromRange();
+            });
+
+            // Initial render
+            picker.renderDayHeaders();
+            picker.renderCalendar();
+        }
+
+        /**
+         * Add PTO from the current range selection (no inputs needed)
+         */
+        function addPTOFromRange() {
+            if (!ptoRangeStart) {
+                alert('Please select a start date');
+                return;
+            }
+
+            // If only start date, add single day
+            if (!ptoRangeEnd) {
+                const dateStr = formatDateStr(ptoRangeStart);
+
+                if (state.workCalendar.pto.includes(dateStr)) {
+                    alert('This date is already added as PTO');
+                    return;
+                }
+
+                const dayOfWeek = ptoRangeStart.getDay();
+                if (!state.workCalendar.workDays[dayOfWeek].enabled) {
+                    alert('This date is not a work day');
+                    return;
+                }
+
+                if (state.workCalendar.holidays.includes(dateStr)) {
+                    alert('This date is a holiday');
+                    return;
+                }
+
+                state.workCalendar.pto.push(dateStr);
+                clearPTORangeSelection();
+                renderPTOList();
+                return;
+            }
+
+            // Add range
+            const current = new Date(ptoRangeStart);
+            let addedCount = 0;
+            while (current <= ptoRangeEnd) {
+                const dateStr = formatDateStr(current);
+                const dayOfWeek = current.getDay();
+                if (state.workCalendar.workDays[dayOfWeek].enabled &&
+                    !state.workCalendar.holidays.includes(dateStr) &&
+                    !state.workCalendar.pto.includes(dateStr)) {
+                    state.workCalendar.pto.push(dateStr);
+                    addedCount++;
+                }
+                current.setDate(current.getDate() + 1);
+            }
+
+            clearPTORangeSelection();
+            renderPTOList();
+        }
+
+        /**
+         * Sync input values to range state (legacy - kept for compatibility)
+         */
+        function syncInputsToRangeState() {
+            // No longer needed - range state is managed directly by clicks
+        }
+
+        /**
+         * Sync range state to input values (legacy - kept for compatibility)
+         */
+        function syncRangeStateToInputs() {
+            // No longer needed - no input fields to sync
+        }
+
+        /**
+         * Add PTO from the input fields
+         */
+        function addPTOFromInputs() {
+            syncInputsToRangeState();
+
+            if (!ptoRangeStart) {
+                alert('Please select a start date');
+                return;
+            }
+
+            // If only start date, add single day
+            if (!ptoRangeEnd) {
+                const dateStr = formatDateStr(ptoRangeStart);
+
+                if (state.workCalendar.pto.includes(dateStr)) {
+                    alert('This date is already added as PTO');
+                    return;
+                }
+
+                const dayOfWeek = ptoRangeStart.getDay();
+                if (!state.workCalendar.workDays[dayOfWeek].enabled) {
+                    alert('This date is not a work day');
+                    return;
+                }
+
+                if (state.workCalendar.holidays.includes(dateStr)) {
+                    alert('This date is a holiday');
+                    return;
+                }
+
+                state.workCalendar.pto.push(dateStr);
+                clearPTORangeSelection();
+                renderPTOList();
+                return;
+            }
+
+            // Add range
+            const current = new Date(ptoRangeStart);
+            let addedCount = 0;
+            while (current <= ptoRangeEnd) {
+                const dateStr = formatDateStr(current);
+                const dayOfWeek = current.getDay();
+                if (state.workCalendar.workDays[dayOfWeek].enabled &&
+                    !state.workCalendar.holidays.includes(dateStr) &&
+                    !state.workCalendar.pto.includes(dateStr)) {
+                    state.workCalendar.pto.push(dateStr);
+                    addedCount++;
+                }
+                current.setDate(current.getDate() + 1);
+            }
+
+            clearPTORangeSelection();
+            renderPTOList();
+        }
+
+        /**
+         * Handle holiday date click from picker
+         * Automatically adds the selected date as a holiday
+         */
+        function handleHolidayDateClick(date, picker) {
+            const input = document.getElementById('holiday-date-input');
+            const formattedDateStr = formatDateStr(date);
+
+            if (state.workCalendar.holidays.includes(formattedDateStr)) {
+                alert('This date is already added as a holiday');
+                picker.close();
+                return;
+            }
+
+            // Check if it's a work day (but exclude existing holidays from the check)
+            const dayOfWeek = date.getDay();
+            if (!state.workCalendar.workDays[dayOfWeek].enabled) {
+                alert('This date is already a non-work day (weekend)');
+                picker.close();
+                return;
+            }
+
+            if (state.workCalendar.pto.includes(formattedDateStr)) {
+                alert('This date is already marked as PTO');
+                picker.close();
+                return;
+            }
+
+            state.workCalendar.holidays.push(formattedDateStr);
+            input.value = '';
+            picker.selectedDate = null;
+            picker.displayInput.value = "";
+            picker.close();
+            renderHolidaysList();
+        }
+
+        /**
+         * Handle confirm (Select button click) in PTO picker
+         * Adds the selected range as PTO days
+         */
+        function handlePTOConfirm(picker) {
+            addPTOFromPicker();
+            picker.close();
+        }
+
+        /**
          * Handle date click in PTO picker for range selection
+         * First click sets start, second click sets end
          */
         function handlePTODateClick(date, picker) {
             const dateStr = formatDateStr(date);
@@ -14061,32 +14698,27 @@
             }
 
             if (!ptoRangeStart) {
+                // First click: set range start
                 ptoRangeStart = new Date(date);
                 ptoRangeEnd = null;
+                syncRangeStateToInputs();
                 updatePTORangeStatus();
                 picker.renderCalendar();
-                document.getElementById('pto-clear-range').style.display = 'inline-block';
             } else if (!ptoRangeEnd) {
+                // Second click: set range end
                 ptoRangeEnd = new Date(date);
                 if (ptoRangeStart > ptoRangeEnd) {
                     [ptoRangeStart, ptoRangeEnd] = [ptoRangeEnd, ptoRangeStart];
                 }
+                syncRangeStateToInputs();
                 updatePTORangeStatus();
                 picker.renderCalendar();
             } else {
+                // Third click: reset and start new range
                 ptoRangeStart = new Date(date);
                 ptoRangeEnd = null;
+                syncRangeStateToInputs();
                 updatePTORangeStatus();
-                picker.renderCalendar();
-            }
-        }
-
-        /**
-         * Handle date hover in PTO picker for range preview
-         */
-        function handlePTODateHover(date, picker) {
-            if (ptoRangeStart && !ptoRangeEnd) {
-                picker.previewDate = date;
                 picker.renderCalendar();
             }
         }
@@ -14100,16 +14732,17 @@
 
             if (ptoRangeStart && !ptoRangeEnd) {
                 const startStr = ptoRangeStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                statusEl.textContent = 'Range start: ' + startStr + ' - Click another date to complete range, or click "Add PTO" for single day';
+                statusEl.textContent = 'Start: ' + startStr + ' - Select end date or press Enter/click Add PTO for single day';
                 statusEl.style.display = 'block';
             } else if (ptoRangeStart && ptoRangeEnd) {
                 const startStr = ptoRangeStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                 const endStr = ptoRangeEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                 const count = countWorkDaysInRange(ptoRangeStart, ptoRangeEnd);
-                statusEl.textContent = 'Range: ' + startStr + ' to ' + endStr + ' (' + count + ' work day' + (count !== 1 ? 's' : '') + ') - Click "Add PTO" to add';
+                statusEl.textContent = 'Range: ' + startStr + ' to ' + endStr + ' (' + count + ' work day' + (count !== 1 ? 's' : '') + ') - Press Enter or click Add PTO';
                 statusEl.style.display = 'block';
             } else {
-                statusEl.style.display = 'none';
+                statusEl.textContent = 'Select a start date in the calendar or enter dates manually';
+                statusEl.style.display = 'block';
             }
         }
 
@@ -14227,14 +14860,18 @@
         function clearPTORangeSelection() {
             ptoRangeStart = null;
             ptoRangeEnd = null;
-            const input = document.getElementById('pto-date-input');
-            if (input) input.value = '';
+
+            // Clear the start and end date input fields
+            const startInput = document.getElementById('pto-start-date');
+            const endInput = document.getElementById('pto-end-date');
+            if (startInput) startInput.value = '';
+            if (endInput) endInput.value = '';
+
+            // Re-render the embedded picker calendar
             if (ptoPickerInstance) {
-                ptoPickerInstance.selectedDate = null;
-                ptoPickerInstance.previewDate = null;
-                ptoPickerInstance.displayInput.value = "";
                 ptoPickerInstance.renderCalendar();
             }
+
             updatePTORangeStatus();
             const clearBtn = document.getElementById('pto-clear-range');
             if (clearBtn) clearBtn.style.display = 'none';
@@ -14395,6 +15032,481 @@
         }
 
         // ========================================
+        // HOLIDAY TEMPLATE FUNCTIONS (Issue-76)
+        // ========================================
+
+        /**
+         * Calculate Easter Sunday for a given year using the Anonymous Gregorian algorithm
+         * @param {number} year - The year to calculate Easter for
+         * @returns {Date} - Easter Sunday date
+         */
+        function calculateEasterSunday(year) {
+            const a = year % 19;
+            const b = Math.floor(year / 100);
+            const c = year % 100;
+            const d = Math.floor(b / 4);
+            const e = b % 4;
+            const f = Math.floor((b + 8) / 25);
+            const g = Math.floor((b - f + 1) / 3);
+            const h = (19 * a + b - d - g + 15) % 30;
+            const i = Math.floor(c / 4);
+            const k = c % 4;
+            const l = (32 + 2 * e + 2 * i - h - k) % 7;
+            const m = Math.floor((a + 11 * h + 22 * l) / 451);
+            const month = Math.floor((h + l - 7 * m + 114) / 31) - 1; // 0-indexed month
+            const day = ((h + l - 7 * m + 114) % 31) + 1;
+            return new Date(year, month, day);
+        }
+
+        /**
+         * Get the nth occurrence of a weekday in a month
+         * @param {number} year - Year
+         * @param {number} month - Month (0-indexed)
+         * @param {number} weekday - Day of week (0=Sunday, 1=Monday, etc.)
+         * @param {number} n - Which occurrence (1=first, 2=second, etc., -1=last)
+         * @returns {Date}
+         */
+        function getNthWeekdayOfMonth(year, month, weekday, n) {
+            if (n === -1) {
+                // Last occurrence of weekday in month
+                const lastDay = new Date(year, month + 1, 0);
+                let day = lastDay.getDate();
+                while (new Date(year, month, day).getDay() !== weekday) {
+                    day--;
+                }
+                return new Date(year, month, day);
+            }
+            const firstDay = new Date(year, month, 1);
+            let dayOffset = (weekday - firstDay.getDay() + 7) % 7;
+            const day = 1 + dayOffset + (n - 1) * 7;
+            return new Date(year, month, day);
+        }
+
+        /**
+         * Add days to a date
+         * @param {Date} date - Base date
+         * @param {number} days - Days to add (can be negative)
+         * @returns {Date}
+         */
+        function addDays(date, days) {
+            const result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result;
+        }
+
+        /**
+         * Get holidays for Netherlands for a given year
+         */
+        function getNetherlandsHolidays(year) {
+            const holidays = [];
+            const easter = calculateEasterSunday(year);
+
+            // Fixed holidays
+            holidays.push({ date: new Date(year, 0, 1), name: "New Year's Day" });
+
+            // King's Day - April 27 (or April 26 if 27th is Sunday)
+            let kingsDay = new Date(year, 3, 27);
+            if (kingsDay.getDay() === 0) {
+                kingsDay = new Date(year, 3, 26);
+            }
+            holidays.push({ date: kingsDay, name: "King's Day" });
+
+            // Liberation Day - May 5 (national holiday every 5 years: 2025, 2030, etc.)
+            if (year % 5 === 0) {
+                holidays.push({ date: new Date(year, 4, 5), name: "Liberation Day" });
+            }
+
+            // Christmas
+            holidays.push({ date: new Date(year, 11, 25), name: "Christmas Day" });
+            holidays.push({ date: new Date(year, 11, 26), name: "Second Day of Christmas" });
+
+            // Easter-based holidays
+            holidays.push({ date: addDays(easter, -2), name: "Good Friday" });
+            holidays.push({ date: easter, name: "Easter Sunday" });
+            holidays.push({ date: addDays(easter, 1), name: "Easter Monday" });
+            holidays.push({ date: addDays(easter, 39), name: "Ascension Day" });
+            holidays.push({ date: addDays(easter, 49), name: "Whit Sunday" });
+            holidays.push({ date: addDays(easter, 50), name: "Whit Monday" });
+
+            return holidays;
+        }
+
+        /**
+         * Get holidays for Germany for a given year (nationwide only)
+         */
+        function getGermanyHolidays(year) {
+            const holidays = [];
+            const easter = calculateEasterSunday(year);
+
+            // Fixed holidays
+            holidays.push({ date: new Date(year, 0, 1), name: "New Year's Day" });
+            holidays.push({ date: new Date(year, 4, 1), name: "Labour Day" });
+            holidays.push({ date: new Date(year, 9, 3), name: "German Unity Day" });
+            holidays.push({ date: new Date(year, 11, 25), name: "Christmas Day" });
+            holidays.push({ date: new Date(year, 11, 26), name: "Second Day of Christmas" });
+
+            // Easter-based holidays
+            holidays.push({ date: addDays(easter, -2), name: "Good Friday" });
+            holidays.push({ date: addDays(easter, 1), name: "Easter Monday" });
+            holidays.push({ date: addDays(easter, 39), name: "Ascension Day" });
+            holidays.push({ date: addDays(easter, 50), name: "Whit Monday" });
+
+            return holidays;
+        }
+
+        /**
+         * Get holidays for United Kingdom (England) for a given year
+         */
+        function getUKHolidays(year) {
+            const holidays = [];
+            const easter = calculateEasterSunday(year);
+
+            // New Year's Day - Jan 1 (substitute if weekend)
+            let newYear = new Date(year, 0, 1);
+            if (newYear.getDay() === 0) newYear = new Date(year, 0, 2);
+            if (newYear.getDay() === 6) newYear = new Date(year, 0, 3);
+            holidays.push({ date: newYear, name: "New Year's Day" });
+
+            // Easter-based
+            holidays.push({ date: addDays(easter, -2), name: "Good Friday" });
+            holidays.push({ date: addDays(easter, 1), name: "Easter Monday" });
+
+            // Early May bank holiday - First Monday of May
+            holidays.push({ date: getNthWeekdayOfMonth(year, 4, 1, 1), name: "Early May Bank Holiday" });
+
+            // Spring bank holiday - Last Monday of May
+            holidays.push({ date: getNthWeekdayOfMonth(year, 4, 1, -1), name: "Spring Bank Holiday" });
+
+            // Summer bank holiday - Last Monday of August
+            holidays.push({ date: getNthWeekdayOfMonth(year, 7, 1, -1), name: "Summer Bank Holiday" });
+
+            // Christmas Day - Dec 25 (substitute if weekend)
+            let christmas = new Date(year, 11, 25);
+            if (christmas.getDay() === 0) christmas = new Date(year, 11, 27);
+            if (christmas.getDay() === 6) christmas = new Date(year, 11, 27);
+            holidays.push({ date: christmas, name: "Christmas Day" });
+
+            // Boxing Day - Dec 26 (substitute if weekend)
+            let boxingDay = new Date(year, 11, 26);
+            if (boxingDay.getDay() === 0) boxingDay = new Date(year, 11, 28);
+            if (boxingDay.getDay() === 6) boxingDay = new Date(year, 11, 28);
+            holidays.push({ date: boxingDay, name: "Boxing Day" });
+
+            return holidays;
+        }
+
+        /**
+         * Get holidays for United States for a given year
+         */
+        function getUSHolidays(year) {
+            const holidays = [];
+
+            // New Year's Day - Jan 1 (observed on Friday if Sat, Monday if Sun)
+            let newYear = new Date(year, 0, 1);
+            if (newYear.getDay() === 0) newYear = new Date(year, 0, 2);
+            if (newYear.getDay() === 6) newYear = new Date(year - 1, 11, 31);
+            holidays.push({ date: newYear, name: "New Year's Day" });
+
+            // MLK Day - Third Monday of January
+            holidays.push({ date: getNthWeekdayOfMonth(year, 0, 1, 3), name: "Martin Luther King Jr. Day" });
+
+            // Presidents' Day - Third Monday of February
+            holidays.push({ date: getNthWeekdayOfMonth(year, 1, 1, 3), name: "Presidents' Day" });
+
+            // Memorial Day - Last Monday of May
+            holidays.push({ date: getNthWeekdayOfMonth(year, 4, 1, -1), name: "Memorial Day" });
+
+            // Juneteenth - June 19 (observed on Friday if Sat, Monday if Sun)
+            let juneteenth = new Date(year, 5, 19);
+            if (juneteenth.getDay() === 0) juneteenth = new Date(year, 5, 20);
+            if (juneteenth.getDay() === 6) juneteenth = new Date(year, 5, 18);
+            holidays.push({ date: juneteenth, name: "Juneteenth" });
+
+            // Independence Day - July 4 (observed on Friday if Sat, Monday if Sun)
+            let july4 = new Date(year, 6, 4);
+            if (july4.getDay() === 0) july4 = new Date(year, 6, 5);
+            if (july4.getDay() === 6) july4 = new Date(year, 6, 3);
+            holidays.push({ date: july4, name: "Independence Day" });
+
+            // Labor Day - First Monday of September
+            holidays.push({ date: getNthWeekdayOfMonth(year, 8, 1, 1), name: "Labor Day" });
+
+            // Columbus Day - Second Monday of October
+            holidays.push({ date: getNthWeekdayOfMonth(year, 9, 1, 2), name: "Columbus Day" });
+
+            // Veterans Day - November 11 (observed on Friday if Sat, Monday if Sun)
+            let veteransDay = new Date(year, 10, 11);
+            if (veteransDay.getDay() === 0) veteransDay = new Date(year, 10, 12);
+            if (veteransDay.getDay() === 6) veteransDay = new Date(year, 10, 10);
+            holidays.push({ date: veteransDay, name: "Veterans Day" });
+
+            // Thanksgiving - Fourth Thursday of November
+            holidays.push({ date: getNthWeekdayOfMonth(year, 10, 4, 4), name: "Thanksgiving Day" });
+
+            // Christmas - December 25 (observed on Friday if Sat, Monday if Sun)
+            let christmas = new Date(year, 11, 25);
+            if (christmas.getDay() === 0) christmas = new Date(year, 11, 26);
+            if (christmas.getDay() === 6) christmas = new Date(year, 11, 24);
+            holidays.push({ date: christmas, name: "Christmas Day" });
+
+            return holidays;
+        }
+
+        /**
+         * Get holidays for India for a given year (national gazetted holidays)
+         */
+        function getIndiaHolidays(year) {
+            const holidays = [];
+
+            // Three mandatory national holidays
+            holidays.push({ date: new Date(year, 0, 26), name: "Republic Day" });
+            holidays.push({ date: new Date(year, 7, 15), name: "Independence Day" });
+            holidays.push({ date: new Date(year, 9, 2), name: "Gandhi Jayanti" });
+
+            // Common gazetted holidays
+            holidays.push({ date: new Date(year, 0, 1), name: "New Year's Day" });
+            holidays.push({ date: new Date(year, 4, 1), name: "May Day" });
+            holidays.push({ date: new Date(year, 11, 25), name: "Christmas Day" });
+
+            // Holi - approximate date (full moon in March, varies by lunar calendar)
+            // Using approximate Western dates
+            const holiDates = {
+                2025: new Date(2025, 2, 14),
+                2026: new Date(2026, 2, 3),
+                2027: new Date(2027, 2, 22),
+                2028: new Date(2028, 2, 11),
+                2029: new Date(2029, 2, 1),
+                2030: new Date(2030, 2, 20),
+                2031: new Date(2031, 2, 10),
+                2032: new Date(2032, 1, 28),
+                2033: new Date(2033, 2, 17),
+                2034: new Date(2034, 2, 7),
+                2035: new Date(2035, 2, 25),
+                2036: new Date(2036, 2, 14),
+                2037: new Date(2037, 2, 4),
+                2038: new Date(2038, 2, 23),
+                2039: new Date(2039, 2, 12),
+                2040: new Date(2040, 2, 1),
+                2041: new Date(2041, 2, 20),
+                2042: new Date(2042, 2, 9),
+                2043: new Date(2043, 2, 28),
+                2044: new Date(2044, 2, 16),
+                2045: new Date(2045, 2, 6),
+                2046: new Date(2046, 2, 24),
+                2047: new Date(2047, 2, 14),
+                2048: new Date(2048, 2, 3),
+                2049: new Date(2049, 2, 22),
+                2050: new Date(2050, 2, 11)
+            };
+            if (holiDates[year]) {
+                holidays.push({ date: holiDates[year], name: "Holi" });
+            }
+
+            // Diwali - approximate date (new moon in Oct/Nov, varies by lunar calendar)
+            const diwaliDates = {
+                2025: new Date(2025, 9, 20),
+                2026: new Date(2026, 10, 8),
+                2027: new Date(2027, 9, 29),
+                2028: new Date(2028, 9, 17),
+                2029: new Date(2029, 10, 5),
+                2030: new Date(2030, 9, 26),
+                2031: new Date(2031, 9, 16),
+                2032: new Date(2032, 10, 3),
+                2033: new Date(2033, 9, 23),
+                2034: new Date(2034, 10, 11),
+                2035: new Date(2035, 9, 31),
+                2036: new Date(2036, 9, 19),
+                2037: new Date(2037, 10, 7),
+                2038: new Date(2038, 9, 27),
+                2039: new Date(2039, 9, 17),
+                2040: new Date(2040, 10, 4),
+                2041: new Date(2041, 9, 24),
+                2042: new Date(2042, 10, 12),
+                2043: new Date(2043, 10, 1),
+                2044: new Date(2044, 9, 20),
+                2045: new Date(2045, 10, 8),
+                2046: new Date(2046, 9, 28),
+                2047: new Date(2047, 9, 18),
+                2048: new Date(2048, 10, 5),
+                2049: new Date(2049, 9, 25),
+                2050: new Date(2050, 10, 13)
+            };
+            if (diwaliDates[year]) {
+                holidays.push({ date: diwaliDates[year], name: "Diwali" });
+            }
+
+            return holidays;
+        }
+
+        /**
+         * Get holidays for a country
+         * @param {string} countryCode - Country code (NL, DE, UK, US, IN)
+         * @param {number} startYear - Start year
+         * @param {number} endYear - End year (inclusive)
+         * @returns {Array} - Array of holiday objects with date and name
+         */
+        function getHolidaysForCountry(countryCode, startYear, endYear) {
+            const allHolidays = [];
+            const getHolidaysFunc = {
+                'NL': getNetherlandsHolidays,
+                'DE': getGermanyHolidays,
+                'UK': getUKHolidays,
+                'US': getUSHolidays,
+                'IN': getIndiaHolidays
+            }[countryCode];
+
+            if (!getHolidaysFunc) return [];
+
+            for (let year = startYear; year <= endYear; year++) {
+                const yearHolidays = getHolidaysFunc(year);
+                allHolidays.push(...yearHolidays);
+            }
+
+            return allHolidays;
+        }
+
+        /**
+         * Open the holiday template modal
+         */
+        function openHolidayTemplateModal() {
+            const modal = document.getElementById('holiday-template-modal');
+            const countrySelect = document.getElementById('holiday-template-country');
+            const yearSelect = document.getElementById('holiday-template-end-year');
+            const previewDiv = document.getElementById('holiday-template-preview');
+
+            // Reset selections
+            countrySelect.value = '';
+            previewDiv.style.display = 'none';
+
+            // Populate year dropdown (current year to 2050)
+            const currentYear = new Date().getFullYear();
+            yearSelect.innerHTML = '';
+            for (let year = currentYear; year <= 2050; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            }
+            yearSelect.value = currentYear + 1; // Default to next year
+
+            // Add change listeners for preview
+            countrySelect.onchange = updateHolidayTemplatePreview;
+            yearSelect.onchange = updateHolidayTemplatePreview;
+
+            modal.classList.remove('hidden');
+        }
+
+        /**
+         * Close the holiday template modal
+         */
+        function closeHolidayTemplateModal() {
+            document.getElementById('holiday-template-modal').classList.add('hidden');
+        }
+
+        /**
+         * Update the preview in the holiday template modal
+         */
+        function updateHolidayTemplatePreview() {
+            const countrySelect = document.getElementById('holiday-template-country');
+            const yearSelect = document.getElementById('holiday-template-end-year');
+            const previewDiv = document.getElementById('holiday-template-preview');
+            const previewText = document.getElementById('holiday-template-preview-text');
+
+            const country = countrySelect.value;
+            const endYear = parseInt(yearSelect.value);
+
+            if (!country) {
+                previewDiv.style.display = 'none';
+                return;
+            }
+
+            const currentYear = new Date().getFullYear();
+            const holidays = getHolidaysForCountry(country, currentYear, endYear);
+
+            // Filter out holidays that would fall on non-work days or already exist
+            const validHolidays = holidays.filter(h => {
+                const dateStr = formatDateStr(h.date);
+                const dayOfWeek = h.date.getDay();
+                return state.workCalendar.workDays[dayOfWeek].enabled &&
+                       !state.workCalendar.holidays.includes(dateStr);
+            });
+
+            const countryNames = {
+                'NL': 'Netherlands',
+                'DE': 'Germany',
+                'UK': 'United Kingdom',
+                'US': 'United States',
+                'IN': 'India'
+            };
+
+            previewText.innerHTML = `<strong>${countryNames[country]}</strong>: ${validHolidays.length} new holidays will be added from ${currentYear} to ${endYear}.<br><br>` +
+                `Total holidays in template: ${holidays.length}<br>` +
+                `Already added or non-work days: ${holidays.length - validHolidays.length}`;
+
+            previewDiv.style.display = 'block';
+        }
+
+        /**
+         * Apply the selected holiday template
+         */
+        function applyHolidayTemplate() {
+            const countrySelect = document.getElementById('holiday-template-country');
+            const yearSelect = document.getElementById('holiday-template-end-year');
+
+            const country = countrySelect.value;
+            const endYear = parseInt(yearSelect.value);
+
+            if (!country) {
+                alert('Please select a country.');
+                return;
+            }
+
+            const currentYear = new Date().getFullYear();
+            const holidays = getHolidaysForCountry(country, currentYear, endYear);
+
+            let addedCount = 0;
+            let skippedCount = 0;
+
+            holidays.forEach(holiday => {
+                const dateStr = formatDateStr(holiday.date);
+                const dayOfWeek = holiday.date.getDay();
+
+                // Skip if not a work day or already exists
+                if (!state.workCalendar.workDays[dayOfWeek].enabled) {
+                    skippedCount++;
+                    return;
+                }
+                if (state.workCalendar.holidays.includes(dateStr)) {
+                    skippedCount++;
+                    return;
+                }
+
+                // Add the holiday
+                state.workCalendar.holidays.push(dateStr);
+                addedCount++;
+            });
+
+            // Sort holidays chronologically
+            state.workCalendar.holidays.sort();
+
+            // Close modal and refresh UI
+            closeHolidayTemplateModal();
+            renderHolidaysList();
+            if (holidayPickerInstance) holidayPickerInstance.renderCalendar();
+            if (ptoPickerInstance) ptoPickerInstance.renderCalendar();
+
+            // Show summary
+            const countryNames = {
+                'NL': 'Netherlands',
+                'DE': 'Germany',
+                'UK': 'United Kingdom',
+                'US': 'United States',
+                'IN': 'India'
+            };
+            alert(`Holiday template applied!\n\n${countryNames[country]} holidays from ${currentYear} to ${endYear}:\n- Added: ${addedCount} holidays\n- Skipped: ${skippedCount} (already added or non-work days)`);
+        }
+
+        // ========================================
         // WHAT'S NEW MODAL FUNCTIONS (Issue-76)
         // ========================================
 
@@ -14456,6 +15568,8 @@
                 state.roles = [];
                 state.tags = [];
                 state.settings = { ...DEFAULT_SETTINGS };
+                // Reset work calendar to defaults (Mon-Fri 8hrs, no holidays, no PTO)
+                state.workCalendar = JSON.parse(JSON.stringify(DEFAULT_WORK_CALENDAR));
 
                 // Close modal and navigate to landing page
                 closeClearStateModal();
@@ -14609,7 +15723,6 @@
                     onChange: null,
                     rangeMode: false,
                     onDateClick: null,
-                    onDateHover: null,
                     ...options
                 };
 
@@ -14624,9 +15737,6 @@
                 this.monthPickerOpen = false;
                 this.yearPickerOpen = false;
                 this.yearRangeStart = new Date().getFullYear() - 5;
-
-                // Range selection preview state
-                this.previewDate = null;
 
                 // Long press state
                 this.pressTimer = null;
@@ -14781,15 +15891,6 @@
                 // Mouse wheel on calendar
                 this.calendarGrid.addEventListener('wheel', (e) => this.handleCalendarWheel(e));
 
-                // Hover handler for range preview
-                this.calendarGrid.addEventListener('mouseover', (e) => {
-                    if (!this.options.rangeMode || !this.options.onDateHover) return;
-                    const dayEl = e.target.closest('.dtp-day');
-                    if (!dayEl || dayEl.classList.contains('disabled-day')) return;
-                    const date = new Date(dayEl.dataset.date);
-                    this.options.onDateHover(date, this);
-                });
-
                 // Time spinner buttons
                 this.picker.querySelectorAll('.dtp-spinner-btn').forEach(btn => {
                     btn.addEventListener('mousedown', (e) => this.startSpinnerPress(e));
@@ -14905,6 +16006,12 @@
             }
 
             confirm() {
+                // In range mode with onConfirm callback, use that instead
+                if (this.options.rangeMode && this.options.onConfirm) {
+                    this.options.onConfirm(this);
+                    return;
+                }
+
                 // Build final date
                 const finalDate = new Date(this.focusedDate);
                 finalDate.setHours(this.hours, this.minutes, 0, 0);
@@ -14994,12 +16101,13 @@
                     // Check if this is a valid work day (Issue-76)
                     if (!isWorkDay(dateObj)) {
                         classes.push('disabled-day');
+                    }
 
                     // Range selection highlighting (Issue-76 PTO picker)
+                    // Only highlights when both start and end are selected (click-based)
                     if (this.options.rangeMode && ptoRangeStart) {
                         const rangeStartKey = this.dateToKey(ptoRangeStart);
                         const rangeEndKey = ptoRangeEnd ? this.dateToKey(ptoRangeEnd) : null;
-                        const previewKey = this.previewDate ? this.dateToKey(this.previewDate) : null;
 
                         if (dateKey === rangeStartKey) {
                             classes.push('range-start');
@@ -15008,18 +16116,16 @@
                             classes.push('range-end');
                         }
 
-                        // Check if date is in range
-                        let effectiveEnd = rangeEndKey || previewKey;
-                        if (effectiveEnd && rangeStartKey) {
-                            let startTime = ptoRangeStart.getTime();
-                            let endTime = (ptoRangeEnd || this.previewDate).getTime();
-                            if (startTime > endTime) [startTime, endTime] = [endTime, startTime];
+                        // Highlight dates in range (only when both start and end are set)
+                        if (rangeEndKey) {
+                            const startTime = ptoRangeStart.getTime();
+                            const endTime = ptoRangeEnd.getTime();
+                            const [rangeMin, rangeMax] = startTime < endTime ? [startTime, endTime] : [endTime, startTime];
                             const dateTime = dateObj.getTime();
-                            if (dateTime > startTime && dateTime < endTime) {
+                            if (dateTime > rangeMin && dateTime < rangeMax) {
                                 classes.push('in-range');
                             }
                         }
-                    }
                     }
 
                     html += `<button type="button" class="${classes.join(' ')}" data-date="${dateObj.toISOString()}" tabindex="-1">${dayNum}</button>`;
@@ -15135,11 +16241,16 @@
                         break;
                     case 'Enter':
                         if (this.focusedElement === 'calendar') {
-                            this.selectFocusedDate();
-                            if (this.options.dateOnly) {
-                                this.selectBtn.focus();
+                            // If custom click handler is set, use it (same as clicking a date)
+                            if (this.options.onDateClick) {
+                                this.options.onDateClick(this.focusedDate, this);
                             } else {
-                                this.hoursInput.focus();
+                                this.selectFocusedDate();
+                                if (this.options.dateOnly) {
+                                    this.selectBtn.focus();
+                                } else {
+                                    this.hoursInput.focus();
+                                }
                             }
                         } else if (this.focusedElement === 'select') {
                             this.confirm();
@@ -15284,8 +16395,8 @@
                 // Dont allow clicking on disabled days
                 if (dayEl.classList.contains('disabled-day')) return;
 
-                // If in range mode with callback, use custom handler
-                if (this.options.rangeMode && this.options.onDateClick) {
+                // If custom click handler is set, use it
+                if (this.options.onDateClick) {
                     this.options.onDateClick(date, this);
                     return;
                 }
