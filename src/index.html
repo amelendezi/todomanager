@@ -5377,6 +5377,21 @@
             pointer-events: none;
         }
 
+        /* Non-work days (weekends, holidays, PTO) - Issue-76 */
+        .dtp-day.disabled-day {
+            color: #D1D5DB;
+            background: #F3F4F6;
+            cursor: not-allowed;
+            pointer-events: none;
+            text-decoration: line-through;
+        }
+
+        .dtp-day.disabled-day.other-month {
+            color: #E5E7EB;
+            background: #FAFAFA;
+        }
+/* Range selection styles for PTO picker */        .dtp-day.range-start {            background: #F5A623;            color: white;            border-radius: 50% 0 0 50%;        }        .dtp-day.range-end {            background: #F5A623;            color: white;            border-radius: 0 50% 50% 0;        }        .dtp-day.range-start.range-end {            border-radius: 50%;        }        .dtp-day.in-range {            background: #FEF3C7;            color: #92400E;            border-radius: 0;        }        .dtp-day.in-range:hover {            background: #FDE68A;        }        .dtp-day.range-preview {            background: #FEF9C3;            color: #A16207;        }
+
         /* Month picker overlay */
         .dtp-overlay {
             position: absolute;
@@ -5782,11 +5797,11 @@
                                     <div class="daily-load-label">Today</div>
                                 </div>
                                 <div class="daily-load-column">
-                                    <div id="daily-load-hours-tomorrow" class="daily-load-column-hours">0hrs</div>
-                                    <div id="daily-load-bar-tomorrow" class="daily-load-bar">
+                                    <div id="daily-load-hours-nextday" class="daily-load-column-hours">0hrs</div>
+                                    <div id="daily-load-bar-nextday" class="daily-load-bar">
                                         <div class="daily-load-empty">-</div>
                                     </div>
-                                    <div class="daily-load-label">Tomorrow</div>
+                                    <div id="daily-load-label-nextday" class="daily-load-label">Next Day</div>
                                 </div>
                             </div>
                         </div>
@@ -5863,6 +5878,21 @@
                             <circle cx="12" cy="15" r="2"></circle>
                         </svg>
                         <span>Planning</span>
+                    </li>
+                    <li class="settings-menu-item" data-section="calendar" onclick="switchSettingsSection('calendar')">
+                        <!-- Calendar icon -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                            <path d="M8 14h.01"></path>
+                            <path d="M12 14h.01"></path>
+                            <path d="M16 14h.01"></path>
+                            <path d="M8 18h.01"></path>
+                            <path d="M12 18h.01"></path>
+                        </svg>
+                        <span>Calendar</span>
                     </li>
                     <li class="settings-menu-item" data-section="storage" onclick="switchSettingsSection('storage')">
                         <!-- Database/Storage icon -->
@@ -5974,6 +6004,57 @@
 
                         <button type="submit" class="btn btn-primary btn-save-settings">Save Settings</button>
                     </form>
+                </div>
+
+                <!-- Calendar Section (Issue-76) -->
+                <div id="settings-section-calendar" class="settings-section hidden">
+                    <h2 class="settings-section-title">Work Calendar</h2>
+                    <p style="color: #6C757D; margin-bottom: 24px;">Configure your available work days, hours per day, holidays, and time off.</p>
+
+                    <!-- Work Days Configuration -->
+                    <div class="calendar-work-days" style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+                        <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 16px;">Work Days & Hours</h3>
+                        <p style="color: #6C757D; font-size: 13px; margin-bottom: 16px;">Enable days you work and set hours per day.</p>
+
+                        <div id="work-days-grid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;">
+                            <!-- Work days will be rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- Holidays Configuration -->
+                    <div class="calendar-holidays" style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+                        <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 16px;">Holidays</h3>
+                        <p style="color: #6C757D; font-size: 13px; margin-bottom: 16px;">Add holidays when you won't be working.</p>
+
+                        <div style="display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start;">
+                            <input type="date" id="holiday-date-input" class="form-input" style="width: 200px;" placeholder="Select date">
+                            <button type="button" class="btn btn-secondary" onclick="addHolidayFromPicker()">Add Holiday</button>
+                        </div>
+
+                        <div id="holidays-list" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            <!-- Holidays will be rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- PTO Configuration -->
+                    <div class="calendar-pto" style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+                        <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 16px;">Paid Time Off (PTO)</h3>
+                        <p style="color: #6C757D; font-size: 13px; margin-bottom: 16px;">Add PTO days when you'll be away from work. <span style="color: #F5A623; font-style: italic;">Click two dates to select a range.</span></p>
+
+                        <div style="display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start;">
+                            <input type="date" id="pto-date-input" class="form-input" style="width: 200px;" placeholder="Select date or range">
+                            <button type="button" class="btn btn-secondary" onclick="addPTOFromPicker()">Add PTO</button>
+                            <button type="button" id="pto-clear-range" class="btn btn-secondary" onclick="clearPTORangeSelection()" style="display: none;">Clear</button>
+                        </div>
+
+                        <div id="pto-range-status" style="display: none; color: #F5A623; font-size: 13px; margin-bottom: 12px;"></div>
+
+                        <div id="pto-list" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            <!-- PTO days will be rendered here -->
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="saveCalendarSettings()">Save Calendar Settings</button>
                 </div>
 
                 <!-- Storage Section -->
@@ -6633,6 +6714,38 @@
         </div>
     </div>
 
+    <!-- What's New Modal (Issue-76) -->
+    <div id="whats-new-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <div style="font-size: 48px; margin-bottom: 12px;">🎉</div>
+                <h2 class="modal-title" style="margin-bottom: 8px;">Welcome to Version <span id="whats-new-version">1.0.0</span></h2>
+                <p style="color: #6C757D; font-size: 14px;">Your data has been migrated to support new features</p>
+            </div>
+
+            <div style="text-align: left; margin-bottom: 24px;">
+                <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 12px;">What's New</h3>
+                <ul style="margin: 0; padding-left: 20px; color: #374151; font-size: 14px; line-height: 1.8;">
+                    <li><strong>Work Calendar</strong> - Configure work days, hours, holidays, and PTO in Settings</li>
+                    <li><strong>Smart Deadlines</strong> - Date picker now prevents selecting non-work days</li>
+                    <li><strong>Next Work Day</strong> - Daily Load shows your next working day instead of tomorrow</li>
+                    <li><strong>App Versioning</strong> - Track updates and data migrations</li>
+                </ul>
+            </div>
+
+            <div id="whats-new-migration" style="display: none; background: #FEF3C7; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+                <h3 style="font-size: 14px; font-weight: 600; color: #92400E; margin-bottom: 8px;">📅 Data Migration Performed</h3>
+                <p id="whats-new-migration-count" style="color: #92400E; font-size: 13px; margin-bottom: 8px;"></p>
+                <div id="whats-new-migration-list" style="max-height: 150px; overflow-y: auto; font-size: 12px; color: #92400E;"></div>
+            </div>
+
+            <div style="text-align: center;">
+                <button type="button" class="btn btn-primary" onclick="closeWhatsNewModal()" style="min-width: 200px;">Continue</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Delete Person Confirmation Modal -->
     <div id="delete-person-modal" class="modal hidden">
         <div class="modal-backdrop" onclick="closeDeletePersonModal()"></div>
@@ -6731,6 +6844,11 @@
         const VALID_ENGAGEMENT_STATUSES = ['active', 'completed', 'closed', 'dropped', 'requested'];
 
         // ========================================
+        // APP VERSION
+        // ========================================
+        const APP_VERSION = '1.0.0';
+
+        // ========================================
         // PLANNING SETTINGS - Defaults
         // ========================================
         const DEFAULT_SETTINGS = Object.freeze({
@@ -6738,6 +6856,24 @@
             bufferPercentage: 15,       // 15% buffer for interruptions
             maxOverdueToShow: 5,        // Limit overdue display
             planningHorizonDays: 14     // Look-ahead window
+        });
+
+        // ========================================
+        // WORK CALENDAR - Defaults
+        // ========================================
+        const DEFAULT_WORK_CALENDAR = Object.freeze({
+            // Days of week: 0=Sunday, 1=Monday, ..., 6=Saturday
+            workDays: {
+                0: { enabled: false, hours: 0 },  // Sunday
+                1: { enabled: true, hours: 8 },   // Monday
+                2: { enabled: true, hours: 8 },   // Tuesday
+                3: { enabled: true, hours: 8 },   // Wednesday
+                4: { enabled: true, hours: 8 },   // Thursday
+                5: { enabled: true, hours: 8 },   // Friday
+                6: { enabled: false, hours: 0 }   // Saturday
+            },
+            holidays: [],  // Array of ISO date strings
+            pto: []        // Array of ISO date strings
         });
 
         // ========================================
@@ -6799,12 +6935,14 @@
 
                 const persistableState = {
                     id: 'state',
+                    appVersion: APP_VERSION,
                     todos: state.todos,
                     engagements: state.engagements,
                     people: state.people,
                     roles: state.roles,
                     tags: state.tags,
                     settings: state.settings,
+                    workCalendar: state.workCalendar,
                     allocations: state.allocations,
                     lastModified: new Date().toISOString()
                 };
@@ -6979,7 +7117,12 @@
             searchQuery: '',
             // Block todo state (Issue-67)
             blockReasonModalOpen: false,
-            todoIndexToBlock: null
+            todoIndexToBlock: null,
+            // Work Calendar (Issue-76)
+            workCalendar: JSON.parse(JSON.stringify(DEFAULT_WORK_CALENDAR)),
+            // What's New screen state (Issue-76)
+            showWhatsNew: false,
+            migrationSummary: null
         };
 
         // DOM Elements - Landing and Home
@@ -7358,12 +7501,14 @@
             const peopleSection = document.getElementById('settings-section-people');
             const tagsSection = document.getElementById('settings-section-tags');
             const planningSection = document.getElementById('settings-section-planning');
+            const calendarSection = document.getElementById('settings-section-calendar');
             const storageSection = document.getElementById('settings-section-storage');
 
             // Hide all sections
             peopleSection.classList.add('hidden');
             tagsSection.classList.add('hidden');
             planningSection.classList.add('hidden');
+            calendarSection.classList.add('hidden');
             storageSection.classList.add('hidden');
 
             if (section === 'people') {
@@ -7375,6 +7520,9 @@
             } else if (section === 'planning') {
                 planningSection.classList.remove('hidden');
                 renderPlanningSettings();
+            } else if (section === 'calendar') {
+                calendarSection.classList.remove('hidden');
+                renderCalendarSettings();
             } else if (section === 'storage') {
                 storageSection.classList.remove('hidden');
                 renderStorageSection();
@@ -13248,17 +13396,18 @@
         const dailyLoadStatus = document.getElementById('daily-load-status');
         const dailyLoadHoursOverdue = document.getElementById('daily-load-hours-overdue');
         const dailyLoadHoursToday = document.getElementById('daily-load-hours-today');
-        const dailyLoadHoursTomorrow = document.getElementById('daily-load-hours-tomorrow');
+        const dailyLoadHoursNextDay = document.getElementById('daily-load-hours-nextday');
         const dailyLoadBarOverdue = document.getElementById('daily-load-bar-overdue');
         const dailyLoadBarToday = document.getElementById('daily-load-bar-today');
-        const dailyLoadBarTomorrow = document.getElementById('daily-load-bar-tomorrow');
+        const dailyLoadBarNextDay = document.getElementById('daily-load-bar-nextday');
+        const dailyLoadLabelNextDay = document.getElementById('daily-load-label-nextday');
 
         // Track highlighted todo for Daily Load chart
         let highlightedTodoId = null;
 
         /**
-         * Categorizes todos by deadline into Overdue, Today, Tomorrow
-         * Only includes todos with deadlines
+         * Categorizes todos by deadline into Overdue, Today, Next Work Day
+         * Only includes todos with deadlines (Issue-76: uses work calendar)
          */
         function categorizeTodosForDailyLoad() {
             const today = new Date();
@@ -13267,13 +13416,19 @@
             const tomorrow = new Date(today);
             tomorrow.setDate(tomorrow.getDate() + 1);
 
-            const dayAfterTomorrow = new Date(today);
-            dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+            // Get the next work day (might not be tomorrow if it's a weekend/holiday)
+            const nextWorkDay = getNextWorkDay(today);
+            nextWorkDay.setHours(0, 0, 0, 0);
+
+            // Day after the next work day
+            const dayAfterNextWorkDay = getNextWorkDay(nextWorkDay);
+            dayAfterNextWorkDay.setHours(0, 0, 0, 0);
 
             const categories = {
                 overdue: [],
                 today: [],
-                tomorrow: []
+                nextDay: [],
+                nextWorkDayDate: nextWorkDay // Store the actual date for the label
             };
 
             state.todos.forEach(todo => {
@@ -13288,8 +13443,8 @@
                     categories.overdue.push(todo);
                 } else if (deadline >= today && deadline < tomorrow) {
                     categories.today.push(todo);
-                } else if (deadline >= tomorrow && deadline < dayAfterTomorrow) {
-                    categories.tomorrow.push(todo);
+                } else if (deadline >= nextWorkDay && deadline < dayAfterNextWorkDay) {
+                    categories.nextDay.push(todo);
                 }
             });
 
@@ -13303,7 +13458,7 @@
 
             categories.overdue.sort(sortByPriority);
             categories.today.sort(sortByPriority);
-            categories.tomorrow.sort(sortByPriority);
+            categories.nextDay.sort(sortByPriority);
 
             return categories;
         }
@@ -13476,10 +13631,24 @@
             dailyLoadStatus.className = `daily-load-status ${status.class}`;
             dailyLoadStatus.textContent = status.text;
 
+            // Update the Next Day label to show the actual day name (Issue-76)
+            const nextDayName = DAY_ABBREVS[categories.nextWorkDayDate.getDay()];
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            // Show "Tomorrow" if next work day is tomorrow, otherwise show day name
+            if (categories.nextWorkDayDate.getTime() === tomorrow.getTime()) {
+                dailyLoadLabelNextDay.textContent = 'Tomorrow';
+            } else {
+                dailyLoadLabelNextDay.textContent = nextDayName;
+            }
+
             // Render each bar (overdue bar uses light red, others use heat gradient)
             renderDailyLoadBar(dailyLoadBarOverdue, categories.overdue, dailyLoadHoursOverdue, true);
             renderDailyLoadBar(dailyLoadBarToday, categories.today, dailyLoadHoursToday, false);
-            renderDailyLoadBar(dailyLoadBarTomorrow, categories.tomorrow, dailyLoadHoursTomorrow, false);
+            renderDailyLoadBar(dailyLoadBarNextDay, categories.nextDay, dailyLoadHoursNextDay, false);
         }
 
         // ========================================
@@ -13640,6 +13809,573 @@
         }
 
         // ========================================
+        // CALENDAR SECTION FUNCTIONS (Issue-76)
+        // ========================================
+
+        const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const DAY_ABBREVS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        /**
+         * Render the work calendar settings section
+         */
+        function renderCalendarSettings() {
+            // Initialize date pickers after DOM is ready
+            setTimeout(initializeCalendarPickers, 0);
+            renderWorkDaysGrid();
+            renderHolidaysList();
+            renderPTOList();
+        }
+
+        /**
+         * Render the work days grid with toggles and hour inputs
+         */
+        function renderWorkDaysGrid() {
+            const grid = document.getElementById('work-days-grid');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < 7; i++) {
+                const dayConfig = state.workCalendar.workDays[i];
+                const dayCard = document.createElement('div');
+                dayCard.style.cssText = `
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    padding: 12px 8px;
+                    background: ${dayConfig.enabled ? '#fff' : '#e5e7eb'};
+                    border-radius: 8px;
+                    border: 2px solid ${dayConfig.enabled ? '#F5A623' : 'transparent'};
+                    transition: all 0.2s;
+                `;
+
+                dayCard.innerHTML = `
+                    <div style="font-weight: 600; font-size: 12px; color: #1F1F1F; margin-bottom: 8px;">${DAY_ABBREVS[i]}</div>
+                    <label style="display: flex; align-items: center; cursor: pointer; margin-bottom: 8px;">
+                        <input type="checkbox" ${dayConfig.enabled ? 'checked' : ''}
+                            onchange="toggleWorkDay(${i}, this.checked)"
+                            style="width: 18px; height: 18px; accent-color: #F5A623;">
+                    </label>
+                    <input type="number" min="0" max="24" value="${dayConfig.hours}"
+                        onchange="setWorkDayHours(${i}, this.value)"
+                        ${dayConfig.enabled ? '' : 'disabled'}
+                        style="width: 50px; padding: 4px; text-align: center; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;">
+                    <div style="font-size: 10px; color: #6C757D; margin-top: 4px;">hours</div>
+                `;
+
+                grid.appendChild(dayCard);
+            }
+        }
+
+        /**
+         * Toggle a work day enabled/disabled
+         */
+        function toggleWorkDay(dayIndex, enabled) {
+            state.workCalendar.workDays[dayIndex].enabled = enabled;
+            if (!enabled) {
+                state.workCalendar.workDays[dayIndex].hours = 0;
+            } else if (state.workCalendar.workDays[dayIndex].hours === 0) {
+                state.workCalendar.workDays[dayIndex].hours = 8; // Default to 8 hours when enabling
+            }
+            renderWorkDaysGrid();
+        }
+
+        /**
+         * Set hours for a specific work day
+         */
+        function setWorkDayHours(dayIndex, hours) {
+            const numHours = parseInt(hours, 10);
+            if (!isNaN(numHours) && numHours >= 0 && numHours <= 24) {
+                state.workCalendar.workDays[dayIndex].hours = numHours;
+            }
+        }
+
+        /**
+         * Render the holidays list
+         */
+        function renderHolidaysList() {
+            const list = document.getElementById('holidays-list');
+            list.innerHTML = '';
+
+            if (state.workCalendar.holidays.length === 0) {
+                list.innerHTML = '<span style="color: #9CA3AF; font-size: 13px;">No holidays added</span>';
+                return;
+            }
+
+            // Sort holidays by date
+            const sortedHolidays = [...state.workCalendar.holidays].sort();
+
+            sortedHolidays.forEach(dateStr => {
+                const date = new Date(dateStr + 'T00:00:00');
+                const chip = document.createElement('div');
+                chip.style.cssText = `
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 6px 12px;
+                    background: #FEE2E2;
+                    color: #DC2626;
+                    border-radius: 16px;
+                    font-size: 13px;
+                `;
+                chip.innerHTML = `
+                    <span>${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                    <button onclick="removeHoliday('${dateStr}')" style="background: none; border: none; cursor: pointer; color: #DC2626; font-size: 14px; line-height: 1;">×</button>
+                `;
+                list.appendChild(chip);
+            });
+        }
+
+        /**
+         * Add a holiday
+         */
+        function addHoliday() {
+            const input = document.getElementById('holiday-date-input');
+            const dateStr = input.value;
+            if (!dateStr) {
+                alert('Please select a date');
+                return;
+            }
+
+            if (state.workCalendar.holidays.includes(dateStr)) {
+                alert('This date is already added as a holiday');
+                return;
+            }
+
+            state.workCalendar.holidays.push(dateStr);
+            input.value = '';
+            renderHolidaysList();
+        }
+
+        /**
+         * Remove a holiday
+         */
+        function removeHoliday(dateStr) {
+            state.workCalendar.holidays = state.workCalendar.holidays.filter(d => d !== dateStr);
+            renderHolidaysList();
+        }
+
+        /**
+         * Render the PTO list
+         */
+        function renderPTOList() {
+            const list = document.getElementById('pto-list');
+            list.innerHTML = '';
+
+            if (state.workCalendar.pto.length === 0) {
+                list.innerHTML = '<span style="color: #9CA3AF; font-size: 13px;">No PTO days added</span>';
+                return;
+            }
+
+            // Sort PTO by date
+            const sortedPTO = [...state.workCalendar.pto].sort();
+
+            sortedPTO.forEach(dateStr => {
+                const date = new Date(dateStr + 'T00:00:00');
+                const chip = document.createElement('div');
+                chip.style.cssText = `
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 6px 12px;
+                    background: #DBEAFE;
+                    color: #1D4ED8;
+                    border-radius: 16px;
+                    font-size: 13px;
+                `;
+                chip.innerHTML = `
+                    <span>${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                    <button onclick="removePTO('${dateStr}')" style="background: none; border: none; cursor: pointer; color: #1D4ED8; font-size: 14px; line-height: 1;">×</button>
+                `;
+                list.appendChild(chip);
+            });
+        }
+
+        /**
+         * Add a PTO day
+         */
+        function addPTO() {
+            const input = document.getElementById('pto-date-input');
+            const dateStr = input.value;
+            if (!dateStr) {
+                alert('Please select a date');
+                return;
+            }
+
+            if (state.workCalendar.pto.includes(dateStr)) {
+                alert('This date is already added as PTO');
+                return;
+            }
+
+            state.workCalendar.pto.push(dateStr);
+            input.value = '';
+            renderPTOList();
+        }
+
+        /**
+         * Remove a PTO day
+         */
+        function removePTO(dateStr) {
+            state.workCalendar.pto = state.workCalendar.pto.filter(d => d !== dateStr);
+            renderPTOList();
+        }
+
+        // PTO Range Selection State
+        let ptoRangeStart = null;
+        let ptoRangeEnd = null;
+        let holidayPickerInstance = null;
+        let ptoPickerInstance = null;
+
+        /**
+         * Initialize DateTimePickers for calendar settings
+         */
+        function initializeCalendarPickers() {
+            const holidayInput = document.getElementById('holiday-date-input');
+            const ptoInput = document.getElementById('pto-date-input');
+
+            // Initialize holiday picker (simple date-only)
+            if (holidayInput && !holidayInput._dtpInstance) {
+                holidayPickerInstance = new DateTimePicker(holidayInput, {
+                    dateOnly: true,
+                    closeOnSelect: true
+                });
+            }
+
+            // Initialize PTO picker with range selection support
+            if (ptoInput && !ptoInput._dtpInstance) {
+                ptoPickerInstance = new DateTimePicker(ptoInput, {
+                    dateOnly: true,
+                    closeOnSelect: false,
+                    rangeMode: true,
+                    onDateClick: handlePTODateClick,
+                    onDateHover: handlePTODateHover
+                });
+            }
+        }
+
+        /**
+         * Handle date click in PTO picker for range selection
+         */
+        function handlePTODateClick(date, picker) {
+            const dateStr = formatDateStr(date);
+            if (state.workCalendar.holidays.includes(dateStr)) {
+                return;
+            }
+
+            if (!ptoRangeStart) {
+                ptoRangeStart = new Date(date);
+                ptoRangeEnd = null;
+                updatePTORangeStatus();
+                picker.renderCalendar();
+                document.getElementById('pto-clear-range').style.display = 'inline-block';
+            } else if (!ptoRangeEnd) {
+                ptoRangeEnd = new Date(date);
+                if (ptoRangeStart > ptoRangeEnd) {
+                    [ptoRangeStart, ptoRangeEnd] = [ptoRangeEnd, ptoRangeStart];
+                }
+                updatePTORangeStatus();
+                picker.renderCalendar();
+            } else {
+                ptoRangeStart = new Date(date);
+                ptoRangeEnd = null;
+                updatePTORangeStatus();
+                picker.renderCalendar();
+            }
+        }
+
+        /**
+         * Handle date hover in PTO picker for range preview
+         */
+        function handlePTODateHover(date, picker) {
+            if (ptoRangeStart && !ptoRangeEnd) {
+                picker.previewDate = date;
+                picker.renderCalendar();
+            }
+        }
+
+        /**
+         * Update PTO range status display
+         */
+        function updatePTORangeStatus() {
+            const statusEl = document.getElementById('pto-range-status');
+            if (!statusEl) return;
+
+            if (ptoRangeStart && !ptoRangeEnd) {
+                const startStr = ptoRangeStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                statusEl.textContent = 'Range start: ' + startStr + ' - Click another date to complete range, or click "Add PTO" for single day';
+                statusEl.style.display = 'block';
+            } else if (ptoRangeStart && ptoRangeEnd) {
+                const startStr = ptoRangeStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                const endStr = ptoRangeEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                const count = countWorkDaysInRange(ptoRangeStart, ptoRangeEnd);
+                statusEl.textContent = 'Range: ' + startStr + ' to ' + endStr + ' (' + count + ' work day' + (count !== 1 ? 's' : '') + ') - Click "Add PTO" to add';
+                statusEl.style.display = 'block';
+            } else {
+                statusEl.style.display = 'none';
+            }
+        }
+
+        /**
+         * Count work days in a date range (excluding holidays and existing PTO)
+         */
+        function countWorkDaysInRange(start, end) {
+            let count = 0;
+            const current = new Date(start);
+            while (current <= end) {
+                const dateStr = formatDateStr(current);
+                if (isWorkDay(current) && !state.workCalendar.holidays.includes(dateStr) && !state.workCalendar.pto.includes(dateStr)) {
+                    count++;
+                }
+                current.setDate(current.getDate() + 1);
+            }
+            return count;
+        }
+
+        /**
+         * Format date as YYYY-MM-DD string
+         */
+        function formatDateStr(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return year + '-' + month + '-' + day;
+        }
+
+        /**
+         * Add holiday from DateTimePicker
+         */
+        function addHolidayFromPicker() {
+            const input = document.getElementById('holiday-date-input');
+            const dateStr = input.value;
+            if (!dateStr) {
+                alert('Please select a date');
+                return;
+            }
+
+            if (state.workCalendar.holidays.includes(dateStr)) {
+                alert('This date is already added as a holiday');
+                return;
+            }
+
+            const date = new Date(dateStr + 'T00:00:00');
+            if (!isWorkDay(date)) {
+                alert('This date is already a non-work day');
+                return;
+            }
+
+            state.workCalendar.holidays.push(dateStr);
+            input.value = '';
+            if (holidayPickerInstance) {
+                holidayPickerInstance.selectedDate = null;
+                holidayPickerInstance.displayInput.value = "";
+            }
+            renderHolidaysList();
+        }
+
+        /**
+         * Add PTO from DateTimePicker (supports range selection)
+         */
+        function addPTOFromPicker() {
+            if (ptoRangeStart && ptoRangeEnd) {
+                const current = new Date(ptoRangeStart);
+                let addedCount = 0;
+                while (current <= ptoRangeEnd) {
+                    const dateStr = formatDateStr(current);
+                    if (isWorkDay(current) && !state.workCalendar.holidays.includes(dateStr) && !state.workCalendar.pto.includes(dateStr)) {
+                        state.workCalendar.pto.push(dateStr);
+                        addedCount++;
+                    }
+                    current.setDate(current.getDate() + 1);
+                }
+                clearPTORangeSelection();
+                renderPTOList();
+            } else if (ptoRangeStart) {
+                const dateStr = formatDateStr(ptoRangeStart);
+                if (state.workCalendar.pto.includes(dateStr)) {
+                    alert('This date is already added as PTO');
+                    return;
+                }
+                if (!isWorkDay(ptoRangeStart)) {
+                    alert('This date is not a work day');
+                    return;
+                }
+                if (state.workCalendar.holidays.includes(dateStr)) {
+                    alert('This date is a holiday');
+                    return;
+                }
+                state.workCalendar.pto.push(dateStr);
+                clearPTORangeSelection();
+                renderPTOList();
+            } else {
+                const input = document.getElementById('pto-date-input');
+                const dateStr = input.value;
+                if (!dateStr) {
+                    alert('Please select a date');
+                    return;
+                }
+                if (state.workCalendar.pto.includes(dateStr)) {
+                    alert('This date is already added as PTO');
+                    return;
+                }
+                state.workCalendar.pto.push(dateStr);
+                input.value = '';
+                renderPTOList();
+            }
+        }
+
+        /**
+         * Clear PTO range selection
+         */
+        function clearPTORangeSelection() {
+            ptoRangeStart = null;
+            ptoRangeEnd = null;
+            const input = document.getElementById('pto-date-input');
+            if (input) input.value = '';
+            if (ptoPickerInstance) {
+                ptoPickerInstance.selectedDate = null;
+                ptoPickerInstance.previewDate = null;
+                ptoPickerInstance.displayInput.value = "";
+                ptoPickerInstance.renderCalendar();
+            }
+            updatePTORangeStatus();
+            const clearBtn = document.getElementById('pto-clear-range');
+            if (clearBtn) clearBtn.style.display = 'none';
+        }
+
+        /**
+         * Save calendar settings
+         */
+        function saveCalendarSettings() {
+            saveStateToIndexedDB().then(() => {
+                alert('Calendar settings saved successfully!');
+            }).catch(err => {
+                console.error('Failed to save calendar settings:', err);
+                alert('Failed to save calendar settings. Please try again.');
+            });
+        }
+
+        /**
+         * Check if a date is a valid work day
+         * @param {Date} date - The date to check
+         * @returns {boolean} - True if the date is a valid work day
+         */
+        function isWorkDay(date) {
+            const dayOfWeek = date.getDay();
+            const dateStr = formatDateStr(date);
+
+            // Check if day of week is enabled
+            if (!state.workCalendar.workDays[dayOfWeek].enabled) {
+                return false;
+            }
+
+            // Check if it's a holiday
+            if (state.workCalendar.holidays.includes(dateStr)) {
+                return false;
+            }
+
+            // Check if it's a PTO day
+            if (state.workCalendar.pto.includes(dateStr)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        /**
+         * Get the next work day from a given date
+         * @param {Date} date - The starting date
+         * @returns {Date} - The next work day
+         */
+        function getNextWorkDay(date) {
+            const nextDay = new Date(date);
+            nextDay.setDate(nextDay.getDate() + 1);
+
+            // Safety: limit to 365 iterations to prevent infinite loops
+            let iterations = 0;
+            while (!isWorkDay(nextDay) && iterations < 365) {
+                nextDay.setDate(nextDay.getDate() + 1);
+                iterations++;
+            }
+
+            return nextDay;
+        }
+
+        /**
+         * Get work hours for a specific date
+         * @param {Date} date - The date to check
+         * @returns {number} - Hours available for that day (0 if not a work day)
+         */
+        function getWorkHoursForDate(date) {
+            if (!isWorkDay(date)) {
+                return 0;
+            }
+            const dayOfWeek = date.getDay();
+            return state.workCalendar.workDays[dayOfWeek].hours;
+        }
+
+        /**
+         * Get the closest valid work day for a date (same day if valid, next if not)
+         * @param {Date} date - The date to check
+         * @returns {Date} - The closest valid work day
+         */
+        function getClosestWorkDay(date) {
+            const checkDate = new Date(date);
+            checkDate.setHours(0, 0, 0, 0);
+
+            // If it's already a work day, return same date
+            if (isWorkDay(checkDate)) {
+                return new Date(date); // Return original date with time preserved
+            }
+
+            // Otherwise find the next work day
+            let iterations = 0;
+            while (!isWorkDay(checkDate) && iterations < 365) {
+                checkDate.setDate(checkDate.getDate() + 1);
+                iterations++;
+            }
+
+            // Preserve the original time
+            const result = new Date(checkDate);
+            result.setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
+            return result;
+        }
+
+        /**
+         * Migrate todos with deadlines on disabled days to valid work days (Issue-76)
+         * @returns {object} Migration summary
+         */
+        function migrateTodosToWorkDays() {
+            const migrated = [];
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            state.todos = state.todos.map(todo => {
+                if (!todo.deadline) return todo;
+
+                const deadlineDate = new Date(todo.deadline);
+                if (isWorkDay(deadlineDate)) return todo;
+
+                // Deadline is on a non-work day, move it forward
+                const newDeadline = getClosestWorkDay(deadlineDate);
+
+                migrated.push({
+                    todoTitle: todo.title,
+                    oldDate: deadlineDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+                    newDate: newDeadline.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+                });
+
+                return {
+                    ...todo,
+                    deadline: newDeadline.toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+            });
+
+            return {
+                migratedCount: migrated.length,
+                items: migrated
+            };
+        }
+
+        // ========================================
         // STORAGE SECTION FUNCTIONS
         // ========================================
 
@@ -13656,6 +14392,47 @@
 
         function closeClearStateModal() {
             document.getElementById('clear-state-modal').classList.add('hidden');
+        }
+
+        // ========================================
+        // WHAT'S NEW MODAL FUNCTIONS (Issue-76)
+        // ========================================
+
+        /**
+         * Show the What's New modal with migration summary
+         * @param {object} migrationSummary - Result from migrateTodosToWorkDays
+         */
+        function showWhatsNewModal(migrationSummary) {
+            document.getElementById('whats-new-version').textContent = APP_VERSION;
+
+            // Show migration details if any todos were migrated
+            const migrationSection = document.getElementById('whats-new-migration');
+            if (migrationSummary && migrationSummary.migratedCount > 0) {
+                migrationSection.style.display = 'block';
+                document.getElementById('whats-new-migration-count').textContent =
+                    `${migrationSummary.migratedCount} todo(s) had deadlines on non-work days and were moved to the next available work day:`;
+
+                const listHtml = migrationSummary.items.map(item =>
+                    `<div style="margin: 4px 0;">• "${item.todoTitle}" moved from ${item.oldDate} → ${item.newDate}</div>`
+                ).join('');
+                document.getElementById('whats-new-migration-list').innerHTML = listHtml;
+            } else {
+                migrationSection.style.display = 'none';
+            }
+
+            document.getElementById('whats-new-modal').classList.remove('hidden');
+        }
+
+        /**
+         * Close the What's New modal
+         */
+        function closeWhatsNewModal() {
+            document.getElementById('whats-new-modal').classList.add('hidden');
+            state.showWhatsNew = false;
+            state.migrationSummary = null;
+
+            // Save state to mark upgrade as complete
+            saveStateToIndexedDB().catch(err => console.error('Failed to save state after upgrade:', err));
         }
 
         function exportThenClear() {
@@ -13741,6 +14518,16 @@
                         state.settings = { ...DEFAULT_SETTINGS, ...savedState.settings };
                     }
 
+                    // Restore work calendar (Issue-76)
+                    if (savedState.workCalendar && typeof savedState.workCalendar === 'object') {
+                        // Deep merge with defaults to handle new fields
+                        state.workCalendar = {
+                            workDays: savedState.workCalendar.workDays || JSON.parse(JSON.stringify(DEFAULT_WORK_CALENDAR.workDays)),
+                            holidays: Array.isArray(savedState.workCalendar.holidays) ? savedState.workCalendar.holidays : [],
+                            pto: Array.isArray(savedState.workCalendar.pto) ? savedState.workCalendar.pto : []
+                        };
+                    }
+
                     // Ensure all todos have required fields with defaults
                     state.todos = state.todos.map(todo => ({
                         ...todo,
@@ -13762,9 +14549,27 @@
                     // Update all engagement statuses based on linked todos (auto-pause/resume)
                     updateAllEngagementStatuses();
 
+                    // Check for version upgrade (Issue-76)
+                    const savedVersion = savedState.appVersion || '0.0.0';
+                    const isUpgrade = savedVersion !== APP_VERSION;
+                    let migrationSummary = null;
+
+                    if (isUpgrade) {
+                        // Run v1.0.0 migration: move todos on disabled days to work days
+                        migrationSummary = migrateTodosToWorkDays();
+
+                        // Save state after migration
+                        await saveStateToIndexedDB();
+                    }
+
                     // Navigate directly to app with home tab
                     state.currentTab = 'home';
                     navigateTo('app');
+
+                    // Show What's New modal if this is an upgrade with existing data
+                    if (isUpgrade) {
+                        showWhatsNewModal(migrationSummary);
+                    }
                 } else {
                     // No saved state, show landing page
                     migrateContactsToPeople();
@@ -13802,6 +14607,9 @@
                     closeOnSelect: true,
                     dateOnly: isDateOnly,
                     onChange: null,
+                    rangeMode: false,
+                    onDateClick: null,
+                    onDateHover: null,
                     ...options
                 };
 
@@ -13816,6 +14624,9 @@
                 this.monthPickerOpen = false;
                 this.yearPickerOpen = false;
                 this.yearRangeStart = new Date().getFullYear() - 5;
+
+                // Range selection preview state
+                this.previewDate = null;
 
                 // Long press state
                 this.pressTimer = null;
@@ -13969,6 +14780,15 @@
 
                 // Mouse wheel on calendar
                 this.calendarGrid.addEventListener('wheel', (e) => this.handleCalendarWheel(e));
+
+                // Hover handler for range preview
+                this.calendarGrid.addEventListener('mouseover', (e) => {
+                    if (!this.options.rangeMode || !this.options.onDateHover) return;
+                    const dayEl = e.target.closest('.dtp-day');
+                    if (!dayEl || dayEl.classList.contains('disabled-day')) return;
+                    const date = new Date(dayEl.dataset.date);
+                    this.options.onDateHover(date, this);
+                });
 
                 // Time spinner buttons
                 this.picker.querySelectorAll('.dtp-spinner-btn').forEach(btn => {
@@ -14170,6 +14990,37 @@
                     if (dateKey === todayKey) classes.push('today');
                     if (dateKey === selectedKey) classes.push('selected');
                     if (dateKey === focusedKey) classes.push('focused');
+
+                    // Check if this is a valid work day (Issue-76)
+                    if (!isWorkDay(dateObj)) {
+                        classes.push('disabled-day');
+
+                    // Range selection highlighting (Issue-76 PTO picker)
+                    if (this.options.rangeMode && ptoRangeStart) {
+                        const rangeStartKey = this.dateToKey(ptoRangeStart);
+                        const rangeEndKey = ptoRangeEnd ? this.dateToKey(ptoRangeEnd) : null;
+                        const previewKey = this.previewDate ? this.dateToKey(this.previewDate) : null;
+
+                        if (dateKey === rangeStartKey) {
+                            classes.push('range-start');
+                        }
+                        if (rangeEndKey && dateKey === rangeEndKey) {
+                            classes.push('range-end');
+                        }
+
+                        // Check if date is in range
+                        let effectiveEnd = rangeEndKey || previewKey;
+                        if (effectiveEnd && rangeStartKey) {
+                            let startTime = ptoRangeStart.getTime();
+                            let endTime = (ptoRangeEnd || this.previewDate).getTime();
+                            if (startTime > endTime) [startTime, endTime] = [endTime, startTime];
+                            const dateTime = dateObj.getTime();
+                            if (dateTime > startTime && dateTime < endTime) {
+                                classes.push('in-range');
+                            }
+                        }
+                    }
+                    }
 
                     html += `<button type="button" class="${classes.join(' ')}" data-date="${dateObj.toISOString()}" tabindex="-1">${dayNum}</button>`;
                 }
@@ -14429,6 +15280,15 @@
                 if (!dayEl) return;
 
                 const date = new Date(dayEl.dataset.date);
+
+                // Dont allow clicking on disabled days
+                if (dayEl.classList.contains('disabled-day')) return;
+
+                // If in range mode with callback, use custom handler
+                if (this.options.rangeMode && this.options.onDateClick) {
+                    this.options.onDateClick(date, this);
+                    return;
+                }
                 this.focusedDate = date;
                 this.viewDate = new Date(date);
                 this.selectFocusedDate();
