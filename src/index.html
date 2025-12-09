@@ -3939,6 +3939,12 @@
 
         .meeting-modal-content.expanded {
             max-width: 580px;
+            overflow: visible;
+        }
+
+        /* Ensure date picker in recurring panel floats above everything */
+        .meeting-recurring-panel .dtp-picker {
+            z-index: 10001;
         }
 
         .meeting-form-container {
@@ -4003,6 +4009,7 @@
             padding: 0 0 0 20px;
             border-left: 1px solid #E5E7EB;
             margin-left: 20px;
+            overflow: visible;
         }
 
         .recurring-panel-header {
