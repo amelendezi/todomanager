@@ -4085,6 +4085,120 @@
             margin-left: 8px;
         }
 
+        /* Conflict Resolution Modal Styles (Issue-82) */
+        .conflict-group {
+            margin-bottom: 16px;
+        }
+
+        .conflict-group-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #F3F4F6;
+            border-radius: 8px 8px 0 0;
+            font-weight: 600;
+            font-size: 13px;
+            color: #374151;
+        }
+
+        .conflict-group-header .group-icon {
+            font-size: 16px;
+        }
+
+        .conflict-group-header .group-count {
+            background: #6B7280;
+            color: white;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: auto;
+        }
+
+        .conflict-items-list {
+            border: 1px solid #E5E7EB;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .conflict-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-bottom: 1px solid #E5E7EB;
+            transition: background 0.15s ease;
+        }
+
+        .conflict-item:last-child {
+            border-bottom: none;
+        }
+
+        .conflict-item:hover {
+            background: #F9FAFB;
+        }
+
+        .conflict-item.selected {
+            background: #FEF3C7;
+        }
+
+        .conflict-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #F5A623;
+            cursor: pointer;
+        }
+
+        .conflict-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conflict-item-title {
+            font-weight: 500;
+            font-size: 14px;
+            color: #1F1F1F;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conflict-item-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: #6B7280;
+            margin-top: 2px;
+        }
+
+        .conflict-item-date {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .conflict-item-type-badge {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .conflict-item-type-badge.todo {
+            background: #DBEAFE;
+            color: #1D4ED8;
+        }
+
+        .conflict-item-type-badge.meeting {
+            background: #E9D5FF;
+            color: #7C3AED;
+        }
+
+        .conflict-item-type-badge.recurring {
+            background: #FCE7F3;
+            color: #BE185D;
+        }
+
         /* Meetings list section */
         .meetings-section {
             background: #FFFFFF;
@@ -7088,8 +7202,7 @@
             <div style="text-align: left; margin-bottom: 24px;">
                 <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 12px;">What's New</h3>
                 <ul style="margin: 0; padding-left: 20px; color: #374151; font-size: 14px; line-height: 1.8;">
-                    <li><strong>Meetings</strong> - Track meetings with Shift+M shortcut, see them in Daily Load (purple bars)</li>
-                    <li><strong>Meetings List</strong> - View upcoming meetings below Daily Load, grouped by Today/Tomorrow/Date</li>
+                    <li><strong>Conflict Detection</strong> - When adding holidays, PTO, or disabling work days, conflicts with scheduled todos and meetings are detected and you can choose to move or delete them</li>
                 </ul>
             </div>
 
@@ -7101,6 +7214,41 @@
 
             <div style="text-align: center;">
                 <button type="button" class="btn btn-primary" onclick="closeWhatsNewModal()" style="min-width: 200px;">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conflict Resolution Modal (Issue-82) -->
+    <div id="conflict-resolution-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content" style="max-width: 650px; max-height: 80vh; overflow-y: auto;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 40px; margin-bottom: 8px;">⚠️</div>
+                <h2 class="modal-title" style="margin-bottom: 8px;">Scheduling Conflicts Detected</h2>
+                <p style="color: #6C757D; font-size: 14px;">The following items conflict with your new calendar exclusion dates.</p>
+            </div>
+
+            <div id="conflict-items-container" style="margin-bottom: 20px;">
+                <!-- Conflict items will be rendered here -->
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: space-between; align-items: center; border-top: 1px solid #E5E7EB; padding-top: 20px;">
+                <div style="display: flex; gap: 8px;">
+                    <button type="button" class="btn btn-secondary" onclick="selectAllConflicts()" style="font-size: 12px; padding: 6px 12px;">Select All</button>
+                    <button type="button" class="btn btn-secondary" onclick="deselectAllConflicts()" style="font-size: 12px; padding: 6px 12px;">Deselect All</button>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button type="button" class="btn btn-secondary" onclick="moveSelectedConflicts()" style="background: #10B981; color: white; border-color: #10B981;">
+                        <span style="margin-right: 4px;">→</span> Move Selected
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="deleteSelectedConflicts()" style="background: #DC2626; border-color: #DC2626;">
+                        <span style="margin-right: 4px;">🗑</span> Delete Selected
+                    </button>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 16px;">
+                <button type="button" class="btn btn-secondary" onclick="closeConflictResolutionModal()" style="min-width: 120px;">Keep All (No Changes)</button>
             </div>
         </div>
     </div>
@@ -7265,7 +7413,7 @@
         // ========================================
         // APP VERSION
         // ========================================
-        const APP_VERSION = '1.2.0';
+        const APP_VERSION = '1.3.0';
 
         // ========================================
         // PLANNING SETTINGS - Defaults
@@ -14755,10 +14903,35 @@
             state.workCalendar.workDays[dayIndex].enabled = enabled;
             if (!enabled) {
                 state.workCalendar.workDays[dayIndex].hours = 0;
+                // Check for conflicts when disabling a work day (Issue-82)
+                checkWorkDayConflicts(dayIndex);
             } else if (state.workCalendar.workDays[dayIndex].hours === 0) {
                 state.workCalendar.workDays[dayIndex].hours = 8; // Default to 8 hours when enabling
             }
             renderWorkDaysGrid();
+        }
+
+        /**
+         * Check for conflicts when disabling a recurring work day (Issue-82)
+         * This checks all future occurrences of the disabled day
+         */
+        function checkWorkDayConflicts(dayIndex) {
+            // Get all dates for this day of week in the next 365 days
+            const conflictDates = [];
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            for (let i = 0; i < 365; i++) {
+                const checkDate = new Date(today);
+                checkDate.setDate(today.getDate() + i);
+                if (checkDate.getDay() === dayIndex) {
+                    conflictDates.push(formatDateStr(checkDate));
+                }
+            }
+
+            if (conflictDates.length > 0) {
+                checkAndShowConflicts(conflictDates);
+            }
         }
 
         /**
@@ -15121,7 +15294,7 @@
             }
 
             if (state.workCalendar.holidays.includes(dateStr)) {
-                // Already a holiday - remove it
+                // Already a holiday - remove it (no conflict check needed for removal)
                 state.workCalendar.holidays = state.workCalendar.holidays.filter(d => d !== dateStr);
                 picker.renderCalendar();
                 renderHolidaysList();
@@ -15140,6 +15313,8 @@
                         picker.renderCalendar();
                         renderHolidaysList();
                         if (ptoPickerInstance) ptoPickerInstance.renderCalendar();
+                        // Check for conflicts (Issue-82)
+                        checkAndShowConflicts([dateStr]);
                     }
                 } else {
                     // Add as holiday
@@ -15147,6 +15322,8 @@
                     picker.renderCalendar();
                     renderHolidaysList();
                     if (ptoPickerInstance) ptoPickerInstance.renderCalendar();
+                    // Check for conflicts (Issue-82)
+                    checkAndShowConflicts([dateStr]);
                 }
             }
         }
@@ -15340,6 +15517,9 @@
                 return;
             }
 
+            // Track newly added dates for conflict check (Issue-82)
+            const addedDates = [];
+
             // If only start date, add single day
             if (!ptoRangeEnd) {
                 const dateStr = formatDateStr(ptoRangeStart);
@@ -15361,14 +15541,18 @@
                 }
 
                 state.workCalendar.pto.push(dateStr);
+                addedDates.push(dateStr);
                 clearPTORangeSelection();
                 renderPTOList();
+                // Check for conflicts (Issue-82)
+                if (addedDates.length > 0) {
+                    checkAndShowConflicts(addedDates);
+                }
                 return;
             }
 
             // Add range
             const current = new Date(ptoRangeStart);
-            let addedCount = 0;
             while (current <= ptoRangeEnd) {
                 const dateStr = formatDateStr(current);
                 const dayOfWeek = current.getDay();
@@ -15376,13 +15560,17 @@
                     !state.workCalendar.holidays.includes(dateStr) &&
                     !state.workCalendar.pto.includes(dateStr)) {
                     state.workCalendar.pto.push(dateStr);
-                    addedCount++;
+                    addedDates.push(dateStr);
                 }
                 current.setDate(current.getDate() + 1);
             }
 
             clearPTORangeSelection();
             renderPTOList();
+            // Check for conflicts (Issue-82)
+            if (addedDates.length > 0) {
+                checkAndShowConflicts(addedDates);
+            }
         }
 
         /**
@@ -15786,6 +15974,377 @@
             const result = new Date(checkDate);
             result.setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
             return result;
+        }
+
+        // ========================================
+        // CONFLICT DETECTION FUNCTIONS (Issue-82)
+        // ========================================
+
+        // Store detected conflicts for modal operations
+        let pendingConflicts = [];
+
+        /**
+         * Detect conflicts between exclusion dates and scheduled items
+         * @param {string[]} newExclusionDates - Array of date strings (YYYY-MM-DD) to check
+         * @returns {object} Object with conflicts grouped by type
+         */
+        function detectExclusionConflicts(newExclusionDates) {
+            const conflicts = {
+                todos: [],
+                meetings: [],
+                recurringMeetings: []
+            };
+
+            if (!newExclusionDates || newExclusionDates.length === 0) {
+                return conflicts;
+            }
+
+            // Create a Set for O(1) lookup
+            const exclusionSet = new Set(newExclusionDates);
+
+            // Check todos with deadlines
+            state.todos.forEach(todo => {
+                if (todo.completed || todo.dropped) return;
+
+                const deadline = todo.deadline || todo.dueDate;
+                if (!deadline) return;
+
+                const deadlineDate = new Date(deadline);
+                const dateStr = formatDateStr(deadlineDate);
+
+                if (exclusionSet.has(dateStr)) {
+                    conflicts.todos.push({
+                        type: 'todo',
+                        id: todo.id,
+                        title: todo.title,
+                        date: deadline,
+                        dateStr: dateStr
+                    });
+                }
+            });
+
+            // Check meetings
+            state.meetings.forEach(meeting => {
+                const meetingDate = new Date(meeting.date);
+                const dateStr = formatDateStr(meetingDate);
+
+                if (exclusionSet.has(dateStr)) {
+                    if (meeting.recurringGroupId) {
+                        conflicts.recurringMeetings.push({
+                            type: 'recurring',
+                            id: meeting.id,
+                            title: meeting.title,
+                            date: meeting.date,
+                            dateStr: dateStr,
+                            recurringGroupId: meeting.recurringGroupId,
+                            duration: meeting.duration
+                        });
+                    } else {
+                        conflicts.meetings.push({
+                            type: 'meeting',
+                            id: meeting.id,
+                            title: meeting.title,
+                            date: meeting.date,
+                            dateStr: dateStr,
+                            duration: meeting.duration
+                        });
+                    }
+                }
+            });
+
+            return conflicts;
+        }
+
+        /**
+         * Check if there are any conflicts
+         * @param {object} conflicts - Conflicts object from detectExclusionConflicts
+         * @returns {boolean}
+         */
+        function hasConflicts(conflicts) {
+            return conflicts.todos.length > 0 ||
+                   conflicts.meetings.length > 0 ||
+                   conflicts.recurringMeetings.length > 0;
+        }
+
+        /**
+         * Get total count of conflicts
+         * @param {object} conflicts - Conflicts object from detectExclusionConflicts
+         * @returns {number}
+         */
+        function getTotalConflictCount(conflicts) {
+            return conflicts.todos.length + conflicts.meetings.length + conflicts.recurringMeetings.length;
+        }
+
+        /**
+         * Format a date for display in conflict modal
+         * @param {string} dateStr - ISO date string
+         * @returns {string}
+         */
+        function formatConflictDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+        }
+
+        /**
+         * Open the conflict resolution modal
+         * @param {object} conflicts - Conflicts object from detectExclusionConflicts
+         */
+        function openConflictResolutionModal(conflicts) {
+            pendingConflicts = [];
+
+            // Build flat list of all conflicts
+            conflicts.todos.forEach(c => pendingConflicts.push({ ...c, selected: true }));
+            conflicts.meetings.forEach(c => pendingConflicts.push({ ...c, selected: true }));
+            conflicts.recurringMeetings.forEach(c => pendingConflicts.push({ ...c, selected: true }));
+
+            renderConflictItems(conflicts);
+            document.getElementById('conflict-resolution-modal').classList.remove('hidden');
+        }
+
+        /**
+         * Close the conflict resolution modal
+         */
+        function closeConflictResolutionModal() {
+            document.getElementById('conflict-resolution-modal').classList.add('hidden');
+            pendingConflicts = [];
+        }
+
+        /**
+         * Render conflict items in the modal
+         * @param {object} conflicts - Conflicts object
+         */
+        function renderConflictItems(conflicts) {
+            const container = document.getElementById('conflict-items-container');
+            let html = '';
+
+            // Todos group
+            if (conflicts.todos.length > 0) {
+                html += `
+                    <div class="conflict-group">
+                        <div class="conflict-group-header">
+                            <span class="group-icon">📋</span>
+                            <span>Todos with Deadlines</span>
+                            <span class="group-count">${conflicts.todos.length}</span>
+                        </div>
+                        <div class="conflict-items-list">
+                            ${conflicts.todos.map(item => renderConflictItem(item)).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Meetings group
+            if (conflicts.meetings.length > 0) {
+                html += `
+                    <div class="conflict-group">
+                        <div class="conflict-group-header">
+                            <span class="group-icon">📅</span>
+                            <span>Scheduled Meetings</span>
+                            <span class="group-count">${conflicts.meetings.length}</span>
+                        </div>
+                        <div class="conflict-items-list">
+                            ${conflicts.meetings.map(item => renderConflictItem(item)).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Recurring meetings group
+            if (conflicts.recurringMeetings.length > 0) {
+                html += `
+                    <div class="conflict-group">
+                        <div class="conflict-group-header">
+                            <span class="group-icon">🔄</span>
+                            <span>Recurring Meeting Occurrences</span>
+                            <span class="group-count">${conflicts.recurringMeetings.length}</span>
+                        </div>
+                        <div class="conflict-items-list">
+                            ${conflicts.recurringMeetings.map(item => renderConflictItem(item)).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        /**
+         * Render a single conflict item
+         * @param {object} item - Conflict item
+         * @returns {string} HTML string
+         */
+        function renderConflictItem(item) {
+            const typeLabel = item.type === 'todo' ? 'Todo' :
+                             item.type === 'meeting' ? 'Meeting' : 'Recurring';
+            const typeClass = item.type;
+            const durationDisplay = item.duration ? ` (${formatDurationDisplay(item.duration)})` : '';
+
+            return `
+                <div class="conflict-item selected" data-id="${item.id}" data-type="${item.type}">
+                    <input type="checkbox" checked onchange="toggleConflictItem('${item.id}')">
+                    <div class="conflict-item-info">
+                        <div class="conflict-item-title">${escapeHtml(item.title)}${durationDisplay}</div>
+                        <div class="conflict-item-meta">
+                            <span class="conflict-item-date">📅 ${formatConflictDate(item.date)}</span>
+                        </div>
+                    </div>
+                    <span class="conflict-item-type-badge ${typeClass}">${typeLabel}</span>
+                </div>
+            `;
+        }
+
+        /**
+         * Toggle a conflict item's selection
+         * @param {string} id - Item ID
+         */
+        function toggleConflictItem(id) {
+            const item = pendingConflicts.find(c => c.id === id);
+            if (item) {
+                item.selected = !item.selected;
+                const el = document.querySelector(`.conflict-item[data-id="${id}"]`);
+                if (el) {
+                    el.classList.toggle('selected', item.selected);
+                }
+            }
+        }
+
+        /**
+         * Select all conflict items
+         */
+        function selectAllConflicts() {
+            pendingConflicts.forEach(item => {
+                item.selected = true;
+            });
+            document.querySelectorAll('.conflict-item').forEach(el => {
+                el.classList.add('selected');
+                el.querySelector('input[type="checkbox"]').checked = true;
+            });
+        }
+
+        /**
+         * Deselect all conflict items
+         */
+        function deselectAllConflicts() {
+            pendingConflicts.forEach(item => {
+                item.selected = false;
+            });
+            document.querySelectorAll('.conflict-item').forEach(el => {
+                el.classList.remove('selected');
+                el.querySelector('input[type="checkbox"]').checked = false;
+            });
+        }
+
+        /**
+         * Move selected conflict items to next available work day
+         */
+        function moveSelectedConflicts() {
+            const selectedItems = pendingConflicts.filter(item => item.selected);
+            if (selectedItems.length === 0) {
+                alert('No items selected. Please select items to move.');
+                return;
+            }
+
+            let movedCount = 0;
+
+            selectedItems.forEach(item => {
+                const currentDate = new Date(item.date);
+                const nextWorkDay = getNextWorkDay(currentDate);
+
+                if (item.type === 'todo') {
+                    const todo = state.todos.find(t => t.id === item.id);
+                    if (todo) {
+                        // Preserve time from original deadline
+                        nextWorkDay.setHours(currentDate.getHours(), currentDate.getMinutes(), 0, 0);
+                        todo.deadline = nextWorkDay.toISOString();
+                        todo.updatedAt = new Date().toISOString();
+                        movedCount++;
+                    }
+                } else if (item.type === 'meeting' || item.type === 'recurring') {
+                    const meeting = state.meetings.find(m => m.id === item.id);
+                    if (meeting) {
+                        // Preserve time from original meeting
+                        nextWorkDay.setHours(currentDate.getHours(), currentDate.getMinutes(), 0, 0);
+                        meeting.date = nextWorkDay.toISOString();
+                        meeting.updatedAt = new Date().toISOString();
+                        movedCount++;
+                    }
+                }
+            });
+
+            closeConflictResolutionModal();
+
+            // Refresh UI
+            if (state.currentPage === 'todos') {
+                renderTodos();
+                renderMeetingsList();
+                renderDailyLoadKPI();
+            }
+
+            // Show confirmation
+            if (movedCount > 0) {
+                console.log(`Moved ${movedCount} item(s) to next available work day`);
+            }
+        }
+
+        /**
+         * Delete selected conflict items
+         */
+        function deleteSelectedConflicts() {
+            const selectedItems = pendingConflicts.filter(item => item.selected);
+            if (selectedItems.length === 0) {
+                alert('No items selected. Please select items to delete.');
+                return;
+            }
+
+            let deletedCount = 0;
+
+            selectedItems.forEach(item => {
+                if (item.type === 'todo') {
+                    const index = state.todos.findIndex(t => t.id === item.id);
+                    if (index !== -1) {
+                        state.todos.splice(index, 1);
+                        deletedCount++;
+                    }
+                } else if (item.type === 'meeting' || item.type === 'recurring') {
+                    const index = state.meetings.findIndex(m => m.id === item.id);
+                    if (index !== -1) {
+                        state.meetings.splice(index, 1);
+                        deletedCount++;
+                    }
+                }
+            });
+
+            closeConflictResolutionModal();
+
+            // Refresh UI
+            if (state.currentPage === 'todos') {
+                renderTodos();
+                renderMeetingsList();
+                renderDailyLoadKPI();
+            }
+
+            // Show confirmation
+            if (deletedCount > 0) {
+                console.log(`Deleted ${deletedCount} item(s)`);
+            }
+        }
+
+        /**
+         * Check for conflicts and show the modal if any are found
+         * Helper function to be called after adding exclusion dates
+         * @param {string[]} newExclusionDates - Array of date strings to check
+         */
+        function checkAndShowConflicts(newExclusionDates) {
+            const conflicts = detectExclusionConflicts(newExclusionDates);
+            if (hasConflicts(conflicts)) {
+                openConflictResolutionModal(conflicts);
+            }
         }
 
         /**
@@ -16272,6 +16831,7 @@
 
             let addedCount = 0;
             let skippedCount = 0;
+            const addedDates = []; // Track newly added dates for conflict check (Issue-82)
 
             holidays.forEach(holiday => {
                 const dateStr = formatDateStr(holiday.date);
@@ -16289,6 +16849,7 @@
 
                 // Add the holiday
                 state.workCalendar.holidays.push(dateStr);
+                addedDates.push(dateStr);
                 addedCount++;
             });
 
@@ -16310,6 +16871,11 @@
                 'IN': 'India'
             };
             alert(`Holiday template applied!\n\n${countryNames[country]} holidays from ${currentYear} to ${endYear}:\n- Added: ${addedCount} holidays\n- Skipped: ${skippedCount} (already added or non-work days)`);
+
+            // Check for conflicts after applying template (Issue-82)
+            if (addedDates.length > 0) {
+                checkAndShowConflicts(addedDates);
+            }
         }
 
         // ========================================
