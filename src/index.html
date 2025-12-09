@@ -6175,7 +6175,8 @@
                         <div class="form-group">
                             <label for="todo-effort" class="form-label">Effort Level <span class="required">*</span></label>
                             <select id="todo-effort" class="effort-select" required>
-                                <option value="very_low">Very Low (30 min)</option>
+                                <option value="minimal">Minimal Work (30 min)</option>
+                                <option value="very_low">Very Low (1 hour)</option>
                                 <option value="low">Low (2 hours)</option>
                                 <option value="average" selected>Average (4 hours)</option>
                                 <option value="high">High (6 hours)</option>
@@ -6714,28 +6715,27 @@
         </div>
     </div>
 
-    <!-- What's New Modal (Issue-76) -->
+    <!-- What's New Modal (Issue-76, Issue-78) -->
     <div id="whats-new-modal" class="modal hidden">
         <div class="modal-backdrop"></div>
         <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
             <div style="text-align: center; margin-bottom: 24px;">
                 <div style="font-size: 48px; margin-bottom: 12px;">🎉</div>
-                <h2 class="modal-title" style="margin-bottom: 8px;">Welcome to Version <span id="whats-new-version">1.0.0</span></h2>
+                <h2 class="modal-title" style="margin-bottom: 8px;">Welcome to Version <span id="whats-new-version">1.1.0</span></h2>
                 <p style="color: #6C757D; font-size: 14px;">Your data has been migrated to support new features</p>
             </div>
 
             <div style="text-align: left; margin-bottom: 24px;">
                 <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 12px;">What's New</h3>
                 <ul style="margin: 0; padding-left: 20px; color: #374151; font-size: 14px; line-height: 1.8;">
-                    <li><strong>Work Calendar</strong> - Configure work days, hours, holidays, and PTO in Settings</li>
-                    <li><strong>Smart Deadlines</strong> - Date picker now prevents selecting non-work days</li>
-                    <li><strong>Next Work Day</strong> - Daily Load shows your next working day instead of tomorrow</li>
-                    <li><strong>App Versioning</strong> - Track updates and data migrations</li>
+                    <li><strong>Minimal Work Effort</strong> - New effort level for quick 30-minute tasks</li>
+                    <li><strong>Updated Very Low</strong> - Very Low effort is now 1 hour instead of 30 minutes</li>
+                    <li><strong>Holiday Templates</strong> - Quickly add public holidays for NL, DE, UK, US, or India</li>
                 </ul>
             </div>
 
             <div id="whats-new-migration" style="display: none; background: #FEF3C7; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
-                <h3 style="font-size: 14px; font-weight: 600; color: #92400E; margin-bottom: 8px;">📅 Data Migration Performed</h3>
+                <h3 style="font-size: 14px; font-weight: 600; color: #92400E; margin-bottom: 8px;">⚡ Data Migration Performed</h3>
                 <p id="whats-new-migration-count" style="color: #92400E; font-size: 13px; margin-bottom: 8px;"></p>
                 <div id="whats-new-migration-list" style="max-height: 150px; overflow-y: auto; font-size: 12px; color: #92400E;"></div>
             </div>
@@ -6876,11 +6876,12 @@
         // EFFORT LEVELS - Configuration
         // ========================================
         const EFFORT_CONFIG = Object.freeze({
-            very_low:  { label: "Very Low",  minutes: 30,  icon: "⚡" },
-            low:       { label: "Low",       minutes: 120, icon: "🟢" },
-            average:   { label: "Average",   minutes: 240, icon: "🟡" },
-            high:      { label: "High",      minutes: 360, icon: "🟠" },
-            very_high: { label: "Very High", minutes: 480, icon: "🔴" }
+            minimal:   { label: "Minimal Work", minutes: 30,  icon: "⚡" },
+            very_low:  { label: "Very Low",     minutes: 60,  icon: "🟢" },
+            low:       { label: "Low",          minutes: 120, icon: "🟡" },
+            average:   { label: "Average",      minutes: 240, icon: "🟠" },
+            high:      { label: "High",         minutes: 360, icon: "🔴" },
+            very_high: { label: "Very High",    minutes: 480, icon: "⚫" }
         });
 
         const DEFAULT_EFFORT = "average";
@@ -6905,7 +6906,7 @@
         // ========================================
         // APP VERSION
         // ========================================
-        const APP_VERSION = '1.0.0';
+        const APP_VERSION = '1.1.0';
 
         // ========================================
         // PLANNING SETTINGS - Defaults
@@ -14976,32 +14977,25 @@
         }
 
         /**
-         * Migrate todos with deadlines on disabled days to valid work days (Issue-76)
+         * Migrate todos with very_low effort to minimal (Issue-78)
+         * This preserves the 30-minute intent for existing todos
          * @returns {object} Migration summary
          */
-        function migrateTodosToWorkDays() {
+        function migrateEffortVeryLowToMinimal() {
             const migrated = [];
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
 
             state.todos = state.todos.map(todo => {
-                if (!todo.deadline) return todo;
-
-                const deadlineDate = new Date(todo.deadline);
-                if (isWorkDay(deadlineDate)) return todo;
-
-                // Deadline is on a non-work day, move it forward
-                const newDeadline = getClosestWorkDay(deadlineDate);
+                if (todo.effort !== 'very_low') return todo;
 
                 migrated.push({
                     todoTitle: todo.title,
-                    oldDate: deadlineDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
-                    newDate: newDeadline.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+                    oldEffort: 'Very Low (30 min)',
+                    newEffort: 'Minimal Work (30 min)'
                 });
 
                 return {
                     ...todo,
-                    deadline: newDeadline.toISOString(),
+                    effort: 'minimal',
                     updatedAt: new Date().toISOString()
                 };
             });
@@ -15507,12 +15501,12 @@
         }
 
         // ========================================
-        // WHAT'S NEW MODAL FUNCTIONS (Issue-76)
+        // WHAT'S NEW MODAL FUNCTIONS (Issue-76, Issue-78)
         // ========================================
 
         /**
          * Show the What's New modal with migration summary
-         * @param {object} migrationSummary - Result from migrateTodosToWorkDays
+         * @param {object} migrationSummary - Result from migrateEffortVeryLowToMinimal
          */
         function showWhatsNewModal(migrationSummary) {
             document.getElementById('whats-new-version').textContent = APP_VERSION;
@@ -15522,10 +15516,10 @@
             if (migrationSummary && migrationSummary.migratedCount > 0) {
                 migrationSection.style.display = 'block';
                 document.getElementById('whats-new-migration-count').textContent =
-                    `${migrationSummary.migratedCount} todo(s) had deadlines on non-work days and were moved to the next available work day:`;
+                    `${migrationSummary.migratedCount} todo(s) had their effort level updated:`;
 
                 const listHtml = migrationSummary.items.map(item =>
-                    `<div style="margin: 4px 0;">• "${item.todoTitle}" moved from ${item.oldDate} → ${item.newDate}</div>`
+                    `<div style="margin: 4px 0;">• "${item.todoTitle}" changed from ${item.oldEffort} → ${item.newEffort}</div>`
                 ).join('');
                 document.getElementById('whats-new-migration-list').innerHTML = listHtml;
             } else {
@@ -15669,8 +15663,8 @@
                     let migrationSummary = null;
 
                     if (isUpgrade) {
-                        // Run v1.0.0 migration: move todos on disabled days to work days
-                        migrationSummary = migrateTodosToWorkDays();
+                        // Run v1.1.0 migration: convert very_low effort to minimal (Issue-78)
+                        migrationSummary = migrateEffortVeryLowToMinimal();
 
                         // Save state after migration
                         await saveStateToIndexedDB();
