@@ -64,3 +64,5 @@ Issue-85: Fixed deadline date not populating when editing existing todo by using
 Issue-86: Fixed todo list sorting to use deadline field instead of legacy dueDate for proper chronological ordering.
 
 Issue-64: Implemented configurable Logger utility with debug toggle in Settings to suppress console output in production mode.
+
+Issue-62: Replaced Math.random() with crypto.getRandomValues() for cryptographically secure ID generation.
