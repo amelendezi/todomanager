@@ -8457,9 +8457,11 @@
             setFormTabIndex(todoFormRight, false);
         }
 
-        // Generate unique ID
+        // Generate unique ID using cryptographically secure random values (Issue-62)
         function generateId() {
-            return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+            const array = new Uint32Array(4);
+            crypto.getRandomValues(array);
+            return Array.from(array, x => x.toString(36)).join('');
         }
 
         // Save todo (handles both create and update)
