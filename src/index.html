@@ -6478,6 +6478,17 @@
                         </div>
                     </div>
 
+                    <div style="border-top: 1px solid #e5e7eb; padding-top: 24px; margin-bottom: 24px;">
+                        <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 12px;">Debug Logging</h3>
+                        <p style="color: #6C757D; margin-bottom: 16px; font-size: 14px;">
+                            Enable console logging for debugging purposes. When disabled, error messages are suppressed to prevent exposing sensitive information.
+                        </p>
+                        <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                            <input type="checkbox" id="debug-logging-toggle" onchange="toggleDebugLogging(this.checked)" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span style="font-size: 14px; color: #1F1F1F;">Enable debug logging to browser console</span>
+                        </label>
+                    </div>
+
                     <div style="border-top: 1px solid #e5e7eb; padding-top: 24px;">
                         <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 12px;">Clear Browser State</h3>
                         <p style="color: #6C757D; margin-bottom: 16px; font-size: 14px;">
@@ -7332,6 +7343,30 @@
 
     <script>
         // ========================================
+        // LOGGER UTILITY - Configurable logging (Issue-64)
+        // ========================================
+        const Logger = {
+            _debug: false,
+            get debug() { return this._debug; },
+            set debug(value) { this._debug = !!value; },
+            error: function(msg, err) {
+                if (this._debug) {
+                    console.error(msg, err);
+                }
+            },
+            log: function(msg, ...args) {
+                if (this._debug) {
+                    console.log(msg, ...args);
+                }
+            },
+            warn: function(msg, ...args) {
+                if (this._debug) {
+                    console.warn(msg, ...args);
+                }
+            }
+        };
+
+        // ========================================
         // PRIORITY TAGS - System-defined constants
         // ========================================
         const PRIORITY_TAGS = Object.freeze({
@@ -7422,7 +7457,8 @@
             workdayMinutes: 480,        // 8-hour workday
             bufferPercentage: 15,       // 15% buffer for interruptions
             maxOverdueToShow: 5,        // Limit overdue display
-            planningHorizonDays: 14     // Look-ahead window
+            planningHorizonDays: 14,    // Look-ahead window
+            debugLogging: false         // Console logging disabled by default (Issue-64)
         });
 
         // ========================================
@@ -16389,6 +16425,11 @@
             document.getElementById('storage-size').textContent = formatBytes(stats.estimatedSize);
             document.getElementById('storage-todos').textContent = stats.todoCount;
             document.getElementById('storage-engagements').textContent = stats.engagementCount;
+            // Set debug logging toggle state (Issue-64)
+            const debugToggle = document.getElementById('debug-logging-toggle');
+            if (debugToggle) {
+                debugToggle.checked = state.settings.debugLogging || false;
+            }
         }
 
         function openClearStateModal() {
@@ -16397,6 +16438,13 @@
 
         function closeClearStateModal() {
             document.getElementById('clear-state-modal').classList.add('hidden');
+        }
+
+        // Toggle debug logging (Issue-64)
+        function toggleDebugLogging(enabled) {
+            Logger.debug = enabled;
+            state.settings.debugLogging = enabled;
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save debug logging setting:', err));
         }
 
         // ========================================
@@ -17022,6 +17070,9 @@
                     if (savedState.settings && typeof savedState.settings === 'object') {
                         state.settings = { ...DEFAULT_SETTINGS, ...savedState.settings };
                     }
+
+                    // Initialize Logger with saved debug setting (Issue-64)
+                    Logger.debug = state.settings.debugLogging || false;
 
                     // Restore work calendar (Issue-76)
                     if (savedState.workCalendar && typeof savedState.workCalendar === 'object') {
