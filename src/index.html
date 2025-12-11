@@ -14693,9 +14693,16 @@
                 })
                 .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-            // Update count
+            // Update count - only show today's meetings to align with Daily Load KPI focus (Issue-95)
             if (countEl) {
-                countEl.textContent = upcomingMeetings.length > 0 ? `${upcomingMeetings.length} upcoming` : '';
+                const tomorrow = new Date(now);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const todayMeetings = upcomingMeetings.filter(m => {
+                    const meetingDate = new Date(m.date);
+                    meetingDate.setHours(0, 0, 0, 0);
+                    return meetingDate < tomorrow;
+                });
+                countEl.textContent = todayMeetings.length > 0 ? `${todayMeetings.length} today` : '';
             }
 
             if (upcomingMeetings.length === 0) {
