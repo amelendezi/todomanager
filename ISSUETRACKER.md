@@ -69,4 +69,5 @@ Issue-62: Replaced Math.random() with crypto.getRandomValues() for cryptographic
 
 Issue-87: Modified Overdue column to only show completed overdue todos if they were completed today.
 
+Issue-88: Daily Load KPI now considers future pending tasks before suggesting "ask for work", showing "Easy workload" instead when future tasks exist.
 Issue-95: Fixed meeting stats to only count meetings for current day instead of all upcoming meetings.
