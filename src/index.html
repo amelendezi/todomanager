@@ -8325,15 +8325,16 @@
                 todoDescriptionInput.value = todo.description || '';
 
                 // Handle deadline (support both new deadline and old dueDate)
+                // Use setDeadlineValue to properly update DateTimePicker display (Issue-85)
                 if (todo.deadline) {
-                    todoDeadlineInput.value = formatDateTimeLocal(new Date(todo.deadline));
+                    setDeadlineValue(new Date(todo.deadline));
                 } else if (todo.dueDate) {
                     // Convert old dueDate to deadline with default time
                     const oldDate = new Date(todo.dueDate);
                     oldDate.setHours(17, 0, 0, 0);
-                    todoDeadlineInput.value = formatDateTimeLocal(oldDate);
+                    setDeadlineValue(oldDate);
                 } else {
-                    todoDeadlineInput.value = getDefaultDeadline();
+                    setDeadlineValue(getDefaultDeadlineDate());
                 }
 
                 // Set effort
@@ -8360,8 +8361,8 @@
             } else {
                 // Create mode
                 modalTitle.textContent = 'New Todo';
-                // Set default deadline to 5 PM today
-                todoDeadlineInput.value = getDefaultDeadline();
+                // Set default deadline to 5 PM today (Issue-85)
+                setDeadlineValue(getDefaultDeadlineDate());
                 // Set default effort
                 todoEffortSelect.value = DEFAULT_EFFORT;
                 // Set default priority
@@ -16957,10 +16958,24 @@
         // DATETIME HELPERS
         // ========================================
 
-        function getDefaultDeadline() {
+        // Get default deadline as Date object (5 PM today)
+        function getDefaultDeadlineDate() {
             const now = new Date();
-            now.setHours(17, 0, 0, 0); // Default to 5 PM today
-            return formatDateTimeLocal(now);
+            now.setHours(17, 0, 0, 0);
+            return now;
+        }
+
+        function getDefaultDeadline() {
+            return formatDateTimeLocal(getDefaultDeadlineDate());
+        }
+
+        // Set deadline value using DateTimePicker API if available (Issue-85)
+        function setDeadlineValue(date) {
+            if (todoDeadlineInput._dtpInstance) {
+                todoDeadlineInput._dtpInstance.setValue(date);
+            } else {
+                todoDeadlineInput.value = formatDateTimeLocal(date);
+            }
         }
 
         function formatDateTimeLocal(date) {
