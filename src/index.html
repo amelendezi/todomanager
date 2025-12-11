@@ -8151,7 +8151,7 @@
             state.currentTab = 'home';
             navigateTo('app');
             // Save initial empty state to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save initial state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save initial state:', err));
         }
 
         function continueWorking() {
@@ -8259,7 +8259,7 @@
                     }
 
                     // Log import summary for debugging
-                    console.log(`Import completed: ${state.todos.length} todos, ${state.engagements.length} engagements, ${state.people.length} people, ${state.tags.length} tags, ${state.roles.length} roles`);
+                    Logger.log(`Import completed: ${state.todos.length} todos, ${state.engagements.length} engagements, ${state.people.length} people, ${state.tags.length} tags, ${state.roles.length} roles`);
 
                     // Navigate to app and render
                     navigateTo('app');
@@ -8270,7 +8270,7 @@
                     loadPlanningSettings();
 
                     // Save imported data to IndexedDB
-                    saveStateToIndexedDB().catch(err => console.error('Failed to save imported state:', err));
+                    saveStateToIndexedDB().catch(err => Logger.error('Failed to save imported state:', err));
 
                 } catch (error) {
                     alert('Error importing file: ' + error.message + '\n\nPlease ensure you selected a valid TodoApp export file.');
@@ -8290,7 +8290,7 @@
 
         // Data persistence - saves to IndexedDB
         function saveData() {
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Modal functions
@@ -8580,7 +8580,7 @@
                 renderEngagements();
             }
             // Auto-save to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Auto-update engagement status based on linked todos
@@ -8864,7 +8864,7 @@
                 renderEngagements();
             }
             // Auto-save to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // ========================================
@@ -8917,7 +8917,7 @@
             if (state.currentTab === 'engagements') {
                 renderEngagements();
             }
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Unblock a todo
@@ -8934,7 +8934,7 @@
             if (state.currentTab === 'engagements') {
                 renderEngagements();
             }
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Block todo from recommendation panel (by ID)
@@ -9282,7 +9282,7 @@
             }
 
             // Auto-save to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Toggle show archived engagements
@@ -9998,7 +9998,7 @@
                     closeUnifiedPromoteModal();
                     renderEngagements();
                 })
-                .catch(err => console.error('Failed to save allocation:', err));
+                .catch(err => Logger.error('Failed to save allocation:', err));
         }
 
         // Open comments panel for an engagement (Issue-57)
@@ -10142,7 +10142,7 @@
             // Re-render engagements list
             renderEngagements();
             // Auto-save to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Close engagement action (set status to Closed)
@@ -10166,7 +10166,7 @@
             opp.status = 'closed';
             renderEngagements();
             // Auto-save to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Complete engagement action (set status to Completed - final state)
@@ -10190,7 +10190,7 @@
             renderEngagements();
             renderTodos();
             // Auto-save to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Reactivate engagement (from Closed to Paused)
@@ -10202,7 +10202,7 @@
             opp.status = 'paused';
             renderEngagements();
             // Auto-save to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Uncancel engagement (from Dropped to Paused)
@@ -10214,7 +10214,7 @@
             opp.status = 'paused';
             renderEngagements();
             // Auto-save to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // ========================================
@@ -10492,7 +10492,7 @@
             });
 
             renderPreProjectSection(eng);
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Update pre-project allocation field
@@ -10509,7 +10509,7 @@
             }
 
             renderPreProjectSummary(eng.preProject.allocations);
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Delete pre-project allocation
@@ -10520,7 +10520,7 @@
 
             eng.preProject.allocations.splice(idx, 1);
             renderPreProjectSection(eng);
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Save pre-project field
@@ -10530,7 +10530,7 @@
             if (!eng.preProject) return;
 
             eng.preProject[field] = value || null;
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Save project field
@@ -10540,7 +10540,7 @@
             if (!eng.project) return;
 
             eng.project[field] = value || null;
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Save project timeline field
@@ -10550,7 +10550,7 @@
             if (!eng.project || !eng.project.timeline) return;
 
             eng.project.timeline[field] = value || null;
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Add project allocation period
@@ -10572,7 +10572,7 @@
             });
 
             renderProjectSection(eng);
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Update project allocation status
@@ -10582,7 +10582,7 @@
             if (!eng.project || !eng.project.timeline || !eng.project.timeline.allocations[idx]) return;
 
             eng.project.timeline.allocations[idx].status = status;
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Delete project allocation
@@ -10593,7 +10593,7 @@
 
             eng.project.timeline.allocations.splice(idx, 1);
             renderProjectSection(eng);
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // ========================================
@@ -10648,7 +10648,7 @@
                 openSidePanel(state.promoteEngagementIndex);
             }
 
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // ========================================
@@ -10771,7 +10771,7 @@
                 openSidePanel(state.promoteEngagementIndex);
             }
 
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Revert pre-project back to engagement
@@ -10793,7 +10793,7 @@
                 openSidePanel(index);
             }
 
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Complete project
@@ -10822,7 +10822,7 @@
                 openSidePanel(index);
             }
 
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Open delete confirmation modal
@@ -10874,7 +10874,7 @@
             renderEngagements();
             renderTodos();
             // Auto-save to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // =============================================
@@ -10956,7 +10956,7 @@
             renderEngagements();
             renderTodos();
             // Auto-save to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // ========================================
@@ -11070,7 +11070,7 @@
 
             renderEngagements();
             renderTodos();
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Format datetime for display
@@ -11138,7 +11138,7 @@
             // Re-render comments
             renderCommentsInPanel(opp);
             // Auto-save to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Delete a comment from the current engagement
@@ -11154,7 +11154,7 @@
             // Re-render comments
             renderCommentsInPanel(opp);
             // Auto-save to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // =============================================
@@ -11681,7 +11681,7 @@
             closeTagModal();
             renderTags();
             // Auto-save to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Delete tag
@@ -11704,7 +11704,7 @@
             state.tags.splice(index, 1);
             renderTags();
             // Auto-save to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Get tag by ID
@@ -12194,7 +12194,7 @@
             closePersonModal();
             renderPeople();
             // Auto-save to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
         }
 
         // Open delete person modal
@@ -12231,7 +12231,7 @@
                 renderPeople();
                 renderEngagements();
                 // Auto-save to IndexedDB
-                saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+                saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
             }
         }
 
@@ -14853,7 +14853,7 @@
             }
 
             // Auto-save to IndexedDB
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
 
             alert('Planning settings saved successfully!');
         }
@@ -15924,7 +15924,7 @@
             saveStateToIndexedDB().then(() => {
                 alert('Calendar settings saved successfully!');
             }).catch(err => {
-                console.error('Failed to save calendar settings:', err);
+                Logger.error('Failed to save calendar settings:', err);
                 alert('Failed to save calendar settings. Please try again.');
             });
         }
@@ -16327,7 +16327,7 @@
 
             // Show confirmation
             if (movedCount > 0) {
-                console.log(`Moved ${movedCount} item(s) to next available work day`);
+                Logger.log(`Moved ${movedCount} item(s) to next available work day`);
             }
         }
 
@@ -16370,7 +16370,7 @@
 
             // Show confirmation
             if (deletedCount > 0) {
-                console.log(`Deleted ${deletedCount} item(s)`);
+                Logger.log(`Deleted ${deletedCount} item(s)`);
             }
         }
 
@@ -16967,7 +16967,7 @@
             state.migrationSummary = null;
 
             // Save state to mark upgrade as complete
-            saveStateToIndexedDB().catch(err => console.error('Failed to save state after upgrade:', err));
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state after upgrade:', err));
         }
 
         function exportThenClear() {
@@ -16999,7 +16999,7 @@
                 closeClearStateModal();
                 navigateTo('landing');
             } catch (error) {
-                console.error('Failed to clear state:', error);
+                Logger.error('Failed to clear state:', error);
                 alert('Failed to clear browser state. Please try again.');
             }
         }
@@ -17135,7 +17135,7 @@
                     navigateTo('landing');
                 }
             } catch (error) {
-                console.error('Failed to initialize IndexedDB:', error);
+                Logger.error('Failed to initialize IndexedDB:', error);
                 // Show warning modal if IndexedDB is unavailable
                 showIndexedDBWarning();
             }
