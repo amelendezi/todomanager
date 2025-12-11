@@ -62,3 +62,5 @@ Issue-82: Added Conflict Detection Modal for Calendar Exclusions - when adding h
 Issue-85: Fixed deadline date not populating when editing existing todo by using DateTimePicker's setValue API instead of direct input value assignment.
 
 Issue-86: Fixed todo list sorting to use deadline field instead of legacy dueDate for proper chronological ordering.
+
+Issue-64: Implemented configurable Logger utility with debug toggle in Settings to suppress console output in production mode.
