@@ -71,3 +71,5 @@ Issue-87: Modified Overdue column to only show completed overdue todos if they w
 
 Issue-88: Daily Load KPI now considers future pending tasks before suggesting "ask for work", showing "Easy workload" instead when future tasks exist.
 Issue-95: Fixed meeting stats to only count meetings for current day instead of all upcoming meetings.
+
+Issue-97: Added collapsible "Recently Completed" and "Recently Dropped" sections with configurable visibility threshold in new Tasks settings section.
