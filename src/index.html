@@ -14072,7 +14072,18 @@
                 deadline.setHours(0, 0, 0, 0);
 
                 if (deadline < today) {
-                    categories.overdue.push(todo);
+                    // Issue-87: Only show completed overdue todos if completed today
+                    if (!todo.completed) {
+                        // Uncompleted overdue todos always show
+                        categories.overdue.push(todo);
+                    } else if (todo.completedAt) {
+                        // Completed overdue todos only show if completed today
+                        const completedDate = new Date(todo.completedAt);
+                        completedDate.setHours(0, 0, 0, 0);
+                        if (completedDate.getTime() === today.getTime()) {
+                            categories.overdue.push(todo);
+                        }
+                    }
                 } else if (deadline >= today && deadline < tomorrow) {
                     categories.today.push(todo);
                 } else if (deadline >= nextWorkDay && deadline < dayAfterNextWorkDay) {

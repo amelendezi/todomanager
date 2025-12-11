@@ -66,3 +66,5 @@ Issue-86: Fixed todo list sorting to use deadline field instead of legacy dueDat
 Issue-64: Implemented configurable Logger utility with debug toggle in Settings to suppress console output in production mode.
 
 Issue-62: Replaced Math.random() with crypto.getRandomValues() for cryptographically secure ID generation.
+
+Issue-87: Modified Overdue column to only show completed overdue todos if they were completed today.
