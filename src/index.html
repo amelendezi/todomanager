@@ -6282,6 +6282,14 @@
                         </svg>
                         <span>Planning</span>
                     </li>
+                    <li class="settings-menu-item" data-section="tasks" onclick="switchSettingsSection('tasks')">
+                        <!-- Checklist/Tasks icon -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                        </svg>
+                        <span>Tasks</span>
+                    </li>
                     <li class="settings-menu-item" data-section="calendar" onclick="switchSettingsSection('calendar')">
                         <!-- Calendar icon -->
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -6403,6 +6411,22 @@
                             <label for="planning-horizon" class="form-label">Planning Horizon (days)</label>
                             <input type="number" id="planning-horizon" class="form-input" min="1" max="30" value="14">
                             <p class="form-hint">How far ahead to look when recommending tasks (default: 14 days)</p>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-save-settings">Save Settings</button>
+                    </form>
+                </div>
+
+                <!-- Tasks Section (Issue-97) -->
+                <div id="settings-section-tasks" class="settings-section hidden">
+                    <h2 class="settings-section-title">Tasks</h2>
+                    <p style="color: #6C757D; margin-bottom: 24px;">Configure how completed and dropped tasks are displayed in the todo list.</p>
+
+                    <form class="tasks-settings-form" onsubmit="saveTasksSettings(event)">
+                        <div class="form-group">
+                            <label for="completed-visibility-days" class="form-label">Completed/Dropped Visibility (days)</label>
+                            <input type="number" id="completed-visibility-days" class="form-input" min="1" max="365" value="5">
+                            <p class="form-hint">Recently completed and dropped tasks older than this will be hidden from the list (default: 5 days). Tasks remain in the system and are included in exports.</p>
                         </div>
 
                         <button type="submit" class="btn btn-primary btn-save-settings">Save Settings</button>
@@ -7463,7 +7487,8 @@
             bufferPercentage: 15,       // 15% buffer for interruptions
             maxOverdueToShow: 5,        // Limit overdue display
             planningHorizonDays: 14,    // Look-ahead window
-            debugLogging: false         // Console logging disabled by default (Issue-64)
+            debugLogging: false,        // Console logging disabled by default (Issue-64)
+            completedVisibilityDays: 5  // Days to show completed/dropped todos (Issue-97)
         });
 
         // ========================================
@@ -8114,6 +8139,7 @@
             const peopleSection = document.getElementById('settings-section-people');
             const tagsSection = document.getElementById('settings-section-tags');
             const planningSection = document.getElementById('settings-section-planning');
+            const tasksSection = document.getElementById('settings-section-tasks');
             const calendarSection = document.getElementById('settings-section-calendar');
             const storageSection = document.getElementById('settings-section-storage');
 
@@ -8121,6 +8147,7 @@
             peopleSection.classList.add('hidden');
             tagsSection.classList.add('hidden');
             planningSection.classList.add('hidden');
+            tasksSection.classList.add('hidden');
             calendarSection.classList.add('hidden');
             storageSection.classList.add('hidden');
 
@@ -8133,6 +8160,9 @@
             } else if (section === 'planning') {
                 planningSection.classList.remove('hidden');
                 renderPlanningSettings();
+            } else if (section === 'tasks') {
+                tasksSection.classList.remove('hidden');
+                renderTasksSettings();
             } else if (section === 'calendar') {
                 calendarSection.classList.remove('hidden');
                 renderCalendarSettings();
@@ -8257,7 +8287,9 @@
                             maxOverdueToShow: typeof s.maxOverdueToShow === 'number' && s.maxOverdueToShow >= 0 && s.maxOverdueToShow <= 100
                                 ? s.maxOverdueToShow : DEFAULT_SETTINGS.maxOverdueToShow,
                             planningHorizonDays: typeof s.planningHorizonDays === 'number' && s.planningHorizonDays >= 1 && s.planningHorizonDays <= 365
-                                ? s.planningHorizonDays : DEFAULT_SETTINGS.planningHorizonDays
+                                ? s.planningHorizonDays : DEFAULT_SETTINGS.planningHorizonDays,
+                            completedVisibilityDays: typeof s.completedVisibilityDays === 'number' && s.completedVisibilityDays >= 1 && s.completedVisibilityDays <= 365
+                                ? s.completedVisibilityDays : DEFAULT_SETTINGS.completedVisibilityDays
                         };
                     } else {
                         state.settings = { ...DEFAULT_SETTINGS };
@@ -14913,6 +14945,34 @@
 
         function renderPlanningSettings() {
             loadPlanningSettings();
+        }
+
+        // ========================================
+        // TASKS SETTINGS FUNCTIONS (Issue-97)
+        // ========================================
+
+        function saveTasksSettings(event) {
+            event.preventDefault();
+
+            state.settings.completedVisibilityDays = parseInt(document.getElementById('completed-visibility-days').value) || DEFAULT_SETTINGS.completedVisibilityDays;
+
+            // Refresh todo list with new settings
+            if (state.currentPage === 'app' && state.currentTab === 'home') {
+                renderTodos();
+            }
+
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
+
+            alert('Tasks settings saved successfully!');
+        }
+
+        function loadTasksSettings() {
+            document.getElementById('completed-visibility-days').value = state.settings.completedVisibilityDays || DEFAULT_SETTINGS.completedVisibilityDays;
+        }
+
+        function renderTasksSettings() {
+            loadTasksSettings();
         }
 
         // ========================================
