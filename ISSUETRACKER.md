@@ -68,3 +68,5 @@ Issue-64: Implemented configurable Logger utility with debug toggle in Settings 
 Issue-62: Replaced Math.random() with crypto.getRandomValues() for cryptographically secure ID generation.
 
 Issue-87: Modified Overdue column to only show completed overdue todos if they were completed today.
+
+Issue-88: Daily Load KPI now considers future pending tasks before suggesting "ask for work", showing "Easy workload" instead when future tasks exist.
