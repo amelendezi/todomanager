@@ -58,3 +58,5 @@ Issue-78: Added "Minimal Work" effort level (30 min), updated "Very Low" to 1 ho
 Issue-80: Introduced Meetings feature with new entity type (title, description, date, duration), Shift+M keyboard shortcut to create meetings on Todo's page, dedicated Meetings list section below Daily Load showing upcoming meetings grouped by Today/Tomorrow/Date, integration with Daily Load KPI (purple color coding), IndexedDB persistence, and bumped app to v1.2.0.
 
 Issue-82: Added Conflict Detection Modal for Calendar Exclusions - when adding holidays, PTO, or disabling work days, detects conflicting todos and meetings with options to move to next work day or delete, bumped app to v1.3.0.
+
+Issue-85: Fixed deadline date not populating when editing existing todo by using DateTimePicker's setValue API instead of direct input value assignment.
