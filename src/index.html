@@ -8646,9 +8646,11 @@
                                 ? new Date(b.todo.completedAt || b.todo.droppedAt).getTime() : 0;
                             return bTime - aTime;
                         } else {
-                            // Both active: sort by dueDate (earliest first)
-                            const aDate = a.todo.dueDate ? new Date(a.todo.dueDate).getTime() : Infinity;
-                            const bDate = b.todo.dueDate ? new Date(b.todo.dueDate).getTime() : Infinity;
+                            // Both active: sort by deadline (earliest first)
+                            const aDeadline = a.todo.deadline || a.todo.dueDate;
+                            const bDeadline = b.todo.deadline || b.todo.dueDate;
+                            const aDate = aDeadline ? new Date(aDeadline).getTime() : Infinity;
+                            const bDate = bDeadline ? new Date(bDeadline).getTime() : Infinity;
                             return aDate - bDate;
                         }
                     });
