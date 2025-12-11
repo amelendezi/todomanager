@@ -68,3 +68,5 @@ Issue-64: Implemented configurable Logger utility with debug toggle in Settings 
 Issue-62: Replaced Math.random() with crypto.getRandomValues() for cryptographically secure ID generation.
 
 Issue-87: Modified Overdue column to only show completed overdue todos if they were completed today.
+
+Issue-95: Fixed meeting stats to only count meetings for current day instead of all upcoming meetings.
