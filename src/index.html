@@ -3757,6 +3757,11 @@
             color: #1976D2;
         }
 
+        .daily-load-status.easy {
+            background: #E8F5E9;
+            color: #43A047;
+        }
+
         .daily-load-container {
             display: flex;
             align-items: flex-end;
@@ -14145,15 +14150,35 @@
         }
 
         /**
-         * Get workload status based on today's hours
+         * Check if there are any pending (non-completed, non-dropped, non-blocked) todos
+         * scheduled for the future (after today)
          */
-        function getWorkloadStatus(todayHours) {
+        function hasFuturePendingTodos() {
+            const today = new Date();
+            today.setHours(23, 59, 59, 999); // End of today
+
+            return state.todos.some(todo => {
+                if (todo.completed || todo.dropped || todo.blocked) return false;
+                const deadlineValue = todo.deadline || todo.dueDate;
+                if (!deadlineValue) return false;
+                const deadline = new Date(deadlineValue);
+                return deadline > today;
+            });
+        }
+
+        /**
+         * Get workload status based on today's hours and future tasks (Issue-88)
+         */
+        function getWorkloadStatus(todayHours, hasFutureTasks = false) {
             if (todayHours > 8) {
                 return { class: 'overloaded', text: 'You are overloaded' };
             } else if (todayHours >= 6) {
                 return { class: 'careful', text: 'Careful not to exceed yourself today' };
             } else if (todayHours >= 4) {
                 return { class: 'balanced', text: 'Balanced workload' };
+            } else if (hasFutureTasks) {
+                // Issue-88: Light workload but future tasks exist
+                return { class: 'easy', text: 'Easy workload' };
             } else {
                 return { class: 'light', text: 'You should ask for work' };
             }
@@ -14301,8 +14326,9 @@
             const todayMeetingMinutes = meetingCategories.today.reduce((sum, m) => sum + m.duration, 0);
             const totalTodayHours = todayTodoHours.total + (todayMeetingMinutes / 60);
 
-            // Update status message
-            const status = getWorkloadStatus(totalTodayHours);
+            // Update status message (Issue-88: consider future pending tasks)
+            const hasFutureTasks = hasFuturePendingTodos();
+            const status = getWorkloadStatus(totalTodayHours, hasFutureTasks);
             dailyLoadStatus.className = `daily-load-status ${status.class}`;
             dailyLoadStatus.textContent = status.text;
 
