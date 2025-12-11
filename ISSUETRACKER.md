@@ -60,3 +60,5 @@ Issue-80: Introduced Meetings feature with new entity type (title, description, 
 Issue-82: Added Conflict Detection Modal for Calendar Exclusions - when adding holidays, PTO, or disabling work days, detects conflicting todos and meetings with options to move to next work day or delete, bumped app to v1.3.0.
 
 Issue-85: Fixed deadline date not populating when editing existing todo by using DateTimePicker's setValue API instead of direct input value assignment.
+
+Issue-86: Fixed todo list sorting to use deadline field instead of legacy dueDate for proper chronological ordering.
