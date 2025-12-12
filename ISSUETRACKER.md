@@ -80,4 +80,5 @@ Issue-101: Implemented read-only modal view for todos. Clicking a todo opens a r
 
 Issue-103: Compact Daily Plan items to single-line layout with auto-height container, truncated titles with ellipsis and hover tooltip.
 
+Issue-107: Redesigned Daily Load KPI with 8-day forecast, symmetric layout (450px), priority-based task colors, and workload border color coding.
 Issue-105: Fixed Daily Plan container excessive empty space by adding align-items: flex-start to prevent vertical stretching.

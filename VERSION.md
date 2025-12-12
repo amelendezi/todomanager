@@ -1,6 +1,31 @@
 # TodoManager Version History
 
-## Version 1.7.0 (Current)
+## Version 1.8.0 (Current)
+
+### Release Date
+December 2025
+
+### New Features
+- **Daily Load Redesign**: Complete overhaul of Daily Load KPI chart with 8-day forecast (Issue-107)
+  - 8 columns: Yesterday, Today, Tomorrow, + 5 more work days
+  - Smart day labeling: weekday names or dates if gap >2 days (weekend/holiday)
+  - **Yesterday column**: Shows meetings (yellow), completed on-time (green), extra completions (dark green), missed overdue (light red)
+  - **Today column**: Tasks ordered by priority - meetings, urgent, overdue, high, normal, low, someday
+  - **Future columns**: Tasks ordered by priority
+  - **Column border color coding** based on workload hours:
+    - Green border: ≤6 hrs (Easy workload)
+    - Dark yellow border: 6-7.5 hrs (Moderate workload)
+    - Orange border: 7.5-8 hrs (Heavy workload)
+    - Red border: >8 hrs (Overloaded)
+- **Symmetric Layout**: Daily Plan (left) and Daily Load + Meetings (right) now have equal widths (450px)
+- **Priority-based Task Colors**: Tasks colored by priority level (urgent=red, high=orange, normal=blue, low=gray, someday=light gray)
+
+### Data Migrations
+- No data migrations required for v1.8.0
+
+---
+
+## Version 1.7.0
 
 ### Release Date
 December 2025
