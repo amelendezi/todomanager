@@ -3308,10 +3308,10 @@
             min-width: 500px;
         }
 
-        /* KPI Panel (Right) - Issue-74 */
+        /* KPI Panel (Right) - Issue-74, Issue-107: Symmetric width with Daily Plan */
         .kpi-panel {
-            width: 280px;
-            min-width: 280px;
+            width: 450px;
+            min-width: 450px;
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
@@ -4009,7 +4009,7 @@
         .daily-load-bars {
             display: flex;
             flex: 1;
-            gap: 8px;
+            gap: 4px; /* Issue-107: Reduced gap for 8 columns */
             align-items: flex-end;
             justify-content: center;
         }
@@ -4019,31 +4019,32 @@
             flex-direction: column;
             align-items: center;
             flex: 1;
+            min-width: 0; /* Issue-107: Allow columns to shrink */
         }
 
         .daily-load-column-header {
-            font-size: 11px;
+            font-size: 10px; /* Issue-107: Smaller font for 8 columns */
             color: #6C757D;
             margin-bottom: 4px;
             text-align: center;
         }
 
         .daily-load-column-hours {
-            font-size: 10px;
+            font-size: 9px; /* Issue-107: Smaller font for 8 columns */
             color: #9CA3AF;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             text-align: center;
         }
 
         .daily-load-bar {
             width: 100%;
-            min-height: 160px;
-            max-height: 160px;
+            min-height: 120px; /* Issue-107: Reduced height for 8 columns */
+            max-height: 120px;
             display: flex;
             flex-direction: column-reverse;
             justify-content: flex-start;
             background: #F9FAFB;
-            border-radius: 8px;
+            border-radius: 6px; /* Issue-107: Smaller border radius */
             overflow: hidden;
             position: relative;
         }
@@ -4096,6 +4097,32 @@
         .daily-load-segment.heat-red-light { background: #F87171; }
         .daily-load-segment.heat-red-intense { background: #EF4444; }
 
+        /* Issue-107: Priority-based segment colors */
+        .daily-load-segment.priority-urgent { background: #DC2626; }
+        .daily-load-segment.priority-high { background: #F97316; }
+        .daily-load-segment.priority-normal { background: #3B82F6; }
+        .daily-load-segment.priority-low { background: #6B7280; }
+        .daily-load-segment.priority-someday { background: #9CA3AF; }
+
+        /* Issue-107: Yesterday column - completed task colors */
+        .daily-load-segment.completed-ontime { background: #22C55E; }
+        .daily-load-segment.completed-extra { background: #166534; }
+        .daily-load-segment.overdue-missed { background: #FCA5A5; }
+
+        /* Issue-107: Column border color coding based on workload */
+        .daily-load-bar.workload-easy {
+            border: 2px solid #22C55E;
+        }
+        .daily-load-bar.workload-moderate {
+            border: 2px solid #CA8A04;
+        }
+        .daily-load-bar.workload-heavy {
+            border: 2px solid #F97316;
+        }
+        .daily-load-bar.workload-overloaded {
+            border: 2px solid #DC2626;
+        }
+
         .daily-load-empty {
             width: 100%;
             height: 100%;
@@ -4107,10 +4134,14 @@
         }
 
         .daily-load-label {
-            font-size: 11px;
+            font-size: 9px; /* Issue-107: Smaller font for 8 columns */
             color: #6C757D;
-            margin-top: 8px;
+            margin-top: 6px;
             font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
         }
 
         /* Responsive split-panel */
