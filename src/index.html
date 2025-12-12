@@ -793,6 +793,116 @@
             margin-bottom: 24px;
         }
 
+        /* Issue-101: Modal header with edit button */
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header .modal-title {
+            margin-bottom: 0;
+        }
+
+        .modal-edit-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid #E0E0E0;
+            background: #FFFFFF;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6C757D;
+            transition: all 0.2s ease;
+        }
+
+        .modal-edit-btn:hover {
+            background: #F5A623;
+            border-color: #F5A623;
+            color: #FFFFFF;
+        }
+
+        .modal-edit-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Issue-101: Read-only view styles */
+        .todo-readonly-view {
+            padding: 0;
+        }
+
+        .todo-readonly-field {
+            margin-bottom: 16px;
+        }
+
+        .todo-readonly-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6C757D;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .todo-readonly-value {
+            font-size: 15px;
+            color: #1F1F1F;
+            line-height: 1.5;
+        }
+
+        .todo-readonly-value.title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .todo-readonly-value.description {
+            white-space: pre-wrap;
+            background: #F8F9FA;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .todo-readonly-value.empty {
+            color: #9CA3AF;
+            font-style: italic;
+        }
+
+        .todo-readonly-engagement {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #E3F2FD;
+            border-radius: 6px;
+            color: #1565C0;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        .todo-readonly-engagement:hover {
+            background: #BBDEFB;
+        }
+
+        .todo-readonly-engagement svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .todo-readonly-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .todo-readonly-close-btn {
+            width: 100%;
+            margin-top: 24px;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -1088,6 +1198,48 @@
         .todo-collapsible-section.dropped-section .todo-collapsible-count {
             background: #f5c6cb;
             color: #721c24;
+        }
+
+        /* Issue-99: Upcoming in a Week section - blue tint */
+        .todo-collapsible-section.upcoming-week-section {
+            background: #e8f4fd;
+        }
+
+        .todo-collapsible-section.upcoming-week-section .todo-collapsible-header:hover {
+            background: #cce5fc;
+        }
+
+        .todo-collapsible-section.upcoming-week-section .todo-collapsible-count {
+            background: #b3d7fa;
+            color: #0d47a1;
+        }
+
+        /* Issue-99: Upcoming in 2 Weeks section - purple tint */
+        .todo-collapsible-section.upcoming-two-weeks-section {
+            background: #f3e8fd;
+        }
+
+        .todo-collapsible-section.upcoming-two-weeks-section .todo-collapsible-header:hover {
+            background: #e4ccfc;
+        }
+
+        .todo-collapsible-section.upcoming-two-weeks-section .todo-collapsible-count {
+            background: #d4b3fa;
+            color: #4a148c;
+        }
+
+        /* Issue-99: In the Horizon section - gray/neutral tint */
+        .todo-collapsible-section.horizon-section {
+            background: #f5f5f5;
+        }
+
+        .todo-collapsible-section.horizon-section .todo-collapsible-header:hover {
+            background: #e0e0e0;
+        }
+
+        .todo-collapsible-section.horizon-section .todo-collapsible-count {
+            background: #bdbdbd;
+            color: #424242;
         }
 
         /* Daily Load highlight (Issue-74) */
@@ -6685,9 +6837,24 @@
 
     <!-- Create Todo Modal -->
     <div id="todo-modal" class="modal hidden">
-        <div class="modal-backdrop" onclick="closeModal()"></div>
+        <div class="modal-backdrop" id="todo-modal-backdrop" onclick="handleTodoModalBackdropClick()"></div>
         <div class="modal-content" id="todo-modal-content">
-            <h2 id="modal-title" class="modal-title">New Todo</h2>
+            <!-- Issue-101: Modal header with edit button -->
+            <div class="modal-header" id="todo-modal-header">
+                <h2 id="modal-title" class="modal-title">New Todo</h2>
+                <button type="button" id="todo-edit-mode-btn" class="modal-edit-btn hidden" onclick="switchToEditMode()" title="Edit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Issue-101: Read-only view -->
+            <div id="todo-readonly-view" class="todo-readonly-view hidden">
+                <!-- Content will be rendered dynamically -->
+            </div>
+
             <form id="todo-form" onsubmit="saveTodo(event)">
                 <div id="todo-form-columns" class="todo-form-columns">
                     <!-- Left Column - Main Todo Form -->
@@ -7336,9 +7503,10 @@
             <div style="text-align: left; margin-bottom: 24px;">
                 <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 12px;">What's New</h3>
                 <ul style="margin: 0; padding-left: 20px; color: #374151; font-size: 14px; line-height: 1.8;">
-                    <li><strong>Collapsible Completed/Dropped Sections</strong> - Completed and dropped todos are now grouped into collapsible sections below the active todo list</li>
-                    <li><strong>Tasks Settings</strong> - New "Tasks" section in Settings with configurable visibility threshold (default: 5 days)</li>
-                    <li><strong>Cleaner Todo List</strong> - Older completed/dropped items are automatically hidden but remain in the system</li>
+                    <li><strong>Future Todo Groups</strong> - Organize upcoming todos into collapsible sections based on deadline proximity</li>
+                    <li><strong>Upcoming in a Week</strong> - Todos due 8-14 days from now (blue section)</li>
+                    <li><strong>Upcoming in 2 Weeks</strong> - Todos due 15 days to end of month (purple section)</li>
+                    <li><strong>In the Horizon</strong> - Todos over 1 month away (gray section)</li>
                 </ul>
             </div>
 
@@ -7573,7 +7741,7 @@
         // ========================================
         // APP VERSION
         // ========================================
-        const APP_VERSION = '1.4.0';
+        const APP_VERSION = '1.5.0';
 
         // ========================================
         // PLANNING SETTINGS - Defaults
@@ -7773,6 +7941,7 @@
             previousTab: 'home',  // Track previous tab for settings return navigation
             settingsSection: 'people',  // Current settings section
             modalOpen: false,
+            modalReadOnly: false,  // Issue-101: Track read-only vs edit mode
             engagementModalOpen: false,
             personModalOpen: false,
             confirmModalOpen: false,
@@ -7822,6 +7991,10 @@
             // Issue-97: Collapsible sections expanded state
             recentlyCompletedExpanded: false,
             recentlyDroppedExpanded: false,
+            // Issue-99: Future todo groups expanded state
+            upcomingWeekExpanded: false,
+            upcomingTwoWeeksExpanded: false,
+            horizonExpanded: false,
             // Priority autocomplete state
             selectedPriority: DEFAULT_PRIORITY,
             priorityDropdownOpen: false,
@@ -7869,6 +8042,7 @@
         const emptyState = document.getElementById('empty-state');
         const todoShortcutHintFloating = document.getElementById('todo-shortcut-hint-floating');
         const todoModal = document.getElementById('todo-modal');
+        const todoModalBackdrop = document.getElementById('todo-modal-backdrop');  // Issue-101
         const todoForm = document.getElementById('todo-form');
         const todoTitleInput = document.getElementById('todo-title');
         const todoDescriptionInput = document.getElementById('todo-description');
@@ -7879,6 +8053,8 @@
         const modalTitle = document.getElementById('modal-title');
         const todoSaveBtn = document.getElementById('todo-save-btn');
         const todoSaveWrapper = document.getElementById('todo-save-wrapper');
+        const todoEditModeBtn = document.getElementById('todo-edit-mode-btn');  // Issue-101
+        const todoReadonlyView = document.getElementById('todo-readonly-view');  // Issue-101
 
         // DOM Elements - Recommendation Panel
         const recommendationPanel = document.getElementById('recommendation-panel');
@@ -8430,10 +8606,28 @@
         }
 
         // Modal functions
-        function openModal(todoIndex = null) {
+        // Issue-101: Updated to support read-only mode
+        function openModal(todoIndex = null, readOnly = false) {
             todoModal.classList.remove('hidden');
             state.modalOpen = true;
             state.editingTodoIndex = todoIndex;
+            state.modalReadOnly = readOnly;
+
+            // Issue-101: Handle read-only vs edit mode display
+            if (readOnly && todoIndex !== null) {
+                // Read-only mode - show read-only view, hide form
+                todoForm.classList.add('hidden');
+                todoReadonlyView.classList.remove('hidden');
+                todoEditModeBtn.classList.remove('hidden');
+                modalTitle.textContent = 'View Todo';
+                renderTodoReadonlyView(state.todos[todoIndex]);
+                return;
+            }
+
+            // Edit/Create mode - show form, hide read-only view
+            todoForm.classList.remove('hidden');
+            todoReadonlyView.classList.add('hidden');
+            todoEditModeBtn.classList.add('hidden');
 
             // Reset form
             todoForm.reset();
@@ -8549,9 +8743,150 @@
             setTimeout(() => todoTitleInput.focus(), 100);
         }
 
+        // Issue-101: Render read-only view of a todo
+        function renderTodoReadonlyView(todo) {
+            // Format deadline
+            const deadlineValue = todo.deadline || todo.dueDate;
+            const deadlineDisplay = deadlineValue ? formatDeadlineDisplay(deadlineValue) : '';
+
+            // Format effort
+            const effort = todo.effort || DEFAULT_EFFORT;
+            const effortConfig = EFFORT_CONFIG[effort];
+            const effortDisplay = effortConfig ? `${effortConfig.icon} ${formatEffortDisplay(effort)}` : '';
+
+            // Format priority
+            const priority = todo.priority || DEFAULT_PRIORITY;
+            const priorityTag = PRIORITY_TAGS[priority];
+            const priorityDisplay = priorityTag ? priorityTag.label : 'Normal';
+
+            // Format engagement
+            let engagementHtml = '<span class="todo-readonly-value empty">None</span>';
+            if (todo.engagementId) {
+                const opp = state.engagements.find(o => o.id === todo.engagementId);
+                if (opp) {
+                    engagementHtml = `
+                        <span class="todo-readonly-engagement" onclick="navigateToEngagement('${opp.id}')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            ${escapeHtml(opp.name)}
+                        </span>
+                    `;
+                }
+            }
+
+            // Format tags
+            let tagsHtml = '<span class="todo-readonly-value empty">None</span>';
+            if (todo.tagIds && todo.tagIds.length > 0) {
+                const tagPills = todo.tagIds.map(tagId => {
+                    const tag = getTagById(tagId);
+                    if (tag) {
+                        return `<span class="tag-pill" style="background-color: ${tag.color}; color: #fff;">${escapeHtml(tag.name)}</span>`;
+                    }
+                    return '';
+                }).filter(Boolean);
+                if (tagPills.length > 0) {
+                    tagsHtml = `<div class="todo-readonly-tags">${tagPills.join('')}</div>`;
+                }
+            }
+
+            // Build status display
+            let statusHtml = '';
+            if (todo.blocked) {
+                statusHtml = `<span class="priority-pill" style="background: #9E9E9E; color: #fff;">Blocked</span>`;
+                if (todo.blockReason) {
+                    statusHtml += `<span class="todo-readonly-value" style="margin-left: 8px; font-style: italic;">"${escapeHtml(todo.blockReason)}"</span>`;
+                }
+            } else if (todo.completed) {
+                statusHtml = `<span class="priority-pill" style="background: #4CAF50; color: #fff;">Completed</span>`;
+            } else if (todo.dropped) {
+                statusHtml = `<span class="priority-pill" style="background: #DC3545; color: #fff;">Dropped</span>`;
+            } else {
+                statusHtml = `<span class="priority-pill" style="background: #2196F3; color: #fff;">Active</span>`;
+            }
+
+            todoReadonlyView.innerHTML = `
+                <div class="todo-readonly-field">
+                    <div class="todo-readonly-label">Title</div>
+                    <div class="todo-readonly-value title">${escapeHtml(todo.title)}</div>
+                </div>
+
+                <div class="todo-readonly-field">
+                    <div class="todo-readonly-label">Status</div>
+                    <div class="todo-readonly-value">${statusHtml}</div>
+                </div>
+
+                <div class="todo-readonly-field">
+                    <div class="todo-readonly-label">Description</div>
+                    <div class="todo-readonly-value ${todo.description ? 'description' : 'empty'}">
+                        ${todo.description ? escapeHtml(todo.description) : 'No description'}
+                    </div>
+                </div>
+
+                <div class="todo-readonly-field">
+                    <div class="todo-readonly-label">Deadline</div>
+                    <div class="todo-readonly-value ${deadlineDisplay ? '' : 'empty'}">
+                        ${deadlineDisplay || 'Not set'}
+                    </div>
+                </div>
+
+                <div class="todo-readonly-field">
+                    <div class="todo-readonly-label">Effort</div>
+                    <div class="todo-readonly-value">${effortDisplay}</div>
+                </div>
+
+                <div class="todo-readonly-field">
+                    <div class="todo-readonly-label">Priority</div>
+                    <div class="todo-readonly-value">
+                        <span class="priority-pill priority-${priority}">${priorityDisplay}</span>
+                    </div>
+                </div>
+
+                <div class="todo-readonly-field">
+                    <div class="todo-readonly-label">Linked Engagement</div>
+                    <div class="todo-readonly-value">${engagementHtml}</div>
+                </div>
+
+                <div class="todo-readonly-field">
+                    <div class="todo-readonly-label">Tags</div>
+                    <div class="todo-readonly-value">${tagsHtml}</div>
+                </div>
+
+                <button type="button" class="btn btn-secondary todo-readonly-close-btn" onclick="closeModal()">Close</button>
+            `;
+        }
+
+        // Issue-101: Switch from read-only to edit mode
+        function switchToEditMode() {
+            if (state.editingTodoIndex !== null) {
+                state.modalReadOnly = false;
+                openModal(state.editingTodoIndex, false);
+            }
+        }
+
+        // Issue-101: Navigate to engagement from read-only view
+        function navigateToEngagement(engagementId) {
+            closeModal();
+            // Navigate to engagements tab and select the engagement
+            state.currentTab = 'engagements';
+            renderPage();
+            // Find and expand the engagement
+            const engIndex = state.engagements.findIndex(e => e.id === engagementId);
+            if (engIndex !== -1) {
+                state.expandedEngagementId = engagementId;
+                renderEngagements();
+            }
+        }
+
+        // Issue-101: Open todo in read-only mode (for clicking on todo cards)
+        function viewTodo(index) {
+            openModal(index, true);
+        }
+
         // Edit a todo - opens modal in edit mode
         function editTodo(index) {
-            openModal(index);
+            openModal(index, false);
         }
 
         // Get today's date in YYYY-MM-DD format for date input
@@ -8591,6 +8926,14 @@
             // Reset tab navigation
             setFormTabIndex(todoFormLeft, true);
             setFormTabIndex(todoFormRight, false);
+        }
+
+        // Issue-101: Handle backdrop click - close modal only in read-only mode
+        function handleTodoModalBackdropClick() {
+            if (state.modalReadOnly) {
+                closeModal();
+            }
+            // In edit mode, clicking backdrop does nothing (user must use Save/Cancel)
         }
 
         // Generate unique ID using cryptographically secure random values (Issue-62)
@@ -8802,16 +9145,64 @@
                 return new Date(timestamp) >= visibilityThreshold;
             }
 
-            // Issue-97: Separate todos into active, recently completed, and recently dropped
-            const activeTodos = [];
+            // Issue-99: Helper to get days from today for a deadline
+            function getDaysFromToday(deadline) {
+                if (!deadline) return Infinity;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const deadlineDate = new Date(deadline);
+                deadlineDate.setHours(0, 0, 0, 0);
+                const diffTime = deadlineDate.getTime() - today.getTime();
+                return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            }
+
+            // Issue-99: Helper to get the number of days in the current month
+            function getDaysInCurrentMonth() {
+                const today = new Date();
+                // Get next month's first day, then subtract 1 day to get last day of current month
+                return new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+            }
+
+            // Issue-99: Categorize active todo by deadline range
+            function getDeadlineCategory(todo) {
+                const deadline = todo.deadline || todo.dueDate;
+                const daysFromToday = getDaysFromToday(deadline);
+                const daysInMonth = getDaysInCurrentMonth();
+
+                if (daysFromToday <= 7) {
+                    return 'immediate'; // 1-7 days - main active list
+                } else if (daysFromToday <= 14) {
+                    return 'upcomingWeek'; // 8-14 days
+                } else if (daysFromToday <= daysInMonth) {
+                    return 'upcomingTwoWeeks'; // 15 days to end of month
+                } else {
+                    return 'horizon'; // Beyond 1 month
+                }
+            }
+
+            // Issue-99: Separate todos into categories
+            const immediateTodos = [];      // 1-7 days (main active list)
+            const upcomingWeekTodos = [];   // 8-14 days
+            const upcomingTwoWeeksTodos = []; // 15 days to end of month
+            const horizonTodos = [];        // Over 1 month
             const recentlyCompleted = [];
             const recentlyDropped = [];
 
             filteredTodos.forEach(todo => {
                 const originalIndex = state.todos.indexOf(todo);
                 if (!todo.completed && !todo.dropped) {
-                    // Active todo (including blocked)
-                    activeTodos.push({ todo, originalIndex });
+                    // Categorize active todos by deadline
+                    const category = getDeadlineCategory(todo);
+                    const todoEntry = { todo, originalIndex };
+                    if (category === 'immediate') {
+                        immediateTodos.push(todoEntry);
+                    } else if (category === 'upcomingWeek') {
+                        upcomingWeekTodos.push(todoEntry);
+                    } else if (category === 'upcomingTwoWeeks') {
+                        upcomingTwoWeeksTodos.push(todoEntry);
+                    } else {
+                        horizonTodos.push(todoEntry);
+                    }
                 } else if (todo.completed && !todo.dropped && isWithinVisibilityThreshold(todo)) {
                     // Recently completed (within threshold)
                     recentlyCompleted.push({ todo, originalIndex });
@@ -8822,14 +9213,20 @@
                 // Todos older than threshold are not rendered but remain in state
             });
 
-            // Sort active todos by deadline (earliest first)
-            activeTodos.sort((a, b) => {
+            // Issue-99: Sort helper for todos by deadline (earliest first)
+            function sortByDeadline(a, b) {
                 const aDeadline = a.todo.deadline || a.todo.dueDate;
                 const bDeadline = b.todo.deadline || b.todo.dueDate;
                 const aDate = aDeadline ? new Date(aDeadline).getTime() : Infinity;
                 const bDate = bDeadline ? new Date(bDeadline).getTime() : Infinity;
                 return aDate - bDate;
-            });
+            }
+
+            // Sort all todo categories by deadline
+            immediateTodos.sort(sortByDeadline);
+            upcomingWeekTodos.sort(sortByDeadline);
+            upcomingTwoWeeksTodos.sort(sortByDeadline);
+            horizonTodos.sort(sortByDeadline);
 
             // Sort recently completed by completedAt (most recent first)
             recentlyCompleted.sort((a, b) => {
@@ -8846,10 +9243,13 @@
             });
 
             // Check if there's anything to display
-            const hasActiveTodos = activeTodos.length > 0;
+            const hasImmediateTodos = immediateTodos.length > 0;
+            const hasUpcomingWeekTodos = upcomingWeekTodos.length > 0;
+            const hasUpcomingTwoWeeksTodos = upcomingTwoWeeksTodos.length > 0;
+            const hasHorizonTodos = horizonTodos.length > 0;
             const hasRecentlyCompleted = recentlyCompleted.length > 0;
             const hasRecentlyDropped = recentlyDropped.length > 0;
-            const hasAnyVisibleTodos = hasActiveTodos || hasRecentlyCompleted || hasRecentlyDropped;
+            const hasAnyVisibleTodos = hasImmediateTodos || hasUpcomingWeekTodos || hasUpcomingTwoWeeksTodos || hasHorizonTodos || hasRecentlyCompleted || hasRecentlyDropped;
 
             if (!hasAnyVisibleTodos) {
                 // Show empty state
@@ -8862,10 +9262,97 @@
                 emptyState.classList.add('hidden');
                 todoShortcutHintFloating.classList.remove('hidden');
 
-                // Render active todos
-                activeTodos.forEach(({ todo, originalIndex: index }) => {
+                // Render immediate todos (1-7 days) - main active list
+                immediateTodos.forEach(({ todo, originalIndex: index }) => {
                     todoList.appendChild(createTodoItemElement(todo, index));
                 });
+
+                // Issue-99: Render "Upcoming in a Week" section (8-14 days, collapsed by default)
+                if (hasUpcomingWeekTodos) {
+                    const upcomingWeekSection = document.createElement('div');
+                    upcomingWeekSection.className = 'todo-collapsible-section upcoming-week-section';
+                    upcomingWeekSection.id = 'upcoming-week-section';
+
+                    if (state.upcomingWeekExpanded) {
+                        upcomingWeekSection.classList.add('expanded');
+                    }
+
+                    upcomingWeekSection.innerHTML = `
+                        <div class="todo-collapsible-header" onclick="toggleUpcomingWeekSection()">
+                            <svg class="todo-collapsible-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="todo-collapsible-title">Upcoming in a Week</span>
+                            <span class="todo-collapsible-count">${upcomingWeekTodos.length}</span>
+                        </div>
+                        <div class="todo-collapsible-content"></div>
+                    `;
+
+                    const upcomingWeekContent = upcomingWeekSection.querySelector('.todo-collapsible-content');
+                    upcomingWeekTodos.forEach(({ todo, originalIndex: index }) => {
+                        upcomingWeekContent.appendChild(createTodoItemElement(todo, index));
+                    });
+
+                    todoList.appendChild(upcomingWeekSection);
+                }
+
+                // Issue-99: Render "Upcoming in 2 Weeks" section (15 days to end of month, collapsed by default)
+                if (hasUpcomingTwoWeeksTodos) {
+                    const upcomingTwoWeeksSection = document.createElement('div');
+                    upcomingTwoWeeksSection.className = 'todo-collapsible-section upcoming-two-weeks-section';
+                    upcomingTwoWeeksSection.id = 'upcoming-two-weeks-section';
+
+                    if (state.upcomingTwoWeeksExpanded) {
+                        upcomingTwoWeeksSection.classList.add('expanded');
+                    }
+
+                    upcomingTwoWeeksSection.innerHTML = `
+                        <div class="todo-collapsible-header" onclick="toggleUpcomingTwoWeeksSection()">
+                            <svg class="todo-collapsible-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="todo-collapsible-title">Upcoming in 2 Weeks</span>
+                            <span class="todo-collapsible-count">${upcomingTwoWeeksTodos.length}</span>
+                        </div>
+                        <div class="todo-collapsible-content"></div>
+                    `;
+
+                    const upcomingTwoWeeksContent = upcomingTwoWeeksSection.querySelector('.todo-collapsible-content');
+                    upcomingTwoWeeksTodos.forEach(({ todo, originalIndex: index }) => {
+                        upcomingTwoWeeksContent.appendChild(createTodoItemElement(todo, index));
+                    });
+
+                    todoList.appendChild(upcomingTwoWeeksSection);
+                }
+
+                // Issue-99: Render "In the Horizon" section (over 1 month, collapsed by default)
+                if (hasHorizonTodos) {
+                    const horizonSection = document.createElement('div');
+                    horizonSection.className = 'todo-collapsible-section horizon-section';
+                    horizonSection.id = 'horizon-section';
+
+                    if (state.horizonExpanded) {
+                        horizonSection.classList.add('expanded');
+                    }
+
+                    horizonSection.innerHTML = `
+                        <div class="todo-collapsible-header" onclick="toggleHorizonSection()">
+                            <svg class="todo-collapsible-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="todo-collapsible-title">In the Horizon (Over 1 Month)</span>
+                            <span class="todo-collapsible-count">${horizonTodos.length}</span>
+                        </div>
+                        <div class="todo-collapsible-content"></div>
+                    `;
+
+                    const horizonContent = horizonSection.querySelector('.todo-collapsible-content');
+                    horizonTodos.forEach(({ todo, originalIndex: index }) => {
+                        horizonContent.appendChild(createTodoItemElement(todo, index));
+                    });
+
+                    todoList.appendChild(horizonSection);
+                }
 
                 // Issue-97: Render Recently Completed section (collapsed by default)
                 if (hasRecentlyCompleted) {
@@ -9020,48 +9507,34 @@
             const checkboxClass = todo.blocked ? 'blocked' : (todo.dropped ? 'dropped' : (todo.completed ? 'checked' : ''));
             const checkboxClick = (todo.dropped || todo.blocked) ? '' : `onclick="toggleTodo(${index})"`;
 
-            // Build action buttons based on state
+            // Issue-101: Build action buttons based on state
+            // Removed edit button - clicking todo content opens read-only modal instead
             let actionsHtml = '';
             if (todo.blocked) {
                 // Blocked: only show Unblock button
                 actionsHtml = `
-                    <button class="todo-unblock-btn" onclick="unblockTodo(${index})" title="Unblock">
+                    <button class="todo-unblock-btn" onclick="event.stopPropagation(); unblockTodo(${index})" title="Unblock">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="5 3 19 12 5 21 5 3"></polygon>
                         </svg>
                     </button>
                 `;
             } else if (!todo.completed && !todo.dropped) {
-                // Active: show Edit and Block buttons
+                // Active: only show Block button (edit via clicking todo content)
                 actionsHtml = `
-                    <button class="todo-edit-btn" onclick="editTodo(${index})" title="Edit">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                    </button>
-                    <button class="todo-block-btn" onclick="openBlockReasonModal(${index})" title="Block">
+                    <button class="todo-block-btn" onclick="event.stopPropagation(); openBlockReasonModal(${index})" title="Block">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="6" y="4" width="4" height="16"></rect>
                             <rect x="14" y="4" width="4" height="16"></rect>
                         </svg>
                     </button>
                 `;
-            } else {
-                // Completed or Dropped: only show Edit
-                actionsHtml = `
-                    <button class="todo-edit-btn" onclick="editTodo(${index})" title="Edit">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                    </button>
-                `;
             }
+            // Completed or Dropped: no action buttons (edit via clicking todo content)
 
             todoItem.innerHTML = `
                 <div class="todo-checkbox ${checkboxClass}" ${checkboxClick}></div>
-                <div class="todo-content">
+                <div class="todo-content" onclick="viewTodo(${index})" style="cursor: pointer;">
                     <div class="todo-info">
                         <div class="todo-title">${escapeHtml(todo.title)}</div>
                         ${dueDateHtml}
@@ -9093,6 +9566,33 @@
             if (section) {
                 section.classList.toggle('expanded');
                 state.recentlyDroppedExpanded = section.classList.contains('expanded');
+            }
+        }
+
+        // Issue-99: Toggle Upcoming in a Week section
+        function toggleUpcomingWeekSection() {
+            const section = document.getElementById('upcoming-week-section');
+            if (section) {
+                section.classList.toggle('expanded');
+                state.upcomingWeekExpanded = section.classList.contains('expanded');
+            }
+        }
+
+        // Issue-99: Toggle Upcoming in 2 Weeks section
+        function toggleUpcomingTwoWeeksSection() {
+            const section = document.getElementById('upcoming-two-weeks-section');
+            if (section) {
+                section.classList.toggle('expanded');
+                state.upcomingTwoWeeksExpanded = section.classList.contains('expanded');
+            }
+        }
+
+        // Issue-99: Toggle In the Horizon section
+        function toggleHorizonSection() {
+            const section = document.getElementById('horizon-section');
+            if (section) {
+                section.classList.toggle('expanded');
+                state.horizonExpanded = section.classList.contains('expanded');
             }
         }
 
@@ -13266,9 +13766,14 @@
                         cancelInlineEngagement();
                         return;
                     }
-                    // Otherwise close the whole modal
-                    e.preventDefault();
-                    closeModal();
+                    // Issue-101: In read-only mode, Escape closes the modal
+                    // In edit mode, Escape does nothing (user must use Save/Cancel buttons)
+                    if (state.modalReadOnly) {
+                        e.preventDefault();
+                        closeModal();
+                        return;
+                    }
+                    // Edit mode - don't close on Escape
                     return;
                 }
                 if (state.engagementModalOpen) {
@@ -14155,7 +14660,7 @@
                 <div class="recommendation-item-header" style="position: relative;">
                     <div class="recommendation-item-checkbox ${item.todo.completed ? 'checked' : ''}"
                          onclick="toggleTodoFromRecommendation('${item.todo.id}')"></div>
-                    <div class="recommendation-item-title">${escapeHtml(item.todo.title)}</div>
+                    <div class="recommendation-item-title" onclick="viewTodoFromRecommendation('${item.todo.id}')" style="cursor: pointer;">${escapeHtml(item.todo.title)}</div>
                     <button class="recommendation-item-block-btn" onclick="blockTodoFromRecommendation('${item.todo.id}')" title="Block">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="6" y="4" width="4" height="16"></rect>
@@ -14214,6 +14719,14 @@
             }
         }
 
+        // Issue-101: View todo from recommendation panel (opens read-only modal)
+        function viewTodoFromRecommendation(todoId) {
+            const index = state.todos.findIndex(t => t.id === todoId);
+            if (index !== -1) {
+                viewTodo(index);
+            }
+        }
+
         // Render blocked section with special styling (Issue-67)
         function renderBlockedSection(sectionEl, itemsEl, countEl, items) {
             sectionEl.classList.toggle('hidden', items.length === 0);
@@ -14256,7 +14769,7 @@
             div.innerHTML = `
                 <div class="recommendation-item-header">
                     <div class="recommendation-item-checkbox blocked"></div>
-                    <div class="recommendation-item-title">${escapeHtml(item.todo.title)}</div>
+                    <div class="recommendation-item-title" onclick="viewTodoFromRecommendation('${item.todo.id}')" style="cursor: pointer;">${escapeHtml(item.todo.title)}</div>
                     <button class="todo-unblock-btn" onclick="unblockTodoFromRecommendation('${item.todo.id}')" title="Unblock" style="margin-left: auto;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="5 3 19 12 5 21 5 3"></polygon>
