@@ -1,6 +1,24 @@
 # TodoManager Version History
 
-## Version 1.6.0 (Current)
+## Version 1.7.0 (Current)
+
+### Release Date
+December 2025
+
+### New Features
+- **Compact Daily Plan Items**: Daily Plan items now display in a compact single-line layout
+  - Checkbox, title, effort, and deadline all on one line
+  - Long titles truncated with ellipsis ("...")
+  - Hover tooltip shows full title for truncated items
+  - Container auto-sizes to content (no fixed height, no scrollbars)
+  - Block/unblock buttons remain functional
+
+### Data Migrations
+- No data migrations required for v1.7.0
+
+---
+
+## Version 1.6.0
 
 ### Release Date
 December 2025
