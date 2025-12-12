@@ -3428,15 +3428,18 @@
             opacity: 0.6;
         }
 
-        /* Recommendation Item */
+        /* Recommendation Item - Issue-103: Compact single-line layout */
         .recommendation-item {
             background: #F8F9FA;
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 8px;
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin-bottom: 4px;
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .recommendation-item:last-child {
@@ -3446,25 +3449,17 @@
         .recommendation-item:hover {
             background: #FFFFFF;
             border-color: #E0E0E0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        }
-
-        .recommendation-item-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
         }
 
         .recommendation-item-checkbox {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             border: 2px solid #D0D0D0;
             flex-shrink: 0;
             cursor: pointer;
             transition: all 0.2s ease;
-            margin-top: 2px;
         }
 
         .recommendation-item-checkbox:hover {
@@ -3478,10 +3473,14 @@
 
         .recommendation-item-title {
             flex: 1;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
             color: #1F1F1F;
-            line-height: 1.4;
+            line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
         }
 
         .recommendation-item.completed .recommendation-item-title {
@@ -3491,7 +3490,7 @@
 
         /* Blocked recommendation item styles (Issue-67) */
         .recommendation-item.blocked {
-            opacity: 0.5;
+            opacity: 0.6;
             background: #EEEEEE;
         }
 
@@ -3505,13 +3504,28 @@
             cursor: not-allowed;
         }
 
+        /* Compact meta info for single-line layout */
+        .recommendation-item-meta-compact {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            font-size: 11px;
+            color: #6C757D;
+        }
+
+        .recommendation-item-effort-compact,
+        .recommendation-item-deadline-compact {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            white-space: nowrap;
+        }
+
         .recommendation-item-block-btn {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
             background: transparent;
             border: none;
             cursor: pointer;
@@ -3521,6 +3535,7 @@
             color: #9E9E9E;
             transition: all 0.2s ease;
             opacity: 0;
+            flex-shrink: 0;
         }
 
         .recommendation-item:hover .recommendation-item-block-btn {
@@ -3533,47 +3548,31 @@
         }
 
         .recommendation-item-block-btn svg {
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
         }
 
-        .recommendation-item-meta {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 12px;
-            color: #6C757D;
-            margin-bottom: 8px;
-            margin-left: 30px;
+        /* Hide legacy multi-line elements */
+        .recommendation-item-header,
+        .recommendation-item-meta,
+        .recommendation-item-tags,
+        .recommendation-item-reasoning,
+        .recommendation-item-score {
+            display: none;
         }
 
-        .recommendation-item-effort,
-        .recommendation-item-deadline {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* Tag pills in recommendation */
-        .recommendation-item-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-left: 30px;
-            margin-bottom: 8px;
-        }
-
-        /* Priority pill styling (distinct from user tags) */
+        /* Priority pill styling - compact version */
         .priority-pill {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            padding: 3px 10px;
-            font-size: 11px;
+            gap: 2px;
+            padding: 2px 6px;
+            font-size: 9px;
             font-weight: 600;
-            border-radius: 12px;
+            border-radius: 8px;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
+            flex-shrink: 0;
         }
 
         .priority-pill.priority-urgent {
@@ -3601,38 +3600,15 @@
             color: #9E9E9E;
         }
 
-        /* Reasoning text */
-        .recommendation-item-reasoning {
-            font-size: 12px;
-            color: #6C757D;
-            font-style: italic;
-            margin-left: 30px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .recommendation-item-reasoning::before {
-            content: '\2192';
-            color: #ADB5BD;
-        }
-
-        /* Score display */
-        .recommendation-item-score {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            margin-left: 30px;
-            margin-top: 8px;
-        }
-
+        /* Score badge - compact version */
         .score-badge {
-            font-size: 11px;
+            font-size: 9px;
             font-weight: 600;
             color: #6C757D;
             background: #E9ECEF;
-            padding: 2px 8px;
-            border-radius: 10px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            flex-shrink: 0;
         }
 
         .score-badge.critical {
@@ -14631,53 +14607,36 @@
             });
         }
 
+        // Issue-103: Compact single-line Daily Plan items
         function createRecommendationItemElement(item, index) {
             const div = document.createElement('div');
             div.className = `recommendation-item ${item.todo.completed ? 'completed' : ''}`;
 
-            const priority = item.todo.priority || DEFAULT_PRIORITY;
             const effort = item.todo.effort || DEFAULT_EFFORT;
-            const scoreClass = getScoreClassification(item.urgencyScore);
 
-            // Build tags HTML
-            let tagsHtml = '';
-            if (priority !== 'normal') {
-                const priorityTag = PRIORITY_TAGS[priority];
-                tagsHtml += `<span class="priority-pill priority-${priority}">${priorityTag.label}</span>`;
-            }
-
-            // Add user tags
-            if (item.todo.tagIds && item.todo.tagIds.length > 0) {
-                item.todo.tagIds.forEach(tagId => {
-                    const tag = state.tags.find(t => t.id === tagId);
-                    if (tag) {
-                        tagsHtml += `<span class="tag-pill" style="background-color: ${tag.color}20; color: ${tag.color}; border: 1px solid ${tag.color}40;">${escapeHtml(tag.name)}</span>`;
-                    }
-                });
-            }
-
+            // Single-line compact layout: checkbox | title | effort | deadline | block-btn
             div.innerHTML = `
-                <div class="recommendation-item-header" style="position: relative;">
-                    <div class="recommendation-item-checkbox ${item.todo.completed ? 'checked' : ''}"
-                         onclick="toggleTodoFromRecommendation('${item.todo.id}')"></div>
-                    <div class="recommendation-item-title" onclick="viewTodoFromRecommendation('${item.todo.id}')" style="cursor: pointer;">${escapeHtml(item.todo.title)}</div>
-                    <button class="recommendation-item-block-btn" onclick="blockTodoFromRecommendation('${item.todo.id}')" title="Block">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="6" y="4" width="4" height="16"></rect>
-                            <rect x="14" y="4" width="4" height="16"></rect>
-                        </svg>
-                    </button>
+                <div class="recommendation-item-checkbox ${item.todo.completed ? 'checked' : ''}"
+                     onclick="event.stopPropagation(); toggleTodoFromRecommendation('${item.todo.id}')"></div>
+                <div class="recommendation-item-title" title="${escapeHtml(item.todo.title)}">${escapeHtml(item.todo.title)}</div>
+                <div class="recommendation-item-meta-compact">
+                    <span class="recommendation-item-effort-compact">⏱️ ${formatEffortDisplay(effort)}</span>
+                    <span class="recommendation-item-deadline-compact">📅 ${formatDeadlineDisplay(item.todo.deadline)}</span>
                 </div>
-                <div class="recommendation-item-meta">
-                    <span class="recommendation-item-effort">⏱️ ${formatEffortDisplay(effort)}</span>
-                    <span class="recommendation-item-deadline">📅 ${formatDeadlineDisplay(item.todo.deadline)}</span>
-                </div>
-                ${tagsHtml ? `<div class="recommendation-item-tags">${tagsHtml}</div>` : ''}
-                <div class="recommendation-item-reasoning">${item.reasoning}</div>
-                <div class="recommendation-item-score">
-                    <span class="score-badge ${scoreClass.class}">Score: ${item.urgencyScore}</span>
-                </div>
+                <button class="recommendation-item-block-btn" onclick="event.stopPropagation(); blockTodoFromRecommendation('${item.todo.id}')" title="Block">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="6" y="4" width="4" height="16"></rect>
+                        <rect x="14" y="4" width="4" height="16"></rect>
+                    </svg>
+                </button>
             `;
+
+            // Click on item (not checkbox/block button) opens read-only modal
+            div.onclick = function(e) {
+                if (!e.target.closest('.recommendation-item-checkbox') && !e.target.closest('.recommendation-item-block-btn')) {
+                    viewTodoFromRecommendation(item.todo.id);
+                }
+            };
 
             return div;
         }
@@ -14740,49 +14699,34 @@
         }
 
         // Create blocked item element (Issue-67)
+        // Issue-103: Compact single-line blocked items
         function createBlockedItemElement(item) {
             const div = document.createElement('div');
             div.className = 'recommendation-item blocked';
 
-            const priority = item.todo.priority || DEFAULT_PRIORITY;
             const effort = item.todo.effort || DEFAULT_EFFORT;
 
-            // Build tags HTML
-            let tagsHtml = '';
-            if (priority !== 'normal') {
-                const priorityTag = PRIORITY_TAGS[priority];
-                tagsHtml += `<span class="priority-pill priority-${priority}">${priorityTag.label}</span>`;
-            }
-
-            // Add user tags
-            if (item.todo.tagIds && item.todo.tagIds.length > 0) {
-                item.todo.tagIds.forEach(tagId => {
-                    const tag = state.tags.find(t => t.id === tagId);
-                    if (tag) {
-                        tagsHtml += `<span class="tag-pill" style="background-color: ${tag.color}20; color: ${tag.color}; border: 1px solid ${tag.color}40;">${escapeHtml(tag.name)}</span>`;
-                    }
-                });
-            }
-
-            const reasonText = item.todo.blockedReason ? escapeHtml(item.todo.blockedReason) : 'No reason provided';
-
+            // Single-line compact layout: checkbox | title | effort | deadline | unblock-btn
             div.innerHTML = `
-                <div class="recommendation-item-header">
-                    <div class="recommendation-item-checkbox blocked"></div>
-                    <div class="recommendation-item-title" onclick="viewTodoFromRecommendation('${item.todo.id}')" style="cursor: pointer;">${escapeHtml(item.todo.title)}</div>
-                    <button class="todo-unblock-btn" onclick="unblockTodoFromRecommendation('${item.todo.id}')" title="Unblock" style="margin-left: auto;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                        </svg>
-                    </button>
+                <div class="recommendation-item-checkbox blocked"></div>
+                <div class="recommendation-item-title" title="${escapeHtml(item.todo.title)}">${escapeHtml(item.todo.title)}</div>
+                <div class="recommendation-item-meta-compact">
+                    <span class="recommendation-item-effort-compact">⏱️ ${formatEffortDisplay(effort)}</span>
+                    <span class="recommendation-item-deadline-compact">📅 ${formatDeadlineDisplay(item.todo.deadline)}</span>
                 </div>
-                <div class="recommendation-item-meta">
-                    <span class="recommendation-item-effort">⏱️ ${formatEffortDisplay(effort)}</span>
-                    <span class="recommendation-item-deadline">📅 ${formatDeadlineDisplay(item.todo.deadline)}</span>
-                </div>
-                ${tagsHtml ? `<div class="recommendation-item-tags">${tagsHtml}</div>` : ''}
-                <div class="recommendation-item-reasoning" style="color: #757575; font-style: italic;">⏸️ ${reasonText}</div>
+                <button class="recommendation-item-block-btn" onclick="event.stopPropagation(); unblockTodoFromRecommendation('${item.todo.id}')" title="Unblock">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                </button>
             `;
+
+            // Click on item opens read-only modal
+            div.onclick = function(e) {
+                if (!e.target.closest('.recommendation-item-block-btn')) {
+                    viewTodoFromRecommendation(item.todo.id);
+                }
+            };
 
             return div;
         }
