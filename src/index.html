@@ -996,6 +996,100 @@
             color: #BDBDBD;
         }
 
+        /* Collapsible sections for completed/dropped todos (Issue-97) */
+        .todo-collapsible-section {
+            margin-top: 16px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            overflow: hidden;
+        }
+
+        .todo-collapsible-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.15s ease;
+        }
+
+        .todo-collapsible-header:hover {
+            background: #e9ecef;
+        }
+
+        .todo-collapsible-icon {
+            width: 16px;
+            height: 16px;
+            color: #6C757D;
+            transition: transform 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .todo-collapsible-section.expanded .todo-collapsible-icon {
+            transform: rotate(90deg);
+        }
+
+        .todo-collapsible-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #495057;
+            flex: 1;
+        }
+
+        .todo-collapsible-count {
+            font-size: 12px;
+            color: #6C757D;
+            background: #dee2e6;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .todo-collapsible-content {
+            display: none;
+            padding: 0 12px 12px 12px;
+        }
+
+        .todo-collapsible-section.expanded .todo-collapsible-content {
+            display: block;
+        }
+
+        .todo-collapsible-content .todo-item {
+            margin-top: 8px;
+        }
+
+        .todo-collapsible-content .todo-item:first-child {
+            margin-top: 0;
+        }
+
+        /* Completed section has green tint */
+        .todo-collapsible-section.completed-section {
+            background: #f0f9f4;
+        }
+
+        .todo-collapsible-section.completed-section .todo-collapsible-header:hover {
+            background: #d4edda;
+        }
+
+        .todo-collapsible-section.completed-section .todo-collapsible-count {
+            background: #c3e6cb;
+            color: #155724;
+        }
+
+        /* Dropped section has red tint */
+        .todo-collapsible-section.dropped-section {
+            background: #fdf2f2;
+        }
+
+        .todo-collapsible-section.dropped-section .todo-collapsible-header:hover {
+            background: #f8d7da;
+        }
+
+        .todo-collapsible-section.dropped-section .todo-collapsible-count {
+            background: #f5c6cb;
+            color: #721c24;
+        }
+
         /* Daily Load highlight (Issue-74) */
         .todo-item.daily-load-highlighted {
             box-shadow: 0 0 0 3px #F5A623, 0 4px 12px rgba(245, 166, 35, 0.3);
@@ -6282,6 +6376,14 @@
                         </svg>
                         <span>Planning</span>
                     </li>
+                    <li class="settings-menu-item" data-section="tasks" onclick="switchSettingsSection('tasks')">
+                        <!-- Checklist/Tasks icon -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                        </svg>
+                        <span>Tasks</span>
+                    </li>
                     <li class="settings-menu-item" data-section="calendar" onclick="switchSettingsSection('calendar')">
                         <!-- Calendar icon -->
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -6403,6 +6505,22 @@
                             <label for="planning-horizon" class="form-label">Planning Horizon (days)</label>
                             <input type="number" id="planning-horizon" class="form-input" min="1" max="30" value="14">
                             <p class="form-hint">How far ahead to look when recommending tasks (default: 14 days)</p>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-save-settings">Save Settings</button>
+                    </form>
+                </div>
+
+                <!-- Tasks Section (Issue-97) -->
+                <div id="settings-section-tasks" class="settings-section hidden">
+                    <h2 class="settings-section-title">Tasks</h2>
+                    <p style="color: #6C757D; margin-bottom: 24px;">Configure how completed and dropped tasks are displayed in the todo list.</p>
+
+                    <form class="tasks-settings-form" onsubmit="saveTasksSettings(event)">
+                        <div class="form-group">
+                            <label for="completed-visibility-days" class="form-label">Completed/Dropped Visibility (days)</label>
+                            <input type="number" id="completed-visibility-days" class="form-input" min="1" max="365" value="5">
+                            <p class="form-hint">Recently completed and dropped tasks older than this will be hidden from the list (default: 5 days). Tasks remain in the system and are included in exports.</p>
                         </div>
 
                         <button type="submit" class="btn btn-primary btn-save-settings">Save Settings</button>
@@ -7218,7 +7336,9 @@
             <div style="text-align: left; margin-bottom: 24px;">
                 <h3 style="font-size: 16px; font-weight: 600; color: #1F1F1F; margin-bottom: 12px;">What's New</h3>
                 <ul style="margin: 0; padding-left: 20px; color: #374151; font-size: 14px; line-height: 1.8;">
-                    <li><strong>Conflict Detection</strong> - When adding holidays, PTO, or disabling work days, conflicts with scheduled todos and meetings are detected and you can choose to move or delete them</li>
+                    <li><strong>Collapsible Completed/Dropped Sections</strong> - Completed and dropped todos are now grouped into collapsible sections below the active todo list</li>
+                    <li><strong>Tasks Settings</strong> - New "Tasks" section in Settings with configurable visibility threshold (default: 5 days)</li>
+                    <li><strong>Cleaner Todo List</strong> - Older completed/dropped items are automatically hidden but remain in the system</li>
                 </ul>
             </div>
 
@@ -7453,7 +7573,7 @@
         // ========================================
         // APP VERSION
         // ========================================
-        const APP_VERSION = '1.3.0';
+        const APP_VERSION = '1.4.0';
 
         // ========================================
         // PLANNING SETTINGS - Defaults
@@ -7463,7 +7583,8 @@
             bufferPercentage: 15,       // 15% buffer for interruptions
             maxOverdueToShow: 5,        // Limit overdue display
             planningHorizonDays: 14,    // Look-ahead window
-            debugLogging: false         // Console logging disabled by default (Issue-64)
+            debugLogging: false,        // Console logging disabled by default (Issue-64)
+            completedVisibilityDays: 5  // Days to show completed/dropped todos (Issue-97)
         });
 
         // ========================================
@@ -7698,6 +7819,9 @@
             oppTagHighlightIndex: -1,
             // Planning settings
             settings: { ...DEFAULT_SETTINGS },
+            // Issue-97: Collapsible sections expanded state
+            recentlyCompletedExpanded: false,
+            recentlyDroppedExpanded: false,
             // Priority autocomplete state
             selectedPriority: DEFAULT_PRIORITY,
             priorityDropdownOpen: false,
@@ -8114,6 +8238,7 @@
             const peopleSection = document.getElementById('settings-section-people');
             const tagsSection = document.getElementById('settings-section-tags');
             const planningSection = document.getElementById('settings-section-planning');
+            const tasksSection = document.getElementById('settings-section-tasks');
             const calendarSection = document.getElementById('settings-section-calendar');
             const storageSection = document.getElementById('settings-section-storage');
 
@@ -8121,6 +8246,7 @@
             peopleSection.classList.add('hidden');
             tagsSection.classList.add('hidden');
             planningSection.classList.add('hidden');
+            tasksSection.classList.add('hidden');
             calendarSection.classList.add('hidden');
             storageSection.classList.add('hidden');
 
@@ -8133,6 +8259,9 @@
             } else if (section === 'planning') {
                 planningSection.classList.remove('hidden');
                 renderPlanningSettings();
+            } else if (section === 'tasks') {
+                tasksSection.classList.remove('hidden');
+                renderTasksSettings();
             } else if (section === 'calendar') {
                 calendarSection.classList.remove('hidden');
                 renderCalendarSettings();
@@ -8257,7 +8386,9 @@
                             maxOverdueToShow: typeof s.maxOverdueToShow === 'number' && s.maxOverdueToShow >= 0 && s.maxOverdueToShow <= 100
                                 ? s.maxOverdueToShow : DEFAULT_SETTINGS.maxOverdueToShow,
                             planningHorizonDays: typeof s.planningHorizonDays === 'number' && s.planningHorizonDays >= 1 && s.planningHorizonDays <= 365
-                                ? s.planningHorizonDays : DEFAULT_SETTINGS.planningHorizonDays
+                                ? s.planningHorizonDays : DEFAULT_SETTINGS.planningHorizonDays,
+                            completedVisibilityDays: typeof s.completedVisibilityDays === 'number' && s.completedVisibilityDays >= 1 && s.completedVisibilityDays <= 365
+                                ? s.completedVisibilityDays : DEFAULT_SETTINGS.completedVisibilityDays
                         };
                     } else {
                         state.settings = { ...DEFAULT_SETTINGS };
@@ -8658,7 +8789,69 @@
                 ? state.todos.filter(todo => matchesTodo(todo, state.searchQuery))
                 : state.todos;
 
-            if (filteredTodos.length === 0) {
+            // Issue-97: Calculate visibility threshold
+            const visibilityDays = state.settings.completedVisibilityDays || DEFAULT_SETTINGS.completedVisibilityDays;
+            const visibilityThreshold = new Date();
+            visibilityThreshold.setDate(visibilityThreshold.getDate() - visibilityDays);
+            visibilityThreshold.setHours(0, 0, 0, 0);
+
+            // Issue-97: Helper to check if a todo is within visibility threshold
+            function isWithinVisibilityThreshold(todo) {
+                const timestamp = todo.completedAt || todo.droppedAt;
+                if (!timestamp) return false;
+                return new Date(timestamp) >= visibilityThreshold;
+            }
+
+            // Issue-97: Separate todos into active, recently completed, and recently dropped
+            const activeTodos = [];
+            const recentlyCompleted = [];
+            const recentlyDropped = [];
+
+            filteredTodos.forEach(todo => {
+                const originalIndex = state.todos.indexOf(todo);
+                if (!todo.completed && !todo.dropped) {
+                    // Active todo (including blocked)
+                    activeTodos.push({ todo, originalIndex });
+                } else if (todo.completed && !todo.dropped && isWithinVisibilityThreshold(todo)) {
+                    // Recently completed (within threshold)
+                    recentlyCompleted.push({ todo, originalIndex });
+                } else if (todo.dropped && isWithinVisibilityThreshold(todo)) {
+                    // Recently dropped (within threshold)
+                    recentlyDropped.push({ todo, originalIndex });
+                }
+                // Todos older than threshold are not rendered but remain in state
+            });
+
+            // Sort active todos by deadline (earliest first)
+            activeTodos.sort((a, b) => {
+                const aDeadline = a.todo.deadline || a.todo.dueDate;
+                const bDeadline = b.todo.deadline || b.todo.dueDate;
+                const aDate = aDeadline ? new Date(aDeadline).getTime() : Infinity;
+                const bDate = bDeadline ? new Date(bDeadline).getTime() : Infinity;
+                return aDate - bDate;
+            });
+
+            // Sort recently completed by completedAt (most recent first)
+            recentlyCompleted.sort((a, b) => {
+                const aTime = a.todo.completedAt ? new Date(a.todo.completedAt).getTime() : 0;
+                const bTime = b.todo.completedAt ? new Date(b.todo.completedAt).getTime() : 0;
+                return bTime - aTime;
+            });
+
+            // Sort recently dropped by droppedAt (most recent first)
+            recentlyDropped.sort((a, b) => {
+                const aTime = a.todo.droppedAt ? new Date(a.todo.droppedAt).getTime() : 0;
+                const bTime = b.todo.droppedAt ? new Date(b.todo.droppedAt).getTime() : 0;
+                return bTime - aTime;
+            });
+
+            // Check if there's anything to display
+            const hasActiveTodos = activeTodos.length > 0;
+            const hasRecentlyCompleted = recentlyCompleted.length > 0;
+            const hasRecentlyDropped = recentlyDropped.length > 0;
+            const hasAnyVisibleTodos = hasActiveTodos || hasRecentlyCompleted || hasRecentlyDropped;
+
+            if (!hasAnyVisibleTodos) {
                 // Show empty state
                 todoList.classList.add('hidden');
                 emptyState.classList.remove('hidden');
@@ -8669,181 +8862,237 @@
                 emptyState.classList.add('hidden');
                 todoShortcutHintFloating.classList.remove('hidden');
 
-                // Create sorted array with original indices preserved
-                const sortedTodos = filteredTodos
-                    .map((todo) => ({ todo, originalIndex: state.todos.indexOf(todo) }))
-                    .sort((a, b) => {
-                        // Active todos first, then completed/dropped
-                        const aActive = !a.todo.completed && !a.todo.dropped;
-                        const bActive = !b.todo.completed && !b.todo.dropped;
+                // Render active todos
+                activeTodos.forEach(({ todo, originalIndex: index }) => {
+                    todoList.appendChild(createTodoItemElement(todo, index));
+                });
 
-                        if (aActive !== bActive) {
-                            return aActive ? -1 : 1;
-                        }
+                // Issue-97: Render Recently Completed section (collapsed by default)
+                if (hasRecentlyCompleted) {
+                    const completedSection = document.createElement('div');
+                    completedSection.className = 'todo-collapsible-section completed-section';
+                    completedSection.id = 'recently-completed-section';
 
-                        if (!aActive) {
-                            // Both completed or dropped: sort by completedAt/droppedAt (most recent first)
-                            const aTime = a.todo.completedAt || a.todo.droppedAt
-                                ? new Date(a.todo.completedAt || a.todo.droppedAt).getTime() : 0;
-                            const bTime = b.todo.completedAt || b.todo.droppedAt
-                                ? new Date(b.todo.completedAt || b.todo.droppedAt).getTime() : 0;
-                            return bTime - aTime;
-                        } else {
-                            // Both active: sort by deadline (earliest first)
-                            const aDeadline = a.todo.deadline || a.todo.dueDate;
-                            const bDeadline = b.todo.deadline || b.todo.dueDate;
-                            const aDate = aDeadline ? new Date(aDeadline).getTime() : Infinity;
-                            const bDate = bDeadline ? new Date(bDeadline).getTime() : Infinity;
-                            return aDate - bDate;
-                        }
+                    // Check if it was previously expanded
+                    if (state.recentlyCompletedExpanded) {
+                        completedSection.classList.add('expanded');
+                    }
+
+                    completedSection.innerHTML = `
+                        <div class="todo-collapsible-header" onclick="toggleRecentlyCompletedSection()">
+                            <svg class="todo-collapsible-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="todo-collapsible-title">Recently Completed</span>
+                            <span class="todo-collapsible-count">${recentlyCompleted.length}</span>
+                        </div>
+                        <div class="todo-collapsible-content"></div>
+                    `;
+
+                    const completedContent = completedSection.querySelector('.todo-collapsible-content');
+                    recentlyCompleted.forEach(({ todo, originalIndex: index }) => {
+                        completedContent.appendChild(createTodoItemElement(todo, index));
                     });
 
-                sortedTodos.forEach(({ todo, originalIndex: index }) => {
-                    const todoItem = document.createElement('div');
-                    const stateClass = todo.blocked ? 'blocked' : (todo.dropped ? 'dropped' : (todo.completed ? 'completed' : ''));
-                    todoItem.className = `todo-item ${stateClass}`;
-                    todoItem.dataset.todoId = todo.id; // For Daily Load chart highlighting (Issue-74)
+                    todoList.appendChild(completedSection);
+                }
 
-                    // Format deadline (supports both old dueDate and new deadline)
-                    let dueDateHtml = '';
-                    const deadlineValue = todo.deadline || todo.dueDate;
-                    if (deadlineValue) {
-                        const dueDate = new Date(deadlineValue);
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
-                        const isOverdue = dueDate < today && !todo.completed && !todo.dropped && !todo.blocked;
-                        dueDateHtml = `<div class="todo-due-date ${isOverdue ? 'overdue' : ''}">📅 ${formatDeadlineDisplay(deadlineValue)}</div>`;
+                // Issue-97: Render Recently Dropped section (collapsed by default)
+                if (hasRecentlyDropped) {
+                    const droppedSection = document.createElement('div');
+                    droppedSection.className = 'todo-collapsible-section dropped-section';
+                    droppedSection.id = 'recently-dropped-section';
+
+                    // Check if it was previously expanded
+                    if (state.recentlyDroppedExpanded) {
+                        droppedSection.classList.add('expanded');
                     }
 
-                    // Format effort
-                    let effortHtml = '';
-                    const effort = todo.effort || DEFAULT_EFFORT;
-                    const effortConfig = EFFORT_CONFIG[effort];
-                    if (effortConfig) {
-                        effortHtml = `<span class="todo-effort"><span class="todo-effort-icon">${effortConfig.icon}</span> ${formatEffortDisplay(effort)}</span>`;
-                    }
-
-                    // Format priority
-                    let priorityHtml = '';
-                    const priority = todo.priority || DEFAULT_PRIORITY;
-                    if (priority && priority !== 'normal') {
-                        const priorityTag = PRIORITY_TAGS[priority];
-                        if (priorityTag) {
-                            priorityHtml = `<span class="priority-pill priority-${priority}">${priorityTag.label}</span>`;
-                        }
-                    }
-
-                    // Format linked engagement
-                    let engagementHtml = '';
-                    if (todo.engagementId) {
-                        const opp = state.engagements.find(o => o.id === todo.engagementId);
-                        if (opp) {
-                            engagementHtml = `
-                                <div class="todo-engagement">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <polyline points="12 6 12 12 16 14"></polyline>
-                                    </svg>
-                                    ${escapeHtml(opp.name)}
-                                </div>
-                            `;
-                        }
-                    }
-
-                    // Format tags (combine priority pill with user tags)
-                    let tagsHtml = '';
-                    const tagPills = [];
-
-                    // Add priority pill first (if not normal)
-                    if (priorityHtml) {
-                        tagPills.push(priorityHtml);
-                    }
-
-                    // Add effort badge
-                    if (effortHtml) {
-                        tagPills.push(effortHtml);
-                    }
-
-                    // Add user tags
-                    if (todo.tagIds && todo.tagIds.length > 0) {
-                        todo.tagIds.forEach(tagId => {
-                            const tag = getTagById(tagId);
-                            if (tag) {
-                                tagPills.push(`<span class="tag-pill" style="background-color: ${tag.color}; color: #fff;">${escapeHtml(tag.name)}</span>`);
-                            }
-                        });
-                    }
-
-                    if (tagPills.length > 0) {
-                        tagsHtml = `<div class="tags-container">${tagPills.join('')}</div>`;
-                    }
-
-                    // Format description for two-column layout
-                    let descriptionHtml = '';
-                    if (todo.description && todo.description.trim()) {
-                        descriptionHtml = `<div class="todo-description">${escapeHtml(todo.description)}</div>`;
-                    }
-
-                    // Checkbox class and click handler (dropped and blocked todos can't be toggled)
-                    const checkboxClass = todo.blocked ? 'blocked' : (todo.dropped ? 'dropped' : (todo.completed ? 'checked' : ''));
-                    const checkboxClick = (todo.dropped || todo.blocked) ? '' : `onclick="toggleTodo(${index})"`;
-
-                    // Build action buttons based on state
-                    let actionsHtml = '';
-                    if (todo.blocked) {
-                        // Blocked: only show Unblock button
-                        actionsHtml = `
-                            <button class="todo-unblock-btn" onclick="unblockTodo(${index})" title="Unblock">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                                </svg>
-                            </button>
-                        `;
-                    } else if (!todo.completed && !todo.dropped) {
-                        // Active: show Edit and Block buttons
-                        actionsHtml = `
-                            <button class="todo-edit-btn" onclick="editTodo(${index})" title="Edit">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                            </button>
-                            <button class="todo-block-btn" onclick="openBlockReasonModal(${index})" title="Block">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="6" y="4" width="4" height="16"></rect>
-                                    <rect x="14" y="4" width="4" height="16"></rect>
-                                </svg>
-                            </button>
-                        `;
-                    } else {
-                        // Completed or Dropped: only show Edit
-                        actionsHtml = `
-                            <button class="todo-edit-btn" onclick="editTodo(${index})" title="Edit">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                            </button>
-                        `;
-                    }
-
-                    todoItem.innerHTML = `
-                        <div class="todo-checkbox ${checkboxClass}" ${checkboxClick}></div>
-                        <div class="todo-content">
-                            <div class="todo-info">
-                                <div class="todo-title">${escapeHtml(todo.title)}</div>
-                                ${dueDateHtml}
-                                ${engagementHtml}
-                                ${tagsHtml}
-                            </div>
-                            ${descriptionHtml}
+                    droppedSection.innerHTML = `
+                        <div class="todo-collapsible-header" onclick="toggleRecentlyDroppedSection()">
+                            <svg class="todo-collapsible-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="todo-collapsible-title">Recently Dropped</span>
+                            <span class="todo-collapsible-count">${recentlyDropped.length}</span>
                         </div>
-                        <div class="todo-actions">
-                            ${actionsHtml}
+                        <div class="todo-collapsible-content"></div>
+                    `;
+
+                    const droppedContent = droppedSection.querySelector('.todo-collapsible-content');
+                    recentlyDropped.forEach(({ todo, originalIndex: index }) => {
+                        droppedContent.appendChild(createTodoItemElement(todo, index));
+                    });
+
+                    todoList.appendChild(droppedSection);
+                }
+            }
+        }
+
+        // Issue-97: Helper function to create a todo item element
+        function createTodoItemElement(todo, index) {
+            const todoItem = document.createElement('div');
+            const stateClass = todo.blocked ? 'blocked' : (todo.dropped ? 'dropped' : (todo.completed ? 'completed' : ''));
+            todoItem.className = `todo-item ${stateClass}`;
+            todoItem.dataset.todoId = todo.id; // For Daily Load chart highlighting (Issue-74)
+
+            // Format deadline (supports both old dueDate and new deadline)
+            let dueDateHtml = '';
+            const deadlineValue = todo.deadline || todo.dueDate;
+            if (deadlineValue) {
+                const dueDate = new Date(deadlineValue);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const isOverdue = dueDate < today && !todo.completed && !todo.dropped && !todo.blocked;
+                dueDateHtml = `<div class="todo-due-date ${isOverdue ? 'overdue' : ''}">📅 ${formatDeadlineDisplay(deadlineValue)}</div>`;
+            }
+
+            // Format effort
+            let effortHtml = '';
+            const effort = todo.effort || DEFAULT_EFFORT;
+            const effortConfig = EFFORT_CONFIG[effort];
+            if (effortConfig) {
+                effortHtml = `<span class="todo-effort"><span class="todo-effort-icon">${effortConfig.icon}</span> ${formatEffortDisplay(effort)}</span>`;
+            }
+
+            // Format priority
+            let priorityHtml = '';
+            const priority = todo.priority || DEFAULT_PRIORITY;
+            if (priority && priority !== 'normal') {
+                const priorityTag = PRIORITY_TAGS[priority];
+                if (priorityTag) {
+                    priorityHtml = `<span class="priority-pill priority-${priority}">${priorityTag.label}</span>`;
+                }
+            }
+
+            // Format linked engagement
+            let engagementHtml = '';
+            if (todo.engagementId) {
+                const opp = state.engagements.find(o => o.id === todo.engagementId);
+                if (opp) {
+                    engagementHtml = `
+                        <div class="todo-engagement">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            ${escapeHtml(opp.name)}
                         </div>
                     `;
-                    todoList.appendChild(todoItem);
+                }
+            }
+
+            // Format tags (combine priority pill with user tags)
+            let tagsHtml = '';
+            const tagPills = [];
+
+            // Add priority pill first (if not normal)
+            if (priorityHtml) {
+                tagPills.push(priorityHtml);
+            }
+
+            // Add effort badge
+            if (effortHtml) {
+                tagPills.push(effortHtml);
+            }
+
+            // Add user tags
+            if (todo.tagIds && todo.tagIds.length > 0) {
+                todo.tagIds.forEach(tagId => {
+                    const tag = getTagById(tagId);
+                    if (tag) {
+                        tagPills.push(`<span class="tag-pill" style="background-color: ${tag.color}; color: #fff;">${escapeHtml(tag.name)}</span>`);
+                    }
                 });
+            }
+
+            if (tagPills.length > 0) {
+                tagsHtml = `<div class="tags-container">${tagPills.join('')}</div>`;
+            }
+
+            // Format description for two-column layout
+            let descriptionHtml = '';
+            if (todo.description && todo.description.trim()) {
+                descriptionHtml = `<div class="todo-description">${escapeHtml(todo.description)}</div>`;
+            }
+
+            // Checkbox class and click handler (dropped and blocked todos can't be toggled)
+            const checkboxClass = todo.blocked ? 'blocked' : (todo.dropped ? 'dropped' : (todo.completed ? 'checked' : ''));
+            const checkboxClick = (todo.dropped || todo.blocked) ? '' : `onclick="toggleTodo(${index})"`;
+
+            // Build action buttons based on state
+            let actionsHtml = '';
+            if (todo.blocked) {
+                // Blocked: only show Unblock button
+                actionsHtml = `
+                    <button class="todo-unblock-btn" onclick="unblockTodo(${index})" title="Unblock">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                    </button>
+                `;
+            } else if (!todo.completed && !todo.dropped) {
+                // Active: show Edit and Block buttons
+                actionsHtml = `
+                    <button class="todo-edit-btn" onclick="editTodo(${index})" title="Edit">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
+                    <button class="todo-block-btn" onclick="openBlockReasonModal(${index})" title="Block">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="6" y="4" width="4" height="16"></rect>
+                            <rect x="14" y="4" width="4" height="16"></rect>
+                        </svg>
+                    </button>
+                `;
+            } else {
+                // Completed or Dropped: only show Edit
+                actionsHtml = `
+                    <button class="todo-edit-btn" onclick="editTodo(${index})" title="Edit">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
+                `;
+            }
+
+            todoItem.innerHTML = `
+                <div class="todo-checkbox ${checkboxClass}" ${checkboxClick}></div>
+                <div class="todo-content">
+                    <div class="todo-info">
+                        <div class="todo-title">${escapeHtml(todo.title)}</div>
+                        ${dueDateHtml}
+                        ${engagementHtml}
+                        ${tagsHtml}
+                    </div>
+                    ${descriptionHtml}
+                </div>
+                <div class="todo-actions">
+                    ${actionsHtml}
+                </div>
+            `;
+
+            return todoItem;
+        }
+
+        // Issue-97: Toggle Recently Completed section
+        function toggleRecentlyCompletedSection() {
+            const section = document.getElementById('recently-completed-section');
+            if (section) {
+                section.classList.toggle('expanded');
+                state.recentlyCompletedExpanded = section.classList.contains('expanded');
+            }
+        }
+
+        // Issue-97: Toggle Recently Dropped section
+        function toggleRecentlyDroppedSection() {
+            const section = document.getElementById('recently-dropped-section');
+            if (section) {
+                section.classList.toggle('expanded');
+                state.recentlyDroppedExpanded = section.classList.contains('expanded');
             }
         }
 
@@ -14913,6 +15162,34 @@
 
         function renderPlanningSettings() {
             loadPlanningSettings();
+        }
+
+        // ========================================
+        // TASKS SETTINGS FUNCTIONS (Issue-97)
+        // ========================================
+
+        function saveTasksSettings(event) {
+            event.preventDefault();
+
+            state.settings.completedVisibilityDays = parseInt(document.getElementById('completed-visibility-days').value) || DEFAULT_SETTINGS.completedVisibilityDays;
+
+            // Refresh todo list with new settings
+            if (state.currentPage === 'app' && state.currentTab === 'home') {
+                renderTodos();
+            }
+
+            // Auto-save to IndexedDB
+            saveStateToIndexedDB().catch(err => Logger.error('Failed to save state:', err));
+
+            alert('Tasks settings saved successfully!');
+        }
+
+        function loadTasksSettings() {
+            document.getElementById('completed-visibility-days').value = state.settings.completedVisibilityDays || DEFAULT_SETTINGS.completedVisibilityDays;
+        }
+
+        function renderTasksSettings() {
+            loadTasksSettings();
         }
 
         // ========================================
