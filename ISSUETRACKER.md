@@ -77,3 +77,5 @@ Issue-97: Added collapsible "Recently Completed" and "Recently Dropped" sections
 Issue-99: Added collapsible future todo groups (Upcoming in a Week, Upcoming in 2 Weeks, In the Horizon) to organize todos by deadline proximity.
 
 Issue-101: Implemented read-only modal view for todos. Clicking a todo opens a read-only view with all fields displayed. Edit pen icon in header switches to edit mode. Removed edit button from todo cards (keep checkbox and block). In read-only mode, Escape/backdrop click closes modal. In edit mode, user must Save/Cancel. Daily Plan todo titles also open read-only modal.
+
+Issue-103: Compact Daily Plan items to single-line layout with auto-height container, truncated titles with ellipsis and hover tooltip.
