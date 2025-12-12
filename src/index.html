@@ -4144,6 +4144,37 @@
             max-width: 100%;
         }
 
+        /* Issue-107: Today column highlight */
+        .daily-load-column.today .daily-load-label {
+            font-weight: 700;
+            color: #1F1F1F;
+        }
+
+        /* Issue-107: Faded overlay for non-Today columns */
+        .daily-load-column.faded .daily-load-bar {
+            position: relative;
+        }
+
+        .daily-load-column.faded .daily-load-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.4);
+            pointer-events: none;
+            border-radius: 6px;
+        }
+
+        .daily-load-column.faded .daily-load-label {
+            opacity: 0.7;
+        }
+
+        .daily-load-column.faded .daily-load-column-hours {
+            opacity: 0.7;
+        }
+
         /* Responsive split-panel */
         @media (max-width: 1400px) {
             .home-split-container {
@@ -14809,10 +14840,10 @@
                 return 'Tmrw';
             }
 
-            // Check if there's a gap > 2 days from previous date
+            // Check if there's a gap > 3 days from previous date
             if (prevDate) {
                 const dayDiff = Math.round((dateTime - prevDate.getTime()) / (1000 * 60 * 60 * 24));
-                if (dayDiff > 2) {
+                if (dayDiff > 3) {
                     // Show date format: "Dec 22"
                     return `${MONTH_NAMES_SHORT[date.getMonth()]} ${date.getDate()}`;
                 }
@@ -15131,7 +15162,7 @@
          */
         function renderYesterdayColumn(data) {
             const column = document.createElement('div');
-            column.className = 'daily-load-column';
+            column.className = 'daily-load-column faded';
 
             // Calculate total hours
             let totalHours = 0;
@@ -15183,7 +15214,7 @@
          */
         function renderTodayColumn(data) {
             const column = document.createElement('div');
-            column.className = 'daily-load-column';
+            column.className = 'daily-load-column today';
 
             // Calculate total hours
             let totalHours = 0;
@@ -15238,7 +15269,7 @@
          */
         function renderFutureDayColumn(data, date, labelText) {
             const column = document.createElement('div');
-            column.className = 'daily-load-column';
+            column.className = 'daily-load-column faded';
 
             // Calculate total hours
             let totalHours = 0;
