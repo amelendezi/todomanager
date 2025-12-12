@@ -1090,6 +1090,48 @@
             color: #721c24;
         }
 
+        /* Issue-99: Upcoming in a Week section - blue tint */
+        .todo-collapsible-section.upcoming-week-section {
+            background: #e8f4fd;
+        }
+
+        .todo-collapsible-section.upcoming-week-section .todo-collapsible-header:hover {
+            background: #cce5fc;
+        }
+
+        .todo-collapsible-section.upcoming-week-section .todo-collapsible-count {
+            background: #b3d7fa;
+            color: #0d47a1;
+        }
+
+        /* Issue-99: Upcoming in 2 Weeks section - purple tint */
+        .todo-collapsible-section.upcoming-two-weeks-section {
+            background: #f3e8fd;
+        }
+
+        .todo-collapsible-section.upcoming-two-weeks-section .todo-collapsible-header:hover {
+            background: #e4ccfc;
+        }
+
+        .todo-collapsible-section.upcoming-two-weeks-section .todo-collapsible-count {
+            background: #d4b3fa;
+            color: #4a148c;
+        }
+
+        /* Issue-99: In the Horizon section - gray/neutral tint */
+        .todo-collapsible-section.horizon-section {
+            background: #f5f5f5;
+        }
+
+        .todo-collapsible-section.horizon-section .todo-collapsible-header:hover {
+            background: #e0e0e0;
+        }
+
+        .todo-collapsible-section.horizon-section .todo-collapsible-count {
+            background: #bdbdbd;
+            color: #424242;
+        }
+
         /* Daily Load highlight (Issue-74) */
         .todo-item.daily-load-highlighted {
             box-shadow: 0 0 0 3px #F5A623, 0 4px 12px rgba(245, 166, 35, 0.3);
@@ -7822,6 +7864,10 @@
             // Issue-97: Collapsible sections expanded state
             recentlyCompletedExpanded: false,
             recentlyDroppedExpanded: false,
+            // Issue-99: Future todo groups expanded state
+            upcomingWeekExpanded: false,
+            upcomingTwoWeeksExpanded: false,
+            horizonExpanded: false,
             // Priority autocomplete state
             selectedPriority: DEFAULT_PRIORITY,
             priorityDropdownOpen: false,
@@ -8802,16 +8848,64 @@
                 return new Date(timestamp) >= visibilityThreshold;
             }
 
-            // Issue-97: Separate todos into active, recently completed, and recently dropped
-            const activeTodos = [];
+            // Issue-99: Helper to get days from today for a deadline
+            function getDaysFromToday(deadline) {
+                if (!deadline) return Infinity;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const deadlineDate = new Date(deadline);
+                deadlineDate.setHours(0, 0, 0, 0);
+                const diffTime = deadlineDate.getTime() - today.getTime();
+                return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            }
+
+            // Issue-99: Helper to get the number of days in the current month
+            function getDaysInCurrentMonth() {
+                const today = new Date();
+                // Get next month's first day, then subtract 1 day to get last day of current month
+                return new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+            }
+
+            // Issue-99: Categorize active todo by deadline range
+            function getDeadlineCategory(todo) {
+                const deadline = todo.deadline || todo.dueDate;
+                const daysFromToday = getDaysFromToday(deadline);
+                const daysInMonth = getDaysInCurrentMonth();
+
+                if (daysFromToday <= 7) {
+                    return 'immediate'; // 1-7 days - main active list
+                } else if (daysFromToday <= 14) {
+                    return 'upcomingWeek'; // 8-14 days
+                } else if (daysFromToday <= daysInMonth) {
+                    return 'upcomingTwoWeeks'; // 15 days to end of month
+                } else {
+                    return 'horizon'; // Beyond 1 month
+                }
+            }
+
+            // Issue-99: Separate todos into categories
+            const immediateTodos = [];      // 1-7 days (main active list)
+            const upcomingWeekTodos = [];   // 8-14 days
+            const upcomingTwoWeeksTodos = []; // 15 days to end of month
+            const horizonTodos = [];        // Over 1 month
             const recentlyCompleted = [];
             const recentlyDropped = [];
 
             filteredTodos.forEach(todo => {
                 const originalIndex = state.todos.indexOf(todo);
                 if (!todo.completed && !todo.dropped) {
-                    // Active todo (including blocked)
-                    activeTodos.push({ todo, originalIndex });
+                    // Categorize active todos by deadline
+                    const category = getDeadlineCategory(todo);
+                    const todoEntry = { todo, originalIndex };
+                    if (category === 'immediate') {
+                        immediateTodos.push(todoEntry);
+                    } else if (category === 'upcomingWeek') {
+                        upcomingWeekTodos.push(todoEntry);
+                    } else if (category === 'upcomingTwoWeeks') {
+                        upcomingTwoWeeksTodos.push(todoEntry);
+                    } else {
+                        horizonTodos.push(todoEntry);
+                    }
                 } else if (todo.completed && !todo.dropped && isWithinVisibilityThreshold(todo)) {
                     // Recently completed (within threshold)
                     recentlyCompleted.push({ todo, originalIndex });
@@ -8822,14 +8916,20 @@
                 // Todos older than threshold are not rendered but remain in state
             });
 
-            // Sort active todos by deadline (earliest first)
-            activeTodos.sort((a, b) => {
+            // Issue-99: Sort helper for todos by deadline (earliest first)
+            function sortByDeadline(a, b) {
                 const aDeadline = a.todo.deadline || a.todo.dueDate;
                 const bDeadline = b.todo.deadline || b.todo.dueDate;
                 const aDate = aDeadline ? new Date(aDeadline).getTime() : Infinity;
                 const bDate = bDeadline ? new Date(bDeadline).getTime() : Infinity;
                 return aDate - bDate;
-            });
+            }
+
+            // Sort all todo categories by deadline
+            immediateTodos.sort(sortByDeadline);
+            upcomingWeekTodos.sort(sortByDeadline);
+            upcomingTwoWeeksTodos.sort(sortByDeadline);
+            horizonTodos.sort(sortByDeadline);
 
             // Sort recently completed by completedAt (most recent first)
             recentlyCompleted.sort((a, b) => {
@@ -8846,10 +8946,13 @@
             });
 
             // Check if there's anything to display
-            const hasActiveTodos = activeTodos.length > 0;
+            const hasImmediateTodos = immediateTodos.length > 0;
+            const hasUpcomingWeekTodos = upcomingWeekTodos.length > 0;
+            const hasUpcomingTwoWeeksTodos = upcomingTwoWeeksTodos.length > 0;
+            const hasHorizonTodos = horizonTodos.length > 0;
             const hasRecentlyCompleted = recentlyCompleted.length > 0;
             const hasRecentlyDropped = recentlyDropped.length > 0;
-            const hasAnyVisibleTodos = hasActiveTodos || hasRecentlyCompleted || hasRecentlyDropped;
+            const hasAnyVisibleTodos = hasImmediateTodos || hasUpcomingWeekTodos || hasUpcomingTwoWeeksTodos || hasHorizonTodos || hasRecentlyCompleted || hasRecentlyDropped;
 
             if (!hasAnyVisibleTodos) {
                 // Show empty state
@@ -8862,10 +8965,97 @@
                 emptyState.classList.add('hidden');
                 todoShortcutHintFloating.classList.remove('hidden');
 
-                // Render active todos
-                activeTodos.forEach(({ todo, originalIndex: index }) => {
+                // Render immediate todos (1-7 days) - main active list
+                immediateTodos.forEach(({ todo, originalIndex: index }) => {
                     todoList.appendChild(createTodoItemElement(todo, index));
                 });
+
+                // Issue-99: Render "Upcoming in a Week" section (8-14 days, collapsed by default)
+                if (hasUpcomingWeekTodos) {
+                    const upcomingWeekSection = document.createElement('div');
+                    upcomingWeekSection.className = 'todo-collapsible-section upcoming-week-section';
+                    upcomingWeekSection.id = 'upcoming-week-section';
+
+                    if (state.upcomingWeekExpanded) {
+                        upcomingWeekSection.classList.add('expanded');
+                    }
+
+                    upcomingWeekSection.innerHTML = `
+                        <div class="todo-collapsible-header" onclick="toggleUpcomingWeekSection()">
+                            <svg class="todo-collapsible-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="todo-collapsible-title">Upcoming in a Week</span>
+                            <span class="todo-collapsible-count">${upcomingWeekTodos.length}</span>
+                        </div>
+                        <div class="todo-collapsible-content"></div>
+                    `;
+
+                    const upcomingWeekContent = upcomingWeekSection.querySelector('.todo-collapsible-content');
+                    upcomingWeekTodos.forEach(({ todo, originalIndex: index }) => {
+                        upcomingWeekContent.appendChild(createTodoItemElement(todo, index));
+                    });
+
+                    todoList.appendChild(upcomingWeekSection);
+                }
+
+                // Issue-99: Render "Upcoming in 2 Weeks" section (15 days to end of month, collapsed by default)
+                if (hasUpcomingTwoWeeksTodos) {
+                    const upcomingTwoWeeksSection = document.createElement('div');
+                    upcomingTwoWeeksSection.className = 'todo-collapsible-section upcoming-two-weeks-section';
+                    upcomingTwoWeeksSection.id = 'upcoming-two-weeks-section';
+
+                    if (state.upcomingTwoWeeksExpanded) {
+                        upcomingTwoWeeksSection.classList.add('expanded');
+                    }
+
+                    upcomingTwoWeeksSection.innerHTML = `
+                        <div class="todo-collapsible-header" onclick="toggleUpcomingTwoWeeksSection()">
+                            <svg class="todo-collapsible-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="todo-collapsible-title">Upcoming in 2 Weeks</span>
+                            <span class="todo-collapsible-count">${upcomingTwoWeeksTodos.length}</span>
+                        </div>
+                        <div class="todo-collapsible-content"></div>
+                    `;
+
+                    const upcomingTwoWeeksContent = upcomingTwoWeeksSection.querySelector('.todo-collapsible-content');
+                    upcomingTwoWeeksTodos.forEach(({ todo, originalIndex: index }) => {
+                        upcomingTwoWeeksContent.appendChild(createTodoItemElement(todo, index));
+                    });
+
+                    todoList.appendChild(upcomingTwoWeeksSection);
+                }
+
+                // Issue-99: Render "In the Horizon" section (over 1 month, collapsed by default)
+                if (hasHorizonTodos) {
+                    const horizonSection = document.createElement('div');
+                    horizonSection.className = 'todo-collapsible-section horizon-section';
+                    horizonSection.id = 'horizon-section';
+
+                    if (state.horizonExpanded) {
+                        horizonSection.classList.add('expanded');
+                    }
+
+                    horizonSection.innerHTML = `
+                        <div class="todo-collapsible-header" onclick="toggleHorizonSection()">
+                            <svg class="todo-collapsible-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="todo-collapsible-title">In the Horizon (Over 1 Month)</span>
+                            <span class="todo-collapsible-count">${horizonTodos.length}</span>
+                        </div>
+                        <div class="todo-collapsible-content"></div>
+                    `;
+
+                    const horizonContent = horizonSection.querySelector('.todo-collapsible-content');
+                    horizonTodos.forEach(({ todo, originalIndex: index }) => {
+                        horizonContent.appendChild(createTodoItemElement(todo, index));
+                    });
+
+                    todoList.appendChild(horizonSection);
+                }
 
                 // Issue-97: Render Recently Completed section (collapsed by default)
                 if (hasRecentlyCompleted) {
@@ -9093,6 +9283,33 @@
             if (section) {
                 section.classList.toggle('expanded');
                 state.recentlyDroppedExpanded = section.classList.contains('expanded');
+            }
+        }
+
+        // Issue-99: Toggle Upcoming in a Week section
+        function toggleUpcomingWeekSection() {
+            const section = document.getElementById('upcoming-week-section');
+            if (section) {
+                section.classList.toggle('expanded');
+                state.upcomingWeekExpanded = section.classList.contains('expanded');
+            }
+        }
+
+        // Issue-99: Toggle Upcoming in 2 Weeks section
+        function toggleUpcomingTwoWeeksSection() {
+            const section = document.getElementById('upcoming-two-weeks-section');
+            if (section) {
+                section.classList.toggle('expanded');
+                state.upcomingTwoWeeksExpanded = section.classList.contains('expanded');
+            }
+        }
+
+        // Issue-99: Toggle In the Horizon section
+        function toggleHorizonSection() {
+            const section = document.getElementById('horizon-section');
+            if (section) {
+                section.classList.toggle('expanded');
+                state.horizonExpanded = section.classList.contains('expanded');
             }
         }
 
