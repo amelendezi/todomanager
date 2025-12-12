@@ -1,6 +1,23 @@
 # TodoManager Version History
 
-## Version 1.8.0 (Current)
+## Version 1.9.0 (Current)
+
+### Release Date
+December 2025
+
+### Bug Fixes
+- **Export/Import Sync**: Fixed export/import functionality to include all app entities (Issue-109)
+  - Export now includes: `workCalendar`, `meetings`, `allocations`, `appVersion`
+  - Import now properly restores all entities with sanitization
+  - Added `sanitizeMeeting()`, `sanitizeWorkCalendar()`, `sanitizeAllocation()` functions
+  - Prevents data loss and browser issues during round-trip export→import
+
+### Data Migrations
+- No data migrations required for v1.9.0
+
+---
+
+## Version 1.8.0
 
 ### Release Date
 December 2025

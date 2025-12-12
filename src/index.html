@@ -7761,7 +7761,7 @@
         // ========================================
         // APP VERSION
         // ========================================
-        const APP_VERSION = '1.8.0';
+        const APP_VERSION = '1.9.0';
 
         // ========================================
         // PLANNING SETTINGS - Defaults
@@ -8491,9 +8491,10 @@
 
         // Export app state to JSON file
         function exportData() {
-            // Collect all data entities from state
+            // Collect all data entities from state (Issue-109: include all entities)
             const exportableData = {
                 version: '1.0',
+                appVersion: APP_VERSION,  // Issue-109: Add app version for compatibility tracking
                 lastModified: new Date().toISOString(),
                 settings: state.settings,
                 userTags: state.tags,  // Renamed for spec compliance
@@ -8502,6 +8503,9 @@
                 people: state.people,
                 roles: state.roles,
                 tags: state.tags,  // Keep for backward compatibility
+                workCalendar: state.workCalendar,  // Issue-109: Add work calendar (Issue-76)
+                meetings: state.meetings,           // Issue-109: Add meetings (Issue-80)
+                allocations: state.allocations,     // Issue-109: Add allocations (Issue-43/57)
                 exportedAt: new Date().toISOString()
             };
 
@@ -8564,12 +8568,23 @@
                         : Array.isArray(importedData.tags)
                             ? importedData.tags.slice(0, IMPORT_LIMITS.MAX_ARRAY_SIZE) : [];
 
+                    // Issue-109: Extract meetings and allocations arrays
+                    const rawMeetings = Array.isArray(importedData.meetings)
+                        ? importedData.meetings.slice(0, IMPORT_LIMITS.MAX_ARRAY_SIZE) : [];
+                    const rawAllocations = Array.isArray(importedData.allocations)
+                        ? importedData.allocations.slice(0, IMPORT_LIMITS.MAX_ARRAY_SIZE) : [];
+
                     // Sanitize and validate all entities, filtering out invalid ones
                     state.roles = rawRoles.map(sanitizeRole).filter(r => r !== null);
                     state.people = rawPeople.map(sanitizePerson).filter(p => p !== null);
                     state.tags = rawTags.map(sanitizeTag).filter(t => t !== null);
                     state.engagements = rawEngagements.map(sanitizeEngagement).filter(e => e !== null);
                     state.todos = rawTodos.map(sanitizeTodo).filter(t => t !== null);
+
+                    // Issue-109: Sanitize and restore meetings, allocations, and workCalendar
+                    state.meetings = rawMeetings.map(sanitizeMeeting).filter(m => m !== null);
+                    state.allocations = rawAllocations.map(sanitizeAllocation).filter(a => a !== null);
+                    state.workCalendar = sanitizeWorkCalendar(importedData.workCalendar);
 
                     // Restore planning settings (merge with defaults, validate numeric values)
                     if (importedData.settings && typeof importedData.settings === 'object') {
@@ -8590,8 +8605,8 @@
                         state.settings = { ...DEFAULT_SETTINGS };
                     }
 
-                    // Log import summary for debugging
-                    Logger.log(`Import completed: ${state.todos.length} todos, ${state.engagements.length} engagements, ${state.people.length} people, ${state.tags.length} tags, ${state.roles.length} roles`);
+                    // Log import summary for debugging (Issue-109: include all entities)
+                    Logger.log(`Import completed: ${state.todos.length} todos, ${state.engagements.length} engagements, ${state.people.length} people, ${state.tags.length} tags, ${state.roles.length} roles, ${state.meetings.length} meetings, ${state.allocations.length} allocations`);
 
                     // Navigate to app and render
                     navigateTo('app');
@@ -9868,6 +9883,104 @@
                 id: role.id,
                 name: sanitizeString(role.name) || 'Unnamed Role'
             };
+        }
+
+        // Issue-109: Sanitize a meeting object - returns null if invalid
+        function sanitizeMeeting(meeting) {
+            if (!meeting || typeof meeting !== 'object') return null;
+            if (!isValidId(meeting.id)) return null;
+
+            return {
+                id: meeting.id,
+                title: sanitizeString(meeting.title) || 'Untitled Meeting',
+                description: sanitizeString(meeting.description),
+                date: isValidISODate(meeting.date) ? meeting.date : new Date().toISOString(),
+                duration: typeof meeting.duration === 'number' && meeting.duration > 0 && meeting.duration <= 1440
+                    ? meeting.duration : 60,
+                // Recurring meeting fields
+                isRecurring: typeof meeting.isRecurring === 'boolean' ? meeting.isRecurring : false,
+                frequency: ['daily', 'weekly', 'bi-weekly', '3-weeks', 'monthly'].includes(meeting.frequency)
+                    ? meeting.frequency : null,
+                recurringEndDate: isValidISODate(meeting.recurringEndDate) ? meeting.recurringEndDate : null,
+                parentMeetingId: isValidId(meeting.parentMeetingId) ? meeting.parentMeetingId : null,
+                createdAt: isValidISODate(meeting.createdAt) ? meeting.createdAt : new Date().toISOString()
+            };
+        }
+
+        // Issue-109: Sanitize work calendar object - returns default if invalid
+        function sanitizeWorkCalendar(calendar) {
+            if (!calendar || typeof calendar !== 'object') {
+                return JSON.parse(JSON.stringify(DEFAULT_WORK_CALENDAR));
+            }
+
+            // Sanitize workDays
+            const workDays = {};
+            for (let day = 0; day <= 6; day++) {
+                const defaultDay = DEFAULT_WORK_CALENDAR.workDays[day];
+                if (calendar.workDays && calendar.workDays[day] && typeof calendar.workDays[day] === 'object') {
+                    workDays[day] = {
+                        enabled: typeof calendar.workDays[day].enabled === 'boolean'
+                            ? calendar.workDays[day].enabled : defaultDay.enabled,
+                        hours: typeof calendar.workDays[day].hours === 'number' && calendar.workDays[day].hours >= 0 && calendar.workDays[day].hours <= 24
+                            ? calendar.workDays[day].hours : defaultDay.hours
+                    };
+                } else {
+                    workDays[day] = { ...defaultDay };
+                }
+            }
+
+            // Sanitize holidays array - must be valid date strings
+            const holidays = Array.isArray(calendar.holidays)
+                ? calendar.holidays.filter(d => isValidDateString(d)).slice(0, 1000)
+                : [];
+
+            // Sanitize PTO array - must be valid date strings
+            const pto = Array.isArray(calendar.pto)
+                ? calendar.pto.filter(d => isValidDateString(d)).slice(0, 1000)
+                : [];
+
+            return { workDays, holidays, pto };
+        }
+
+        // Issue-109: Sanitize an allocation object - returns null if invalid
+        function sanitizeAllocation(allocation) {
+            if (!allocation || typeof allocation !== 'object') return null;
+            if (!isValidId(allocation.id)) return null;
+
+            const sanitized = {
+                id: allocation.id,
+                createdAt: isValidISODate(allocation.createdAt) ? allocation.createdAt : new Date().toISOString(),
+                updatedAt: isValidISODate(allocation.updatedAt) ? allocation.updatedAt : new Date().toISOString()
+            };
+
+            // Sanitize preProject allocation data if present
+            if (allocation.preProject && typeof allocation.preProject === 'object') {
+                sanitized.preProject = {
+                    allocationPercentage: typeof allocation.preProject.allocationPercentage === 'number'
+                        && allocation.preProject.allocationPercentage >= 0
+                        && allocation.preProject.allocationPercentage <= 100
+                        ? allocation.preProject.allocationPercentage : 25,
+                    months: Array.isArray(allocation.preProject.months)
+                        ? allocation.preProject.months.filter(m => typeof m === 'string' && /^\d{4}-\d{2}$/.test(m)).slice(0, 120)
+                        : []
+                };
+            }
+
+            // Sanitize project allocation data if present
+            if (allocation.project && typeof allocation.project === 'object') {
+                sanitized.project = {
+                    allocationPercentage: typeof allocation.project.allocationPercentage === 'number'
+                        && allocation.project.allocationPercentage >= 0
+                        && allocation.project.allocationPercentage <= 100
+                        ? allocation.project.allocationPercentage : 25,
+                    startMonth: typeof allocation.project.startMonth === 'string' && /^\d{4}-\d{2}$/.test(allocation.project.startMonth)
+                        ? allocation.project.startMonth : null,
+                    endMonth: typeof allocation.project.endMonth === 'string' && /^\d{4}-\d{2}$/.test(allocation.project.endMonth)
+                        ? allocation.project.endMonth : null
+                };
+            }
+
+            return sanitized;
         }
 
         // Format date for display

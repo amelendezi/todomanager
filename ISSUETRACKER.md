@@ -82,3 +82,5 @@ Issue-103: Compact Daily Plan items to single-line layout with auto-height conta
 
 Issue-107: Redesigned Daily Load KPI with 8-day forecast, symmetric layout (450px), priority-based task colors, and workload border color coding.
 Issue-105: Fixed Daily Plan container excessive empty space by adding align-items: flex-start to prevent vertical stretching.
+
+Issue-109: Fixed export/import to include workCalendar, meetings, allocations, and appVersion with proper sanitization functions.
