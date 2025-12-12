@@ -6418,37 +6418,17 @@
                     </div>
                 </div>
 
-                <!-- KPI Panel (Right) - Issue-74 -->
+                <!-- KPI Panel (Right) - Issue-74, Issue-107 -->
                 <div class="kpi-panel">
-                    <!-- Daily Load Chart -->
+                    <!-- Daily Load Chart - Issue-107: 8-column forecast -->
                     <div id="daily-load-chart" class="daily-load-chart">
                         <div class="daily-load-header">
                             <div class="daily-load-title">Daily Load</div>
                             <div id="daily-load-status" class="daily-load-status balanced">Balanced workload</div>
                         </div>
                         <div class="daily-load-container">
-                            <div class="daily-load-bars">
-                                <div class="daily-load-column">
-                                    <div id="daily-load-hours-overdue" class="daily-load-column-hours">0hrs</div>
-                                    <div id="daily-load-bar-overdue" class="daily-load-bar">
-                                        <div class="daily-load-empty">-</div>
-                                    </div>
-                                    <div class="daily-load-label">Overdue</div>
-                                </div>
-                                <div class="daily-load-column">
-                                    <div id="daily-load-hours-today" class="daily-load-column-hours">0hrs</div>
-                                    <div id="daily-load-bar-today" class="daily-load-bar">
-                                        <div class="daily-load-empty">-</div>
-                                    </div>
-                                    <div class="daily-load-label">Today</div>
-                                </div>
-                                <div class="daily-load-column">
-                                    <div id="daily-load-hours-nextday" class="daily-load-column-hours">0hrs</div>
-                                    <div id="daily-load-bar-nextday" class="daily-load-bar">
-                                        <div class="daily-load-empty">-</div>
-                                    </div>
-                                    <div id="daily-load-label-nextday" class="daily-load-label">Next Day</div>
-                                </div>
+                            <div id="daily-load-bars" class="daily-load-bars">
+                                <!-- Columns generated dynamically by renderDailyLoadChart() -->
                             </div>
                         </div>
                     </div>
@@ -14763,89 +14743,276 @@
         }
 
         // ========================================
-        // DAILY LOAD KPI CHART - Issue-74
+        // DAILY LOAD KPI CHART - Issue-74, Issue-107
         // ========================================
 
         // Get DOM elements for Daily Load chart
         const dailyLoadStatus = document.getElementById('daily-load-status');
-        const dailyLoadHoursOverdue = document.getElementById('daily-load-hours-overdue');
-        const dailyLoadHoursToday = document.getElementById('daily-load-hours-today');
-        const dailyLoadHoursNextDay = document.getElementById('daily-load-hours-nextday');
-        const dailyLoadBarOverdue = document.getElementById('daily-load-bar-overdue');
-        const dailyLoadBarToday = document.getElementById('daily-load-bar-today');
-        const dailyLoadBarNextDay = document.getElementById('daily-load-bar-nextday');
-        const dailyLoadLabelNextDay = document.getElementById('daily-load-label-nextday');
+        const dailyLoadBarsContainer = document.getElementById('daily-load-bars');
 
         // Track highlighted todo for Daily Load chart
         let highlightedTodoId = null;
 
-        /**
-         * Categorizes todos by deadline into Overdue, Today, Next Work Day
-         * Only includes todos with deadlines (Issue-76: uses work calendar)
-         */
-        function categorizeTodosForDailyLoad() {
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+        // Day abbreviations for column labels
+        const DAY_NAMES_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const MONTH_NAMES_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+        /**
+         * Issue-107: Get the previous work day (or yesterday if it's a work day)
+         */
+        function getPreviousWorkDay(date) {
+            const prevDay = new Date(date);
+            prevDay.setDate(prevDay.getDate() - 1);
+
+            // Safety: limit to 365 iterations to prevent infinite loops
+            let iterations = 0;
+            while (!isWorkDay(prevDay) && iterations < 365) {
+                prevDay.setDate(prevDay.getDate() - 1);
+                iterations++;
+            }
+
+            return prevDay;
+        }
+
+        /**
+         * Issue-107: Get array of next N work days starting from a date (exclusive)
+         */
+        function getNextNWorkDays(startDate, count) {
+            const workDays = [];
+            let currentDate = new Date(startDate);
+
+            while (workDays.length < count) {
+                currentDate = getNextWorkDay(currentDate);
+                workDays.push(new Date(currentDate));
+            }
+
+            return workDays;
+        }
+
+        /**
+         * Issue-107: Format date label for Daily Load columns
+         * Shows "Yesterday", "Today", "Tomorrow", weekday name, or date if gap > 2 days
+         */
+        function formatDayLabel(date, today, yesterday, prevDate = null) {
+            const dateTime = date.getTime();
+            const todayTime = today.getTime();
+            const yesterdayTime = yesterday.getTime();
             const tomorrow = new Date(today);
             tomorrow.setDate(tomorrow.getDate() + 1);
 
-            // Get the next work day (might not be tomorrow if it's a weekend/holiday)
-            const nextWorkDay = getNextWorkDay(today);
-            nextWorkDay.setHours(0, 0, 0, 0);
+            if (dateTime === yesterdayTime) {
+                return 'Yest.';
+            } else if (dateTime === todayTime) {
+                return 'Today';
+            } else if (dateTime === tomorrow.getTime()) {
+                return 'Tmrw';
+            }
 
-            // Day after the next work day
-            const dayAfterNextWorkDay = getNextWorkDay(nextWorkDay);
-            dayAfterNextWorkDay.setHours(0, 0, 0, 0);
+            // Check if there's a gap > 2 days from previous date
+            if (prevDate) {
+                const dayDiff = Math.round((dateTime - prevDate.getTime()) / (1000 * 60 * 60 * 24));
+                if (dayDiff > 2) {
+                    // Show date format: "Dec 22"
+                    return `${MONTH_NAMES_SHORT[date.getMonth()]} ${date.getDate()}`;
+                }
+            }
 
-            const categories = {
-                overdue: [],
-                today: [],
-                nextDay: [],
-                nextWorkDayDate: nextWorkDay // Store the actual date for the label
+            // Show weekday abbreviation
+            return DAY_NAMES_SHORT[date.getDay()];
+        }
+
+        /**
+         * Issue-107: Get workload border class based on total hours
+         */
+        function getWorkloadBorderClass(totalHours) {
+            if (totalHours <= 6) return 'workload-easy';
+            if (totalHours <= 7.5) return 'workload-moderate';
+            if (totalHours <= 8) return 'workload-heavy';
+            return 'workload-overloaded';
+        }
+
+        /**
+         * Issue-107: Get priority-based color class for task segment
+         */
+        function getPriorityColorClass(priority) {
+            const priorityMap = {
+                'urgent': 'priority-urgent',
+                'high': 'priority-high',
+                'normal': 'priority-normal',
+                'low': 'priority-low',
+                'someday': 'priority-someday'
             };
+            return priorityMap[priority] || 'priority-normal';
+        }
 
-            state.todos.forEach(todo => {
-                // Skip todos without deadline or dropped/blocked todos
+        /**
+         * Issue-107: Categorize todos for a specific date
+         */
+        function getTodosForDate(targetDate) {
+            const dateStart = new Date(targetDate);
+            dateStart.setHours(0, 0, 0, 0);
+            const dateEnd = new Date(dateStart);
+            dateEnd.setDate(dateEnd.getDate() + 1);
+
+            return state.todos.filter(todo => {
+                if (todo.dropped || todo.blocked) return false;
                 const deadlineValue = todo.deadline || todo.dueDate;
-                if (!deadlineValue || todo.dropped || todo.blocked) return;
+                if (!deadlineValue) return false;
 
                 const deadline = new Date(deadlineValue);
                 deadline.setHours(0, 0, 0, 0);
 
-                if (deadline < today) {
-                    // Issue-87: Only show completed overdue todos if completed today
-                    if (!todo.completed) {
-                        // Uncompleted overdue todos always show
-                        categories.overdue.push(todo);
-                    } else if (todo.completedAt) {
-                        // Completed overdue todos only show if completed today
-                        const completedDate = new Date(todo.completedAt);
-                        completedDate.setHours(0, 0, 0, 0);
-                        if (completedDate.getTime() === today.getTime()) {
-                            categories.overdue.push(todo);
+                return deadline.getTime() === dateStart.getTime();
+            });
+        }
+
+        /**
+         * Issue-107: Get overdue todos (deadlines before today, not completed)
+         */
+        function getOverdueTodos(today) {
+            return state.todos.filter(todo => {
+                if (todo.dropped || todo.blocked || todo.completed) return false;
+                const deadlineValue = todo.deadline || todo.dueDate;
+                if (!deadlineValue) return false;
+
+                const deadline = new Date(deadlineValue);
+                deadline.setHours(0, 0, 0, 0);
+
+                return deadline < today;
+            });
+        }
+
+        /**
+         * Issue-107: Categorize yesterday's data with special logic
+         */
+        function categorizeYesterdayData(yesterday, today) {
+            const yesterdayStart = new Date(yesterday);
+            yesterdayStart.setHours(0, 0, 0, 0);
+            const yesterdayEnd = new Date(yesterdayStart);
+            yesterdayEnd.setDate(yesterdayEnd.getDate() + 1);
+
+            const result = {
+                meetings: [],
+                completedOnTime: [],      // Completed with yesterday's deadline (green)
+                completedExtra: [],       // Completed yesterday but deadline wasn't yesterday (dark green)
+                overdueMissed: []         // Yesterday's deadline, not completed (light red)
+            };
+
+            // Get meetings for yesterday
+            result.meetings = (state.meetings || []).filter(meeting => {
+                const meetingDate = new Date(meeting.date);
+                meetingDate.setHours(0, 0, 0, 0);
+                return meetingDate.getTime() === yesterdayStart.getTime();
+            });
+
+            // Categorize todos
+            state.todos.forEach(todo => {
+                if (todo.dropped || todo.blocked) return;
+
+                const deadlineValue = todo.deadline || todo.dueDate;
+                const deadline = deadlineValue ? new Date(deadlineValue) : null;
+                if (deadline) deadline.setHours(0, 0, 0, 0);
+
+                const hadYesterdayDeadline = deadline && deadline.getTime() === yesterdayStart.getTime();
+
+                if (todo.completed && todo.completedAt) {
+                    const completedDate = new Date(todo.completedAt);
+                    completedDate.setHours(0, 0, 0, 0);
+                    const completedYesterday = completedDate.getTime() === yesterdayStart.getTime();
+
+                    if (completedYesterday) {
+                        if (hadYesterdayDeadline) {
+                            result.completedOnTime.push(todo);
+                        } else {
+                            result.completedExtra.push(todo);
                         }
                     }
-                } else if (deadline >= today && deadline < tomorrow) {
-                    categories.today.push(todo);
-                } else if (deadline >= nextWorkDay && deadline < dayAfterNextWorkDay) {
-                    categories.nextDay.push(todo);
+                } else if (!todo.completed && hadYesterdayDeadline) {
+                    result.overdueMissed.push(todo);
                 }
             });
 
-            // Sort each category by priority (highest priority at bottom of stack)
-            // Weight: urgent=100, high=75, normal=50, low=25, someday=10
-            const sortByPriority = (a, b) => {
-                const weightA = PRIORITY_TAGS[a.priority || DEFAULT_PRIORITY]?.weight || 50;
-                const weightB = PRIORITY_TAGS[b.priority || DEFAULT_PRIORITY]?.weight || 50;
-                return weightA - weightB; // Lower weight first, so higher priority ends up at bottom
+            return result;
+        }
+
+        /**
+         * Issue-107: Categorize today's data with priority ordering
+         */
+        function categorizeTodayData(today) {
+            const todayStart = new Date(today);
+            todayStart.setHours(0, 0, 0, 0);
+            const todayEnd = new Date(todayStart);
+            todayEnd.setDate(todayEnd.getDate() + 1);
+
+            const result = {
+                meetings: [],
+                urgent: [],
+                overdue: [],
+                high: [],
+                normal: [],
+                low: [],
+                someday: []
             };
 
-            categories.overdue.sort(sortByPriority);
-            categories.today.sort(sortByPriority);
-            categories.nextDay.sort(sortByPriority);
+            // Get meetings for today
+            result.meetings = (state.meetings || []).filter(meeting => {
+                const meetingDate = new Date(meeting.date);
+                meetingDate.setHours(0, 0, 0, 0);
+                return meetingDate.getTime() === todayStart.getTime();
+            });
 
-            return categories;
+            // Get overdue todos
+            result.overdue = getOverdueTodos(todayStart);
+
+            // Get today's todos by priority
+            const todayTodos = getTodosForDate(todayStart).filter(t => !t.completed);
+            todayTodos.forEach(todo => {
+                const priority = todo.priority || 'normal';
+                if (result[priority]) {
+                    result[priority].push(todo);
+                } else {
+                    result.normal.push(todo);
+                }
+            });
+
+            return result;
+        }
+
+        /**
+         * Issue-107: Categorize future day's data with priority ordering
+         */
+        function categorizeFutureDayData(date) {
+            const dateStart = new Date(date);
+            dateStart.setHours(0, 0, 0, 0);
+
+            const result = {
+                meetings: [],
+                urgent: [],
+                high: [],
+                normal: [],
+                low: [],
+                someday: []
+            };
+
+            // Get meetings for this date
+            result.meetings = (state.meetings || []).filter(meeting => {
+                const meetingDate = new Date(meeting.date);
+                meetingDate.setHours(0, 0, 0, 0);
+                return meetingDate.getTime() === dateStart.getTime();
+            });
+
+            // Get todos for this date by priority
+            const dayTodos = getTodosForDate(dateStart).filter(t => !t.completed);
+            dayTodos.forEach(todo => {
+                const priority = todo.priority || 'normal';
+                if (result[priority]) {
+                    result[priority].push(todo);
+                } else {
+                    result.normal.push(todo);
+                }
+            });
+
+            return result;
         }
 
         /**
@@ -14869,21 +15036,6 @@
                 completed: completedMinutes / 60,
                 remaining: (totalMinutes - completedMinutes) / 60
             };
-        }
-
-        /**
-         * Get heat gradient class based on cumulative hours
-         */
-        function getHeatClass(cumulativeHours) {
-            if (cumulativeHours <= 2) return 'heat-green-1';
-            if (cumulativeHours <= 3) return 'heat-green-2';
-            if (cumulativeHours <= 4) return 'heat-green-3';
-            if (cumulativeHours <= 5) return 'heat-yellow-1';
-            if (cumulativeHours <= 6) return 'heat-yellow-2';
-            if (cumulativeHours <= 7) return 'heat-orange-1';
-            if (cumulativeHours <= 8) return 'heat-orange-2';
-            if (cumulativeHours <= 10) return 'heat-red-light';
-            return 'heat-red-intense';
         }
 
         /**
@@ -14922,93 +15074,217 @@
         }
 
         /**
-         * Format hours display - shows only remaining hours
+         * Format hours display - shows total hours
          */
-        function formatHoursDisplay(hours) {
-            if (hours.remaining === 0) return '0hrs';
-            const remainingStr = hours.remaining % 1 === 0 ? hours.remaining.toFixed(0) : hours.remaining.toFixed(1);
-            return `${remainingStr}hrs`;
+        function formatHoursDisplay(totalHours) {
+            if (totalHours === 0) return '0h';
+            const hoursStr = totalHours % 1 === 0 ? totalHours.toFixed(0) : totalHours.toFixed(1);
+            return `${hoursStr}h`;
         }
 
         /**
-         * Render a single bar column with stacked todo and meeting segments
+         * Issue-107: Render a segment in the bar
          */
-        function renderDailyLoadBar(barElement, todos, meetings, hoursElement, isOverdue = false) {
-            const todoHours = calculateTotalHours(todos);
-            const meetingMinutes = meetings.reduce((sum, m) => sum + m.duration, 0);
-            const meetingHoursValue = meetingMinutes / 60;
-            const totalHours = todoHours.total + meetingHoursValue;
-
-            // Format hours display including meetings
-            const displayHours = {
-                total: totalHours,
-                completed: todoHours.completed,
-                remaining: totalHours - todoHours.completed
-            };
-            hoursElement.textContent = formatHoursDisplay(displayHours);
-
-            if (todos.length === 0 && meetings.length === 0) {
-                barElement.innerHTML = '<div class="daily-load-empty">-</div>';
-                return;
+        function renderSegment(barElement, item, colorClass, scaleFactor, pixelsPerHour, isCompleted = false, isMeeting = false) {
+            let hours;
+            if (isMeeting) {
+                hours = item.duration / 60;
+            } else {
+                const effort = item.effort || DEFAULT_EFFORT;
+                const minutes = EFFORT_CONFIG[effort]?.minutes || 240;
+                hours = minutes / 60;
             }
 
-            barElement.innerHTML = '';
+            const scaledHours = hours * scaleFactor;
+            const segmentHeight = Math.max(scaledHours * pixelsPerHour, 12); // Minimum 12px for visibility
 
-            // Max height is 160px, representing 10 hours
-            const maxHeight = 160;
-            const maxHours = 10;
-            const pixelsPerHour = maxHeight / maxHours;
+            const segment = document.createElement('div');
+            segment.className = `daily-load-segment ${colorClass}`;
 
-            // Calculate scale factor if total exceeds 10 hours
-            const scaleFactor = totalHours > maxHours ? maxHours / totalHours : 1;
+            if (isCompleted) {
+                segment.classList.add('completed');
+            }
 
-            let cumulativeHours = 0;
+            if (!isMeeting && item.id === highlightedTodoId) {
+                segment.classList.add('highlighted');
+            }
 
-            // Render todo segments first (from bottom to top)
-            todos.forEach(todo => {
+            segment.style.height = `${segmentHeight}px`;
+
+            if (isMeeting) {
+                segment.dataset.meetingId = item.id;
+                segment.title = `📅 ${escapeHtml(item.title)} (${formatDurationDisplay(item.duration)})`;
+            } else {
+                segment.dataset.todoId = item.id;
+                const effort = item.effort || DEFAULT_EFFORT;
+                segment.title = `${escapeHtml(item.title)} (${formatEffortDisplay(effort)})`;
+                segment.onclick = () => highlightTodoInList(item.id);
+            }
+
+            barElement.appendChild(segment);
+            return hours;
+        }
+
+        /**
+         * Issue-107: Render Yesterday column
+         */
+        function renderYesterdayColumn(data) {
+            const column = document.createElement('div');
+            column.className = 'daily-load-column';
+
+            // Calculate total hours
+            let totalHours = 0;
+            const allTodos = [...data.completedOnTime, ...data.completedExtra, ...data.overdueMissed];
+            allTodos.forEach(todo => {
                 const effort = todo.effort || DEFAULT_EFFORT;
-                const todoMinutes = EFFORT_CONFIG[effort]?.minutes || 240;
-                const todoHoursVal = todoMinutes / 60;
-                const scaledHours = todoHoursVal * scaleFactor;
-                const segmentHeight = Math.max(scaledHours * pixelsPerHour, 16); // Minimum 16px for visibility
-
-                cumulativeHours += todoHoursVal;
-                // Use 'overdue' class for overdue column, heat gradient for others
-                const colorClass = isOverdue ? 'overdue' : getHeatClass(cumulativeHours);
-
-                const segment = document.createElement('div');
-                segment.className = `daily-load-segment ${colorClass}`;
-                if (todo.completed) {
-                    segment.classList.add('completed');
-                }
-                if (todo.id === highlightedTodoId) {
-                    segment.classList.add('highlighted');
-                }
-                segment.style.height = `${segmentHeight}px`;
-                segment.dataset.todoId = todo.id;
-                segment.title = `${escapeHtml(todo.title)} (${formatEffortDisplay(effort)})`;
-
-                segment.onclick = () => highlightTodoInList(todo.id);
-
-                barElement.appendChild(segment);
+                totalHours += (EFFORT_CONFIG[effort]?.minutes || 240) / 60;
             });
+            data.meetings.forEach(m => totalHours += m.duration / 60);
 
-            // Render meeting segments (purple) on top of todos
-            meetings.forEach(meeting => {
-                const meetingHrs = meeting.duration / 60;
-                const scaledHours = meetingHrs * scaleFactor;
-                const segmentHeight = Math.max(scaledHours * pixelsPerHour, 16);
+            // Hours display
+            const hoursDiv = document.createElement('div');
+            hoursDiv.className = 'daily-load-column-hours';
+            hoursDiv.textContent = formatHoursDisplay(totalHours);
+            column.appendChild(hoursDiv);
 
-                cumulativeHours += meetingHrs;
+            // Bar
+            const bar = document.createElement('div');
+            bar.className = `daily-load-bar ${getWorkloadBorderClass(totalHours)}`;
 
-                const segment = document.createElement('div');
-                segment.className = 'daily-load-segment meeting';
-                segment.style.height = `${segmentHeight}px`;
-                segment.dataset.meetingId = meeting.id;
-                segment.title = `📅 ${escapeHtml(meeting.title)} (${formatDurationDisplay(meeting.duration)})`;
+            if (data.meetings.length === 0 && allTodos.length === 0) {
+                bar.innerHTML = '<div class="daily-load-empty">-</div>';
+            } else {
+                const maxHeight = 120;
+                const maxHours = 10;
+                const pixelsPerHour = maxHeight / maxHours;
+                const scaleFactor = totalHours > maxHours ? maxHours / totalHours : 1;
 
-                barElement.appendChild(segment);
+                // Render in order: meetings (yellow), completed on-time (green), completed extra (dark green), overdue missed (light red)
+                data.meetings.forEach(m => renderSegment(bar, m, 'meeting', scaleFactor, pixelsPerHour, false, true));
+                data.completedOnTime.forEach(t => renderSegment(bar, t, 'completed-ontime', scaleFactor, pixelsPerHour, true));
+                data.completedExtra.forEach(t => renderSegment(bar, t, 'completed-extra', scaleFactor, pixelsPerHour, true));
+                data.overdueMissed.forEach(t => renderSegment(bar, t, 'overdue-missed', scaleFactor, pixelsPerHour));
+            }
+
+            column.appendChild(bar);
+
+            // Label
+            const label = document.createElement('div');
+            label.className = 'daily-load-label';
+            label.textContent = 'Yest.';
+            column.appendChild(label);
+
+            return column;
+        }
+
+        /**
+         * Issue-107: Render Today column
+         */
+        function renderTodayColumn(data) {
+            const column = document.createElement('div');
+            column.className = 'daily-load-column';
+
+            // Calculate total hours
+            let totalHours = 0;
+            const allTodos = [...data.urgent, ...data.overdue, ...data.high, ...data.normal, ...data.low, ...data.someday];
+            allTodos.forEach(todo => {
+                const effort = todo.effort || DEFAULT_EFFORT;
+                totalHours += (EFFORT_CONFIG[effort]?.minutes || 240) / 60;
             });
+            data.meetings.forEach(m => totalHours += m.duration / 60);
+
+            // Hours display
+            const hoursDiv = document.createElement('div');
+            hoursDiv.className = 'daily-load-column-hours';
+            hoursDiv.textContent = formatHoursDisplay(totalHours);
+            column.appendChild(hoursDiv);
+
+            // Bar
+            const bar = document.createElement('div');
+            bar.className = `daily-load-bar ${getWorkloadBorderClass(totalHours)}`;
+
+            if (data.meetings.length === 0 && allTodos.length === 0) {
+                bar.innerHTML = '<div class="daily-load-empty">-</div>';
+            } else {
+                const maxHeight = 120;
+                const maxHours = 10;
+                const pixelsPerHour = maxHeight / maxHours;
+                const scaleFactor = totalHours > maxHours ? maxHours / totalHours : 1;
+
+                // Render in order: meetings, urgent, overdue, high, normal, low, someday
+                data.meetings.forEach(m => renderSegment(bar, m, 'meeting', scaleFactor, pixelsPerHour, false, true));
+                data.urgent.forEach(t => renderSegment(bar, t, 'priority-urgent', scaleFactor, pixelsPerHour));
+                data.overdue.forEach(t => renderSegment(bar, t, 'overdue', scaleFactor, pixelsPerHour));
+                data.high.forEach(t => renderSegment(bar, t, 'priority-high', scaleFactor, pixelsPerHour));
+                data.normal.forEach(t => renderSegment(bar, t, 'priority-normal', scaleFactor, pixelsPerHour));
+                data.low.forEach(t => renderSegment(bar, t, 'priority-low', scaleFactor, pixelsPerHour));
+                data.someday.forEach(t => renderSegment(bar, t, 'priority-someday', scaleFactor, pixelsPerHour));
+            }
+
+            column.appendChild(bar);
+
+            // Label
+            const label = document.createElement('div');
+            label.className = 'daily-load-label';
+            label.textContent = 'Today';
+            column.appendChild(label);
+
+            return column;
+        }
+
+        /**
+         * Issue-107: Render Future day column
+         */
+        function renderFutureDayColumn(data, date, labelText) {
+            const column = document.createElement('div');
+            column.className = 'daily-load-column';
+
+            // Calculate total hours
+            let totalHours = 0;
+            const allTodos = [...data.urgent, ...data.high, ...data.normal, ...data.low, ...data.someday];
+            allTodos.forEach(todo => {
+                const effort = todo.effort || DEFAULT_EFFORT;
+                totalHours += (EFFORT_CONFIG[effort]?.minutes || 240) / 60;
+            });
+            data.meetings.forEach(m => totalHours += m.duration / 60);
+
+            // Hours display
+            const hoursDiv = document.createElement('div');
+            hoursDiv.className = 'daily-load-column-hours';
+            hoursDiv.textContent = formatHoursDisplay(totalHours);
+            column.appendChild(hoursDiv);
+
+            // Bar
+            const bar = document.createElement('div');
+            bar.className = `daily-load-bar ${getWorkloadBorderClass(totalHours)}`;
+
+            if (data.meetings.length === 0 && allTodos.length === 0) {
+                bar.innerHTML = '<div class="daily-load-empty">-</div>';
+            } else {
+                const maxHeight = 120;
+                const maxHours = 10;
+                const pixelsPerHour = maxHeight / maxHours;
+                const scaleFactor = totalHours > maxHours ? maxHours / totalHours : 1;
+
+                // Render in order: meetings, urgent, high, normal, low, someday
+                data.meetings.forEach(m => renderSegment(bar, m, 'meeting', scaleFactor, pixelsPerHour, false, true));
+                data.urgent.forEach(t => renderSegment(bar, t, 'priority-urgent', scaleFactor, pixelsPerHour));
+                data.high.forEach(t => renderSegment(bar, t, 'priority-high', scaleFactor, pixelsPerHour));
+                data.normal.forEach(t => renderSegment(bar, t, 'priority-normal', scaleFactor, pixelsPerHour));
+                data.low.forEach(t => renderSegment(bar, t, 'priority-low', scaleFactor, pixelsPerHour));
+                data.someday.forEach(t => renderSegment(bar, t, 'priority-someday', scaleFactor, pixelsPerHour));
+            }
+
+            column.appendChild(bar);
+
+            // Label
+            const label = document.createElement('div');
+            label.className = 'daily-load-label';
+            label.textContent = labelText;
+            label.title = date.toLocaleDateString();
+            column.appendChild(label);
+
+            return column;
         }
 
         /**
@@ -15050,44 +15326,56 @@
         }
 
         /**
-         * Render the complete Daily Load chart
+         * Issue-107: Render the complete Daily Load chart with 8 columns
          */
         function renderDailyLoadChart() {
             if (state.currentPage !== 'app' || state.currentTab !== 'home') return;
 
-            const todoCategories = categorizeTodosForDailyLoad();
-            const meetingCategories = categorizeMeetingsForDailyLoad();
+            // Get dates
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
 
-            // Calculate total hours for today including meetings
-            const todayTodoHours = calculateTotalHours(todoCategories.today);
-            const todayMeetingMinutes = meetingCategories.today.reduce((sum, m) => sum + m.duration, 0);
-            const totalTodayHours = todayTodoHours.total + (todayMeetingMinutes / 60);
+            const yesterday = getPreviousWorkDay(today);
+            yesterday.setHours(0, 0, 0, 0);
 
-            // Update status message (Issue-88: consider future pending tasks)
+            // Get 7 future work days (including tomorrow if it's a work day)
+            const futureWorkDays = getNextNWorkDays(today, 7);
+
+            // Clear existing columns
+            dailyLoadBarsContainer.innerHTML = '';
+
+            // 1. Render Yesterday column
+            const yesterdayData = categorizeYesterdayData(yesterday, today);
+            dailyLoadBarsContainer.appendChild(renderYesterdayColumn(yesterdayData));
+
+            // 2. Render Today column
+            const todayData = categorizeTodayData(today);
+            dailyLoadBarsContainer.appendChild(renderTodayColumn(todayData));
+
+            // Calculate today's total hours for status
+            let todayTotalHours = 0;
+            const todayAllTodos = [...todayData.urgent, ...todayData.overdue, ...todayData.high, ...todayData.normal, ...todayData.low, ...todayData.someday];
+            todayAllTodos.forEach(todo => {
+                const effort = todo.effort || DEFAULT_EFFORT;
+                todayTotalHours += (EFFORT_CONFIG[effort]?.minutes || 240) / 60;
+            });
+            todayData.meetings.forEach(m => todayTotalHours += m.duration / 60);
+
+            // Update status message
             const hasFutureTasks = hasFuturePendingTodos();
-            const status = getWorkloadStatus(totalTodayHours, hasFutureTasks);
+            const status = getWorkloadStatus(todayTotalHours, hasFutureTasks);
             dailyLoadStatus.className = `daily-load-status ${status.class}`;
             dailyLoadStatus.textContent = status.text;
 
-            // Update the Next Day label to show the actual day name (Issue-76)
-            const nextDayName = DAY_ABBREVS[todoCategories.nextWorkDayDate.getDay()];
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const tomorrow = new Date(today);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-
-            // Show "Tomorrow" if next work day is tomorrow, otherwise show day name
-            if (todoCategories.nextWorkDayDate.getTime() === tomorrow.getTime()) {
-                dailyLoadLabelNextDay.textContent = 'Tomorrow';
-            } else {
-                dailyLoadLabelNextDay.textContent = nextDayName;
+            // 3. Render 6 future day columns (to make 8 total)
+            let prevDate = today;
+            for (let i = 0; i < 6 && i < futureWorkDays.length; i++) {
+                const date = futureWorkDays[i];
+                const data = categorizeFutureDayData(date);
+                const label = formatDayLabel(date, today, yesterday, prevDate);
+                dailyLoadBarsContainer.appendChild(renderFutureDayColumn(data, date, label));
+                prevDate = date;
             }
-
-            // Render each bar (overdue bar uses light red, others use heat gradient)
-            // Pass both todos and meetings to render combined bars
-            renderDailyLoadBar(dailyLoadBarOverdue, todoCategories.overdue, meetingCategories.overdue, dailyLoadHoursOverdue, true);
-            renderDailyLoadBar(dailyLoadBarToday, todoCategories.today, meetingCategories.today, dailyLoadHoursToday, false);
-            renderDailyLoadBar(dailyLoadBarNextDay, todoCategories.nextDay, meetingCategories.nextDay, dailyLoadHoursNextDay, false);
         }
 
         // ========================================
@@ -15457,43 +15745,7 @@
             `).join('');
         }
 
-        /**
-         * Categorize meetings for Daily Load (similar to todos)
-         */
-        function categorizeMeetingsForDailyLoad() {
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const tomorrow = new Date(today);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-
-            const nextWorkDay = getNextWorkDay(today);
-            nextWorkDay.setHours(0, 0, 0, 0);
-
-            const dayAfterNextWorkDay = getNextWorkDay(nextWorkDay);
-            dayAfterNextWorkDay.setHours(0, 0, 0, 0);
-
-            const categories = {
-                overdue: [],
-                today: [],
-                nextDay: []
-            };
-
-            state.meetings.forEach(meeting => {
-                const meetingDate = new Date(meeting.date);
-                meetingDate.setHours(0, 0, 0, 0);
-
-                if (meetingDate < today) {
-                    categories.overdue.push(meeting);
-                } else if (meetingDate >= today && meetingDate < tomorrow) {
-                    categories.today.push(meeting);
-                } else if (meetingDate >= nextWorkDay && meetingDate < dayAfterNextWorkDay) {
-                    categories.nextDay.push(meeting);
-                }
-            });
-
-            return categories;
-        }
+        // Issue-107: Removed categorizeMeetingsForDailyLoad - meetings are now categorized per-day
 
         // ========================================
         // PRIORITY AUTOCOMPLETE FUNCTIONS
