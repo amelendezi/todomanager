@@ -3287,6 +3287,7 @@
         /* Split-panel layout for Todos page */
         .home-split-container {
             display: flex;
+            align-items: flex-start; /* Issue-105: Prevent panels from stretching to tallest sibling */
             gap: 24px;
             max-width: 2000px;
             margin: 0 auto;

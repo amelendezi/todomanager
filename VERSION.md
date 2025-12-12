@@ -38,6 +38,11 @@ December 2025
   - Container auto-sizes to content (no fixed height, no scrollbars)
   - Block/unblock buttons remain functional
 
+### Bug Fixes
+- **Daily Plan Fixed Height**: Daily Plan panel now has auto-height like Daily Load and Meetings panes (Issue-105)
+  - Previously stretched to fill available vertical space
+  - Now ends right after the Insights section with no excessive empty space
+
 ### Data Migrations
 - No data migrations required for v1.7.0
 
