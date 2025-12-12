@@ -793,6 +793,116 @@
             margin-bottom: 24px;
         }
 
+        /* Issue-101: Modal header with edit button */
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header .modal-title {
+            margin-bottom: 0;
+        }
+
+        .modal-edit-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid #E0E0E0;
+            background: #FFFFFF;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6C757D;
+            transition: all 0.2s ease;
+        }
+
+        .modal-edit-btn:hover {
+            background: #F5A623;
+            border-color: #F5A623;
+            color: #FFFFFF;
+        }
+
+        .modal-edit-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Issue-101: Read-only view styles */
+        .todo-readonly-view {
+            padding: 0;
+        }
+
+        .todo-readonly-field {
+            margin-bottom: 16px;
+        }
+
+        .todo-readonly-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6C757D;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .todo-readonly-value {
+            font-size: 15px;
+            color: #1F1F1F;
+            line-height: 1.5;
+        }
+
+        .todo-readonly-value.title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .todo-readonly-value.description {
+            white-space: pre-wrap;
+            background: #F8F9FA;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .todo-readonly-value.empty {
+            color: #9CA3AF;
+            font-style: italic;
+        }
+
+        .todo-readonly-engagement {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #E3F2FD;
+            border-radius: 6px;
+            color: #1565C0;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        .todo-readonly-engagement:hover {
+            background: #BBDEFB;
+        }
+
+        .todo-readonly-engagement svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .todo-readonly-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .todo-readonly-close-btn {
+            width: 100%;
+            margin-top: 24px;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -6727,9 +6837,24 @@
 
     <!-- Create Todo Modal -->
     <div id="todo-modal" class="modal hidden">
-        <div class="modal-backdrop" onclick="closeModal()"></div>
+        <div class="modal-backdrop" id="todo-modal-backdrop" onclick="handleTodoModalBackdropClick()"></div>
         <div class="modal-content" id="todo-modal-content">
-            <h2 id="modal-title" class="modal-title">New Todo</h2>
+            <!-- Issue-101: Modal header with edit button -->
+            <div class="modal-header" id="todo-modal-header">
+                <h2 id="modal-title" class="modal-title">New Todo</h2>
+                <button type="button" id="todo-edit-mode-btn" class="modal-edit-btn hidden" onclick="switchToEditMode()" title="Edit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Issue-101: Read-only view -->
+            <div id="todo-readonly-view" class="todo-readonly-view hidden">
+                <!-- Content will be rendered dynamically -->
+            </div>
+
             <form id="todo-form" onsubmit="saveTodo(event)">
                 <div id="todo-form-columns" class="todo-form-columns">
                     <!-- Left Column - Main Todo Form -->
@@ -7816,6 +7941,7 @@
             previousTab: 'home',  // Track previous tab for settings return navigation
             settingsSection: 'people',  // Current settings section
             modalOpen: false,
+            modalReadOnly: false,  // Issue-101: Track read-only vs edit mode
             engagementModalOpen: false,
             personModalOpen: false,
             confirmModalOpen: false,
@@ -7916,6 +8042,7 @@
         const emptyState = document.getElementById('empty-state');
         const todoShortcutHintFloating = document.getElementById('todo-shortcut-hint-floating');
         const todoModal = document.getElementById('todo-modal');
+        const todoModalBackdrop = document.getElementById('todo-modal-backdrop');  // Issue-101
         const todoForm = document.getElementById('todo-form');
         const todoTitleInput = document.getElementById('todo-title');
         const todoDescriptionInput = document.getElementById('todo-description');
@@ -7926,6 +8053,8 @@
         const modalTitle = document.getElementById('modal-title');
         const todoSaveBtn = document.getElementById('todo-save-btn');
         const todoSaveWrapper = document.getElementById('todo-save-wrapper');
+        const todoEditModeBtn = document.getElementById('todo-edit-mode-btn');  // Issue-101
+        const todoReadonlyView = document.getElementById('todo-readonly-view');  // Issue-101
 
         // DOM Elements - Recommendation Panel
         const recommendationPanel = document.getElementById('recommendation-panel');
@@ -8477,10 +8606,28 @@
         }
 
         // Modal functions
-        function openModal(todoIndex = null) {
+        // Issue-101: Updated to support read-only mode
+        function openModal(todoIndex = null, readOnly = false) {
             todoModal.classList.remove('hidden');
             state.modalOpen = true;
             state.editingTodoIndex = todoIndex;
+            state.modalReadOnly = readOnly;
+
+            // Issue-101: Handle read-only vs edit mode display
+            if (readOnly && todoIndex !== null) {
+                // Read-only mode - show read-only view, hide form
+                todoForm.classList.add('hidden');
+                todoReadonlyView.classList.remove('hidden');
+                todoEditModeBtn.classList.remove('hidden');
+                modalTitle.textContent = 'View Todo';
+                renderTodoReadonlyView(state.todos[todoIndex]);
+                return;
+            }
+
+            // Edit/Create mode - show form, hide read-only view
+            todoForm.classList.remove('hidden');
+            todoReadonlyView.classList.add('hidden');
+            todoEditModeBtn.classList.add('hidden');
 
             // Reset form
             todoForm.reset();
@@ -8596,9 +8743,150 @@
             setTimeout(() => todoTitleInput.focus(), 100);
         }
 
+        // Issue-101: Render read-only view of a todo
+        function renderTodoReadonlyView(todo) {
+            // Format deadline
+            const deadlineValue = todo.deadline || todo.dueDate;
+            const deadlineDisplay = deadlineValue ? formatDeadlineDisplay(deadlineValue) : '';
+
+            // Format effort
+            const effort = todo.effort || DEFAULT_EFFORT;
+            const effortConfig = EFFORT_CONFIG[effort];
+            const effortDisplay = effortConfig ? `${effortConfig.icon} ${formatEffortDisplay(effort)}` : '';
+
+            // Format priority
+            const priority = todo.priority || DEFAULT_PRIORITY;
+            const priorityTag = PRIORITY_TAGS[priority];
+            const priorityDisplay = priorityTag ? priorityTag.label : 'Normal';
+
+            // Format engagement
+            let engagementHtml = '<span class="todo-readonly-value empty">None</span>';
+            if (todo.engagementId) {
+                const opp = state.engagements.find(o => o.id === todo.engagementId);
+                if (opp) {
+                    engagementHtml = `
+                        <span class="todo-readonly-engagement" onclick="navigateToEngagement('${opp.id}')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            ${escapeHtml(opp.name)}
+                        </span>
+                    `;
+                }
+            }
+
+            // Format tags
+            let tagsHtml = '<span class="todo-readonly-value empty">None</span>';
+            if (todo.tagIds && todo.tagIds.length > 0) {
+                const tagPills = todo.tagIds.map(tagId => {
+                    const tag = getTagById(tagId);
+                    if (tag) {
+                        return `<span class="tag-pill" style="background-color: ${tag.color}; color: #fff;">${escapeHtml(tag.name)}</span>`;
+                    }
+                    return '';
+                }).filter(Boolean);
+                if (tagPills.length > 0) {
+                    tagsHtml = `<div class="todo-readonly-tags">${tagPills.join('')}</div>`;
+                }
+            }
+
+            // Build status display
+            let statusHtml = '';
+            if (todo.blocked) {
+                statusHtml = `<span class="priority-pill" style="background: #9E9E9E; color: #fff;">Blocked</span>`;
+                if (todo.blockReason) {
+                    statusHtml += `<span class="todo-readonly-value" style="margin-left: 8px; font-style: italic;">"${escapeHtml(todo.blockReason)}"</span>`;
+                }
+            } else if (todo.completed) {
+                statusHtml = `<span class="priority-pill" style="background: #4CAF50; color: #fff;">Completed</span>`;
+            } else if (todo.dropped) {
+                statusHtml = `<span class="priority-pill" style="background: #DC3545; color: #fff;">Dropped</span>`;
+            } else {
+                statusHtml = `<span class="priority-pill" style="background: #2196F3; color: #fff;">Active</span>`;
+            }
+
+            todoReadonlyView.innerHTML = `
+                <div class="todo-readonly-field">
+                    <div class="todo-readonly-label">Title</div>
+                    <div class="todo-readonly-value title">${escapeHtml(todo.title)}</div>
+                </div>
+
+                <div class="todo-readonly-field">
+                    <div class="todo-readonly-label">Status</div>
+                    <div class="todo-readonly-value">${statusHtml}</div>
+                </div>
+
+                <div class="todo-readonly-field">
+                    <div class="todo-readonly-label">Description</div>
+                    <div class="todo-readonly-value ${todo.description ? 'description' : 'empty'}">
+                        ${todo.description ? escapeHtml(todo.description) : 'No description'}
+                    </div>
+                </div>
+
+                <div class="todo-readonly-field">
+                    <div class="todo-readonly-label">Deadline</div>
+                    <div class="todo-readonly-value ${deadlineDisplay ? '' : 'empty'}">
+                        ${deadlineDisplay || 'Not set'}
+                    </div>
+                </div>
+
+                <div class="todo-readonly-field">
+                    <div class="todo-readonly-label">Effort</div>
+                    <div class="todo-readonly-value">${effortDisplay}</div>
+                </div>
+
+                <div class="todo-readonly-field">
+                    <div class="todo-readonly-label">Priority</div>
+                    <div class="todo-readonly-value">
+                        <span class="priority-pill priority-${priority}">${priorityDisplay}</span>
+                    </div>
+                </div>
+
+                <div class="todo-readonly-field">
+                    <div class="todo-readonly-label">Linked Engagement</div>
+                    <div class="todo-readonly-value">${engagementHtml}</div>
+                </div>
+
+                <div class="todo-readonly-field">
+                    <div class="todo-readonly-label">Tags</div>
+                    <div class="todo-readonly-value">${tagsHtml}</div>
+                </div>
+
+                <button type="button" class="btn btn-secondary todo-readonly-close-btn" onclick="closeModal()">Close</button>
+            `;
+        }
+
+        // Issue-101: Switch from read-only to edit mode
+        function switchToEditMode() {
+            if (state.editingTodoIndex !== null) {
+                state.modalReadOnly = false;
+                openModal(state.editingTodoIndex, false);
+            }
+        }
+
+        // Issue-101: Navigate to engagement from read-only view
+        function navigateToEngagement(engagementId) {
+            closeModal();
+            // Navigate to engagements tab and select the engagement
+            state.currentTab = 'engagements';
+            renderPage();
+            // Find and expand the engagement
+            const engIndex = state.engagements.findIndex(e => e.id === engagementId);
+            if (engIndex !== -1) {
+                state.expandedEngagementId = engagementId;
+                renderEngagements();
+            }
+        }
+
+        // Issue-101: Open todo in read-only mode (for clicking on todo cards)
+        function viewTodo(index) {
+            openModal(index, true);
+        }
+
         // Edit a todo - opens modal in edit mode
         function editTodo(index) {
-            openModal(index);
+            openModal(index, false);
         }
 
         // Get today's date in YYYY-MM-DD format for date input
@@ -8638,6 +8926,14 @@
             // Reset tab navigation
             setFormTabIndex(todoFormLeft, true);
             setFormTabIndex(todoFormRight, false);
+        }
+
+        // Issue-101: Handle backdrop click - close modal only in read-only mode
+        function handleTodoModalBackdropClick() {
+            if (state.modalReadOnly) {
+                closeModal();
+            }
+            // In edit mode, clicking backdrop does nothing (user must use Save/Cancel)
         }
 
         // Generate unique ID using cryptographically secure random values (Issue-62)
@@ -9211,48 +9507,34 @@
             const checkboxClass = todo.blocked ? 'blocked' : (todo.dropped ? 'dropped' : (todo.completed ? 'checked' : ''));
             const checkboxClick = (todo.dropped || todo.blocked) ? '' : `onclick="toggleTodo(${index})"`;
 
-            // Build action buttons based on state
+            // Issue-101: Build action buttons based on state
+            // Removed edit button - clicking todo content opens read-only modal instead
             let actionsHtml = '';
             if (todo.blocked) {
                 // Blocked: only show Unblock button
                 actionsHtml = `
-                    <button class="todo-unblock-btn" onclick="unblockTodo(${index})" title="Unblock">
+                    <button class="todo-unblock-btn" onclick="event.stopPropagation(); unblockTodo(${index})" title="Unblock">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="5 3 19 12 5 21 5 3"></polygon>
                         </svg>
                     </button>
                 `;
             } else if (!todo.completed && !todo.dropped) {
-                // Active: show Edit and Block buttons
+                // Active: only show Block button (edit via clicking todo content)
                 actionsHtml = `
-                    <button class="todo-edit-btn" onclick="editTodo(${index})" title="Edit">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                    </button>
-                    <button class="todo-block-btn" onclick="openBlockReasonModal(${index})" title="Block">
+                    <button class="todo-block-btn" onclick="event.stopPropagation(); openBlockReasonModal(${index})" title="Block">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="6" y="4" width="4" height="16"></rect>
                             <rect x="14" y="4" width="4" height="16"></rect>
                         </svg>
                     </button>
                 `;
-            } else {
-                // Completed or Dropped: only show Edit
-                actionsHtml = `
-                    <button class="todo-edit-btn" onclick="editTodo(${index})" title="Edit">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                    </button>
-                `;
             }
+            // Completed or Dropped: no action buttons (edit via clicking todo content)
 
             todoItem.innerHTML = `
                 <div class="todo-checkbox ${checkboxClass}" ${checkboxClick}></div>
-                <div class="todo-content">
+                <div class="todo-content" onclick="viewTodo(${index})" style="cursor: pointer;">
                     <div class="todo-info">
                         <div class="todo-title">${escapeHtml(todo.title)}</div>
                         ${dueDateHtml}
@@ -13484,9 +13766,14 @@
                         cancelInlineEngagement();
                         return;
                     }
-                    // Otherwise close the whole modal
-                    e.preventDefault();
-                    closeModal();
+                    // Issue-101: In read-only mode, Escape closes the modal
+                    // In edit mode, Escape does nothing (user must use Save/Cancel buttons)
+                    if (state.modalReadOnly) {
+                        e.preventDefault();
+                        closeModal();
+                        return;
+                    }
+                    // Edit mode - don't close on Escape
                     return;
                 }
                 if (state.engagementModalOpen) {
@@ -14373,7 +14660,7 @@
                 <div class="recommendation-item-header" style="position: relative;">
                     <div class="recommendation-item-checkbox ${item.todo.completed ? 'checked' : ''}"
                          onclick="toggleTodoFromRecommendation('${item.todo.id}')"></div>
-                    <div class="recommendation-item-title">${escapeHtml(item.todo.title)}</div>
+                    <div class="recommendation-item-title" onclick="viewTodoFromRecommendation('${item.todo.id}')" style="cursor: pointer;">${escapeHtml(item.todo.title)}</div>
                     <button class="recommendation-item-block-btn" onclick="blockTodoFromRecommendation('${item.todo.id}')" title="Block">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="6" y="4" width="4" height="16"></rect>
@@ -14432,6 +14719,14 @@
             }
         }
 
+        // Issue-101: View todo from recommendation panel (opens read-only modal)
+        function viewTodoFromRecommendation(todoId) {
+            const index = state.todos.findIndex(t => t.id === todoId);
+            if (index !== -1) {
+                viewTodo(index);
+            }
+        }
+
         // Render blocked section with special styling (Issue-67)
         function renderBlockedSection(sectionEl, itemsEl, countEl, items) {
             sectionEl.classList.toggle('hidden', items.length === 0);
@@ -14474,7 +14769,7 @@
             div.innerHTML = `
                 <div class="recommendation-item-header">
                     <div class="recommendation-item-checkbox blocked"></div>
-                    <div class="recommendation-item-title">${escapeHtml(item.todo.title)}</div>
+                    <div class="recommendation-item-title" onclick="viewTodoFromRecommendation('${item.todo.id}')" style="cursor: pointer;">${escapeHtml(item.todo.title)}</div>
                     <button class="todo-unblock-btn" onclick="unblockTodoFromRecommendation('${item.todo.id}')" title="Unblock" style="margin-left: auto;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="5 3 19 12 5 21 5 3"></polygon>
